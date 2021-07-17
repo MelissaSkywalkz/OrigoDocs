@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html">
+  <title>>_</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+
+<div class="sidenav" id="mySidenav">
+  <div class="header">
+    <a href="#" style="text-decoration: none;">
+    <h2 class="logo">>_</h2>
+    </a>
+  </div>
+  <div class="links">
+  <button class="accordion">CMD</button>
+    <div class="panel">
+      <a href="page.html">CMD Commands</a>
+      <a href="#">Placeholder</a>
+      <a href="#">Placeholder</a>
+    </div>
+
+  <button class="accordion">Other</button>
+  <div class="panel">
+    <a href="#">Placeholder</a>
+    <a href="#">Placeholder</a>
+    <a href="#">Placeholder</a>
+  </div>
+  <a href="#">Placeholder</a>
+  <a href="#">Placeholder</a>
+  <a href="#">Placeholder</a>
+</div>
+  <div class="sidebar-footer" id="copyright">
+    <p>>_ © 2020</p>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <form class="form-inline">
+      <span id="one" onclick="closeNav()"><img src="sort.png"/></span>
+      <span id="two" onclick="openNav()"><img src="sort.png"/></span>
+      <input class="form-control mr-sm-2" type="search" placeholder="Search projekts..." aria-label="Search">
+    </form>
+    <a class="navbar-brand">Log in</a>
+  </nav>
+  <h4 class="desc">Basic</h4>
+  <div class="center">
+    <div class="row">
+      <div class="column">
+        <h3>CD</h3>
+        <h6>Change directory</h6>
+        <p class="code">> cd desktop</p>
+      </div>
+      <div class="column">
+        <h3>DIR</h3>
+        <h6>List directory content</h6>
+        <p class="code">> dir</p>
+      </div>
+    </div>
+    </div>
+  <h4 class="desc">Network</h4>
+  <div class="center">
+    <div class="row">
+      <div class="column">
+        <h3>IPCONFIG</h3>
+        <h6>Display IP network settings</h6>
+        <p class="code">> ipconfig/all</p>
+        <p class="code">> ipconfig/renew</p>
+        <p class="code">> ipconfig/release</p>
+        <p class="code">> ipconfig/flushdns</p>
+      </div>
+      <div class="column">
+        <h3>PING</h3>
+        <h6>Pings the network</h6>
+        <p class="code">> ping 192.168.0.1</p>
+        <p class="code">> ping -t google.com</p>
+      </div>
+      <div class="column">
+        <h3>TRACERT</h3>
+        <h6>Trace routes similar to patchping</h6>
+        <p class="code">> tracert 192.168.0.1</p>
+        <p class="code">> tracert google.com</p>
+      </div>
+      <div class="column">
+        <h3>NSLOOKUP</h3>
+        <h6>Query the DNS</h6>
+        <p class="code">> nslookup 192.168.0.1</p>
+        <p class="code">> nslookup google.com</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <h3>FTP</h3>
+        <h6>Transfer files to a FTP server</h6>
+        <p class="code">> ftp.speedtest.tele2.net</p>
+      </div>
+      <div class="column">
+        <h3>FTYPE</h3>
+        <h6>Display file type and mapping</h6>
+        <p class="code">> ftype htmlfile="C:\user\desktop\<br>main.html"</p>
+        <p class="code">> ftype htmlfile="C:\user\desktop\<br>main.html" -nohome ASSOC .html=htmlfile</p>
+      </div>
+      <div class="column">
+        <h3>ROUTE</h3>
+        <h6>Display network routing table, add static routes</h6>
+        <p class="code">> placeholder</p>
+      </div>
+      <div class="column">
+        <h3>NETSTAT</h3>
+        <h6>display TCP/IP connections and status</h6>
+        <p class="code">> placeholder</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <h3>GETMAC</h3>
+        <h6>Display MAC address</h6>
+        <p class="code">> placeholder</p>
+      </div>
+      <div class="column">
+        <h3>NETSH</h3>
+        <h6>Configure/control/display network components</h6>
+        <p class="code">> placeholder</p>
+      </div>
+      <div class="column">
+        <h3>PATHPING</h3>
+        <h6>Test the connection to a specific IP address</h6>
+        <p class="code">> placeholder</p>
+      </div>
+      <div class="column">
+        <h3>SYSTEMINFO</h3>
+        <h6>Displays computer-specific properties and configurations</h6>
+        <p class="code">> placeholder</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <h3>TFTP</h3>
+        <h6>Transfer files to a TFTP server</h6>
+        <p class="code">> placeholder</p>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+<script src="main.js"></script>
+
+</html>
