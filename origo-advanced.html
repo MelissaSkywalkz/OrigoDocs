@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 101 – Origo lathund</title>
+  <title>Origo – avancerat</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
@@ -18,9 +18,9 @@
       </button>
       <div class="accordion-panel" id="nav-docs">
         <a href="index.html">Start</a>
-        <a class="active" href="page.html">JSON 101</a>
+        <a href="page.html">JSON 101</a>
         <a href="origo.html">Origo – snabbstart</a>
-        <a href="origo-advanced.html">Origo – avancerat</a>
+        <a class="active" href="origo-advanced.html">Origo – avancerat</a>
         <a href="layermanager.html">Layermanager</a>
         <a href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
@@ -53,90 +53,84 @@
         <img src="sort.png" alt="" />
       </button>
       <div class="topbar-title">
-        <span class="eyebrow">JSON 101</span>
-        <h1>JSON för dummies</h1>
+        <span class="eyebrow">Origo</span>
+        <h1>Avancerad konfiguration</h1>
       </div>
       <div class="topbar-meta">
-        <span class="status-pill">Grundläggande</span>
+        <span class="status-pill">TODO: verifiera mot Origo-repo</span>
       </div>
     </header>
 
     <section class="doc-content">
-      <h2>Vad är JSON?</h2>
+      <h2>Hur Origo initieras från JSON</h2>
       <p>
-        JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde)
-        och <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
+        Origo läser en JSON-konfiguration som beskriver app, karta, lager och plugins.
+        TODO: verifiera exakt init-flöde och konfig-nycklar i Origo-repo.
       </p>
 
-      <div class="callout callout-warning">
-        <h3>Vanliga fel</h3>
-        <ul>
-          <li>Extra kommatecken (trailing comma) efter sista raden.</li>
-          <li>Felaktiga citattecken – JSON kräver dubbla "".</li>
-          <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
-        </ul>
-      </div>
-
-      <h2>Objekt, arrayer och datatyper</h2>
+      <h2>Vanliga sektioner (översikt)</h2>
       <ul>
-        <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
-        <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
-        <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
+        <li><strong>app</strong> – titel, språk, UI-inställningar.</li>
+        <li><strong>map</strong> – extent, projection, bakgrund.</li>
+        <li><strong>layers</strong> – datalager (WMS/WFS/vektor).</li>
+        <li><strong>plugins</strong> – t.ex. Layermanager.</li>
       </ul>
+      <p>TODO: verifiera exakta namn/struktur i Origo-dokumentation.</p>
 
-      <h2>Exempel: enkelt config-objekt</h2>
+      <h2>Exempel: init-konfig (pseudo-JSON med kommentarer)</h2>
       <pre><code>{
-  "appTitle": "Origo Demo",
-  "debug": true,
-  "language": "sv"
-}
-</code></pre>
-
-      <h2>Exempel: lista av lager</h2>
-      <pre><code>{
+  // TODO: verifiera konfigstruktur i Origo
+  "app": {
+    "title": "Min Origo-app",
+    "language": "sv"
+  },
+  "map": {
+    "projection": "TODO: verifiera",
+    "extent": "TODO: verifiera"
+  },
   "layers": [
     {
-      "name": "Baslager",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
-    },
-    {
-      "name": "Byggnader",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
+      "name": "Bakgrund",
+      "type": "TODO: verifiera WMS/WMTS",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wms",
+        "layers": "workspace:baslager"
+      }
     }
+  ],
+  "plugins": [
+    "layermanager"
   ]
 }
 </code></pre>
 
-      <h2>Exempel: nestade objekt</h2>
-      <pre><code>{
-  "map": {
-    "extent": "TODO: verifiera mot Origo-dokumentation",
-    "projection": "TODO: verifiera mot Origo-dokumentation"
-  },
-  "ui": {
-    "controls": [
-      "zoom",
-      "scale"
-    ]
-  }
-}
-</code></pre>
+      <div class="callout callout-warning">
+        <h3>Obs!</h3>
+        <p>JSON tillåter inte kommentarer. Ta bort <code>//</code>-rader innan produktion.</p>
+      </div>
 
-      <h2>Mini-checklista</h2>
+      <h2>Layer-konfigurationer (typiskt)</h2>
+      <ul>
+        <li><strong>WMS:</strong> när du vill ha kartbilder från GeoServer.</li>
+        <li><strong>WFS:</strong> när du behöver features och attribut i klienten.</li>
+        <li><strong>Vector tiles:</strong> TODO: verifiera stöd i Origo.</li>
+      </ul>
+
+      <h2>Checklista</h2>
       <ol>
-        <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
-        <li>Säkerställ att allt är inom rätt objekt/array.</li>
-        <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
+        <li>Finns alla nödvändiga nycklar i konfigen?</li>
+        <li>Matchar CRS mellan Origo och GeoServer?</li>
+        <li>Är plugins korrekt aktiverade?</li>
       </ol>
 
-      <h2>Debug-tips</h2>
+      <h2>Vanliga fel</h2>
       <ul>
-        <li>Leta efter första felraden i konsolen – ofta där felet börjar.</li>
-        <li>Ta bort halva filen och testa igen (binary search).</li>
-        <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
+        <li>Fel nyckelnamn → Origo ignorerar inställningen.</li>
+        <li>Felaktig WMS/WFS-endpoint.</li>
+        <li>Fel projection ger tom karta.</li>
       </ul>
+
+      <p>TODO: verifiera Origo-konfigens exakta fält och defaults i repo.</p>
     </section>
   </main>
 

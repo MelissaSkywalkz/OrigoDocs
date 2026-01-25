@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 101 – Origo lathund</title>
+  <title>npm & plugins</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
@@ -18,7 +18,7 @@
       </button>
       <div class="accordion-panel" id="nav-docs">
         <a href="index.html">Start</a>
-        <a class="active" href="page.html">JSON 101</a>
+        <a href="page.html">JSON 101</a>
         <a href="origo.html">Origo – snabbstart</a>
         <a href="origo-advanced.html">Origo – avancerat</a>
         <a href="layermanager.html">Layermanager</a>
@@ -27,7 +27,7 @@
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
         <a href="faq-gis.html">FAQ GIS</a>
         <a href="recipes.html">Origo – recept</a>
-        <a href="npm.html">npm & plugins</a>
+        <a class="active" href="npm.html">npm & plugins</a>
         <a href="troubleshooting.html">Felsökning</a>
       </div>
     </div>
@@ -53,90 +53,65 @@
         <img src="sort.png" alt="" />
       </button>
       <div class="topbar-title">
-        <span class="eyebrow">JSON 101</span>
-        <h1>JSON för dummies</h1>
+        <span class="eyebrow">npm</span>
+        <h1>Plugins & paket</h1>
       </div>
       <div class="topbar-meta">
-        <span class="status-pill">Grundläggande</span>
+        <span class="status-pill">Build & deploy</span>
       </div>
     </header>
 
     <section class="doc-content">
-      <h2>Vad är JSON?</h2>
-      <p>
-        JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde)
-        och <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
-      </p>
+      <h2>Installera plugins via npm</h2>
+      <pre><code>npm install @leverantor/origo-plugin
+npm install @leverantor/origo-plugin@1.2.3
+</code></pre>
+      <ul>
+        <li>Använd <strong>exakta versioner</strong> för stabilitet.</li>
+        <li>Notera eventuella <strong>peer dependencies</strong>.</li>
+      </ul>
 
-      <div class="callout callout-warning">
-        <h3>Vanliga fel</h3>
-        <ul>
-          <li>Extra kommatecken (trailing comma) efter sista raden.</li>
-          <li>Felaktiga citattecken – JSON kräver dubbla "".</li>
-          <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
-        </ul>
+      <h2>Bygg in i ett statiskt projekt</h2>
+      <p>
+        Om pluginen kräver byggsteg: använd en enkel bundler (t.ex. Vite) och generera statiska filer.
+        TODO: verifiera om Origo-pluginerna kräver bundling eller kan inkluderas direkt.
+      </p>
+      <pre><code># exempel på enkel setup
+npm create vite@latest origo-demo
+cd origo-demo
+npm install
+npm run build
+</code></pre>
+
+      <h2>Snabba kommandon</h2>
+      <div class="two-column">
+        <div>
+          <h3>Init & install</h3>
+          <pre><code>npm init -y
+npm install paket
+npm install paket --save-dev
+</code></pre>
+        </div>
+        <div>
+          <h3>Uppdatera & audit</h3>
+          <pre><code>npm update
+npm audit
+npm audit fix
+</code></pre>
+        </div>
       </div>
 
-      <h2>Objekt, arrayer och datatyper</h2>
+      <h2>Versioner & semver (kort)</h2>
       <ul>
-        <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
-        <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
-        <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
+        <li><strong>^1.2.3</strong> = tillåter mindre uppdateringar.</li>
+        <li><strong>~1.2.3</strong> = tillåter patchar.</li>
+        <li><strong>1.2.3</strong> = låst exakt version.</li>
       </ul>
 
-      <h2>Exempel: enkelt config-objekt</h2>
-      <pre><code>{
-  "appTitle": "Origo Demo",
-  "debug": true,
-  "language": "sv"
-}
-</code></pre>
-
-      <h2>Exempel: lista av lager</h2>
-      <pre><code>{
-  "layers": [
-    {
-      "name": "Baslager",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
-    },
-    {
-      "name": "Byggnader",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
-    }
-  ]
-}
-</code></pre>
-
-      <h2>Exempel: nestade objekt</h2>
-      <pre><code>{
-  "map": {
-    "extent": "TODO: verifiera mot Origo-dokumentation",
-    "projection": "TODO: verifiera mot Origo-dokumentation"
-  },
-  "ui": {
-    "controls": [
-      "zoom",
-      "scale"
-    ]
-  }
-}
-</code></pre>
-
-      <h2>Mini-checklista</h2>
-      <ol>
-        <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
-        <li>Säkerställ att allt är inom rätt objekt/array.</li>
-        <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
-      </ol>
-
-      <h2>Debug-tips</h2>
-      <ul>
-        <li>Leta efter första felraden i konsolen – ofta där felet börjar.</li>
-        <li>Ta bort halva filen och testa igen (binary search).</li>
-        <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
-      </ul>
+      <div class="callout callout-warning">
+        <h3>Lockfile</h3>
+        <p>Commit alltid <code>package-lock.json</code> för reproducibla byggen.</p>
+      </div>
     </section>
   </main>
 

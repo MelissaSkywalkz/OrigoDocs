@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 101 – Origo lathund</title>
+  <title>Layermanager</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
@@ -18,10 +18,10 @@
       </button>
       <div class="accordion-panel" id="nav-docs">
         <a href="index.html">Start</a>
-        <a class="active" href="page.html">JSON 101</a>
+        <a href="page.html">JSON 101</a>
         <a href="origo.html">Origo – snabbstart</a>
         <a href="origo-advanced.html">Origo – avancerat</a>
-        <a href="layermanager.html">Layermanager</a>
+        <a class="active" href="layermanager.html">Layermanager</a>
         <a href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
@@ -53,90 +53,69 @@
         <img src="sort.png" alt="" />
       </button>
       <div class="topbar-title">
-        <span class="eyebrow">JSON 101</span>
-        <h1>JSON för dummies</h1>
+        <span class="eyebrow">Origo plugin</span>
+        <h1>Layermanager</h1>
       </div>
       <div class="topbar-meta">
-        <span class="status-pill">Grundläggande</span>
+        <span class="status-pill">TODO: verifiera mot layermanager-repo</span>
       </div>
     </header>
 
     <section class="doc-content">
-      <h2>Vad är JSON?</h2>
+      <h2>Vad är Layermanager?</h2>
       <p>
-        JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde)
-        och <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
+        Layermanager är ett Origo-plugin som hjälper användare att hitta och lägga till lager
+        från en katalogtjänst (t.ex. GeoServer eller CSW). TODO: verifiera exakt stöd i repo.
       </p>
 
-      <div class="callout callout-warning">
-        <h3>Vanliga fel</h3>
-        <ul>
-          <li>Extra kommatecken (trailing comma) efter sista raden.</li>
-          <li>Felaktiga citattecken – JSON kräver dubbla "".</li>
-          <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
-        </ul>
-      </div>
+      <h2>Så här lägger du till Layermanager i Origo</h2>
+      <ol>
+        <li>Installera pluginet (npm eller inkluderad bundle).</li>
+        <li>Aktivera pluginet i Origo-konfigurationen.</li>
+        <li>Peka pluginet mot katalog/GeoServer-URL.</li>
+      </ol>
 
-      <h2>Objekt, arrayer och datatyper</h2>
-      <ul>
-        <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
-        <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
-        <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
-      </ul>
-
-      <h2>Exempel: enkelt config-objekt</h2>
+      <h2>Exempel: Layermanager i konfig (pseudo-JSON)</h2>
       <pre><code>{
-  "appTitle": "Origo Demo",
-  "debug": true,
-  "language": "sv"
-}
-</code></pre>
-
-      <h2>Exempel: lista av lager</h2>
-      <pre><code>{
-  "layers": [
+  "plugins": [
     {
-      "name": "Baslager",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
-    },
-    {
-      "name": "Byggnader",
-      "type": "TODO: verifiera mot Origo-dokumentation",
-      "source": "TODO: verifiera mot Origo-dokumentation"
+      "name": "layermanager",
+      "options": {
+        "url": "https://geoserver.example.com/geoserver",
+        "types": ["tema-1", "tema-2"],
+        "onlyAddableLayersBtn": true
+      }
     }
   ]
 }
 </code></pre>
+      <p>TODO: verifiera nycklarna <code>url</code>, <code>types</code> och <code>onlyAddableLayersBtn</code> i repo.</p>
 
-      <h2>Exempel: nestade objekt</h2>
-      <pre><code>{
-  "map": {
-    "extent": "TODO: verifiera mot Origo-dokumentation",
-    "projection": "TODO: verifiera mot Origo-dokumentation"
-  },
-  "ui": {
-    "controls": [
-      "zoom",
-      "scale"
-    ]
-  }
-}
-</code></pre>
+      <h2>Vad betyder options?</h2>
+      <ul>
+        <li><strong>url:</strong> adress till katalog/WMS/CSW som Layermanager läser från.</li>
+        <li><strong>types:</strong> filter för tematyper (t.ex. kategorier).</li>
+        <li><strong>onlyAddableLayersBtn:</strong> visar endast lager som går att lägga till.</li>
+      </ul>
 
-      <h2>Mini-checklista</h2>
+      <h2>Checklistor</h2>
       <ol>
-        <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
-        <li>Säkerställ att allt är inom rätt objekt/array.</li>
-        <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
+        <li>Testa URL:en i webbläsare (får du svar?).</li>
+        <li>Verifiera att Layermanager-pluginet laddas (ingen 404).</li>
+        <li>Kontrollera att lagren visas i UI.</li>
       </ol>
 
-      <h2>Debug-tips</h2>
+      <h2>Vanliga fel</h2>
       <ul>
-        <li>Leta efter första felraden i konsolen – ofta där felet börjar.</li>
-        <li>Ta bort halva filen och testa igen (binary search).</li>
-        <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
+        <li>Tom lista → fel URL eller saknade behörigheter.</li>
+        <li>404 på plugin-script → fel build/filnamn.</li>
+        <li>Inga filter-träffar → fel <code>types</code>-värden.</li>
       </ul>
+
+      <div class="callout callout-warning">
+        <h3>TODO</h3>
+        <p>Lägg in verifierad konfiguration när vi har tittat i layermanager-repo.</p>
+      </div>
     </section>
   </main>
 
