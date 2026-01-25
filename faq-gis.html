@@ -69,7 +69,7 @@
         <li>Ser du 404/403? Då är URL eller behörighet fel.</li>
         <li>Kontrollera att CRS/projection matchar.</li>
       </ol>
-      <pre><code># snabbtest av tjänst\ncurl -I https://geoserver.example.com/geoserver/wms\n</code></pre>
+      <pre><code># snabbtest av tjänst\ncurl -I https://localhost/geoserver/example_workspace/wms\n</code></pre>
 
       <h2>Vad är CRS/projection?</h2>
       <p>
@@ -81,6 +81,27 @@
       <ul>
         <li><strong>WMS</strong> = kartbilder (bra för bakgrundskartor).</li>
         <li><strong>WFS</strong> = objekt/features (bra för analys och attribut).</li>
+      </ul>
+
+      <h2>Varför är kartan seg?</h2>
+      <ul>
+        <li>Vi kollar först om det är WFS med mycket data.</li>
+        <li>Vi kollar cache (GeoWebCache) och gridset.</li>
+        <li>Vi kollar om stilen är tung (ikoner, filter, labels).</li>
+      </ul>
+
+      <h2>Varför ser jag gamla tiles?</h2>
+      <ul>
+        <li>GeoWebCache kan ligga kvar efter style‑ändring.</li>
+        <li>Vi rensar cache endast när det behövs.</li>
+        <li>Testa hård reload i webbläsaren först.</li>
+      </ul>
+
+      <h2>Vi‑tips för nyanställda</h2>
+      <ul>
+        <li>Vi börjar alltid med WMS när vi är osäkra.</li>
+        <li>Vi dokumenterar ändringar i små commits.</li>
+        <li>Vi testar lokalt innan vi går vidare.</li>
       </ul>
 
       <h2>Checklistor</h2>

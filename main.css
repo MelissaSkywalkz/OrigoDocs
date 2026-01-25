@@ -269,6 +269,24 @@ a {
   overflow-x: auto;
 }
 
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.doc-content th,
+.doc-content td {
+  border: 1px solid var(--border);
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.doc-content th {
+  background: #eef2f7;
+}
+
 .two-column {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

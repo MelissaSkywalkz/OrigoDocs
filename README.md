@@ -3,7 +3,7 @@
 Det här repot är en statisk dokumentationsportal för Origo Map och relaterat arbete. Syftet är att ge teamet en snabb, tydlig och kopierbar “lathund” för JSON, Origo-konfigurationer, Layermanager, GeoServer-stilar, recept och npm-flöden.
 
 > **Viktigt:** Om Origo-specifika detaljer inte kan verifieras lokalt ska de markeras med `TODO: verifiera mot Origo-dokumentation`.
-> TODO: ladda ner Skarakartan-konfigen och lägg under `/examples/skarakartan.json` för verifiering.
+> TODO: Lägg en anonymiserad exempelkonfig i `/examples/` för verifiering av våra mallar.
 
 Kort sagt: GeoServer publicerar data (WMS/WFS), Origo hämtar och visar den i kartan. Layermanager hjälper användare att hitta/lägga till lager. GeoServer-stilar (SLD/CSS/MBStyle) påverkar hur lagren ser ut i Origo. Datakällorna kan vara PostGIS eller filer som GeoPackage/Shapefile.
 GeoWebCache står för tile-cache och påverkar prestanda och när gamla tiles kan ligga kvar.
@@ -55,3 +55,9 @@ python -m http.server 8000
 - Kontrollera mobilbrytpunkter visuellt.
 
 > TODO: Automatiserade UI-tester (Playwright) kraschar i nuvarande miljö. Återbesök när miljön stödjer browser-körning.
+
+## Struktur & reduktion (förslag)
+
+- Sammanfoga “Origo – snabbstart” + “Origo – avancerat” om vi vill ha en enda Origo‑guide.
+- Flytta SLD‑cookbook + GeoServer‑uppdatering till en gemensam “Drift & Styles”‑sektion.
+- Flytta återkommande felsökning till en central sida och länka därifrån.

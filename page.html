@@ -139,10 +139,10 @@
         <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
       </ul>
 
-      <h2>Så läser du en riktig config (Skarakartan)</h2>
+      <h2>Så läser du en riktig Origo‑konfig (exempel)</h2>
       <p>
-        Vi använder Skarakartan som referens för hur en större Origo-konfig kan se ut.
-        TODO: ladda ner filen och lägg i repo under <code>/examples/skarakartan.json</code>.
+        Använd en verklig konfig som referens, men jobba alltid med kopia och
+        skriv exempel med generiska placeholders.
       </p>
       <ol>
         <li>Börja i toppen – hitta övergripande sektioner (app, map, layers).</li>
@@ -150,7 +150,7 @@
         <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
       </ol>
 
-      <h3>Skara-exempel (små utdrag)</h3>
+      <h3>Mini‑utdrag (små bitar)</h3>
       <p>Plocka små bitar för att förstå strukturen:</p>
       <pre><code>{
   "controls": [
@@ -167,18 +167,18 @@
 </code></pre>
       <pre><code>{
   "projectionCode": "EPSG:3008",
-  "extent": [-1400000, 4700000, 2100000, 8500000],
-  "resolutions": [1680, 1120, 560, 280, 126, 98, 56]
+  "extent": [100000, 6400000, 200000, 6500000],
+  "resolutions": [1600, 800, 400, 200, 100]
 }
 </code></pre>
       <pre><code>{
   "source": {
-    "wms_lm": {
-      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
       "version": "1.1.1"
     },
-    "wfs_ext": {
-      "url": "https://karta.skara.se:8443/geoserver/ext/ows",
+    "wfs_example": {
+      "url": "https://localhost/geoserver/example_workspace/ows",
       "strategy": "all"
     }
   }
@@ -186,17 +186,17 @@
 </code></pre>
       <pre><code>{
   "layers": [
-    { "name": "nvdb_transportnat_vaghallare", "type": "WMS", "source": "wms_lm" },
-    { "name": "forskola_p", "type": "WFS", "source": "wfs_ext" },
-    { "name": "hembygdsgardar_grp", "type": "GROUP", "layers": ["hembygdsgard_p"] }
+    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
+    { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
+    { "name": "example_group", "type": "GROUP", "layers": ["example_layer_wfs"] }
   ]
 }
 </code></pre>
       <pre><code>{
   "styles": {
-    "forskola": [
+    "example_style": [
       [
-        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+        { "icon": { "src": "https://localhost/icons/example.svg", "scale": 0.85 } }
       ]
     ]
   }
@@ -213,7 +213,7 @@
 
       <h3>Mini-övning</h3>
       <ol>
-        <li>Hitta en tjänst-URL (t.ex. <code>wms_lm</code> eller <code>wfs_ext</code>).</li>
+        <li>Hitta en tjänst-URL (t.ex. <code>wms_example</code> eller <code>wfs_example</code>).</li>
         <li>Hitta ett lagernamn som använder <code>source</code>.</li>
         <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
       </ol>

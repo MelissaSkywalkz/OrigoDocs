@@ -63,10 +63,10 @@
     </header>
 
     <section class="doc-content">
-      <h2>Obs om Skarakartan</h2>
+      <h2>Obs om exempel</h2>
       <p>
-        Exempel här är inspirerade av hur Skarakartan är uppbyggd.
-        TODO: ladda ner <code>/examples/skarakartan.json</code> och verifiera nycklar.
+        Exemplen är generiska och använder placeholders. Anpassa alltid URL:er och namn
+        till din egen miljö.
       </p>
 
       <h2>Minimal karta (placeholder)</h2>
@@ -76,24 +76,24 @@
     "language": "sv"
   },
   "projectionCode": "EPSG:3008",
-  "extent": [-1400000, 4700000, 2100000, 8500000]
+  "extent": [100000, 6400000, 200000, 6500000]
 }
 </code></pre>
 
       <h2>WMS-lager (generellt)</h2>
       <pre><code>{
   "source": {
-    "wms_lm": {
-      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
       "version": "1.1.1"
     }
   },
   "layers": [
     {
-      "name": "nvdb_transportnat_vaghallare",
-      "title": "Väghållare",
+      "name": "example_layer_wms",
+      "title": "Exempel WMS-lager",
       "type": "WMS",
-      "source": "wms_lm"
+      "source": "wms_example"
     }
   ]
 }
@@ -103,17 +103,17 @@
       <h2>WFS-lager (generellt)</h2>
       <pre><code>{
   "source": {
-    "wfs_ext": {
-      "url": "https://karta.skara.se:8443/geoserver/ext/ows",
+    "wfs_example": {
+      "url": "https://localhost/geoserver/example_workspace/ows",
       "strategy": "all"
     }
   },
   "layers": [
     {
-      "name": "forskola_p",
-      "title": "Förskola",
+      "name": "example_layer_wfs",
+      "title": "Exempel WFS-lager",
       "type": "WFS",
-      "source": "wfs_ext"
+      "source": "wfs_example"
     }
   ]
 }
@@ -123,19 +123,19 @@
       <h2>WMTS-lager (generellt)</h2>
       <pre><code>{
   "source": {
-    "wmts_lm": {
-      "url": "https://karta.skara.se:8443/geoserver/lm/gwc/service/wmts",
-      "matrixSet": "SWE_3008_GRID",
-      "matrixIdsPrefix": "SWE_3008_GRID:",
+    "wmts_example": {
+      "url": "https://localhost/geoserver/example_workspace/gwc/service/wmts",
+      "matrixSet": "EXAMPLE_3008_GRID",
+      "matrixIdsPrefix": "EXAMPLE_3008_GRID:",
       "tileSize": [512, 512]
     }
   },
   "layers": [
     {
-      "name": "lm_ortofoto",
-      "title": "Flygfoto",
+      "name": "example_layer_wmts",
+      "title": "Exempel WMTS-lager",
       "type": "WMTS",
-      "source": "wmts_lm"
+      "source": "wmts_example"
     }
   ]
 }
@@ -146,11 +146,11 @@
       <pre><code>{
   "layers": [
     {
-      "name": "hembygdsgardar_grp",
-      "title": "Hembygdsgårdar & lokala museer",
+      "name": "example_group",
+      "title": "Exempelgrupp",
       "type": "GROUP",
       "layers": [
-        { "name": "hembygdsgard_p", "type": "WFS", "source": "wfs_ext" }
+        { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" }
       ]
     }
   ]
@@ -161,9 +161,9 @@
       <h2>Styles (kort exempel)</h2>
       <pre><code>{
   "styles": {
-    "forskola": [
+    "example_style": [
       [
-        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+        { "icon": { "src": "https://localhost/icons/example.svg", "scale": 0.85 } }
       ]
     ]
   }
@@ -171,10 +171,10 @@
 </code></pre>
       <p>TODO: verifiera styles-strukturen i Origo.</p>
 
-      <h2>Controls (exempel från Skara)</h2>
+      <h2>Controls (generellt exempel)</h2>
       <pre><code>{
   "controls": [
-    { "name": "sharemap", "options": { "serviceEndpoint": "https://karta.skara.se:3001/mapstate/" } },
+    { "name": "sharemap", "options": { "serviceEndpoint": "https://localhost/mapstate/" } },
     { "name": "print", "options": { "sizeInitial": "a4" } },
     { "name": "legend", "options": { "searchLayersControl": true } },
     { "name": "measure", "options": { "default": "length" } }

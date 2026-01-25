@@ -125,6 +125,79 @@
         <li><strong>GeoPackage/Shapefile:</strong> Filbaserade datakällor (enkla att dela).</li>
         <li><strong>Raster:</strong> Bildbaserade data (t.ex. höjdmodeller, flygbilder).</li>
       </ul>
+      <h3>MySQL (praktiskt)</h3>
+      <ul>
+        <li><strong>När?</strong> När data redan finns i MySQL och uppdateras ofta.</li>
+        <li><strong>Vanliga problem:</strong> prestanda, fel CRS, saknade index.</li>
+        <li><strong>Koppling:</strong> publicera som WMS/WFS via GeoServer.</li>
+      </ul>
+      <h3>GeoPackage</h3>
+      <ul>
+        <li><strong>Fördelar:</strong> enkel distribution, en fil per dataset.</li>
+        <li><strong>Begränsningar:</strong> fil‑låsning och begränsad samtidighet.</li>
+        <li><strong>När bättre än databas:</strong> statiska lager eller mindre projekt.</li>
+      </ul>
+      <h3>Externa WMS</h3>
+      <ul>
+        <li><strong>När?</strong> När du bara behöver kartbilden, inte attribut.</li>
+        <li><strong>Förvänta dig inte:</strong> snabba attributfrågor eller filtrering.</li>
+        <li><strong>Cache‑tänk:</strong> extern WMS kan vara långsam → cache hjälper.</li>
+      </ul>
+
+      <h2>WMS vs WFS – beslutsguide</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Aspekt</th>
+            <th>WMS</th>
+            <th>WFS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prestanda</td>
+            <td>Bra (bilder + cache)</td>
+            <td>Tyngre (features)</td>
+          </tr>
+          <tr>
+            <td>Användning</td>
+            <td>Bakgrund, visuellt</td>
+            <td>Analys, attribut</td>
+          </tr>
+          <tr>
+            <td>Cache</td>
+            <td>Enkelt (GeoWebCache)</td>
+            <td>Svårare</td>
+          </tr>
+          <tr>
+            <td>Klientbelastning</td>
+            <td>Låg</td>
+            <td>Högre</td>
+          </tr>
+          <tr>
+            <td>Origo‑funktioner</td>
+            <td>Visning</td>
+            <td>Klick, filter, cluster</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Tumregel:</strong> Om du är osäker – börja med WMS.</p>
+
+      <h2>Prestanda i GIS‑kartor – hur vi tänker</h2>
+      <p>Flödet: <strong>Data → GeoServer → Cache → Origo</strong>.</p>
+      <ul>
+        <li><strong>Server‑flaskhals:</strong> tunga frågor, stora geometrier, många styles.</li>
+        <li><strong>Cache‑flaskhals:</strong> fel gridset, fel CRS, gamla tiles.</li>
+        <li><strong>Klient‑flaskhals:</strong> för många features samtidigt.</li>
+        <li><strong>Styling:</strong> komplexa symboler = långsammare rendering.</li>
+      </ul>
+
+      <h2>Clustering – när och varför</h2>
+      <ul>
+        <li><strong>Rätt när:</strong> många punktfeatures samtidigt.</li>
+        <li><strong>Fel när:</strong> få features eller när exakta positioner krävs.</li>
+        <li><strong>Tumregel:</strong> över 5 000 punkter → överväg clustering.</li>
+      </ul>
 
       <h2>Hur styling fungerar i GeoServer</h2>
       <p>

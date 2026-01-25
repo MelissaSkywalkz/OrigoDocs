@@ -138,10 +138,10 @@
         <li>Fel projection ger tom karta.</li>
       </ul>
 
-      <h2>Mönster från Skarakartan</h2>
+      <h2>Mönster i verkliga configs (exempel)</h2>
       <p>
-        Skarakartan visar hur en större konfig brukar organiseras. TODO: ladda ner
-        <code>/examples/skarakartan.json</code> och verifiera exakt struktur mot upstream.
+        Större konfiger brukar följa samma grundmönster. Använd generiska exempel
+        när du dokumenterar, och lägg TODO om något måste verifieras.
       </p>
       <ul>
         <li>Top-level sektioner samlar app, karta och lager.</li>
@@ -150,19 +150,19 @@
       </ul>
       <pre><code>{
   "projectionCode": "EPSG:3008",
-  "projectionExtent": [-1400000, 4700000, 2100000, 8500000],
-  "resolutions": [1680, 1120, 560, 280, 126]
+  "projectionExtent": [100000, 6400000, 200000, 6500000],
+  "resolutions": [1600, 800, 400, 200, 100]
 }
 </code></pre>
       <pre><code>{
   "source": {
-    "wmts_lm": {
-      "url": "https://karta.skara.se:8443/geoserver/lm/gwc/service/wmts",
-      "matrixSet": "SWE_3008_GRID",
-      "matrixIdsPrefix": "SWE_3008_GRID:"
+    "wmts_example": {
+      "url": "https://localhost/geoserver/example_workspace/gwc/service/wmts",
+      "matrixSet": "EXAMPLE_3008_GRID",
+      "matrixIdsPrefix": "EXAMPLE_3008_GRID:"
     },
-    "wms_lm": {
-      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
       "version": "1.1.1"
     }
   }
@@ -170,15 +170,15 @@
 </code></pre>
       <pre><code>{
   "groups": [
-    { "name": "grp_bou", "title": "Förskola, skola och utbildning" }
+    { "name": "grp_example", "title": "Exempelgrupp" }
   ]
 }
 </code></pre>
       <pre><code>{
   "styles": {
-    "forskola": [
+    "example_style": [
       [
-        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+        { "icon": { "src": "https://localhost/icons/example.svg", "scale": 0.85 } }
       ]
     ]
   }

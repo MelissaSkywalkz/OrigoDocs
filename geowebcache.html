@@ -84,6 +84,23 @@
         <li><strong>Seed:</strong> förgenerera tiles i förväg.</li>
         <li><strong>Metatiles:</strong> större tile-bitar för effektiv rendering.</li>
       </ul>
+      <ul>
+        <li><strong>Truncate:</strong> rensa cache för ett lager eller område.</li>
+        <li><strong>Bypass:</strong> kringgå cache vid felsökning.</li>
+      </ul>
+
+      <h2>Seed / Truncate / Bypass – skillnaden</h2>
+      <ul>
+        <li><strong>Seed:</strong> bygger nya tiles (snabbare första visning).</li>
+        <li><strong>Truncate:</strong> tar bort gamla tiles (kräver ny rendering).</li>
+        <li><strong>Bypass:</strong> går förbi cache för att se “live” rendering.</li>
+      </ul>
+
+      <h2>CRS & gridsets</h2>
+      <p>
+        Gridset måste matcha kartans CRS. Om gridset/CRS inte stämmer får du fel placering
+        eller tomma tiles. Vår vanligaste CRS är EPSG:3008.
+      </p>
 
       <h2>Praktisk checklista</h2>
       <ol>
@@ -91,10 +108,23 @@
         <li>Seeda bara de zoom-nivåer som faktiskt används.</li>
         <li>Rensa cache när stilen eller datan ändras.</li>
       </ol>
+      <ol>
+        <li>Rensa inte cache i onödan – det är dyrt.</li>
+        <li>Seeda hellre smala områden än hela världen.</li>
+        <li>Testa alltid visuellt i Origo efter ändring.</li>
+      </ol>
 
       <div class="callout callout-warning">
         <h3>Stale tiles</h3>
         <p>Om du ser gamla kartbilder – rensa cache eller ändra tile-URL för cache-busting.</p>
+      </div>
+      <div class="callout callout-warning">
+        <h3>Vanliga misstag</h3>
+        <ul>
+          <li>Rensa cache i live utan plan.</li>
+          <li>Seeda för många zoom‑nivåer samtidigt.</li>
+          <li>Fel gridset för CRS.</li>
+        </ul>
       </div>
 
       <h2>Klientperspektiv (Origo + browser)</h2>
