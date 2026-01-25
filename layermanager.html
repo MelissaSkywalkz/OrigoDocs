@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Origo – recept</title>
+  <title>Layermanager</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
@@ -21,12 +21,12 @@
         <a href="page.html">JSON 101</a>
         <a href="origo.html">Origo – snabbstart</a>
         <a href="origo-advanced.html">Origo – avancerat</a>
-        <a href="layermanager.html">Layermanager</a>
+        <a class="active" href="layermanager.html">Layermanager</a>
         <a href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
         <a href="faq-gis.html">FAQ GIS</a>
-        <a class="active" href="recipes.html">Origo – recept</a>
+        <a href="recipes.html">Origo – recept</a>
         <a href="npm.html">npm & plugins</a>
         <a href="troubleshooting.html">Felsökning</a>
       </div>
@@ -53,86 +53,69 @@
         <img src="sort.png" alt="" />
       </button>
       <div class="topbar-title">
-        <span class="eyebrow">Origo</span>
-        <h1>Recept / lathundar</h1>
+        <span class="eyebrow">Origo plugin</span>
+        <h1>Layermanager</h1>
       </div>
       <div class="topbar-meta">
-        <span class="status-pill">Praktiska exempel</span>
+        <span class="status-pill">TODO: verifiera mot layermanager-repo</span>
       </div>
     </header>
 
     <section class="doc-content">
-      <h2>Lägg till WMS/WMTS/XYZ</h2>
-      <p>Använd följande som placeholders. TODO: verifiera mot Origo-dokumentation.</p>
+      <h2>Vad är Layermanager?</h2>
+      <p>
+        Layermanager är ett Origo-plugin som hjälper användare att hitta och lägga till lager
+        från en katalogtjänst (t.ex. GeoServer eller CSW). TODO: verifiera exakt stöd i repo.
+      </p>
+
+      <h2>Så här lägger du till Layermanager i Origo</h2>
+      <ol>
+        <li>Installera pluginet (npm eller inkluderad bundle).</li>
+        <li>Aktivera pluginet i Origo-konfigurationen.</li>
+        <li>Peka pluginet mot katalog/GeoServer-URL.</li>
+      </ol>
+
+      <h2>Exempel: Layermanager i konfig (pseudo-JSON)</h2>
       <pre><code>{
-  "layers": [
+  "plugins": [
     {
-      "name": "WMS-lager",
-      "type": "TODO: verifiera WMS-typ",
-      "source": {
-        "url": "https://exempel.se/wms",
-        "layers": "TODO: lager-id"
-      }
-    },
-    {
-      "name": "WMTS-lager",
-      "type": "TODO: verifiera WMTS-typ",
-      "source": {
-        "url": "https://exempel.se/wmts",
-        "layer": "TODO: lager-id"
-      }
-    },
-    {
-      "name": "XYZ-lager",
-      "type": "TODO: verifiera XYZ-typ",
-      "source": {
-        "url": "https://tiles.exempel.se/{z}/{x}/{y}.png"
+      "name": "layermanager",
+      "options": {
+        "url": "https://geoserver.example.com/geoserver",
+        "types": ["tema-1", "tema-2"],
+        "onlyAddableLayersBtn": true
       }
     }
   ]
 }
 </code></pre>
+      <p>TODO: verifiera nycklarna <code>url</code>, <code>types</code> och <code>onlyAddableLayersBtn</code> i repo.</p>
 
-      <h2>Vanliga UI-kontroller</h2>
+      <h2>Vad betyder options?</h2>
       <ul>
-        <li>Zoom</li>
-        <li>Skalstock</li>
-        <li>Lagerlista</li>
-        <li>Sök</li>
-        <li>Bakgrundskarta-väljare</li>
-      </ul>
-      <p>TODO: verifiera exakta kontroll-nycklar i Origo.</p>
-
-      <h2>När lagret kommer från GeoServer</h2>
-      <ul>
-        <li>Kontrollera att GeoServer-layern är publicerad.</li>
-        <li>Använd rätt tjänst (WMS för bilder, WFS för objekt).</li>
-        <li>TODO: verifiera exakt format för WMS/WFS-url i Origo-konfiguration.</li>
+        <li><strong>url:</strong> adress till katalog/WMS/CSW som Layermanager läser från.</li>
+        <li><strong>types:</strong> filter för tematyper (t.ex. kategorier).</li>
+        <li><strong>onlyAddableLayersBtn:</strong> visar endast lager som går att lägga till.</li>
       </ul>
 
-      <div class="callout callout-warning">
-        <h3>Vanliga GeoServer-fel som syns i Origo</h3>
-        <ul>
-          <li>Tom karta → fel CRS/projection eller fel layernamn.</li>
-          <li>404 → fel endpoint eller workspace.</li>
-          <li>403/401 → behörigheter saknas i GeoServer.</li>
-        </ul>
-      </div>
-
-      <h2>Felsökning i Origo-konfig</h2>
-      <div class="callout callout-warning">
-        <h3>Typiska fel</h3>
-        <ul>
-          <li>Fel CRS/projection jämfört med datakälla.</li>
-          <li>Blandat http/https ger blockering i browsern.</li>
-          <li>404 från tile-server eller WMS endpoint.</li>
-        </ul>
-      </div>
+      <h2>Checklistor</h2>
       <ol>
-        <li>Öppna devtools och hitta första felet.</li>
-        <li>Bekräfta att URL:er fungerar i browsern.</li>
-        <li>Stäm av projection/extent med datakälla.</li>
+        <li>Testa URL:en i webbläsare (får du svar?).</li>
+        <li>Verifiera att Layermanager-pluginet laddas (ingen 404).</li>
+        <li>Kontrollera att lagren visas i UI.</li>
       </ol>
+
+      <h2>Vanliga fel</h2>
+      <ul>
+        <li>Tom lista → fel URL eller saknade behörigheter.</li>
+        <li>404 på plugin-script → fel build/filnamn.</li>
+        <li>Inga filter-träffar → fel <code>types</code>-värden.</li>
+      </ul>
+
+      <div class="callout callout-warning">
+        <h3>TODO</h3>
+        <p>Lägg in verifierad konfiguration när vi har tittat i layermanager-repo.</p>
+      </div>
     </section>
   </main>
 
