@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoWebCache</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo.html">Origo – snabbstart</a>
+          <a href="origo-advanced.html">Origo – avancerat</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a class="active" href="geowebcache.html">GeoWebCache</a>
+          <a href="git-vscode.html">Git & VS Code</a>
+          <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="recipes.html">Origo – recept</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://docs.geoserver.org/main/en/user/geowebcache/index.html">GeoWebCache Docs (extern)</a>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+          <a href="https://github.com/origo-map">Origo på GitHub</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">GeoServer</span>
+        <h1>GeoWebCache</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Cache & prestanda</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Tile cache 101</h2>
+      <p>
+        GeoWebCache är tile-cachen som sitter nära GeoServer. Den lagrar kartbilder som små tiles
+        så att klienten (Origo) får snabba svar vid pan/zoom.
+      </p>
+
+      <h2>Hur GeoWebCache hänger ihop med GeoServer</h2>
+      <ul>
+        <li>GeoServer renderar kartan.</li>
+        <li>GeoWebCache sparar resultatet som tiles.</li>
+        <li>Klienten hämtar tiles i stället för att rendera om varje gång.</li>
+      </ul>
+      <p>TODO: verifiera konfigurationen i vår GeoServer-installation.</p>
+
+      <h2>Begrepp (enkelt)</h2>
+      <ul>
+        <li><strong>Gridset / tiling scheme:</strong> hur tiles delas upp (t.ex. 256x256).</li>
+        <li><strong>Seed:</strong> förgenerera tiles i förväg.</li>
+        <li><strong>Metatiles:</strong> större tile-bitar för effektiv rendering.</li>
+      </ul>
+      <ul>
+        <li><strong>Truncate:</strong> rensa cache för ett lager eller område.</li>
+        <li><strong>Bypass:</strong> kringgå cache vid felsökning.</li>
+      </ul>
+
+      <h2>Seed / Truncate / Bypass – skillnaden</h2>
+      <ul>
+        <li><strong>Seed:</strong> bygger nya tiles (snabbare första visning).</li>
+        <li><strong>Truncate:</strong> tar bort gamla tiles (kräver ny rendering).</li>
+        <li><strong>Bypass:</strong> går förbi cache för att se “live” rendering.</li>
+      </ul>
+
+      <h2>CRS & gridsets</h2>
+      <p>
+        Gridset måste matcha kartans CRS. Om gridset/CRS inte stämmer får du fel placering
+        eller tomma tiles. Vår vanligaste CRS är EPSG:3008.
+      </p>
+
+      <h2>Praktisk checklista</h2>
+      <ol>
+        <li>Använd cache för publika bakgrundskartor och statiska lager.</li>
+        <li>Seeda bara de zoom-nivåer som faktiskt används.</li>
+        <li>Rensa cache när stilen eller datan ändras.</li>
+      </ol>
+      <ol>
+        <li>Rensa inte cache i onödan – det är dyrt.</li>
+        <li>Seeda hellre smala områden än hela världen.</li>
+        <li>Testa alltid visuellt i Origo efter ändring.</li>
+      </ol>
+
+      <div class="callout callout-warning">
+        <h3>Stale tiles</h3>
+        <p>Om du ser gamla kartbilder – rensa cache eller ändra tile-URL för cache-busting.</p>
+      </div>
+      <div class="callout callout-warning">
+        <h3>Vanliga misstag</h3>
+        <ul>
+          <li>Rensa cache i live utan plan.</li>
+          <li>Seeda för många zoom‑nivåer samtidigt.</li>
+          <li>Fel gridset för CRS.</li>
+        </ul>
+      </div>
+
+      <h2>Klientperspektiv (Origo + browser)</h2>
+      <ul>
+        <li>Kontrollera Network-fliken: ser du tiles (.png/.jpeg)?</li>
+        <li>Granska cache headers (t.ex. <code>Cache-Control</code>).</li>
+        <li>Hård reload (Ctrl/Cmd + Shift + R) för att kringgå lokal cache.</li>
+      </ul>
+
+      <pre><code># exempel: cache-busting
+https://geoserver.example.com/geoserver/gwc/service/wms?layer=workspace:layer&v=2026-01-25
+</code></pre>
+
+      <p>TODO: verifiera exakta endpoints och cache-parametrar i vår miljö.</p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

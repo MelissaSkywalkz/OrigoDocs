@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Origo – avancerat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+        <a href="index.html">Start</a>
+        <a href="page.html">JSON 101</a>
+        <a href="origo.html">Origo – snabbstart</a>
+        <a class="active" href="origo-advanced.html">Origo – avancerat</a>
+        <a href="layermanager.html">Layermanager</a>
+        <a href="geoserver.html">GeoServer 101</a>
+        <a href="geoserver-styles.html">GeoServer – styles</a>
+        <a href="geowebcache.html">GeoWebCache</a>
+        <a href="git-vscode.html">Git & VS Code</a>
+        <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+        <a href="faq-gis.html">FAQ GIS</a>
+        <a href="recipes.html">Origo – recept</a>
+        <a href="npm.html">npm & plugins</a>
+        <a href="troubleshooting.html">Felsökning</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+        <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+        <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+        <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        <a href="https://github.com/origo-map">Origo på GitHub</a>
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Origo</span>
+        <h1>Avancerad konfiguration</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">TODO: verifiera mot Origo-repo</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Hur Origo initieras från JSON</h2>
+      <p>
+        Origo läser en JSON-konfiguration som beskriver app, karta, lager och plugins.
+        TODO: verifiera exakt init-flöde och konfig-nycklar i Origo-repo.
+      </p>
+
+      <h2>Vanliga sektioner (översikt)</h2>
+      <ul>
+        <li><strong>app</strong> – titel, språk, UI-inställningar.</li>
+        <li><strong>map</strong> – extent, projection, bakgrund.</li>
+        <li><strong>layers</strong> – datalager (WMS/WFS/vektor).</li>
+        <li><strong>plugins</strong> – t.ex. Layermanager.</li>
+      </ul>
+      <p>TODO: verifiera exakta namn/struktur i Origo-dokumentation.</p>
+
+      <h2>Exempel: init-konfig (pseudo-JSON med kommentarer)</h2>
+      <pre><code>{
+  // TODO: verifiera konfigstruktur i Origo
+  "app": {
+    "title": "Min Origo-app",
+    "language": "sv"
+  },
+  "map": {
+    "projection": "TODO: verifiera",
+    "extent": "TODO: verifiera"
+  },
+  "layers": [
+    {
+      "name": "Bakgrund",
+      "type": "TODO: verifiera WMS/WMTS",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wms",
+        "layers": "workspace:baslager"
+      }
+    }
+  ],
+  "plugins": [
+    "layermanager"
+  ]
+}
+</code></pre>
+
+      <div class="callout callout-warning">
+        <h3>Obs!</h3>
+        <p>JSON tillåter inte kommentarer. Ta bort <code>//</code>-rader innan produktion.</p>
+      </div>
+
+      <h2>Layer-konfigurationer (typiskt)</h2>
+      <ul>
+        <li><strong>WMS:</strong> när du vill ha kartbilder från GeoServer.</li>
+        <li><strong>WFS:</strong> när du behöver features och attribut i klienten.</li>
+        <li><strong>Vector tiles:</strong> TODO: verifiera stöd i Origo.</li>
+      </ul>
+      <div class="callout callout-info">
+        <h3>CRS‑notis (vår standard)</h3>
+        <p>
+          Vi jobbar oftast i <strong>SWEREF 99 13 30 (EPSG:3008)</strong>. CRS påverkar extent/bbox,
+          WMTS gridsets och reprojection. Fel CRS → tom karta eller fel läge.
+        </p>
+      </div>
+
+      <h2>Checklista</h2>
+      <ol>
+        <li>Finns alla nödvändiga nycklar i konfigen?</li>
+        <li>Matchar CRS mellan Origo och GeoServer?</li>
+        <li>Är plugins korrekt aktiverade?</li>
+      </ol>
+
+      <h2>Vanliga fel</h2>
+      <ul>
+        <li>Fel nyckelnamn → Origo ignorerar inställningen.</li>
+        <li>Felaktig WMS/WFS-endpoint.</li>
+        <li>Fel projection ger tom karta.</li>
+      </ul>
+
+      <h2>Mönster i verkliga configs (exempel)</h2>
+      <p>
+        Större konfiger brukar följa samma grundmönster. Använd generiska exempel
+        när du dokumenterar, och lägg TODO om något måste verifieras.
+      </p>
+      <ul>
+        <li>Top-level sektioner samlar app, karta och lager.</li>
+        <li>Lager är ofta grupperade efter tema eller källa.</li>
+        <li>UI/controls ligger samlade nära app-inställningar.</li>
+      </ul>
+      <pre><code>{
+  "projectionCode": "EPSG:3008",
+  "projectionExtent": [100000, 6400000, 200000, 6500000],
+  "resolutions": [1600, 800, 400, 200, 100]
+}
+</code></pre>
+      <pre><code>{
+  "source": {
+    "wmts_example": {
+      "url": "https://localhost/geoserver/example_workspace/gwc/service/wmts",
+      "matrixSet": "EXAMPLE_3008_GRID",
+      "matrixIdsPrefix": "EXAMPLE_3008_GRID:"
+    },
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
+      "version": "1.1.1"
+    }
+  }
+}
+</code></pre>
+      <pre><code>{
+  "groups": [
+    { "name": "grp_example", "title": "Exempelgrupp" }
+  ]
+}
+</code></pre>
+      <pre><code>{
+  "styles": {
+    "example_style": [
+      [
+        { "icon": { "src": "https://localhost/icons/example.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
+      <h3>Felsökning när lager inte syns</h3>
+      <ol>
+        <li>Kontrollera att layernamn matchar GeoServer.</li>
+        <li>Testa WMS/WFS-URL direkt i webbläsaren.</li>
+        <li>Stäm av CRS/projection mellan server och karta.</li>
+      </ol>
+
+      <p>TODO: verifiera Origo-konfigens exakta fält och defaults i repo.</p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
