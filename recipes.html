@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Origo – recept</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+        <a href="index.html">Start</a>
+        <a href="page.html">JSON 101</a>
+        <a href="origo.html">Origo – snabbstart</a>
+        <a class="active" href="recipes.html">Origo – recept</a>
+        <a href="npm.html">npm & plugins</a>
+        <a href="troubleshooting.html">Felsökning</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+        <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        <a href="https://github.com/origo-map">Origo på GitHub</a>
+      </div>
+    </div>
+    <div class="sidebar-footer" id="sidebar-footer">
+      <p>>_ Intern lathund 2026</p>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Origo</span>
+        <h1>Recept / lathundar</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Praktiska exempel</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Lägg till WMS/WMTS/XYZ</h2>
+      <p>Använd följande som placeholders. TODO: verifiera mot Origo-dokumentation.</p>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "WMS-lager",
+      "type": "TODO: verifiera WMS-typ",
+      "source": {
+        "url": "https://exempel.se/wms",
+        "layers": "TODO: lager-id"
+      }
+    },
+    {
+      "name": "WMTS-lager",
+      "type": "TODO: verifiera WMTS-typ",
+      "source": {
+        "url": "https://exempel.se/wmts",
+        "layer": "TODO: lager-id"
+      }
+    },
+    {
+      "name": "XYZ-lager",
+      "type": "TODO: verifiera XYZ-typ",
+      "source": {
+        "url": "https://tiles.exempel.se/{z}/{x}/{y}.png"
+      }
+    }
+  ]
+}
+</code></pre>
+
+      <h2>Vanliga UI-kontroller</h2>
+      <ul>
+        <li>Zoom</li>
+        <li>Skalstock</li>
+        <li>Lagerlista</li>
+        <li>Sök</li>
+        <li>Bakgrundskarta-väljare</li>
+      </ul>
+      <p>TODO: verifiera exakta kontroll-nycklar i Origo.</p>
+
+      <h2>Felsökning i Origo-konfig</h2>
+      <div class="callout callout-warning">
+        <h3>Typiska fel</h3>
+        <ul>
+          <li>Fel CRS/projection jämfört med datakälla.</li>
+          <li>Blandat http/https ger blockering i browsern.</li>
+          <li>404 från tile-server eller WMS endpoint.</li>
+        </ul>
+      </div>
+      <ol>
+        <li>Öppna devtools och hitta första felet.</li>
+        <li>Bekräfta att URL:er fungerar i browsern.</li>
+        <li>Stäm av projection/extent med datakälla.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
