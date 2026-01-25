@@ -12,6 +12,7 @@
     <div class="sidebar-header">
       <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
     </div>
+    <div class="nav-content">
     <div class="nav-section">
       <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
         Dokumentation
@@ -24,6 +25,7 @@
         <a href="layermanager.html">Layermanager</a>
         <a href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
+        <a href="geowebcache.html">GeoWebCache</a>
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
         <a href="faq-gis.html">FAQ GIS</a>
         <a href="recipes.html">Origo – recept</a>
@@ -41,6 +43,7 @@
         <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
         <a href="https://github.com/origo-map">Origo på GitHub</a>
       </div>
+    </div>
     </div>
     <div class="sidebar-footer" id="sidebar-footer">
       <p>>_ Intern lathund 2026</p>
@@ -137,6 +140,32 @@
         <li>Ta bort halva filen och testa igen (binary search).</li>
         <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
       </ul>
+
+      <h2>Så läser du en riktig config (Skarakartan)</h2>
+      <p>
+        Vi använder Skarakartan som referens för hur en större Origo-konfig kan se ut.
+        TODO: ladda ner filen och lägg i repo under <code>/examples/skarakartan.json</code>.
+      </p>
+      <ol>
+        <li>Börja i toppen – hitta övergripande sektioner (app, map, layers).</li>
+        <li>Sök efter URL:er (<code>https://</code>) för att hitta tjänster (WMS/WFS).</li>
+        <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
+      </ol>
+
+      <h3>Arbeta baklänges</h3>
+      <p>Utgå från problemet i kartan och hitta relevant del i configen.</p>
+      <ul>
+        <li>Ingen karta → leta efter baslager och projection.</li>
+        <li>Fel lager → leta upp layernamn och service-URL.</li>
+        <li>UI saknas → leta efter controls/plugins.</li>
+      </ul>
+
+      <h3>Mini-övning</h3>
+      <ol>
+        <li>Hitta en WMS/WFS-URL i configen.</li>
+        <li>Hitta ett lagernamn som verkar vara viktigt.</li>
+        <li>Hitta ett config-avsnitt som styr UI.</li>
+      </ol>
     </section>
   </main>
 

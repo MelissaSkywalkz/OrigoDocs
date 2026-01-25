@@ -12,6 +12,7 @@
     <div class="sidebar-header">
       <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
     </div>
+    <div class="nav-content">
     <div class="nav-section">
       <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
         Dokumentation
@@ -24,6 +25,7 @@
         <a href="layermanager.html">Layermanager</a>
         <a href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
+        <a href="geowebcache.html">GeoWebCache</a>
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
         <a href="faq-gis.html">FAQ GIS</a>
         <a href="recipes.html">Origo – recept</a>
@@ -41,6 +43,7 @@
         <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
         <a href="https://github.com/origo-map">Origo på GitHub</a>
       </div>
+    </div>
     </div>
     <div class="sidebar-footer" id="sidebar-footer">
       <p>>_ Intern lathund 2026</p>
@@ -129,6 +132,23 @@
         <li>Felaktig WMS/WFS-endpoint.</li>
         <li>Fel projection ger tom karta.</li>
       </ul>
+
+      <h2>Mönster från Skarakartan</h2>
+      <p>
+        Skarakartan visar hur en större konfig brukar organiseras. TODO: ladda ner
+        <code>/examples/skarakartan.json</code> och verifiera exakt struktur mot upstream.
+      </p>
+      <ul>
+        <li>Top-level sektioner samlar app, karta och lager.</li>
+        <li>Lager är ofta grupperade efter tema eller källa.</li>
+        <li>UI/controls ligger samlade nära app-inställningar.</li>
+      </ul>
+      <h3>Felsökning när lager inte syns</h3>
+      <ol>
+        <li>Kontrollera att layernamn matchar GeoServer.</li>
+        <li>Testa WMS/WFS-URL direkt i webbläsaren.</li>
+        <li>Stäm av CRS/projection mellan server och karta.</li>
+      </ol>
 
       <p>TODO: verifiera Origo-konfigens exakta fält och defaults i repo.</p>
     </section>
