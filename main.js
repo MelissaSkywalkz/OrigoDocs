@@ -1,43 +1,60 @@
-var acc = document.getElementsByClassName("accordion");
- var i;
+const initNavigation = () => {
+  const body = document.body;
+  const toggleButtons = document.querySelectorAll('[data-nav-toggle]');
+  const mediaQuery = window.matchMedia('(max-width: 960px)');
 
- for (i = 0; i < acc.length; i++) {
-   acc[i].addEventListener("click", function() {
-     this.classList.toggle("active");
-     var panel = this.nextElementSibling;
-     if (panel.style.maxHeight) {
-       panel.style.maxHeight = null;
-     } else {
-       panel.style.maxHeight = panel.scrollHeight + "px";
-     }
-   });
- }
+  const setCollapsed = (collapsed) => {
+    body.classList.toggle('nav-collapsed', collapsed);
+    toggleButtons.forEach((button) => {
+      button.setAttribute('aria-expanded', (!collapsed).toString());
+    });
+  };
 
- var o =document.getElementById("one");
- var to =document.getElementById("two");
- var fo =document.getElementById("copyright");
- to.style.display = 'none';
+  const handleToggle = () => {
+    setCollapsed(!body.classList.contains('nav-collapsed'));
+  };
 
- function closeNav() {
-     document.getElementById("mySidenav").style.width = "0px";
-     document.getElementById("main").style.marginLeft= "0px";
-     o.style.display = '';
-     to.style.display = 'none';
-     fo.style.display = 'none';
-     $("#one").hide();
-     $("#two").show();
- }
+  toggleButtons.forEach((button) => {
+    button.addEventListener('click', handleToggle);
+  });
 
- function openNav() {
-     document.getElementById("mySidenav").style.width = "14rem";
-     document.getElementById("main").style.marginLeft = "14rem";
-     o.style.display = 'none';
-     to.style.display = '';
-     fo.style.display = '';
-     $("#two").hide();
-     $("#one").show();
- }
+  const handleMediaChange = () => {
+    if (mediaQuery.matches) {
+      setCollapsed(true);
+    }
+  };
 
- if (window.matchMedia('(max-width: 694px)').matches) {
-   closeNav();
- }
+  handleMediaChange();
+  mediaQuery.addEventListener('change', handleMediaChange);
+};
+
+const initAccordions = () => {
+  const accordions = document.querySelectorAll('.accordion-button');
+
+  accordions.forEach((button) => {
+    const panelId = button.getAttribute('aria-controls');
+    const panel = panelId ? document.getElementById(panelId) : null;
+
+    if (!panel) {
+      return;
+    }
+
+    const syncPanelState = (expanded) => {
+      button.setAttribute('aria-expanded', expanded.toString());
+      panel.hidden = !expanded;
+      panel.style.maxHeight = expanded ? `${panel.scrollHeight}px` : '0px';
+    };
+
+    syncPanelState(button.getAttribute('aria-expanded') === 'true');
+
+    button.addEventListener('click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      syncPanelState(!expanded);
+    });
+  });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initNavigation();
+  initAccordions();
+});
