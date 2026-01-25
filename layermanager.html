@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layermanager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+        <a href="index.html">Start</a>
+        <a href="page.html">JSON 101</a>
+        <a href="origo.html">Origo – snabbstart</a>
+        <a href="origo-advanced.html">Origo – avancerat</a>
+        <a class="active" href="layermanager.html">Layermanager</a>
+        <a href="geoserver.html">GeoServer 101</a>
+        <a href="geoserver-styles.html">GeoServer – styles</a>
+        <a href="geowebcache.html">GeoWebCache</a>
+        <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+        <a href="faq-gis.html">FAQ GIS</a>
+        <a href="recipes.html">Origo – recept</a>
+        <a href="npm.html">npm & plugins</a>
+        <a href="troubleshooting.html">Felsökning</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+        <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+        <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+        <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        <a href="https://github.com/origo-map">Origo på GitHub</a>
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Origo plugin</span>
+        <h1>Layermanager</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">TODO: verifiera mot layermanager-repo</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Vad är Layermanager?</h2>
+      <p>
+        Layermanager är ett Origo-plugin som hjälper användare att hitta och lägga till lager
+        från en katalogtjänst (t.ex. GeoServer eller CSW). TODO: verifiera exakt stöd i repo.
+      </p>
+
+      <h2>Så här lägger du till Layermanager i Origo</h2>
+      <ol>
+        <li>Installera pluginet (npm eller inkluderad bundle).</li>
+        <li>Aktivera pluginet i Origo-konfigurationen.</li>
+        <li>Peka pluginet mot katalog/GeoServer-URL.</li>
+      </ol>
+
+      <h2>Exempel: Layermanager i konfig (pseudo-JSON)</h2>
+      <pre><code>{
+  "plugins": [
+    {
+      "name": "layermanager",
+      "options": {
+        "url": "https://geoserver.example.com/geoserver",
+        "types": ["tema-1", "tema-2"],
+        "onlyAddableLayersBtn": true
+      }
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera nycklarna <code>url</code>, <code>types</code> och <code>onlyAddableLayersBtn</code> i repo.</p>
+
+      <h2>Vad betyder options?</h2>
+      <ul>
+        <li><strong>url:</strong> adress till katalog/WMS/CSW som Layermanager läser från.</li>
+        <li><strong>types:</strong> filter för tematyper (t.ex. kategorier).</li>
+        <li><strong>onlyAddableLayersBtn:</strong> visar endast lager som går att lägga till.</li>
+      </ul>
+
+      <h2>Checklistor</h2>
+      <ol>
+        <li>Testa URL:en i webbläsare (får du svar?).</li>
+        <li>Verifiera att Layermanager-pluginet laddas (ingen 404).</li>
+        <li>Kontrollera att lagren visas i UI.</li>
+      </ol>
+
+      <h2>Vanliga fel</h2>
+      <ul>
+        <li>Tom lista → fel URL eller saknade behörigheter.</li>
+        <li>404 på plugin-script → fel build/filnamn.</li>
+        <li>Inga filter-träffar → fel <code>types</code>-värden.</li>
+      </ul>
+
+      <div class="callout callout-warning">
+        <h3>TODO</h3>
+        <p>Lägg in verifierad konfiguration när vi har tittat i layermanager-repo.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

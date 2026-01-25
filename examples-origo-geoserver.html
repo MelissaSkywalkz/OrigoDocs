@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exempel: Origo + GeoServer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo.html">Origo – snabbstart</a>
+          <a href="origo-advanced.html">Origo – avancerat</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a class="active" href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="recipes.html">Origo – recept</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+          <a href="https://github.com/origo-map">Origo på GitHub</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Exempel</span>
+        <h1>Origo + GeoServer</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Copy/paste</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Obs om Skarakartan</h2>
+      <p>
+        Exempel här är inspirerade av hur Skarakartan är uppbyggd.
+        TODO: ladda ner <code>/examples/skarakartan.json</code> och verifiera nycklar.
+      </p>
+
+      <h2>Minimal karta (placeholder)</h2>
+      <pre><code>{
+  "app": {
+    "title": "Minimal Origo",
+    "language": "sv"
+  },
+  "projectionCode": "EPSG:3008",
+  "extent": [-1400000, 4700000, 2100000, 8500000]
+}
+</code></pre>
+
+      <h2>WMS-lager (generellt)</h2>
+      <pre><code>{
+  "source": {
+    "wms_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+      "version": "1.1.1"
+    }
+  },
+  "layers": [
+    {
+      "name": "nvdb_transportnat_vaghallare",
+      "title": "Väghållare",
+      "type": "WMS",
+      "source": "wms_lm"
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera Origo-nycklar för WMS-lager.</p>
+
+      <h2>WFS-lager (generellt)</h2>
+      <pre><code>{
+  "source": {
+    "wfs_ext": {
+      "url": "https://karta.skara.se:8443/geoserver/ext/ows",
+      "strategy": "all"
+    }
+  },
+  "layers": [
+    {
+      "name": "forskola_p",
+      "title": "Förskola",
+      "type": "WFS",
+      "source": "wfs_ext"
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera Origo-nycklar för WFS-lager.</p>
+
+      <h2>WMTS-lager (generellt)</h2>
+      <pre><code>{
+  "source": {
+    "wmts_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/gwc/service/wmts",
+      "matrixSet": "SWE_3008_GRID",
+      "matrixIdsPrefix": "SWE_3008_GRID:",
+      "tileSize": [512, 512]
+    }
+  },
+  "layers": [
+    {
+      "name": "lm_ortofoto",
+      "title": "Flygfoto",
+      "type": "WMTS",
+      "source": "wmts_lm"
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera Origo-nycklar för WMTS-lager.</p>
+
+      <h2>GROUP (exempel)</h2>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "hembygdsgardar_grp",
+      "title": "Hembygdsgårdar & lokala museer",
+      "type": "GROUP",
+      "layers": [
+        { "name": "hembygdsgard_p", "type": "WFS", "source": "wfs_ext" }
+      ]
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera GROUP-struktur i Origo.</p>
+
+      <h2>Styles (kort exempel)</h2>
+      <pre><code>{
+  "styles": {
+    "forskola": [
+      [
+        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
+      <p>TODO: verifiera styles-strukturen i Origo.</p>
+
+      <h2>Controls (exempel från Skara)</h2>
+      <pre><code>{
+  "controls": [
+    { "name": "sharemap", "options": { "serviceEndpoint": "https://karta.skara.se:3001/mapstate/" } },
+    { "name": "print", "options": { "sizeInitial": "a4" } },
+    { "name": "legend", "options": { "searchLayersControl": true } },
+    { "name": "measure", "options": { "default": "length" } }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera kontroll-nycklar mot Origo-repo.</p>
+
+      <h2>Checklistor</h2>
+      <ol>
+        <li>Verifiera WMS/WFS/WMTS-url:er i webbläsaren.</li>
+        <li>Stäm av layernamn (workspace:layer).</li>
+        <li>Kontrollera projection/extent i kartan.</li>
+      </ol>
+
+      <h2>Vanliga fel</h2>
+      <ul>
+        <li>Tom karta → fel CRS eller fel layernamn.</li>
+        <li>403/401 → behörighet saknas i GeoServer.</li>
+        <li>Fel tiles → cache (GeoWebCache) behöver rensas.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

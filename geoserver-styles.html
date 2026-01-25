@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoServer – styles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo.html">Origo – snabbstart</a>
+          <a href="origo-advanced.html">Origo – avancerat</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a class="active" href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="recipes.html">Origo – recept</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://docs.geoserver.org/main/en/user/styling/index.html">GeoServer Styling Docs (extern)</a>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+          <a href="https://github.com/origo-map">Origo på GitHub</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">GeoServer</span>
+        <h1>Styles: SLD, CSS, MBStyle</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">TODO: verifiera format-stöd</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Översikt</h2>
+      <p>
+        GeoServer använder <strong>styles</strong> för att beskriva hur ett lager ska ritas.
+        En style är en egen resurs som kan kopplas som <em>default</em> eller som alternativ.
+        TODO: verifiera exakta steg i vår GeoServer-version.
+      </p>
+      <ul>
+        <li><strong>Default style:</strong> används automatiskt om inget annat väljs.</li>
+        <li><strong>Alternativa styles:</strong> kan väljas per lager eller i WMS-anrop.</li>
+        <li><strong>Layer ↔ style:</strong> kopplas i GeoServer, inte i klienten.</li>
+      </ul>
+
+      <h2>Välj rätt format</h2>
+      <ul>
+        <li><strong>SLD:</strong> mest standardiserat och detaljerat.</li>
+        <li><strong>CSS Extension:</strong> snabbare att skriva, kräver extension.</li>
+        <li><strong>MBStyle:</strong> passar vektor-tiles och moderna kartstilar.</li>
+      </ul>
+
+      <h2>SLD (Styled Layer Descriptor)</h2>
+      <p>XML-baserat standardformat. Bra när du behöver full kontroll.</p>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <!-- Minimal hello world, TODO: verifiera full struktur -->
+</StyledLayerDescriptor>
+</code></pre>
+      <h3>Typiska fallgropar</h3>
+      <ul>
+        <li>Fel version på SLD.</li>
+        <li>Saknad namespace/element.</li>
+        <li>Felaktig symbolizer för datatyp.</li>
+      </ul>
+
+      <h2>CSS Extension</h2>
+      <p>CSS-liknande syntax. Enklare för snabba prototyper.</p>
+      <pre><code>/* Hello world-style */
+* {
+  polygon-fill: #FF0000;
+}
+</code></pre>
+      <ul>
+        <li>Kontrollera att extension är installerad.</li>
+        <li>Versioner måste matcha GeoServer.</li>
+      </ul>
+
+      <h2>MBStyle (Mapbox Style)</h2>
+      <p>JSON-format som ofta används för vektor-tiles.</p>
+      <pre><code>{
+  "version": 8,
+  "sources": {},
+  "layers": []
+}
+</code></pre>
+      <p>TODO: verifiera stöd för MBStyle i vår GeoServer-version.</p>
+
+      <h2>Checklistor</h2>
+      <ol>
+        <li>Verifiera att rätt extension är installerad.</li>
+        <li>Koppla stilen till rätt layer i GeoServer.</li>
+        <li>Testa i WMS Preview innan du öppnar i Origo.</li>
+      </ol>
+
+      <div class="callout callout-warning">
+        <h3>Varför ser jag inte min nya style?</h3>
+        <p>
+          GeoWebCache kan servera gamla tiles. Rensa cache eller ändra tile-URL för cache-busting.
+          TODO: verifiera cache-rutiner i vår miljö.
+        </p>
+      </div>
+
+      <div class="callout callout-warning">
+        <h3>Skala/zoom/DPI-missförstånd</h3>
+        <p>
+          Styles kan vara skala- eller zoom-beroende. Om inget syns, kontrollera skalintervall
+          och DPI-inställningar. TODO: verifiera standardvärden.
+        </p>
+      </div>
+
+      <h2>Hur detta påverkar kartklienten (Origo)</h2>
+      <p>
+        Origo visar resultatet av GeoServers rendering. Om du byter style i GeoServer syns det
+        i WMS-bilder och tiles utan att Origo-konfigurationen behöver ändras.
+      </p>
+      <pre><code># exempel på WMS-anrop med style (placeholder)
+https://geoserver.example.com/geoserver/wms?service=WMS&request=GetMap&layers=workspace:layer&styles=min_stil
+</code></pre>
+      <p>TODO: verifiera hur style-parametern anges i Origo-konfiguration.</p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
