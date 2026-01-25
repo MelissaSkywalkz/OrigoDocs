@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoServer 101</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+        <a href="index.html">Start</a>
+        <a href="page.html">JSON 101</a>
+        <a href="origo.html">Origo – snabbstart</a>
+        <a class="active" href="geoserver.html">GeoServer 101</a>
+        <a href="recipes.html">Origo – recept</a>
+        <a href="npm.html">npm & plugins</a>
+        <a href="troubleshooting.html">Felsökning</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+        <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+        <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        <a href="https://github.com/origo-map">Origo på GitHub</a>
+      </div>
+    </div>
+    <div class="sidebar-footer" id="sidebar-footer">
+      <p>>_ Intern lathund 2026</p>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">GeoServer</span>
+        <h1>GeoServer 101</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">GIS-grunder</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Vad är GeoServer?</h2>
+      <p>
+        GeoServer är en server som publicerar geografisk data via standardiserade tjänster.
+        Den <strong>visar inte kartan</strong> – den <strong>serverar data</strong> som andra klienter (t.ex. Origo)
+        kan rita upp.
+      </p>
+      <ul>
+        <li><strong>GeoServer</strong> = data/tjänster</li>
+        <li><strong>Origo</strong> = kartklient som använder tjänsterna</li>
+        <li><strong>WMS/WFS</strong> = bryggan mellan server och klient</li>
+      </ul>
+
+      <h2>Så tänker GeoServer (mental modell)</h2>
+      <ol>
+        <li><strong>Datakälla</strong> – t.ex. PostGIS, GeoPackage, Shapefile, raster.</li>
+        <li><strong>Store</strong> – kopplingen till datakällan.</li>
+        <li><strong>Layer</strong> – det publicerade lagret som klienter kan använda.</li>
+        <li><strong>Tjänst</strong> – WMS/WFS/WMTS som levererar data.</li>
+      </ol>
+      <p>TODO: verifiera mot GeoServer-dokumentation om vi behöver nämna andra koncept här.</p>
+
+      <h2>Vanliga GIS-standarder</h2>
+      <div class="two-column">
+        <div>
+          <h3>WMS</h3>
+          <p>Bilder/kartbilder. Bra för bakgrundskartor eller när styling ska ske på servern.</p>
+        </div>
+        <div>
+          <h3>WFS</h3>
+          <p>Objekt/features. Bra när klienten behöver access till geometrier och attribut.</p>
+        </div>
+      </div>
+
+      <h2>Mini-checklista: första lagret</h2>
+      <ol>
+        <li>Datakällan är åtkomlig (rätt URL/anslutning).</li>
+        <li>Layern är publicerad i GeoServer.</li>
+        <li>Klienten använder rätt endpoint (WMS/WFS).</li>
+        <li>CRS/projection matchar mellan data och klient.</li>
+      </ol>
+
+      <h2>GIS-grunder (snabbt)</h2>
+      <ul>
+        <li><strong>CRS/projection:</strong> Hur jorden “plattas ut” till karta.</li>
+        <li><strong>Fel position:</strong> Om CRS inte matchar hamnar lagret fel.</li>
+        <li><strong>Extent/bbox:</strong> Kartans “utbredning” – vad som syns.</li>
+        <li><strong>Cache:</strong> Gamla tiles kan ligga kvar, testa hård reload.</li>
+      </ul>
+
+      <h2>Databaser & datakällor (översikt)</h2>
+      <ul>
+        <li><strong>PostGIS:</strong> Databas för geodata (robust, ofta i produktion).</li>
+        <li><strong>GeoPackage/Shapefile:</strong> Filbaserade datakällor (enkla att dela).</li>
+        <li><strong>Raster:</strong> Bildbaserade data (t.ex. höjdmodeller, flygbilder).</li>
+      </ul>
+
+      <h2>Hur styling fungerar i GeoServer</h2>
+      <p>
+        GeoServer använder <strong>SLD</strong> (Styled Layer Descriptor) för att beskriva styling.
+        Det finns även en CSS-extension för enklare syntax, men den kan vara versions- eller
+        plugin-beroende. TODO: verifiera vilka styling-plugins vi använder.
+      </p>
+
+      <div class="callout callout-warning">
+        <h3>Versioner & plugins</h3>
+        <p>Styling-funktioner kan skilja sig mellan versioner. Kontrollera alltid GeoServer-version.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
