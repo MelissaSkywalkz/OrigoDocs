@@ -26,6 +26,7 @@
         <a class="active" href="geoserver.html">GeoServer 101</a>
         <a href="geoserver-styles.html">GeoServer – styles</a>
         <a href="geowebcache.html">GeoWebCache</a>
+        <a href="git-vscode.html">Git & VS Code</a>
         <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
         <a href="faq-gis.html">FAQ GIS</a>
         <a href="recipes.html">Origo – recept</a>
@@ -110,6 +111,13 @@
         <li><strong>Extent/bbox:</strong> Kartans “utbredning” – vad som syns.</li>
         <li><strong>Cache:</strong> Gamla tiles kan ligga kvar, testa hård reload.</li>
       </ul>
+      <div class="callout callout-info">
+        <h3>CRS‑notis (vår verklighet)</h3>
+        <p>
+          Vi jobbar oftast i <strong>SWEREF 99 13 30 (EPSG:3008)</strong>. CRS påverkar extent/bbox,
+          WMTS gridsets och reprojection. Om CRS inte matchar får du ofta tom karta eller fel läge.
+        </p>
+      </div>
 
       <h2>Databaser & datakällor (översikt)</h2>
       <ul>
@@ -129,6 +137,32 @@
         <h3>Versioner & plugins</h3>
         <p>Styling-funktioner kan skilja sig mellan versioner. Kontrollera alltid GeoServer-version.</p>
       </div>
+
+      <h2>GeoServer – uppdatering & underhåll (DO / DON’T)</h2>
+      <h3>DO – innan uppdatering</h3>
+      <ul>
+        <li>Ta backup på <strong>data directory</strong>.</li>
+        <li>Säkerställ att data directory ligger externt.</li>
+        <li>Notera alla installerade extensions (SLD/CSS/MBStyle m.fl.).</li>
+        <li>Kontrollera versionsmatchning mellan GeoServer och extensions.</li>
+        <li>Testa alltid i testmiljö först.</li>
+      </ul>
+
+      <h3>DON’T – vanliga misstag</h3>
+      <ul>
+        <li>Uppgradera direkt i live.</li>
+        <li>Glömma extensions.</li>
+        <li>Förutsätta att styles fungerar likadant efter uppgradering.</li>
+        <li>Ignorera cache/GeoWebCache.</li>
+      </ul>
+
+      <h3>Efter uppdatering</h3>
+      <ul>
+        <li>Verifiera lager.</li>
+        <li>Verifiera styles.</li>
+        <li>Räkna med att GeoWebCache kan behöva rensas eller seedas om.</li>
+        <li>Testa i Origo (visuellt + funktionellt).</li>
+      </ul>
     </section>
   </main>
 

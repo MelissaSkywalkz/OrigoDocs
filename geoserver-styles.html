@@ -26,6 +26,7 @@
           <a href="geoserver.html">GeoServer 101</a>
           <a class="active" href="geoserver-styles.html">GeoServer – styles</a>
           <a href="geowebcache.html">GeoWebCache</a>
+        <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
           <a href="faq-gis.html">FAQ GIS</a>
           <a href="recipes.html">Origo – recept</a>
@@ -139,6 +140,206 @@
           Styles kan vara skala- eller zoom-beroende. Om inget syns, kontrollera skalintervall
           och DPI-inställningar. TODO: verifiera standardvärden.
         </p>
+      </div>
+
+      <h2>SLD Cookbook – färdiga exempel</h2>
+      <p>Små, fungerande block du kan kopiera och justera.</p>
+
+      <h3>POINT – enkel punkt (cirkel)</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>point_simple</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PointSymbolizer>
+            <Graphic>
+              <Mark>
+                <WellKnownName>circle</WellKnownName>
+                <Fill><CssParameter name="fill">#2b6cb0</CssParameter></Fill>
+                <Stroke><CssParameter name="stroke">#ffffff</CssParameter></Stroke>
+              </Mark>
+              <Size>10</Size>
+            </Graphic>
+          </PointSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Enkla punktlager. <strong>Koppling:</strong> ladda upp SLD och välj som style för lagret.</p>
+
+      <h3>POINT – ikon (ExternalGraphic)</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>point_icon</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PointSymbolizer>
+            <Graphic>
+              <ExternalGraphic>
+                <OnlineResource xlink:type="simple" xlink:href="https://example.com/icon.png"/>
+                <Format>image/png</Format>
+              </ExternalGraphic>
+              <Size>20</Size>
+            </Graphic>
+          </PointSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Ikoner i kartan. <strong>Koppling:</strong> style på lagret i GeoServer.</p>
+
+      <h3>LINE – solid linje</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>line_solid</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#2f855a</CssParameter>
+              <CssParameter name="stroke-width">2</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Vägar, leder. <strong>Koppling:</strong> style på lagret.</p>
+
+      <h3>LINE – streckad linje</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>line_dashed</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#718096</CssParameter>
+              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke-dasharray">6 3</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Planerade stråk. <strong>Koppling:</strong> style på lagret.</p>
+
+      <h3>POLYGON – fyllning + kant</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>polygon_fill</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PolygonSymbolizer>
+            <Fill><CssParameter name="fill">#f6ad55</CssParameter></Fill>
+            <Stroke><CssParameter name="stroke">#c05621</CssParameter></Stroke>
+          </PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Områden. <strong>Koppling:</strong> style på lagret.</p>
+
+      <h3>POLYGON – transparent fill</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>polygon_transparent</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PolygonSymbolizer>
+            <Fill><CssParameter name="fill">#38a169</CssParameter><CssParameter name="fill-opacity">0.2</CssParameter></Fill>
+            <Stroke><CssParameter name="stroke">#2f855a</CssParameter></Stroke>
+          </PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Överlagring utan att dölja bakgrund.</p>
+
+      <h3>LABELS – enkel textetikett</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>labels_simple</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <TextSymbolizer>
+            <Label><ogc:PropertyName>name</ogc:PropertyName></Label>
+            <Font>
+              <CssParameter name="font-family">Arial</CssParameter>
+              <CssParameter name="font-size">12</CssParameter>
+              <CssParameter name="font-weight">bold</CssParameter>
+            </Font>
+            <Fill><CssParameter name="fill">#1a202c</CssParameter></Fill>
+          </TextSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Namn på objekt. <strong>Koppling:</strong> style på lagret.</p>
+
+      <h3>LABELS – placering (kort)</h3>
+      <pre><code><?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>labels_anchor</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <TextSymbolizer>
+            <Label><ogc:PropertyName>name</ogc:PropertyName></Label>
+            <LabelPlacement>
+              <PointPlacement>
+                <AnchorPoint>
+                  <AnchorPointX>0.5</AnchorPointX>
+                  <AnchorPointY>0</AnchorPointY>
+                </AnchorPoint>
+                <Displacement>
+                  <DisplacementX>0</DisplacementX>
+                  <DisplacementY>6</DisplacementY>
+                </Displacement>
+              </PointPlacement>
+            </LabelPlacement>
+          </TextSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+</code></pre>
+      <p><strong>När?</strong> Flytta etiketter för bättre läsbarhet.</p>
+
+      <div class="callout callout-info">
+        <h3>QGIS‑tips (hög nivå)</h3>
+        <p>\n          Skapa en stil i QGIS, exportera som SLD och importera i GeoServer.\n          TODO: verifiera exakta klicksteg i vår miljö.\n        </p>
       </div>
 
       <h2>Hur detta påverkar kartklienten (Origo)</h2>

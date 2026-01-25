@@ -39,6 +39,7 @@ python -m http.server 8000
 - `geoserver.html` – GeoServer 101 + GIS-grunder.
 - `geoserver-styles.html` – GeoServer-stilar (SLD/CSS/MBStyle).
 - `geowebcache.html` – GeoWebCache (tile-cache).
+- `git-vscode.html` – Git & VS Code (rookie-vänlig guide).
 - `examples-origo-geoserver.html` – copy/paste-exempel.
 - `faq-gis.html` – FAQ för GIS-nybörjare.
 - `recipes.html` – Origo recept.
@@ -46,3 +47,11 @@ python -m http.server 8000
 - `troubleshooting.html` – felsökning.
 - `main.css` – gemensam styling.
 - `main.js` – navigation + accordion.
+
+## Test & verifiering (manuellt)
+
+- Starta lokalt: `python -m http.server 8000`.
+- Klicka igenom navigationen och öppna Snabblänkar.
+- Kontrollera mobilbrytpunkter visuellt.
+
+> TODO: Automatiserade UI-tester (Playwright) kraschar i nuvarande miljö. Återbesök när miljön stödjer browser-körning.
