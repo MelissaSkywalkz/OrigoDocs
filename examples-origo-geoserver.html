@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exempel: Origo + GeoServer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo.html">Origo – snabbstart</a>
+          <a href="origo-advanced.html">Origo – avancerat</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a class="active" href="examples-origo-geoserver.html">Exempel: Origo + GeoServer</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="recipes.html">Origo – recept</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://github.com/origo-map/layermanager">Layermanager (extern)</a>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+          <a href="https://github.com/origo-map">Origo på GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-footer" id="sidebar-footer">
+      <p>>_ Intern lathund 2026</p>
+    </div>
+  </nav>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Exempel</span>
+        <h1>Origo + GeoServer</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Copy/paste</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2>Obs om Skarakartan</h2>
+      <p>
+        Exempel här är inspirerade av hur Skarakartan kan vara uppbyggd.
+        TODO: ladda ner <code>/examples/skarakartan.json</code> och verifiera nycklar.
+      </p>
+
+      <h2>Minimal karta (placeholder)</h2>
+      <pre><code>{
+  "app": {
+    "title": "Minimal Origo",
+    "language": "sv"
+  },
+  "map": {
+    "projection": "TODO: verifiera",
+    "extent": "TODO: verifiera"
+  }
+}
+</code></pre>
+
+      <h2>Full konfig (två WMS + en WFS + Layermanager)</h2>
+      <pre><code>{
+  "app": {
+    "title": "Origo + GeoServer demo",
+    "language": "sv"
+  },
+  "map": {
+    "projection": "TODO: verifiera",
+    "extent": "TODO: verifiera"
+  },
+  "layers": [
+    {
+      "name": "Bakgrundskarta",
+      "type": "TODO: verifiera WMS-typ",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wms",
+        "layers": "workspace:bakgrund"
+      }
+    },
+    {
+      "name": "Byggnader",
+      "type": "TODO: verifiera WMS-typ",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wms",
+        "layers": "workspace:byggnader"
+      }
+    },
+    {
+      "name": "Fastigheter",
+      "type": "TODO: verifiera WFS-typ",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wfs",
+        "typeName": "workspace:fastigheter"
+      },
+      "attributes": [
+        "TODO: verifiera attributlista"
+      ]
+    }
+  ],
+  "plugins": [
+    {
+      "name": "layermanager",
+      "options": {
+        "url": "https://geoserver.example.com/geoserver",
+        "types": ["tema-1", "tema-2"],
+        "onlyAddableLayersBtn": true
+      }
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera Origo-nycklar och attributlista mot upstream.</p>
+
+      <h2>WMS-lager (generellt)</h2>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "Baslager",
+      "type": "TODO: verifiera WMS-typ",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wms",
+        "layers": "workspace:baslager"
+      }
+    }
+  ]
+}
+</code></pre>
+
+      <h2>WFS-lager (generellt)</h2>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "Fastigheter",
+      "type": "TODO: verifiera WFS-typ",
+      "source": {
+        "url": "https://geoserver.example.com/geoserver/wfs",
+        "typeName": "workspace:fastigheter"
+      }
+    }
+  ]
+}
+</code></pre>
+
+      <h2>Layermanager + GeoServer-katalog</h2>
+      <pre><code>{
+  "plugins": [
+    {
+      "name": "layermanager",
+      "options": {
+        "url": "https://geoserver.example.com/geoserver",
+        "types": ["tema-1", "tema-2"],
+        "onlyAddableLayersBtn": true
+      }
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera Layermanager-options mot upstream.</p>
+
+      <div class="callout callout-warning">
+        <h3>Obs!</h3>
+        <p>JSON tillåter inte kommentarer. Ta bort <code>//</code>-rader innan produktion.</p>
+      </div>
+
+      <h2>Checklistor</h2>
+      <ol>
+        <li>Verifiera WMS/WFS-url:er i webbläsaren.</li>
+        <li>Stäm av layernamn (workspace:layer).</li>
+        <li>Testa att Layermanager visar lagerlistan.</li>
+      </ol>
+
+      <h2>Vanliga fel</h2>
+      <ul>
+        <li>Tom karta → fel CRS eller fel layernamn.</li>
+        <li>403/401 → behörighet saknas i GeoServer.</li>
+        <li>Layermanager visar inget → fel katalog-URL.</li>
+      </ul>
+
+      <p>TODO: verifiera Origo-nycklar och Layermanager-options mot repo.</p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
