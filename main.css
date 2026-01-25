@@ -43,9 +43,6 @@ a {
   margin-left: 0;
 }
 
-.layout.nav-collapsed .sidebar-footer {
-  display: none;
-}
 
 .sidenav {
   height: 100vh;
@@ -83,6 +80,10 @@ a {
   padding-bottom: 1rem;
 }
 
+.accordion-panel[hidden] {
+  display: none;
+}
+
 .accordion-button {
   width: 100%;
   text-align: left;
@@ -112,8 +113,7 @@ a {
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.3rem 0 0.8rem;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
+  overflow: visible;
 }
 
 .accordion-panel a {
@@ -129,13 +129,6 @@ a {
   border-left-color: #9fb3c8;
 }
 
-.sidebar-footer {
-  width: 100%;
-  padding: 0.8rem 1.5rem;
-  background-color: var(--sidebar-accent);
-  font-size: 0.85rem;
-  margin-top: auto;
-}
 
 .main {
   margin-left: var(--sidebar-width);

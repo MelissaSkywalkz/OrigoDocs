@@ -45,9 +45,6 @@
       </div>
     </div>
     </div>
-    <div class="sidebar-footer" id="sidebar-footer">
-      <p>>_ Intern lathund 2026</p>
-    </div>
   </nav>
 
   <main class="main" id="main">
@@ -143,6 +140,42 @@
         <li>Lager är ofta grupperade efter tema eller källa.</li>
         <li>UI/controls ligger samlade nära app-inställningar.</li>
       </ul>
+      <pre><code>{
+  "projectionCode": "EPSG:3008",
+  "projectionExtent": [-1400000, 4700000, 2100000, 8500000],
+  "resolutions": [1680, 1120, 560, 280, 126]
+}
+</code></pre>
+      <pre><code>{
+  "source": {
+    "wmts_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/gwc/service/wmts",
+      "matrixSet": "SWE_3008_GRID",
+      "matrixIdsPrefix": "SWE_3008_GRID:"
+    },
+    "wms_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+      "version": "1.1.1"
+    }
+  }
+}
+</code></pre>
+      <pre><code>{
+  "groups": [
+    { "name": "grp_bou", "title": "Förskola, skola och utbildning" }
+  ]
+}
+</code></pre>
+      <pre><code>{
+  "styles": {
+    "forskola": [
+      [
+        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
       <h3>Felsökning när lager inte syns</h3>
       <ol>
         <li>Kontrollera att layernamn matchar GeoServer.</li>

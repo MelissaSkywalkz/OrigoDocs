@@ -42,7 +42,6 @@ const initAccordions = () => {
     const syncPanelState = (expanded) => {
       button.setAttribute('aria-expanded', expanded.toString());
       panel.hidden = !expanded;
-      panel.style.maxHeight = expanded ? `${panel.scrollHeight}px` : '0px';
     };
 
     syncPanelState(button.getAttribute('aria-expanded') === 'true');

@@ -45,9 +45,6 @@
         </div>
       </div>
     </div>
-    <div class="sidebar-footer" id="sidebar-footer">
-      <p>>_ Intern lathund 2026</p>
-    </div>
   </nav>
 
   <main class="main" id="main">
@@ -67,7 +64,7 @@
     <section class="doc-content">
       <h2>Obs om Skarakartan</h2>
       <p>
-        Exempel här är inspirerade av hur Skarakartan kan vara uppbyggd.
+        Exempel här är inspirerade av hur Skarakartan är uppbyggd.
         TODO: ladda ner <code>/examples/skarakartan.json</code> och verifiera nycklar.
       </p>
 
@@ -77,132 +74,127 @@
     "title": "Minimal Origo",
     "language": "sv"
   },
-  "map": {
-    "projection": "TODO: verifiera",
-    "extent": "TODO: verifiera"
-  }
+  "projectionCode": "EPSG:3008",
+  "extent": [-1400000, 4700000, 2100000, 8500000]
 }
 </code></pre>
-
-      <h2>Full konfig (två WMS + en WFS + Layermanager)</h2>
-      <pre><code>{
-  "app": {
-    "title": "Origo + GeoServer demo",
-    "language": "sv"
-  },
-  "map": {
-    "projection": "TODO: verifiera",
-    "extent": "TODO: verifiera"
-  },
-  "layers": [
-    {
-      "name": "Bakgrundskarta",
-      "type": "TODO: verifiera WMS-typ",
-      "source": {
-        "url": "https://geoserver.example.com/geoserver/wms",
-        "layers": "workspace:bakgrund"
-      }
-    },
-    {
-      "name": "Byggnader",
-      "type": "TODO: verifiera WMS-typ",
-      "source": {
-        "url": "https://geoserver.example.com/geoserver/wms",
-        "layers": "workspace:byggnader"
-      }
-    },
-    {
-      "name": "Fastigheter",
-      "type": "TODO: verifiera WFS-typ",
-      "source": {
-        "url": "https://geoserver.example.com/geoserver/wfs",
-        "typeName": "workspace:fastigheter"
-      },
-      "attributes": [
-        "TODO: verifiera attributlista"
-      ]
-    }
-  ],
-  "plugins": [
-    {
-      "name": "layermanager",
-      "options": {
-        "url": "https://geoserver.example.com/geoserver",
-        "types": ["tema-1", "tema-2"],
-        "onlyAddableLayersBtn": true
-      }
-    }
-  ]
-}
-</code></pre>
-      <p>TODO: verifiera Origo-nycklar och attributlista mot upstream.</p>
 
       <h2>WMS-lager (generellt)</h2>
       <pre><code>{
+  "source": {
+    "wms_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+      "version": "1.1.1"
+    }
+  },
   "layers": [
     {
-      "name": "Baslager",
-      "type": "TODO: verifiera WMS-typ",
-      "source": {
-        "url": "https://geoserver.example.com/geoserver/wms",
-        "layers": "workspace:baslager"
-      }
+      "name": "nvdb_transportnat_vaghallare",
+      "title": "Väghållare",
+      "type": "WMS",
+      "source": "wms_lm"
     }
   ]
 }
 </code></pre>
+      <p>TODO: verifiera Origo-nycklar för WMS-lager.</p>
 
       <h2>WFS-lager (generellt)</h2>
       <pre><code>{
+  "source": {
+    "wfs_ext": {
+      "url": "https://karta.skara.se:8443/geoserver/ext/ows",
+      "strategy": "all"
+    }
+  },
   "layers": [
     {
-      "name": "Fastigheter",
-      "type": "TODO: verifiera WFS-typ",
-      "source": {
-        "url": "https://geoserver.example.com/geoserver/wfs",
-        "typeName": "workspace:fastigheter"
-      }
+      "name": "forskola_p",
+      "title": "Förskola",
+      "type": "WFS",
+      "source": "wfs_ext"
     }
   ]
 }
 </code></pre>
+      <p>TODO: verifiera Origo-nycklar för WFS-lager.</p>
 
-      <h2>Layermanager + GeoServer-katalog</h2>
+      <h2>WMTS-lager (generellt)</h2>
       <pre><code>{
-  "plugins": [
+  "source": {
+    "wmts_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/gwc/service/wmts",
+      "matrixSet": "SWE_3008_GRID",
+      "matrixIdsPrefix": "SWE_3008_GRID:",
+      "tileSize": [512, 512]
+    }
+  },
+  "layers": [
     {
-      "name": "layermanager",
-      "options": {
-        "url": "https://geoserver.example.com/geoserver",
-        "types": ["tema-1", "tema-2"],
-        "onlyAddableLayersBtn": true
-      }
+      "name": "lm_ortofoto",
+      "title": "Flygfoto",
+      "type": "WMTS",
+      "source": "wmts_lm"
     }
   ]
 }
 </code></pre>
-      <p>TODO: verifiera Layermanager-options mot upstream.</p>
+      <p>TODO: verifiera Origo-nycklar för WMTS-lager.</p>
 
-      <div class="callout callout-warning">
-        <h3>Obs!</h3>
-        <p>JSON tillåter inte kommentarer. Ta bort <code>//</code>-rader innan produktion.</p>
-      </div>
+      <h2>GROUP (exempel)</h2>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "hembygdsgardar_grp",
+      "title": "Hembygdsgårdar & lokala museer",
+      "type": "GROUP",
+      "layers": [
+        { "name": "hembygdsgard_p", "type": "WFS", "source": "wfs_ext" }
+      ]
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera GROUP-struktur i Origo.</p>
+
+      <h2>Styles (kort exempel)</h2>
+      <pre><code>{
+  "styles": {
+    "forskola": [
+      [
+        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
+      <p>TODO: verifiera styles-strukturen i Origo.</p>
+
+      <h2>Controls (exempel från Skara)</h2>
+      <pre><code>{
+  "controls": [
+    { "name": "sharemap", "options": { "serviceEndpoint": "https://karta.skara.se:3001/mapstate/" } },
+    { "name": "print", "options": { "sizeInitial": "a4" } },
+    { "name": "legend", "options": { "searchLayersControl": true } },
+    { "name": "measure", "options": { "default": "length" } }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera kontroll-nycklar mot Origo-repo.</p>
 
       <h2>Checklistor</h2>
       <ol>
-        <li>Verifiera WMS/WFS-url:er i webbläsaren.</li>
+        <li>Verifiera WMS/WFS/WMTS-url:er i webbläsaren.</li>
         <li>Stäm av layernamn (workspace:layer).</li>
-        <li>Testa att Layermanager visar lagerlistan.</li>
+        <li>Kontrollera projection/extent i kartan.</li>
       </ol>
 
       <h2>Vanliga fel</h2>
       <ul>
         <li>Tom karta → fel CRS eller fel layernamn.</li>
         <li>403/401 → behörighet saknas i GeoServer.</li>
-        <li>Layermanager visar inget → fel katalog-URL.</li>
+        <li>Fel tiles → cache (GeoWebCache) behöver rensas.</li>
       </ul>
-
-      <p>TODO: verifiera Origo-nycklar och Layermanager-options mot repo.</p>
     </section>
   </main>
 

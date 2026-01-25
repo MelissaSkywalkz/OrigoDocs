@@ -45,9 +45,6 @@
       </div>
     </div>
     </div>
-    <div class="sidebar-footer" id="sidebar-footer">
-      <p>>_ Intern lathund 2026</p>
-    </div>
   </nav>
 
   <main class="main" id="main">
@@ -152,6 +149,59 @@
         <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
       </ol>
 
+      <h3>Skara-exempel (små utdrag)</h3>
+      <p>Plocka små bitar för att förstå strukturen:</p>
+      <pre><code>{
+  "controls": [
+    { "name": "home" },
+    { "name": "mapmenu" },
+    { "name": "sharemap" },
+    { "name": "help" },
+    { "name": "about" },
+    { "name": "print" },
+    { "name": "legend" },
+    { "name": "measure" }
+  ]
+}
+</code></pre>
+      <pre><code>{
+  "projectionCode": "EPSG:3008",
+  "extent": [-1400000, 4700000, 2100000, 8500000],
+  "resolutions": [1680, 1120, 560, 280, 126, 98, 56]
+}
+</code></pre>
+      <pre><code>{
+  "source": {
+    "wms_lm": {
+      "url": "https://karta.skara.se:8443/geoserver/lm/wms",
+      "version": "1.1.1"
+    },
+    "wfs_ext": {
+      "url": "https://karta.skara.se:8443/geoserver/ext/ows",
+      "strategy": "all"
+    }
+  }
+}
+</code></pre>
+      <pre><code>{
+  "layers": [
+    { "name": "nvdb_transportnat_vaghallare", "type": "WMS", "source": "wms_lm" },
+    { "name": "forskola_p", "type": "WFS", "source": "wfs_ext" },
+    { "name": "hembygdsgardar_grp", "type": "GROUP", "layers": ["hembygdsgard_p"] }
+  ]
+}
+</code></pre>
+      <pre><code>{
+  "styles": {
+    "forskola": [
+      [
+        { "icon": { "src": "https://karta.skara.se/gem/img/svg/forskola.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
+
       <h3>Arbeta baklänges</h3>
       <p>Utgå från problemet i kartan och hitta relevant del i configen.</p>
       <ul>
@@ -162,9 +212,9 @@
 
       <h3>Mini-övning</h3>
       <ol>
-        <li>Hitta en WMS/WFS-URL i configen.</li>
-        <li>Hitta ett lagernamn som verkar vara viktigt.</li>
-        <li>Hitta ett config-avsnitt som styr UI.</li>
+        <li>Hitta en tjänst-URL (t.ex. <code>wms_lm</code> eller <code>wfs_ext</code>).</li>
+        <li>Hitta ett lagernamn som använder <code>source</code>.</li>
+        <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
       </ol>
     </section>
   </main>
