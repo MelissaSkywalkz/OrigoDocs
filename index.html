@@ -1,92 +1,124 @@
-
 <!DOCTYPE html>
-
+<html lang="sv">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="content-type" content="text/html">
-  <title>>_</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="main.css">
+  <title>Origo Map – intern lathund</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
 </head>
-
-<body>
-
-<div class="sidenav" id="mySidenav">
-  <div class="header">
-    <a href="#" style="text-decoration: none;">
-    <h2 class="logo">>_</h2>
-    </a>
-  </div>
-  <div class="links">
-  <button class="accordion">CMD</button>
-    <div class="panel">
-      <a href="page.html">CMD Commands</a>
-      <a href="#">Placeholder</a>
-      <a href="#">Placeholder</a>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
     </div>
-
-  <button class="accordion">Other</button>
-  <div class="panel">
-    <a href="#">Placeholder</a>
-    <a href="#">Placeholder</a>
-    <a href="#">Placeholder</a>
-  </div>
-  <a href="#">Placeholder</a>
-  <a href="#">Placeholder</a>
-  <a href="#">Placeholder</a>
-</div>
-  <div class="sidebar-footer" id="copyright">
-    <p>>_ © 2020</p>
-  </div>
-</div>
-
-<div class="main" id="main">
-  <nav class="navbar navbar-light bg-light justify-content-between">
-    <form class="form-inline">
-      <span id="one" onclick="closeNav()"><img src="sort.png"/></span>
-      <span id="two" onclick="openNav()"><img src="sort.png"/></span>
-      <input class="form-control mr-sm-2" type="search" placeholder="Search projekts..." aria-label="Search">
-    </form>
-    <a class="navbar-brand">Log in</a>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+        <a href="index.html">Start</a>
+        <a href="page.html">JSON 101</a>
+        <a href="origo.html">Origo – snabbstart</a>
+        <a href="geoserver.html">GeoServer 101</a>
+        <a href="recipes.html">Origo – recept</a>
+        <a href="npm.html">npm & plugins</a>
+        <a href="troubleshooting.html">Felsökning</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+        <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+        <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        <a href="https://github.com/origo-map">Origo på GitHub</a>
+      </div>
+    </div>
+    <div class="sidebar-footer" id="sidebar-footer">
+      <p>>_ Intern lathund 2026</p>
+    </div>
   </nav>
-  <h4 class="welcome">Welcome back, Melissa!</h4>
-  <div class="center">
-    <div class="row">
-      <div class="col-sm-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">My projects</h5>
-            <p class="card-text">Some kind of description maybe?</p>
-            <a href="#" class="btn btn-primary">Projects</a>
-          </div>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Origo Map</span>
+        <h1>Intern dokumentationsportal</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">GitHub Pages</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h2>Snabbstart för teamet</h2>
+        <p>
+          Här samlar vi JSON-grunder, Origo-mappar, recept och npm-flöden – i en form som går
+          att kopiera direkt till projekt. Om något saknas, lägg en TODO och länka till källa.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="page.html">Läs JSON 101</a>
+          <a class="button button-secondary" href="origo.html">Gå till Origo snabbstart</a>
         </div>
       </div>
-      <div class="col-sm-4" style="padding-left: 10px; padding-right: 10px;">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">My albums</h5>
-            <p class="card-text">Some kind of description maybe?</p>
-            <a href="#" class="btn btn-primary">Albums</a>
-          </div>
-        </div>
+      <div class="hero-card">
+        <h3>Så här använder du portalen</h3>
+        <ol>
+          <li>Välj område i menyn.</li>
+          <li>Kopiera exempel och fyll i placeholders.</li>
+          <li>Markera TODO om något måste verifieras mot Origo-dokumentationen.</li>
+        </ol>
       </div>
-      <div class="col-sm-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Scanbook</h5>
-            <p class="card-text">Some kind of description maybe?</p>
-            <a href="#" class="btn btn-primary">Scanbook</a>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-</div>
+    </section>
+
+    <section class="card-grid">
+      <article class="card">
+        <h3>JSON 101</h3>
+        <p>Förklara objekt, arrayer och vanliga fel – med mini-checklista.</p>
+        <a class="link" href="page.html">Öppna JSON 101 →</a>
+      </article>
+      <article class="card">
+        <h3>Origo – snabbstart</h3>
+        <p>Basstruktur, begrepp och TODO-platser för config-nycklar.</p>
+        <a class="link" href="origo.html">Till snabbstart →</a>
+      </article>
+      <article class="card">
+        <h3>GeoServer 101</h3>
+        <p>Hur servern, datakällor och standarder hänger ihop med Origo.</p>
+        <a class="link" href="geoserver.html">Läs GeoServer 101 →</a>
+      </article>
+      <article class="card">
+        <h3>Origo – recept</h3>
+        <p>WMS/WMTS/XYZ, UI-kontroller och typiska scenarier.</p>
+        <a class="link" href="recipes.html">Se recept →</a>
+      </article>
+      <article class="card">
+        <h3>npm & plugins</h3>
+        <p>Installera, lås versioner och bygg in i statiskt projekt.</p>
+        <a class="link" href="npm.html">Gå till npm →</a>
+      </article>
+      <article class="card">
+        <h3>Felsökning</h3>
+        <p>Checklistor för CORS, CRS, 404 och cache-problem.</p>
+        <a class="link" href="troubleshooting.html">Öppna felsökning →</a>
+      </article>
+    </section>
+
+    <section class="callout callout-info">
+      <h3>Policy: inga påhittade Origo-nycklar</h3>
+      <p>
+        Om du inte kan verifiera exakt Origo-konfiguration i repo eller i officiella docs,
+        skriv <strong>TODO: verifiera mot Origo-dokumentation</strong> och använd placeholders.
+      </p>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
 </body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
-<script src="main.js"></script>
-
 </html>
