@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Felsökning</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+      </div>
+      <div class="nav-search">
+        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
+        <ul id="searchResults" class="search-results hidden"></ul>
+      </div>
+      <div class="nav-content">
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+            Dokumentation
+          </button>
+          <div class="accordion-panel" id="nav-docs">
+            <a href="index.html">Start</a>
+            <a href="page.html">JSON 101</a>
+            <a href="origo-guide.html">Origo guide</a>
+            <a href="layermanager.html">Layermanager</a>
+            <a href="geoserver.html">GeoServer 101</a>
+            <a href="geoserver-styles.html">GeoServer styles</a>
+            <a href="geowebcache.html">GeoWebCache</a>
+            <a href="origo-server.html">Origo Server</a>
+            <a href="git-vscode.html">Git & VS Code</a>
+            <a href="examples.html">Origo-recept</a>
+            <a href="faq-gis.html">FAQ GIS</a>
+            <a href="npm.html">npm & plugins</a>
+            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="troubleshooting.html" aria-current="page">Felsökning</a>
+          </div>
+        </div>
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+            Snabblänkar
+          </button>
+          <div class="accordion-panel" id="nav-shortcuts" hidden>
+            <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
+              >Origo Docs (extern)</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <button
+          class="nav-toggle"
+          data-nav-toggle
+          aria-label="Öppna eller stäng meny"
+          aria-expanded="true"
+        >
+          <img src="sort.png" alt="" />
+        </button>
+        <button class="cmdk-trigger" type="button" aria-label="Öppna sök" data-cmdk-trigger>
+          Sök
+        </button>
+        <div class="topbar-title">
+          <span class="eyebrow">Support</span>
+          <h1>Felsökning</h1>
+        </div>
+        <div class="topbar-meta">
+          <span class="status-pill">Support</span>
+        </div>
+      </header>
+
+      <section class="doc-content">
+        <h2>Snabb checklista</h2>
+        <ol>
+          <li>Öppna DevTools → Console och Network.</li>
+          <li>Bekräfta att JSON/config laddas utan 404.</li>
+          <li>Matcha CRS/projection mellan data och karta.</li>
+          <li>Kontrollera CORS och mixed content.</li>
+        </ol>
+
+        <h2>Vanliga fel och lösningar</h2>
+        <div class="callout callout-warning">
+          <h3>CORS-blockering</h3>
+          <p>Säkerställ att tjänsten tillåter din domän eller använd proxy.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <h3>Fel CRS/projection</h3>
+          <p>Om kartan är tom eller förskjuten, dubbelkolla projection/extent.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <h3>Blandat http/https</h3>
+          <p>Ladda alltid resurser via https på GitHub Pages.</p>
+        </div>
+
+        <div class="callout callout-warning">
+          <h3>Cache</h3>
+          <p>Testa hård reload (Ctrl/Cmd + Shift + R) eller lägg till cache-busting.</p>
+        </div>
+
+        <h2>GeoServer-relaterade fel (klientperspektiv)</h2>
+        <ul>
+          <li><strong>Tom karta:</strong> fel layernamn eller CRS/projection mismatch.</li>
+          <li><strong>403/401:</strong> GeoServer kräver inloggning eller saknar rättigheter.</li>
+          <li><strong>CRS mismatch:</strong> data och karta använder olika koordinatsystem.</li>
+          <li><strong>CORS:</strong> GeoServer måste tillåta din domän.</li>
+          <li><strong>WMS funkar men WFS är segt:</strong> begränsa med filter/bbox.</li>
+        </ul>
+
+        <h2>Origo Server-relaterat</h2>
+        <ul>
+          <li><strong>Timeouts:</strong> testa kortare requests och granska proxy‑loggar.</li>
+          <li>
+            <strong>401/403:</strong> kontrollera auth mellan Origo, Origo Server och GeoServer.
+          </li>
+          <li><strong>CORS:</strong> säkerställ att klienten går via proxy när det behövs.</li>
+        </ul>
+
+        <h2>Prestanda: snabb felsökning</h2>
+        <ul>
+          <li>Om WFS är segt: byt till WMS för visning.</li>
+          <li>Om tiles är gamla: kontrollera GeoWebCache.</li>
+          <li>
+            Om tiles ligger fel: kontrollera gridset/resolutions i
+            <a href="geowebcache.html#grid-misalignment">grid misalignment</a>.
+          </li>
+          <li>Om det slöar i klienten: minska antal features.</li>
+        </ul>
+
+        <h2>Debug-kommandon (webb)</h2>
+        <pre><code># i browserns console
+localStorage.clear()
+
+# curl för att se headers
+curl -I https://exempel.se/config.json
+</code></pre>
+      </section>
+    </main>
+
+    <script src="main.js"></script>
+    <div class="cmdk" hidden>
+      <div class="cmdk-backdrop" data-cmdk-close></div>
+      <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="Sök">
+        <div class="cmdk-header">
+          <label class="cmdk-label" for="cmdk-input">Sök i portalen</label>
+          <input id="cmdk-input" type="search" placeholder="Skriv för att söka…" autocomplete="off" />
+        </div>
+        <div class="cmdk-status" aria-live="polite"></div>
+        <ul class="cmdk-results" role="listbox" aria-label="Sökresultat"></ul>
+        <div class="cmdk-hint">Tryck Enter för att öppna, Esc för att stänga.</div>
+      </div>
+    </div>
+
+  </body>
+</html>

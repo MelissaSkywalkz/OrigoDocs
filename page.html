@@ -1,161 +1,285 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON 101: Origo lathund</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+      </div>
+      <div class="nav-search">
+        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
+        <ul id="searchResults" class="search-results hidden"></ul>
+      </div>
+      <div class="nav-content">
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+            Dokumentation
+          </button>
+          <div class="accordion-panel" id="nav-docs">
+            <a href="index.html">Start</a>
+            <a href="page.html" aria-current="page">JSON 101</a>
+            <a href="origo-guide.html">Origo guide</a>
+            <a href="layermanager.html">Layermanager</a>
+            <a href="geoserver.html">GeoServer 101</a>
+            <a href="geoserver-styles.html">GeoServer styles</a>
+            <a href="geowebcache.html">GeoWebCache</a>
+            <a href="origo-server.html">Origo Server</a>
+            <a href="git-vscode.html">Git & VS Code</a>
+            <a href="examples.html">Origo-recept</a>
+            <a href="faq-gis.html">FAQ GIS</a>
+            <a href="npm.html">npm & plugins</a>
+            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="troubleshooting.html">Felsökning</a>
+          </div>
+        </div>
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+            Snabblänkar
+          </button>
+          <div class="accordion-panel" id="nav-shortcuts" hidden>
+            <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
+              >Origo Docs (extern)</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
 
-<!DOCTYPE html>
+    <div class="nav-backdrop" hidden></div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="content-type" content="text/html">
-  <title>>_</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="main.css">
-</head>
+    <main class="main" id="main">
+      <header class="topbar">
+        <button
+          class="nav-toggle"
+          data-nav-toggle
+          aria-label="Öppna eller stäng meny"
+          aria-expanded="true"
+        >
+          <img src="sort.png" alt="" />
+        </button>
+        <button class="cmdk-trigger" type="button" aria-label="Öppna sök" data-cmdk-trigger>
+          Sök
+        </button>
+        <div class="topbar-title">
+          <span class="eyebrow">JSON</span>
+          <h1>JSON 101</h1>
+        </div>
+        <div class="topbar-meta">
+          <span class="status-pill">Grund</span>
+        </div>
+      </header>
 
-<body>
+      <section class="doc-content">
+        <h2>Vad är JSON?</h2>
+        <p>
+          JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde) och
+          <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
+        </p>
 
-<div class="sidenav" id="mySidenav">
-  <div class="header">
-    <a href="#" style="text-decoration: none;">
-    <h2 class="logo">>_</h2>
-    </a>
-  </div>
-  <div class="links">
-  <button class="accordion">CMD</button>
-    <div class="panel">
-      <a href="page.html">CMD Commands</a>
-      <a href="#">Placeholder</a>
-      <a href="#">Placeholder</a>
+        <div class="callout callout-warning">
+          <h3>Vanliga fel</h3>
+          <ul>
+            <li>Extra kommatecken (trailing comma) efter sista raden.</li>
+            <li>Felaktiga citattecken. JSON kräver dubbla "".</li>
+            <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
+          </ul>
+        </div>
+
+        <h2>Objekt, arrayer och datatyper</h2>
+        <ul>
+          <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
+          <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
+          <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
+        </ul>
+
+        <div class="callout callout-check">
+          <strong>Snabbcheck</strong>
+          Har du dubbelcitat överallt och inga trailing commas? Kontrollera att varje rad ligger i
+          rätt objekt/array innan du testar i Origo.
+        </div>
+
+        <h2>Exempel: enkelt config-objekt</h2>
+        <pre><code>{
+  "appTitle": "Origo Demo",
+  "debug": true,
+  "language": "sv"
+}
+</code></pre>
+
+        <h2>Exempel: lista av lager</h2>
+        <pre><code>{
+  "layers": [
+    {
+      "name": "Baslager",
+      "type": "TODO: verifiera mot Origo-dokumentation",
+      "source": "TODO: verifiera mot Origo-dokumentation"
+    },
+    {
+      "name": "Byggnader",
+      "type": "TODO: verifiera mot Origo-dokumentation",
+      "source": "TODO: verifiera mot Origo-dokumentation"
+    }
+  ]
+}
+</code></pre>
+
+        <h2>Exempel: nestade objekt</h2>
+        <pre><code>{
+  "map": {
+    "extent": "TODO: verifiera mot Origo-dokumentation",
+    "projection": "TODO: verifiera mot Origo-dokumentation"
+  },
+  "ui": {
+    "controls": [
+      "zoom",
+      "scale"
+    ]
+  }
+}
+</code></pre>
+
+        <h2>Mini-checklista</h2>
+        <ol>
+          <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
+          <li>Säkerställ att allt är inom rätt objekt/array.</li>
+          <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
+        </ol>
+
+        <h2>Testa JSON</h2>
+        <div class="tryit" data-tryit="json">
+          <div class="tryit-grid">
+            <div>
+              <label for="json-tryit-input"><strong>Inmatning</strong></label>
+              <textarea id="json-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-json-action="validate" type="button">Validera</button>
+                <button class="tryit-button" data-json-action="prettify" type="button">Prettify</button>
+                <button class="tryit-button" data-json-action="minify" type="button">Minify</button>
+                <button class="tryit-button secondary" data-json-action="copy" type="button">Kopiera</button>
+                <button class="tryit-button secondary" data-json-action="clear" type="button">Rensa</button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat</strong>
+              <pre class="tryit-output" id="json-tryit-output"></pre>
+              <div class="tryit-status" id="json-tryit-status"></div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Debug-tips</h2>
+        <ul>
+          <li>Leta efter första felraden i konsolen. Ofta där felet börjar.</li>
+          <li>Ta bort halva filen och testa igen (binary search).</li>
+          <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
+        </ul>
+
+        <h2>Så läser du en riktig Origo‑konfig (exempel)</h2>
+        <p>
+          Använd en verklig konfig som referens, men jobba alltid med kopia och skriv exempel med
+          generiska placeholders.
+        </p>
+        <ol>
+          <li>Börja i toppen. Hitta övergripande sektioner (app, map, layers).</li>
+          <li>Sök efter URL:er (<code>https://</code>) för att hitta tjänster (WMS/WFS).</li>
+          <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
+        </ol>
+
+        <h3>Mini‑utdrag (små bitar)</h3>
+        <p>Plocka små bitar för att förstå strukturen:</p>
+        <pre><code>{
+  "controls": [
+    { "name": "home" },
+    { "name": "mapmenu" },
+    { "name": "sharemap" },
+    { "name": "help" },
+    { "name": "about" },
+    { "name": "print" },
+    { "name": "legend" },
+    { "name": "measure" }
+  ]
+}
+</code></pre>
+        <pre><code>{
+  "projectionCode": "EPSG:3008",
+  "extent": [100000, 6400000, 200000, 6500000],
+  "resolutions": [1600, 800, 400, 200, 100]
+}
+</code></pre>
+        <pre><code>{
+  "source": {
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
+      "version": "1.1.1"
+    },
+    "wfs_example": {
+      "url": "https://localhost/geoserver/example_workspace/ows",
+      "strategy": "all"
+    }
+  }
+}
+</code></pre>
+        <pre><code>{
+  "layers": [
+    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
+    { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
+    { "name": "example_group", "type": "GROUP", "layers": ["example_layer_wfs"] }
+  ]
+}
+</code></pre>
+        <pre><code>{
+  "styles": {
+    "example_style": [
+      [
+        { "icon": { "src": "https://localhost/icons/example.svg", "scale": 0.85 } }
+      ]
+    ]
+  }
+}
+</code></pre>
+
+        <h3>Arbeta baklänges</h3>
+        <p>Utgå från problemet i kartan och hitta relevant del i configen.</p>
+        <ul>
+          <li>Ingen karta → leta efter baslager och projection.</li>
+          <li>Fel lager → leta upp layernamn och service-URL.</li>
+          <li>UI saknas → leta efter controls/plugins.</li>
+        </ul>
+
+        <h3>Mini-övning</h3>
+        <ol>
+          <li>
+            Hitta en tjänst-URL (t.ex. <code>wms_example</code> eller <code>wfs_example</code>).
+          </li>
+          <li>Hitta ett lagernamn som använder <code>source</code>.</li>
+          <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
+        </ol>
+      </section>
+    </main>
+
+    <script src="main.js"></script>
+    <div class="cmdk" hidden>
+      <div class="cmdk-backdrop" data-cmdk-close></div>
+      <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="Sök">
+        <div class="cmdk-header">
+          <label class="cmdk-label" for="cmdk-input">Sök i portalen</label>
+          <input id="cmdk-input" type="search" placeholder="Skriv för att söka…" autocomplete="off" />
+        </div>
+        <div class="cmdk-status" aria-live="polite"></div>
+        <ul class="cmdk-results" role="listbox" aria-label="Sökresultat"></ul>
+        <div class="cmdk-hint">Tryck Enter för att öppna, Esc för att stänga.</div>
+      </div>
     </div>
 
-  <button class="accordion">Other</button>
-  <div class="panel">
-    <a href="#">Placeholder</a>
-    <a href="#">Placeholder</a>
-    <a href="#">Placeholder</a>
-  </div>
-  <a href="#">Placeholder</a>
-  <a href="#">Placeholder</a>
-  <a href="#">Placeholder</a>
-</div>
-  <div class="sidebar-footer" id="copyright">
-    <p>>_ © 2020</p>
-  </div>
-</div>
-
-<div class="main" id="main">
-  <nav class="navbar navbar-light bg-light justify-content-between">
-    <form class="form-inline">
-      <span id="one" onclick="closeNav()"><img src="sort.png"/></span>
-      <span id="two" onclick="openNav()"><img src="sort.png"/></span>
-      <input class="form-control mr-sm-2" type="search" placeholder="Search projekts..." aria-label="Search">
-    </form>
-    <a class="navbar-brand">Log in</a>
-  </nav>
-  <h4 class="desc">Basic</h4>
-  <div class="center">
-    <div class="row">
-      <div class="column">
-        <h3>CD</h3>
-        <h6>Change directory</h6>
-        <p class="code">> cd desktop</p>
-      </div>
-      <div class="column">
-        <h3>DIR</h3>
-        <h6>List directory content</h6>
-        <p class="code">> dir</p>
-      </div>
-    </div>
-    </div>
-  <h4 class="desc">Network</h4>
-  <div class="center">
-    <div class="row">
-      <div class="column">
-        <h3>IPCONFIG</h3>
-        <h6>Display IP network settings</h6>
-        <p class="code">> ipconfig/all</p>
-        <p class="code">> ipconfig/renew</p>
-        <p class="code">> ipconfig/release</p>
-        <p class="code">> ipconfig/flushdns</p>
-      </div>
-      <div class="column">
-        <h3>PING</h3>
-        <h6>Pings the network</h6>
-        <p class="code">> ping 192.168.0.1</p>
-        <p class="code">> ping -t google.com</p>
-      </div>
-      <div class="column">
-        <h3>TRACERT</h3>
-        <h6>Trace routes similar to patchping</h6>
-        <p class="code">> tracert 192.168.0.1</p>
-        <p class="code">> tracert google.com</p>
-      </div>
-      <div class="column">
-        <h3>NSLOOKUP</h3>
-        <h6>Query the DNS</h6>
-        <p class="code">> nslookup 192.168.0.1</p>
-        <p class="code">> nslookup google.com</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <h3>FTP</h3>
-        <h6>Transfer files to a FTP server</h6>
-        <p class="code">> ftp.speedtest.tele2.net</p>
-      </div>
-      <div class="column">
-        <h3>FTYPE</h3>
-        <h6>Display file type and mapping</h6>
-        <p class="code">> ftype htmlfile="C:\user\desktop\<br>main.html"</p>
-        <p class="code">> ftype htmlfile="C:\user\desktop\<br>main.html" -nohome ASSOC .html=htmlfile</p>
-      </div>
-      <div class="column">
-        <h3>ROUTE</h3>
-        <h6>Display network routing table, add static routes</h6>
-        <p class="code">> placeholder</p>
-      </div>
-      <div class="column">
-        <h3>NETSTAT</h3>
-        <h6>display TCP/IP connections and status</h6>
-        <p class="code">> placeholder</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <h3>GETMAC</h3>
-        <h6>Display MAC address</h6>
-        <p class="code">> placeholder</p>
-      </div>
-      <div class="column">
-        <h3>NETSH</h3>
-        <h6>Configure/control/display network components</h6>
-        <p class="code">> placeholder</p>
-      </div>
-      <div class="column">
-        <h3>PATHPING</h3>
-        <h6>Test the connection to a specific IP address</h6>
-        <p class="code">> placeholder</p>
-      </div>
-      <div class="column">
-        <h3>SYSTEMINFO</h3>
-        <h6>Displays computer-specific properties and configurations</h6>
-        <p class="code">> placeholder</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column">
-        <h3>TFTP</h3>
-        <h6>Transfer files to a TFTP server</h6>
-        <p class="code">> placeholder</p>
-      </div>
-    </div>
-    </div>
-  </div>
-</body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
-<script src="main.js"></script>
-
+  </body>
 </html>
