@@ -32,11 +32,13 @@
           <a href="origo-guide.html">Origo guide</a>
           <a href="layermanager.html">Layermanager</a>
           <a href="geoserver.html">GeoServer 101</a>
-          <a href="geoserver-styles.html">GeoServer styles</a>
-          <a href="#oversikt">Översikt</a>
+          <a href="geoserver-styles.html" aria-current="page">GeoServer styles</a>
+          <a href="#overview">Översikt</a>
           <a href="#sld-cookbook">SLD Cookbook</a>
           <a href="#labels">Labels</a>
           <a href="#sld-felsokning">SLD‑felsökning</a>
+          <a href="#css-extension">CSS Extension</a>
+          <a href="#mbstyle">MBStyle</a>
           <a href="geowebcache.html">GeoWebCache</a>
           <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples.html">Origo-recept</a>
@@ -75,7 +77,7 @@
     <section class="wizard" data-wizard="geoserver-styles"></section>
 
     <section class="doc-content">
-      <h2 id="oversikt">SLD: SE 1.1</h2>
+      <h2 id="overview">SLD: SE 1.1</h2>
       <p>
         Här bygger du stilar för GeoServer med SLD/SE 1.1. Importera en style, koppla den
         till lagret och testa i preview innan du går vidare.
@@ -400,6 +402,116 @@
 https://localhost/geoserver/example_workspace/wms?service=WMS&amp;request=GetMap&amp;layers=example_layer&amp;styles=example_style
 </code></pre>
       <p>TODO: verifiera hur style‑parametern anges i Origo‑konfiguration.</p>
+
+      <h2 id="css-extension">CSS Extension</h2>
+      <p>
+        CSS Extension är ett snabbare sätt att skriva styles. Det passar för enkla regler
+        och snabba justeringar, men kräver att extensionen är installerad i GeoServer.
+      </p>
+      <pre><code class="language-css">* {
+  mark: symbol("circle");
+  mark-size: 10;
+  fill: #3b82f6;
+  stroke: #ffffff;
+  stroke-width: 1;
+}
+</code></pre>
+      <pre><code class="language-css">* {
+  stroke: #0f766e;
+  stroke-width: 2;
+  stroke-dasharray: 6 3;
+}
+</code></pre>
+      <pre><code class="language-css">* {
+  fill: #facc15;
+  stroke: #b45309;
+  stroke-width: 1;
+  label: [name];
+  font-family: "Arial";
+  font-size: 12;
+  label-fill: #1f2937;
+}
+</code></pre>
+
+      <h2 id="mbstyle">MBStyle</h2>
+      <p>
+        MBStyle är bra för modern styling och vektor‑tiles. Du behöver MBStyle‑stöd i GeoServer
+        och ett vektor‑tile‑lager som källa.
+      </p>
+      <pre><code class="language-json">{
+  "version": 8,
+  "name": "Polygon fill",
+  "sources": {
+    "vector-source": {
+      "type": "vector",
+      "url": "http://localhost/tiles.json"
+    }
+  },
+  "layers": [
+    {
+      "id": "fill-layer",
+      "type": "fill",
+      "source": "vector-source",
+      "source-layer": "layer_name",
+      "paint": {
+        "fill-color": "#60a5fa",
+        "fill-opacity": 0.8
+      }
+    }
+  ]
+}
+</code></pre>
+      <pre><code class="language-json">{
+  "version": 8,
+  "name": "Line stroke",
+  "sources": {
+    "vector-source": {
+      "type": "vector",
+      "url": "http://localhost/tiles.json"
+    }
+  },
+  "layers": [
+    {
+      "id": "line-layer",
+      "type": "line",
+      "source": "vector-source",
+      "source-layer": "layer_name",
+      "paint": {
+        "line-color": "#1f2937",
+        "line-width": 2,
+        "line-dasharray": [2, 2]
+      }
+    }
+  ]
+}
+</code></pre>
+      <pre><code class="language-json">{
+  "version": 8,
+  "name": "Symbol label",
+  "sources": {
+    "vector-source": {
+      "type": "vector",
+      "url": "http://localhost/tiles.json"
+    }
+  },
+  "layers": [
+    {
+      "id": "label-layer",
+      "type": "symbol",
+      "source": "vector-source",
+      "source-layer": "layer_name",
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-size": 12,
+        "text-offset": [0, 0.8]
+      },
+      "paint": {
+        "text-color": "#111827"
+      }
+    }
+  ]
+}
+</code></pre>
     </section>
   </main>
 

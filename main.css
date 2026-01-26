@@ -169,12 +169,16 @@ a {
   font-size: 0.85rem;
   color: #e6ebf3;
   border-left: 2px solid transparent;
+  border-radius: 8px;
 }
 
 .accordion-panel a:hover,
-.accordion-panel a.active {
+.accordion-panel a.active,
+.accordion-panel a[aria-current="page"] {
   background-color: var(--sidebar-hover);
   border-left-color: #9fb3c8;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .accordion-panel a.is-active-section {
@@ -182,6 +186,20 @@ a {
   border-left-color: #c7d2fe;
   color: #ffffff;
   font-weight: 600;
+}
+
+.accordion-panel a[href^="#"] {
+  padding-left: 2.4rem;
+  font-size: 0.8rem;
+  color: rgba(230, 235, 243, 0.8);
+}
+
+.accordion-panel a[href$=".html"] + a[href^="#"] {
+  margin-top: 0.35rem;
+}
+
+.accordion-panel a[href^="#"] + a[href$=".html"] {
+  margin-top: 0.35rem;
 }
 
 .main {
