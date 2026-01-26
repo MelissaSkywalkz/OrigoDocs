@@ -753,6 +753,79 @@ const initReleasePlaybook = () => {
   }
 };
 
+const initScrollSpy = () => {
+  const nav = document.querySelector('.sidenav');
+  if (!nav) {
+    return;
+  }
+
+  const anchorLinks = Array.from(nav.querySelectorAll('a[href^="#"]'));
+  const targets = anchorLinks
+    .map((link) => {
+      const id = link.getAttribute('href')?.slice(1);
+      const target = id ? document.getElementById(id) : null;
+      return target ? { link, target } : null;
+    })
+    .filter(Boolean);
+
+  if (!targets.length) {
+    return;
+  }
+
+  let activeLink = null;
+
+  const setActive = (link) => {
+    if (activeLink === link) {
+      return;
+    }
+    anchorLinks.forEach((item) => item.classList.remove('is-active-section'));
+    link.classList.add('is-active-section');
+    activeLink = link;
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length) {
+          const match = targets.find(({ target }) => target === visible[0].target);
+          if (match) {
+            setActive(match.link);
+          }
+        }
+      },
+      { rootMargin: '-30% 0px -60% 0px' }
+    );
+
+    targets.forEach(({ target }) => observer.observe(target));
+    return;
+  }
+
+  const handleScroll = () => {
+    const top = window.scrollY + window.innerHeight * 0.3;
+    let closest = null;
+    let closestDistance = Infinity;
+
+    targets.forEach(({ target, link }) => {
+      const distance = Math.abs(target.offsetTop - top);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closest = link;
+      }
+    });
+
+    if (closest) {
+      setActive(closest);
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
@@ -761,4 +834,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initWizard();
   initGlossary();
   initReleasePlaybook();
+  initScrollSpy();
 });

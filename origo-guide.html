@@ -30,6 +30,10 @@
           <a href="index.html">Start</a>
           <a href="page.html">JSON 101</a>
           <a class="active" href="origo-guide.html">Origo – guide</a>
+          <a href="#snabbstart">– Snabbstart</a>
+          <a href="#lager">– Lager</a>
+          <a href="#controls">– Controls</a>
+          <a href="#prestanda">– Prestanda</a>
           <a href="layermanager.html">Layermanager</a>
           <a href="geoserver.html">GeoServer 101</a>
           <a href="geoserver-styles.html">GeoServer – styles</a>
@@ -75,7 +79,7 @@
         projectionCode är EPSG:3008 och att dina tjänster svarar.
       </div>
 
-      <h2>Snabbstart</h2>
+      <h2 id="snabbstart">Snabbstart</h2>
       <p>
         Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON‑konfig
         och bygger kartan utifrån lager, controls och plugins.
@@ -88,7 +92,7 @@
 </code></pre>
       <p>TODO: verifiera exakta Origo‑nycklar i upstream.</p>
 
-      <h2>Lager: WMS, WFS, WMTS</h2>
+      <h2 id="lager">Lager: WMS, WFS, WMTS</h2>
       <h3>WMS</h3>
       <pre><code>{
   "source": {
@@ -167,7 +171,7 @@
         WFS för attribut och klientlogik – klienten löser inte fel val automatiskt.
       </div>
 
-      <h2>Controls</h2>
+      <h2 id="controls">Controls</h2>
       <pre><code>{
   "controls": [
     { "name": "home" },
@@ -190,7 +194,7 @@
 </code></pre>
       <p>TODO: verifiera group‑struktur och LayerManager‑koppling.</p>
 
-      <h2>Prestanda</h2>
+      <h2 id="prestanda">Prestanda</h2>
       <ul>
         <li>WMS + cache ger snabbast visning.</li>
         <li>WFS ger mer data men belastar klienten.</li>
