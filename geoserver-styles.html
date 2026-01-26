@@ -75,16 +75,15 @@
     <section class="wizard" data-wizard="geoserver-styles"></section>
 
     <section class="doc-content">
-      <h2 id="oversikt">Översikt</h2>
+      <h2 id="oversikt">SLD – SE 1.1</h2>
       <p>
-        GeoServer använder <strong>styles</strong> för att beskriva hur ett lager ska ritas.
-        En style är en egen resurs som kan kopplas som <em>default</em> eller som alternativ.
+        Här bygger du stilar för GeoServer med SLD/SE 1.1. Importera en style, koppla den
+        till lagret och testa i preview innan du går vidare.
       </p>
-      <ul>
-        <li><strong>Default style:</strong> används automatiskt om inget annat väljs.</li>
-        <li><strong>Alternativa styles:</strong> kan väljas per lager eller i WMS‑anrop.</li>
-        <li><strong>Layer ↔ style:</strong> kopplas i GeoServer, inte i klienten.</li>
-      </ul>
+      <div class="callout callout-check">
+        <strong>Snabbcheck</strong>
+        Importera style → koppla till layer → testa preview.
+      </div>
 
       <h2 id="format">Välj rätt format</h2>
       <ul>
@@ -93,7 +92,7 @@
         <li><strong>MBStyle:</strong> passar vektor‑tiles och moderna kartstilar.</li>
       </ul>
 
-      <h2 id="sld-cookbook">SLD Cookbook – färdiga exempel (SE 1.1)</h2>
+      <h2 id="sld-cookbook">SLD Cookbook – färdiga exempel</h2>
       <p><strong>Denna SLD är en referensmall.</strong> Kopiera exakt.</p>
       <p><strong>Ändra endast:</strong> färg (fill, stroke), storlek (Size), stroke‑width. <strong>Ändra INTE:</strong> namespaces, <code>se:</code>-prefix, version, struktur.</p>
       <div class="callout callout-warn">
@@ -102,212 +101,208 @@
         syns, även om SLD importeras.
       </div>
 
-      <h3>POINT – enkel punkt (cirkel)</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3>Punkt: cirkel</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Simple point style</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:PointSymbolizer>
-            <se:Graphic>
-              <se:Mark>
-                <se:WellKnownName>circle</se:WellKnownName>
-                <se:Fill>
-                  <se:SvgParameter name="fill">#0072B2</se:SvgParameter>
-                </se:Fill>
-                <se:Stroke>
-                  <se:SvgParameter name="stroke">#ffffff</se:SvgParameter>
-                  <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                </se:Stroke>
-              </se:Mark>
-              <se:Size>10</se:Size>
-            </se:Graphic>
-          </se:PointSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Simple point style&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:PointSymbolizer&gt;
+            &lt;se:Graphic&gt;
+              &lt;se:Mark&gt;
+                &lt;se:WellKnownName&gt;circle&lt;/se:WellKnownName&gt;
+                &lt;se:Fill&gt;
+                  &lt;se:SvgParameter name=&quot;fill&quot;&gt;#0072B2&lt;/se:SvgParameter&gt;
+                &lt;/se:Fill&gt;
+                &lt;se:Stroke&gt;
+                  &lt;se:SvgParameter name=&quot;stroke&quot;&gt;#ffffff&lt;/se:SvgParameter&gt;
+                  &lt;se:SvgParameter name=&quot;stroke-width&quot;&gt;1&lt;/se:SvgParameter&gt;
+                &lt;/se:Stroke&gt;
+              &lt;/se:Mark&gt;
+              &lt;se:Size&gt;10&lt;/se:Size&gt;
+            &lt;/se:Graphic&gt;
+          &lt;/se:PointSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Enkla punktlager. <strong>Koppling:</strong> ladda upp SLD och välj som style för lagret.</p>
-      <p><strong>Om detta inte fungerar:</strong> kontrollera SE 1.1, <code>se:</code>-prefix, testa i GeoServer Preview.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, färg, storlek, attribut.</p>
 
-      <h3>POINT – ikon (ExternalGraphic)</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3>Punkt: ikon</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Point icon</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:PointSymbolizer>
-            <se:Graphic>
-              <se:ExternalGraphic>
-                <se:OnlineResource xlink:type="simple" xlink:href="https://localhost/icons/example.png"/>
-                <se:Format>image/png</se:Format>
-              </se:ExternalGraphic>
-              <se:Size>20</se:Size>
-            </se:Graphic>
-          </se:PointSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Point icon&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:PointSymbolizer&gt;
+            &lt;se:Graphic&gt;
+              &lt;se:ExternalGraphic&gt;
+                &lt;se:OnlineResource xlink:type=&quot;simple&quot; xlink:href=&quot;https://localhost/icons/example.png&quot;/&gt;
+                &lt;se:Format&gt;image/png&lt;/se:Format&gt;
+              &lt;/se:ExternalGraphic&gt;
+              &lt;se:Size&gt;20&lt;/se:Size&gt;
+            &lt;/se:Graphic&gt;
+          &lt;/se:PointSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Ikoner. <strong>Om detta inte fungerar:</strong> kontrollera att ikon‑URL är åtkomlig.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, ikon‑URL, storlek.</p>
 
-      <h3>LINE – solid linje</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3>Linje: solid</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Solid line</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#444444</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">2</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Solid line&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:LineSymbolizer&gt;
+            &lt;se:Stroke&gt;
+              &lt;se:SvgParameter name=&quot;stroke&quot;&gt;#444444&lt;/se:SvgParameter&gt;
+              &lt;se:SvgParameter name=&quot;stroke-width&quot;&gt;2&lt;/se:SvgParameter&gt;
+            &lt;/se:Stroke&gt;
+          &lt;/se:LineSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Vägar, lednät. <strong>Om detta inte fungerar:</strong> kontrollera SE 1.1.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, färg, linjebredd.</p>
 
-      <h3>LINE – streckad linje</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3>Linje: streckad</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Dashed line</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#444444</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">2</se:SvgParameter>
-              <se:SvgParameter name="stroke-dasharray">6 4</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Dashed line&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:LineSymbolizer&gt;
+            &lt;se:Stroke&gt;
+              &lt;se:SvgParameter name=&quot;stroke&quot;&gt;#444444&lt;/se:SvgParameter&gt;
+              &lt;se:SvgParameter name=&quot;stroke-width&quot;&gt;2&lt;/se:SvgParameter&gt;
+              &lt;se:SvgParameter name=&quot;stroke-dasharray&quot;&gt;6 4&lt;/se:SvgParameter&gt;
+            &lt;/se:Stroke&gt;
+          &lt;/se:LineSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Planerade stråk.</p>
-      <p><strong>Om detta inte fungerar:</strong> kontrollera att dasharray stöds och testa i Preview.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, färg, linjebredd, dasharray.</p>
 
-      <h3>POLYGON – fyllning + kant</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3>Polygon: fyllning och kant</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Polygon fill</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#f6ad55</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#c05621</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Polygon fill&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:PolygonSymbolizer&gt;
+            &lt;se:Fill&gt;
+              &lt;se:SvgParameter name=&quot;fill&quot;&gt;#f6ad55&lt;/se:SvgParameter&gt;
+            &lt;/se:Fill&gt;
+            &lt;se:Stroke&gt;
+              &lt;se:SvgParameter name=&quot;stroke&quot;&gt;#c05621&lt;/se:SvgParameter&gt;
+            &lt;/se:Stroke&gt;
+          &lt;/se:PolygonSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Områden.</p>
-      <p><strong>Om detta inte fungerar:</strong> säkerställ att lagret är polygon.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, färg, kant.</p>
 
-      <h3 id="labels">LABELS – enkel etikett</h3>
-      <pre><code><?xml version="1.0" encoding="UTF-8"?>
-<se:StyledLayerDescriptor version="1.1.0"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="
+      <h3 id="labels">Labels: enkel etikett</h3>
+      <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot;
+  xmlns:se=&quot;http://www.opengis.net/se&quot;
+  xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;
     http://www.opengis.net/se
-    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd">
-  <se:NamedLayer>
-    <se:Name>example_layer</se:Name>
-    <se:UserStyle>
-      <se:Title>Simple labels</se:Title>
-      <se:FeatureTypeStyle>
-        <se:Rule>
-          <se:TextSymbolizer>
-            <se:Label>
-              <ogc:PropertyName>name</ogc:PropertyName>
-            </se:Label>
-            <se:Font>
-              <se:SvgParameter name="font-family">Arial</se:SvgParameter>
-              <se:SvgParameter name="font-size">12</se:SvgParameter>
-            </se:Font>
-            <se:Fill>
-              <se:SvgParameter name="fill">#1a202c</se:SvgParameter>
-            </se:Fill>
-          </se:TextSymbolizer>
-        </se:Rule>
-      </se:FeatureTypeStyle>
-    </se:UserStyle>
-  </se:NamedLayer>
-</se:StyledLayerDescriptor>
+    https://schemas.opengis.net/se/1.1.0/Symbolizer.xsd&quot;&gt;
+  &lt;se:NamedLayer&gt;
+    &lt;se:Name&gt;example_layer&lt;/se:Name&gt;
+    &lt;se:UserStyle&gt;
+      &lt;se:Title&gt;Simple labels&lt;/se:Title&gt;
+      &lt;se:FeatureTypeStyle&gt;
+        &lt;se:Rule&gt;
+          &lt;se:TextSymbolizer&gt;
+            &lt;se:Label&gt;
+              &lt;ogc:PropertyName&gt;name&lt;/ogc:PropertyName&gt;
+            &lt;/se:Label&gt;
+            &lt;se:Font&gt;
+              &lt;se:SvgParameter name=&quot;font-family&quot;&gt;Arial&lt;/se:SvgParameter&gt;
+              &lt;se:SvgParameter name=&quot;font-size&quot;&gt;12&lt;/se:SvgParameter&gt;
+            &lt;/se:Font&gt;
+            &lt;se:Fill&gt;
+              &lt;se:SvgParameter name=&quot;fill&quot;&gt;#1a202c&lt;/se:SvgParameter&gt;
+            &lt;/se:Fill&gt;
+          &lt;/se:TextSymbolizer&gt;
+        &lt;/se:Rule&gt;
+      &lt;/se:FeatureTypeStyle&gt;
+    &lt;/se:UserStyle&gt;
+  &lt;/se:NamedLayer&gt;
+&lt;/se:StyledLayerDescriptor&gt;
 </code></pre>
-      <p><strong>När?</strong> Namn på objekt. <strong>Om detta inte fungerar:</strong> kontrollera fältnamn.</p>
-      <p><strong>Om detta inte fungerar:</strong> testa med ett hårdkodat label‑värde för felsökning.</p>
+      <p><strong>Ändra bara:</strong> layer‑namn, attribut, textstorlek.</p>
 
-      <h2 id="parameterguide">Parameterguide (kort)</h2>
+      <h2 id="parameterguide">Parameterguide</h2>
       <table>
         <thead>
           <tr>
@@ -345,24 +340,24 @@
         </tbody>
       </table>
 
-      <h2>Avancerat (med varning)</h2>
-      <p><strong>Varning:</strong> Om detta inte fungerar – återgå till nivå 1.</p>
-      <pre><code><!-- ogc:Filter (exempel) -->
-<ogc:Filter>
-  <ogc:PropertyIsEqualTo>
-    <ogc:PropertyName>status</ogc:PropertyName>
-    <ogc:Literal>aktiv</ogc:Literal>
-  </ogc:PropertyIsEqualTo>
-</ogc:Filter>
+      <h2>Avancerat</h2>
+      <p><strong>Varning:</strong> Återgå till nivå 1 om något blir otydligt.</p>
+      <pre><code class="language-xml">&lt;!-- ogc:Filter (exempel) --&gt;
+&lt;ogc:Filter&gt;
+  &lt;ogc:PropertyIsEqualTo&gt;
+    &lt;ogc:PropertyName&gt;status&lt;/ogc:PropertyName&gt;
+    &lt;ogc:Literal&gt;aktiv&lt;/ogc:Literal&gt;
+  &lt;/ogc:PropertyIsEqualTo&gt;
+&lt;/ogc:Filter&gt;
 </code></pre>
-      <pre><code><!-- ScaleDenominator (exempel) -->
-<se:MinScaleDenominator>10000</se:MinScaleDenominator>
-<se:MaxScaleDenominator>50000</se:MaxScaleDenominator>
+      <pre><code class="language-xml">&lt;!-- ScaleDenominator (exempel) --&gt;
+&lt;se:MinScaleDenominator&gt;10000&lt;/se:MinScaleDenominator&gt;
+&lt;se:MaxScaleDenominator&gt;50000&lt;/se:MaxScaleDenominator&gt;
 </code></pre>
-      <pre><code><!-- Dynamiska labels (exempel) -->
-<se:Label>
-  <ogc:PropertyName>name</ogc:PropertyName>
-</se:Label>
+      <pre><code class="language-xml">&lt;!-- Dynamiska labels (exempel) --&gt;
+&lt;se:Label&gt;
+  &lt;ogc:PropertyName&gt;name&lt;/ogc:PropertyName&gt;
+&lt;/se:Label&gt;
 </code></pre>
 
       <h2 id="sld-felsokning">SLD‑felsökning</h2>
@@ -389,20 +384,20 @@
       </ul>
 
       <div class="callout callout-info">
-      <h3>QGIS‑tips (hög nivå)</h3>
+      <h3>QGIS‑tips</h3>
         <p>
           Skapa en stil i QGIS, exportera som SLD och importera i GeoServer.
           TODO: verifiera exakta klicksteg i vår miljö.
         </p>
       </div>
 
-      <h2 id="origo-impact">Hur detta påverkar kartklienten (Origo)</h2>
+      <h2 id="origo-impact">Hur detta påverkar kartklienten i Origo</h2>
       <p>
         Origo visar resultatet av GeoServers rendering. Om du byter style i GeoServer syns det
         i WMS‑bilder och tiles utan att Origo‑konfigurationen behöver ändras.
       </p>
-      <pre><code># exempel på WMS‑anrop med style (placeholder)
-https://localhost/geoserver/example_workspace/wms?service=WMS&request=GetMap&layers=example_layer&styles=example_style
+      <pre><code class="language-xml"># exempel på WMS‑anrop med style (placeholder)
+https://localhost/geoserver/example_workspace/wms?service=WMS&amp;request=GetMap&amp;layers=example_layer&amp;styles=example_style
 </code></pre>
       <p>TODO: verifiera hur style‑parametern anges i Origo‑konfiguration.</p>
     </section>
