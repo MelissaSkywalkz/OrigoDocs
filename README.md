@@ -3,7 +3,6 @@
 Det här repot är en statisk dokumentationsportal för Origo Map och relaterat arbete. Syftet är att ge teamet en snabb, tydlig och kopierbar “lathund” för JSON, Origo-konfigurationer, Layermanager, GeoServer-stilar, recept och npm-flöden.
 
 > **Viktigt:** Om Origo-specifika detaljer inte kan verifieras lokalt ska de markeras med `TODO: verifiera mot Origo-dokumentation`.
-> TODO: Lägg en anonymiserad exempelkonfig i `/examples/` för verifiering av våra mallar.
 
 Kort sagt: GeoServer publicerar data (WMS/WFS), Origo hämtar och visar den i kartan. Layermanager hjälper användare att hitta/lägga till lager. GeoServer-stilar (SLD/CSS/MBStyle) påverkar hur lagren ser ut i Origo. Datakällorna kan vara PostGIS eller filer som GeoPackage/Shapefile.
 GeoWebCache står för tile-cache och påverkar prestanda och när gamla tiles kan ligga kvar.
@@ -33,16 +32,14 @@ python -m http.server 8000
 
 - `index.html` – portal/startsida.
 - `page.html` – JSON 101.
-- `origo.html` – Origo snabbstart (med TODO där detaljer saknas).
-- `origo-advanced.html` – Origo avancerat (init/konfig och lager).
+- `origo-guide.html` – Origo guide (snabbstart, lager, controls och prestanda).
 - `layermanager.html` – Layermanager-plugin och konfig-exempel.
 - `geoserver.html` – GeoServer 101 + GIS-grunder.
 - `geoserver-styles.html` – GeoServer-stilar (SLD/CSS/MBStyle).
 - `geowebcache.html` – GeoWebCache (tile-cache).
 - `git-vscode.html` – Git & VS Code (rookie-vänlig guide).
-- `examples-origo-geoserver.html` – copy/paste-exempel.
+- `examples.html` – Origo-recept (copy/paste-exempel).
 - `faq-gis.html` – FAQ för GIS-nybörjare.
-- `recipes.html` – Origo recept.
 - `npm.html` – npm & plugins.
 - `troubleshooting.html` – felsökning.
 - `main.css` – gemensam styling.
@@ -54,10 +51,6 @@ python -m http.server 8000
 - Klicka igenom navigationen och öppna Snabblänkar.
 - Kontrollera mobilbrytpunkter visuellt.
 
-> TODO: Automatiserade UI-tester (Playwright) kraschar i nuvarande miljö. Återbesök när miljön stödjer browser-körning.
+## TODO
 
-## Struktur & reduktion (förslag)
-
-- Sammanfoga “Origo – snabbstart” + “Origo – avancerat” om vi vill ha en enda Origo‑guide.
-- Flytta SLD‑cookbook + GeoServer‑uppdatering till en gemensam “Drift & Styles”‑sektion.
-- Flytta återkommande felsökning till en central sida och länka därifrån.
+- Lägg en anonymiserad exempelkonfig i `/examples/` för verifiering av våra mallar.
