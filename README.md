@@ -37,6 +37,7 @@ python -m http.server 8000
 - `geoserver.html` – GeoServer 101 + GIS-grunder.
 - `geoserver-styles.html` – GeoServer-stilar (SLD/CSS/MBStyle).
 - `geowebcache.html` – GeoWebCache (tile-cache).
+- `origo-server.html` – Origo Server (backend‑stöd).
 - `git-vscode.html` – Git & VS Code (rookie-vänlig guide).
 - `examples.html` – Origo-recept (copy/paste-exempel).
 - `faq-gis.html` – FAQ för GIS-nybörjare.
@@ -46,6 +47,16 @@ python -m http.server 8000
 - `main.css` – gemensam styling.
 - `main.js` – navigation + accordion.
 - `search-index.json` – sökindex för sidomenyn.
+
+## Källor för verifiering
+
+- https://origo-map.github.io/origo-documentation/latest/
+- https://origo-map.github.io/workshop/
+- https://github.com/origo-map/origo-documentation
+- https://github.com/origo-map/origo
+- https://github.com/origo-map/origo-server
+- https://docs.geoserver.org/latest/en/user/geowebcache/index.html
+- https://docs.geoserver.org/latest/en/user/geowebcache/troubleshooting.html#grid-misalignment
 
 ## Test & verifiering (manuellt)
 

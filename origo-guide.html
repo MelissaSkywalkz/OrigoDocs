@@ -31,13 +31,20 @@
           <a href="page.html">JSON 101</a>
           <a class="active" href="origo-guide.html" aria-current="page">Origo guide</a>
           <a href="#snabbstart">Snabbstart</a>
+          <a href="#minimal-init">Minimal init</a>
           <a href="#lager">Lager</a>
+          <a href="#wms">WMS</a>
+          <a href="#wfs">WFS</a>
+          <a href="#wmts">WMTS</a>
+          <a href="#clustering">Clustering</a>
           <a href="#controls">Controls</a>
           <a href="#prestanda">Prestanda</a>
+          <a href="#vanliga-fel">Vanliga fel</a>
           <a href="layermanager.html">Layermanager</a>
           <a href="geoserver.html">GeoServer 101</a>
           <a href="geoserver-styles.html">GeoServer styles</a>
           <a href="geowebcache.html">GeoWebCache</a>
+          <a href="origo-server.html">Origo Server</a>
           <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples.html">Origo-recept</a>
           <a href="faq-gis.html">FAQ GIS</a>
@@ -78,16 +85,23 @@
         Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON‑konfig
         och bygger kartan utifrån lager, controls och plugins.
       </p>
+      <p>TODO: verifiera exakta Origo‑nycklar i upstream.</p>
+
+      <h2 id="minimal-init">Minimal init</h2>
+      <p>En minsta konfiguration som sätter projektion, extent och startvy.</p>
       <pre><code>{
   "app": { "title": "Origo karta", "language": "sv" },
   "projectionCode": "EPSG:3008",
-  "extent": [100000, 6400000, 200000, 6500000]
+  "extent": [100000, 6400000, 200000, 6500000],
+  "center": [150000, 6450000],
+  "zoom": 5,
+  "resolutions": [560, 280, 140, 70, 35]
 }
 </code></pre>
-      <p>TODO: verifiera exakta Origo‑nycklar i upstream.</p>
+      <p>TODO: verifiera nycklar för startvy och resolutions.</p>
 
       <h2 id="lager">Lager: WMS, WFS, WMTS</h2>
-      <h3>WMS</h3>
+      <h3 id="wms">WMS</h3>
       <pre><code>{
   "source": {
     "wms_example": {
@@ -96,11 +110,14 @@
     }
   },
   "layers": [
-    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" }
+    { "name": "example_baselayer", "type": "WMS", "source": "wms_example" },
+    { "name": "example_theme", "type": "WMS", "source": "wms_example", "visible": false }
   ]
 }
 </code></pre>
-      <h3>WFS</h3>
+      <p>TODO: verifiera nycklar för WMS‑lager och synlighet.</p>
+
+      <h3 id="wfs">WFS</h3>
       <pre><code>{
   "source": {
     "wfs_example": {
@@ -113,7 +130,10 @@
   ]
 }
 </code></pre>
-      <h3>WMTS</h3>
+      <p>TODO: verifiera WFS‑nycklar och strategy.</p>
+      <p>WFS passar när du behöver attribut i klienten eller klick‑logik.</p>
+
+      <h3 id="wmts">WMTS</h3>
       <pre><code>{
   "source": {
     "wmts_example": {
@@ -128,7 +148,26 @@
   ]
 }
 </code></pre>
-      <p>TODO: verifiera Origo‑nycklar för lager/WMTS.</p>
+      <p>TODO: verifiera Origo‑nycklar för WMTS.</p>
+
+      <h2 id="clustering">Clustering</h2>
+      <p>Clustering används när många punktfeatures ska visas utan att kartan blir tung.</p>
+      <pre><code>{
+  "layers": [
+    {
+      "name": "example_points",
+      "type": "WFS",
+      "source": "wfs_example",
+      "layerType": "cluster",
+      "clusterOptions": {
+        "clusterDistance": 30,
+        "clusterMaxZoom": 12
+      }
+    }
+  ]
+}
+</code></pre>
+      <p>TODO: verifiera nycklar för clustering och layerType.</p>
 
       <h2>Beslutsruta: WMS eller WFS?</h2>
       <table>
@@ -195,21 +234,12 @@
         <li>Styling i GeoServer påverkar renderingtiden.</li>
       </ul>
 
-      <h2>Avancerat: clustering</h2>
-      <pre><code>{
-  "layers": [
-    {
-      "name": "example_cluster_layer",
-      "type": "WFS",
-      "source": "wfs_example",
-      "layerType": "cluster",
-      "clusterStyle": "example_cluster_style",
-      "clusterOptions": { "clusterDistance": 25, "clusterMaxZoom": 12 }
-    }
-  ]
-}
-</code></pre>
-      <p>TODO: verifiera clustering‑nycklar mot Origo‑repo.</p>
+      <h2 id="vanliga-fel">Vanliga fel</h2>
+      <ul>
+        <li>Fel CRS eller fel extent gör att inget syns i kartan.</li>
+        <li>WMS fungerar men WFS blir segt utan filter eller bbox.</li>
+        <li>Fel source‑namn i layer gör att lager inte laddas.</li>
+      </ul>
 
       <div class="callout callout-info">
         <h3>CRS‑notis</h3>

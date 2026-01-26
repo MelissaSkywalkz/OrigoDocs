@@ -34,9 +34,13 @@
           <a href="geoserver.html">GeoServer 101</a>
           <a href="geoserver-styles.html">GeoServer styles</a>
           <a href="geowebcache.html" aria-current="page">GeoWebCache</a>
+          <a href="origo-server.html">Origo Server</a>
           <a href="#tile-cache-101">Tile cache 101</a>
           <a href="#seed-truncate-bypass">Seed/Truncate</a>
           <a href="#crs-gridset">CRS & gridsets</a>
+          <a href="#grid-misalignment">Grid misalignment</a>
+          <a href="#seed-strategi">Seed‑strategi</a>
+          <a href="#felsokningsflode">Felsökningsflöde</a>
           <a href="#cacheability">Cacheability</a>
           <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples.html">Origo-recept</a>
@@ -117,6 +121,18 @@
         Gridset måste matcha kartans CRS. Om gridset/CRS inte stämmer får du fel placering
         eller tomma tiles. Vår vanligaste CRS är EPSG:3008.
       </p>
+      <p>
+        Tänk så här: CRS styr hur världen delas upp i zoomnivåer. Gridset och resolutions måste
+        därför hänga ihop med samma projektion och samma extent.
+      </p>
+
+      <h2 id="grid-misalignment">Grid misalignment</h2>
+      <ul>
+        <li><strong>Symptom:</strong> tiles hamnar fel, skuggförskjutning, tomma rutor vid vissa zoom.</li>
+        <li><strong>Orsak:</strong> fel gridset, fel tile size eller blandade CRS.</li>
+        <li><strong>Åtgärd:</strong> verifiera gridset/matrixset, matcha resolutions och seed om.</li>
+      </ul>
+      <p>TODO: verifiera detaljer mot GeoWebCache‑dokumentationen.</p>
 
       <h2 id="gridset-origin">Gridset, origin och matrixset</h2>
       <ul>
@@ -130,6 +146,12 @@
         <li>Seed kan misslyckas om REST-payload är felaktig.</li>
         <li>Testa seeding med små BBOX och få zoomnivåer.</li>
         <li>Kommunikationsfel syns ofta i GeoServer-loggar.</li>
+      </ul>
+      <h2 id="seed-strategi">Seed‑strategi</h2>
+      <ul>
+        <li>Seed per område och per zoomintervall, inte allt samtidigt.</li>
+        <li>Använd metatiles för jämnare rendering.</li>
+        <li>Börja med lägre zoomnivåer och bygg ut stegvis.</li>
       </ul>
 
       <h2 id="cacheability">Cacheability och parametrar</h2>
@@ -170,6 +192,15 @@
           <li>Fel gridset för CRS.</li>
         </ul>
       </div>
+
+      <h2 id="felsokningsflode">Felsökningsflöde</h2>
+      <ul>
+        <li><strong>Gamla tiles:</strong> truncate cache och testa ny seed.</li>
+        <li><strong>Tomma tiles:</strong> kontrollera bbox/extent och att lagret är publicerat.</li>
+        <li><strong>Tung rendering:</strong> minska zoomintervall och seeda mindre område.</li>
+        <li><strong>Extern WMS långsam:</strong> testa bypass och seeda bara nödvändigt.</li>
+        <li><strong>Fel zoomnivå:</strong> kontrollera resolutions och gridset.</li>
+      </ul>
 
       <h2 id="klientperspektiv">Klientperspektiv (Origo + browser)</h2>
       <ul>

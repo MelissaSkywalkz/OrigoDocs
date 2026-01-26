@@ -60,6 +60,7 @@ const WIZARD_DATA = {
         ],
         links: [
           { label: 'CRS & gridsets', href: '#crs-gridset' },
+          { label: 'Grid misalignment', href: '#grid-misalignment' },
           { label: 'Gridset, origin och matrixset', href: '#gridset-origin' },
           { label: 'Begrepp (enkelt)', href: '#begrepp' }
         ],

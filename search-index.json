@@ -42,6 +42,12 @@
     "content": "tile cache gridset epsg 3008 seed truncate metatiles prestanda"
   },
   {
+    "id": "origo-server",
+    "title": "Origo Server",
+    "url": "origo-server.html",
+    "content": "origo server proxy state elevation backend endpoints localhost"
+  },
+  {
     "id": "git-vscode",
     "title": "Git & VS Code",
     "url": "git-vscode.html",

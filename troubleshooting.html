@@ -34,6 +34,7 @@
           <a href="geoserver.html">GeoServer 101</a>
           <a href="geoserver-styles.html">GeoServer styles</a>
           <a href="geowebcache.html">GeoWebCache</a>
+          <a href="origo-server.html">Origo Server</a>
           <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples.html">Origo-recept</a>
           <a href="faq-gis.html">FAQ GIS</a>
@@ -104,13 +105,22 @@
         <li><strong>403/401:</strong> GeoServer kräver inloggning eller saknar rättigheter.</li>
         <li><strong>CRS mismatch:</strong> data och karta använder olika koordinatsystem.</li>
         <li><strong>CORS:</strong> GeoServer måste tillåta din domän.</li>
+        <li><strong>WMS funkar men WFS är segt:</strong> begränsa med filter/bbox.</li>
       </ul>
       <p>TODO: verifiera GeoServer-specifika lösningar mot dokumentationen.</p>
+
+      <h2>Origo Server-relaterat</h2>
+      <ul>
+        <li><strong>Timeouts:</strong> testa kortare requests och granska proxy‑loggar.</li>
+        <li><strong>401/403:</strong> kontrollera auth mellan Origo, Origo Server och GeoServer.</li>
+        <li><strong>CORS:</strong> säkerställ att klienten går via proxy när det behövs.</li>
+      </ul>
 
       <h2>Prestanda: snabb felsökning</h2>
       <ul>
         <li>Om WFS är segt: byt till WMS för visning.</li>
         <li>Om tiles är gamla: kontrollera GeoWebCache.</li>
+        <li>Om tiles ligger fel: kontrollera gridset/resolutions i <a href="geowebcache.html#grid-misalignment">grid misalignment</a>.</li>
         <li>Om det slöar i klienten: minska antal features.</li>
       </ul>
 
