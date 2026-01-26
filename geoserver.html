@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoServer 101</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-search">
+      <input
+        type="search"
+        id="navSearch"
+        placeholder="Sök i GIS-handboken…"
+        aria-label="Sök"
+      />
+      <ul id="searchResults" class="search-results hidden"></ul>
+    </div>
+    <div class="nav-content">
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+        Dokumentation
+      </button>
+      <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo-guide.html">Origo – guide</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html" aria-current="page">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a href="origo-server.html">Origo Server</a>
+          <a href="git-vscode.html">Git & VS Code</a>
+          <a href="examples.html">Origo-recept</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="release-playbook.html">Release‑playbook</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div></div>
+    </div>
+    <div class="nav-section">
+      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+        Snabblänkar
+      </button>
+      <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        </div></div>
+    </div>
+    </div>
+  </nav>
+
+  <div class="nav-backdrop" hidden></div>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">GeoServer</span>
+        <h1>GeoServer 101</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Guide</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <div class="callout callout-check">
+        <strong>Snabbcheck</strong>
+        Workspace → datastore → layer → style → preview. Om ett steg saknas kommer
+        lagret inte att synas i klienten.
+      </div>
+
+      <h2>Vad är GeoServer?</h2>
+      <p>
+        GeoServer är en server som publicerar geografisk data via standardiserade tjänster.
+        Den <strong>visar inte kartan</strong> – den <strong>serverar data</strong> som andra klienter (t.ex. Origo)
+        kan rita upp.
+      </p>
+      <ul>
+        <li><strong>GeoServer</strong> = data/tjänster</li>
+        <li><strong>Origo</strong> = kartklient som använder tjänsterna</li>
+        <li><strong>WMS/WFS</strong> = bryggan mellan server och klient</li>
+      </ul>
+
+      <h2>Så tänker GeoServer (mental modell)</h2>
+      <ol>
+        <li><strong>Datakälla</strong> – t.ex. PostGIS, GeoPackage, Shapefile, raster.</li>
+        <li><strong>Store</strong> – kopplingen till datakällan.</li>
+        <li><strong>Layer</strong> – det publicerade lagret som klienter kan använda.</li>
+        <li><strong>Tjänst</strong> – WMS/WFS/WMTS som levererar data.</li>
+      </ol>
+
+      <h2>Vanliga GIS-standarder</h2>
+      <div class="two-column">
+        <div>
+          <h3>WMS</h3>
+          <p>Bilder/kartbilder. Bra för bakgrundskartor eller när styling ska ske på servern.</p>
+        </div>
+        <div>
+          <h3>WFS</h3>
+          <p>Objekt/features. Bra när klienten behöver access till geometrier och attribut.</p>
+        </div>
+      </div>
+
+      <h2>Mini-checklista: första lagret</h2>
+      <ol>
+        <li>Datakällan är åtkomlig (rätt URL/anslutning).</li>
+        <li>Layern är publicerad i GeoServer.</li>
+        <li>Klienten använder rätt endpoint (WMS/WFS).</li>
+        <li>CRS/projection matchar mellan data och klient.</li>
+      </ol>
+
+      <h2>GIS-grunder (snabbt)</h2>
+      <ul>
+        <li><strong>CRS/projection:</strong> Hur jorden “plattas ut” till karta.</li>
+        <li><strong>Fel position:</strong> Om CRS inte matchar hamnar lagret fel.</li>
+        <li><strong>Extent/bbox:</strong> Kartans “utbredning” – vad som syns.</li>
+        <li><strong>Cache:</strong> Gamla tiles kan ligga kvar, testa hård reload.</li>
+      </ul>
+      <div class="callout callout-info">
+        <h3>CRS‑notis (vår verklighet)</h3>
+        <p>
+          Vi jobbar oftast i <span class="no-break"><strong>SWEREF 99 13 30 (EPSG:3008)</strong></span>.
+          CRS påverkar extent/bbox, WMTS gridsets och reprojection. Om CRS inte matchar får du ofta tom karta eller fel läge.
+        </p>
+      </div>
+
+      <h2>Databaser & datakällor (översikt)</h2>
+      <div class="callout callout-tip">
+        <strong>Tips</strong>
+        GeoPackage/MySQL passar när data är filbaserad eller redan finns i databas.
+        Välj WMS när du vill ha snabb rendering och WFS när du behöver attribut.
+      </div>
+      <ul>
+        <li><strong>PostGIS:</strong> Databas för geodata (robust, ofta i produktion).</li>
+        <li><strong>GeoPackage/Shapefile:</strong> Filbaserade datakällor (enkla att dela).</li>
+        <li><strong>Raster:</strong> Bildbaserade data (t.ex. höjdmodeller, flygbilder).</li>
+      </ul>
+      <h3>MySQL (praktiskt)</h3>
+      <ul>
+        <li><strong>När?</strong> När data redan finns i MySQL och uppdateras ofta.</li>
+        <li><strong>Vanliga problem:</strong> prestanda, fel CRS, saknade index.</li>
+        <li><strong>Koppling:</strong> publicera som WMS/WFS via GeoServer.</li>
+      </ul>
+      <h3>GeoPackage</h3>
+      <ul>
+        <li><strong>Fördelar:</strong> enkel distribution, en fil per dataset.</li>
+        <li><strong>Begränsningar:</strong> fil‑låsning och begränsad samtidighet.</li>
+        <li><strong>När bättre än databas:</strong> statiska lager eller mindre projekt.</li>
+      </ul>
+      <h3>Externa WMS</h3>
+      <ul>
+        <li><strong>När?</strong> När du bara behöver kartbilden, inte attribut.</li>
+        <li><strong>Förvänta dig inte:</strong> snabba attributfrågor eller filtrering.</li>
+        <li><strong>Cache‑tänk:</strong> extern WMS kan vara långsam → cache hjälper.</li>
+      </ul>
+
+      <h2>WMS vs WFS – beslutsguide</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Aspekt</th>
+            <th>WMS</th>
+            <th>WFS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prestanda</td>
+            <td>Bra (bilder + cache)</td>
+            <td>Tyngre (features)</td>
+          </tr>
+          <tr>
+            <td>Användning</td>
+            <td>Bakgrund, visuellt</td>
+            <td>Analys, attribut</td>
+          </tr>
+          <tr>
+            <td>Cache</td>
+            <td>Enkelt (GeoWebCache)</td>
+            <td>Svårare</td>
+          </tr>
+          <tr>
+            <td>Klientbelastning</td>
+            <td>Låg</td>
+            <td>Högre</td>
+          </tr>
+          <tr>
+            <td>Origo‑funktioner</td>
+            <td>Visning</td>
+            <td>Klick, filter, cluster</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Tumregel:</strong> Om du är osäker – börja med WMS.</p>
+
+      <h2>Prestanda i GIS‑kartor – hur vi tänker</h2>
+      <p>Flödet: <strong>Data → GeoServer → Cache → Origo</strong>.</p>
+      <ul>
+        <li><strong>Server‑flaskhals:</strong> tunga frågor, stora geometrier, många styles.</li>
+        <li><strong>Cache‑flaskhals:</strong> fel gridset, fel CRS, gamla tiles.</li>
+        <li><strong>Klient‑flaskhals:</strong> för många features samtidigt.</li>
+        <li><strong>Styling:</strong> komplexa symboler = långsammare rendering.</li>
+      </ul>
+
+      <h2>Clustering – när och varför</h2>
+      <ul>
+        <li><strong>Rätt när:</strong> många punktfeatures samtidigt.</li>
+        <li><strong>Fel när:</strong> få features eller när exakta positioner krävs.</li>
+        <li><strong>Tumregel:</strong> över 5 000 punkter → överväg clustering.</li>
+      </ul>
+
+      <h2>Hur styling fungerar i GeoServer</h2>
+      <p>
+        GeoServer använder <strong>SLD</strong> (Styled Layer Descriptor) för att beskriva styling.
+        Det finns även en CSS-extension för enklare syntax, men den kan vara versions- eller
+        plugin-beroende.
+      </p>
+
+      <div class="callout callout-warning">
+        <h3>Versioner & plugins</h3>
+        <p>Styling-funktioner kan skilja sig mellan versioner. Kontrollera alltid GeoServer-version.</p>
+      </div>
+
+      <h2>GeoServer – uppdatering & underhåll (DO / DON’T)</h2>
+      <h3>DO – innan uppdatering</h3>
+      <ul>
+        <li>Ta backup på <strong>data directory</strong>.</li>
+        <li>Säkerställ att data directory ligger externt.</li>
+        <li>Notera alla installerade extensions (SLD/CSS/MBStyle m.fl.).</li>
+        <li>Kontrollera versionsmatchning mellan GeoServer och extensions.</li>
+        <li>Testa alltid i testmiljö först.</li>
+      </ul>
+
+      <h3>DON’T – vanliga misstag</h3>
+      <ul>
+        <li>Uppgradera direkt i live.</li>
+        <li>Glömma extensions.</li>
+        <li>Förutsätta att styles fungerar likadant efter uppgradering.</li>
+        <li>Ignorera cache/GeoWebCache.</li>
+      </ul>
+
+      <h3>Efter uppdatering</h3>
+      <ul>
+        <li>Verifiera lager.</li>
+        <li>Verifiera styles.</li>
+        <li>Räkna med att GeoWebCache kan behöva rensas eller seedas om.</li>
+        <li>Testa i Origo (visuellt + funktionellt).</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
