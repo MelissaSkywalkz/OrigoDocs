@@ -28,6 +28,161 @@ const initNavigation = () => {
   mediaQuery.addEventListener('change', handleMediaChange);
 };
 
+const WIZARD_DATA = {
+  geowebcache: {
+    quickChecks: [
+      'Testa Layer Preview i GeoServer för att bekräfta att lagret ritar.',
+      'Bekräfta att du använder rätt gridset och CRS (t.ex. EPSG:3008).',
+      'Testa en annan zoomnivå för att se om felet är nivåspecifikt.',
+      'Verifiera att lagret är cache-aktiverat i GeoWebCache.'
+    ],
+    escalate: [
+      'Felet kvarstår efter truncate/seed och kontroll av gridset.',
+      'Du ser fel i GeoServer-loggar eller upprepade renderingsfel.',
+      'Extern tjänst är långsam även i enkel WMS-preview.'
+    ],
+    symptoms: [
+      {
+        id: 'stale-tiles',
+        label: 'Jag ser gamla tiles (förändringar syns inte)',
+        actions: [
+          'Kör truncate för lagret i GeoWebCache.',
+          'Seed om endast de zoomnivåer och områden som används.',
+          'Verifera att klienten inte cacherar egna tiles.',
+          'Testa BBOX med cache-bypass i WMS om möjligt.'
+        ],
+        check: 'Kontrollera detta: testa samma lager i GeoServer Layer Preview.',
+        avoid: 'Undvik detta: seed inte allt på alla zoomar.'
+      },
+      {
+        id: 'offset-tiles',
+        label: 'Tiles hamnar fel / offset (grid/projection)',
+        actions: [
+          'Verifiera att gridset matchar kartans CRS (EPSG:3008).',
+          'Kontrollera att layer är publicerat i rätt CRS.',
+          'Rensa cache efter CRS/gridset-ändringar.',
+          'Säkerställ att Origo använder samma projectionCode.'
+        ],
+        check: 'Kontrollera detta: testa samma lager i WMS 1.1.1 med rätt CRS.',
+        avoid: 'Undvik detta: blanda olika gridset för samma lager.'
+      },
+      {
+        id: 'holes-tiles',
+        label: 'Tomma tiles eller “hål” i kartan',
+        actions: [
+          'Kontrollera datatäckning och BBOX för lagret.',
+          'Seed om området med korrekt zoomintervall.',
+          'Verifiera att stilen fungerar i GeoServer Preview.',
+          'Testa med en förenklad style om möjligt.'
+        ],
+        check: 'Kontrollera detta: testa annan zoom och panorera över området.',
+        avoid: 'Undvik detta: seeda extremt höga zoomnivåer utan behov.'
+      },
+      {
+        id: 'slow-seed',
+        label: 'Långsam rendering / seeding tar evigheter',
+        actions: [
+          'Seeda i mindre geografiska rutor.',
+          'Minska antal zoomnivåer som seedas.',
+          'Kontrollera att datakällan presterar (index i PostGIS).',
+          'Granska style-komplexitet (tunga symbolizers).'
+        ],
+        check: 'Kontrollera detta: testa att seeda ett litet område.',
+        avoid: 'Undvik detta: kör full seed på hela världen.'
+      },
+      {
+        id: 'slow-external',
+        label: 'Extern WMS är långsam',
+        actions: [
+          'Mät svarstid direkt mot den externa WMS-url:en.',
+          'Cachea som proxy-lager om möjligt.',
+          'Begränsa upplösning och zoomnivåer.',
+          'Undvik för stora BBOX i enskilda anrop.'
+        ],
+        check: 'Kontrollera detta: jämför svarstid med och utan cache.',
+        avoid: 'Undvik detta: skicka onödigt stora kartutdrag.'
+      },
+      {
+        id: 'client-or-server',
+        label: 'Jag vet inte om felet är klient (Origo) eller server (GeoServer/GWC)',
+        actions: [
+          'Testa lagret i GeoServer Layer Preview.',
+          'Testa samma lager i Origo med cache-bypass om möjligt.',
+          'Jämför resultat mellan WMS och cache-lager.',
+          'Kontrollera nätverksflödet i webbläsarens devtools.'
+        ],
+        check: 'Kontrollera detta: isolera felet genom att testa WMS direkt.',
+        avoid: 'Undvik detta: ändra flera inställningar samtidigt.'
+      }
+    ]
+  },
+  'geoserver-styles': {
+    quickChecks: [
+      'Testa stilen i GeoServer Layer Preview.',
+      'Säkerställ att rätt style är kopplad som default.',
+      'Kontrollera att lagret och stilen matchar datatyp.',
+      'Bekräfta att SLD/SE-versionen är korrekt.'
+    ],
+    escalate: [
+      'Stilen laddas inte trots ren XML och korrekt format.',
+      'Inget syns i preview efter flera validerade ändringar.',
+      'Loggar visar upprepade schema- eller renderingsfel.'
+    ],
+    symptoms: [
+      {
+        id: 'sld-import-fail',
+        label: 'SLD importeras inte (XML/schema-fel)',
+        actions: [
+          'Validera XML-strukturen och namespaces.',
+          'Använd SE 1.1 och rätt schemaLocation.',
+          'Kontrollera att filen är ren UTF-8 utan extra tecken.',
+          'Testa att importera en minimal referensstyle.'
+        ]
+      },
+      {
+        id: 'sld-no-render',
+        label: 'SLD importeras men inget syns på kartan',
+        actions: [
+          'Verifiera datatyp (point/line/polygon) mot symbolizer.',
+          'Kontrollera Min/MaxScaleDenominator.',
+          'Testa en enkel färg/linjestil utan filter.',
+          'Bekräfta att rätt style är aktiv på lagret.'
+        ]
+      },
+      {
+        id: 'labels-missing',
+        label: 'Labels syns inte eller ligger fel',
+        actions: [
+          'Kontrollera att rätt attribut används i Label.',
+          'Justera fontstorlek och halo/placement.',
+          'Testa med större text och enklare placement.',
+          'Verifiera att data faktiskt har värden.'
+        ]
+      },
+      {
+        id: 'rules-fail',
+        label: 'Rule-baserad styling fungerar inte (filter)',
+        actions: [
+          'Dubbelkolla filter-syntax och attributnamn.',
+          'Testa en regel i taget.',
+          'Kontrollera att datatypen matchar filtervillkoret.',
+          'Verifiera med en enklare OGC-filterregel.'
+        ]
+      },
+      {
+        id: 'style-cache',
+        label: 'Jag ser gamla stilar (cache)',
+        actions: [
+          'Rensa cache i GeoWebCache för lagret.',
+          'Testa med cache-bypass i WMS.',
+          'Uppdatera kartan med hård refresh.',
+          'Bekräfta att rätt style-version är aktiv.'
+        ]
+      }
+    ]
+  }
+};
+
 const initAccordions = () => {
   const accordions = document.querySelectorAll('.accordion-button');
 
@@ -268,9 +423,100 @@ const initCodeCopy = () => {
   });
 };
 
+const initWizard = () => {
+  const wizards = document.querySelectorAll('[data-wizard]');
+
+  wizards.forEach((wizard) => {
+    const wizardId = wizard.getAttribute('data-wizard');
+    const config = WIZARD_DATA[wizardId];
+
+    if (!config) {
+      return;
+    }
+
+    const optionsContainer = wizard.querySelector('[data-wizard-options]');
+    const actionsContainer = wizard.querySelector('[data-wizard-actions]');
+    const quickContainer = wizard.querySelector('[data-wizard-quick]');
+    const escalateContainer = wizard.querySelector('[data-wizard-escalate]');
+    const checkContainer = wizard.querySelector('[data-wizard-check]');
+    const avoidContainer = wizard.querySelector('[data-wizard-avoid]');
+
+    if (!optionsContainer || !actionsContainer || !quickContainer || !escalateContainer) {
+      return;
+    }
+
+    const storageKey = `wizard-selection-${wizardId}`;
+    const defaultSymptom = config.symptoms[0];
+    const savedId = localStorage.getItem(storageKey);
+    let activeSymptom = config.symptoms.find((item) => item.id === savedId) || defaultSymptom;
+
+    const renderList = (container, items) => {
+      container.innerHTML = '';
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        container.appendChild(li);
+      });
+    };
+
+    renderList(quickContainer, config.quickChecks);
+    renderList(escalateContainer, config.escalate);
+
+    const renderActions = (symptom) => {
+      actionsContainer.innerHTML = '';
+      symptom.actions.forEach((action) => {
+        const li = document.createElement('li');
+        li.textContent = action;
+        actionsContainer.appendChild(li);
+      });
+
+      if (checkContainer) {
+        checkContainer.textContent = symptom.check ? symptom.check : '';
+        checkContainer.classList.toggle('hidden', !symptom.check);
+      }
+
+      if (avoidContainer) {
+        avoidContainer.textContent = symptom.avoid ? symptom.avoid : '';
+        avoidContainer.classList.toggle('hidden', !symptom.avoid);
+      }
+    };
+
+    const updateActive = (symptomId) => {
+      const nextSymptom = config.symptoms.find((item) => item.id === symptomId);
+      if (!nextSymptom) {
+        return;
+      }
+
+      activeSymptom = nextSymptom;
+      localStorage.setItem(storageKey, symptomId);
+      renderActions(activeSymptom);
+      optionsContainer.querySelectorAll('.wizard-option').forEach((button) => {
+        const isActive = button.dataset.symptom === symptomId;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', isActive.toString());
+      });
+    };
+
+    optionsContainer.innerHTML = '';
+    config.symptoms.forEach((symptom) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'wizard-option';
+      button.textContent = symptom.label;
+      button.dataset.symptom = symptom.id;
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => updateActive(symptom.id));
+      optionsContainer.appendChild(button);
+    });
+
+    updateActive(activeSymptom.id);
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
   initSearch();
   initCodeCopy();
+  initWizard();
 });
