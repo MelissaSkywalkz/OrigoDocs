@@ -2,12 +2,28 @@ const initNavigation = () => {
   const body = document.body;
   const toggleButtons = document.querySelectorAll('[data-nav-toggle]');
   const mediaQuery = window.matchMedia('(max-width: 960px)');
+  let overlay = document.querySelector('.nav-overlay');
+
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(overlay);
+  }
 
   const setCollapsed = (collapsed) => {
     body.classList.toggle('nav-collapsed', collapsed);
+    body.classList.toggle('nav-open', !collapsed && mediaQuery.matches);
     toggleButtons.forEach((button) => {
       button.setAttribute('aria-expanded', (!collapsed).toString());
     });
+
+    if (!collapsed && mediaQuery.matches) {
+      const firstLink = document.querySelector('.sidenav a');
+      if (firstLink) {
+        firstLink.focus();
+      }
+    }
   };
 
   const handleToggle = () => {
@@ -15,12 +31,29 @@ const initNavigation = () => {
   };
 
   toggleButtons.forEach((button) => {
+    if (!button.getAttribute('aria-controls')) {
+      button.setAttribute('aria-controls', 'sidenav');
+    }
     button.addEventListener('click', handleToggle);
+  });
+
+  overlay.addEventListener('click', () => {
+    if (mediaQuery.matches) {
+      setCollapsed(true);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && mediaQuery.matches && !body.classList.contains('nav-collapsed')) {
+      setCollapsed(true);
+    }
   });
 
   const handleMediaChange = () => {
     if (mediaQuery.matches) {
       setCollapsed(true);
+    } else {
+      setCollapsed(false);
     }
   };
 

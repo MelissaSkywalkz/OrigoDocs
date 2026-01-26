@@ -15,7 +15,7 @@
     "id": "origo-guide",
     "title": "Origo – guide",
     "url": "origo-guide.html",
-    "content": "origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008"
+    "content": "origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel"
   },
   {
     "id": "layermanager",
@@ -39,13 +39,13 @@
     "id": "geowebcache",
     "title": "GeoWebCache",
     "url": "geowebcache.html",
-    "content": "tile cache gridset epsg 3008 seed truncate metatiles prestanda"
+    "content": "tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning"
   },
   {
     "id": "origo-server",
     "title": "Origo Server",
     "url": "origo-server.html",
-    "content": "origo server proxy state elevation backend endpoints localhost"
+    "content": "origo server proxy state elevation backend endpoints drift felsökning localhost"
   },
   {
     "id": "git-vscode",

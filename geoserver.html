@@ -65,7 +65,7 @@
         <h1>GeoServer 101</h1>
       </div>
       <div class="topbar-meta">
-        <span class="status-pill">GIS-grunder</span>
+        <span class="status-pill">Guide</span>
       </div>
     </header>
 
@@ -95,7 +95,6 @@
         <li><strong>Layer</strong> – det publicerade lagret som klienter kan använda.</li>
         <li><strong>Tjänst</strong> – WMS/WFS/WMTS som levererar data.</li>
       </ol>
-      <p>TODO: verifiera mot GeoServer-dokumentation om vi behöver nämna andra koncept här.</p>
 
       <h2>Vanliga GIS-standarder</h2>
       <div class="two-column">
@@ -127,8 +126,8 @@
       <div class="callout callout-info">
         <h3>CRS‑notis (vår verklighet)</h3>
         <p>
-          Vi jobbar oftast i <strong>SWEREF 99 13 30 (EPSG:3008)</strong>. CRS påverkar extent/bbox,
-          WMTS gridsets och reprojection. Om CRS inte matchar får du ofta tom karta eller fel läge.
+          Vi jobbar oftast i <span class="no-break"><strong>SWEREF 99 13 30 (EPSG:3008)</strong></span>.
+          CRS påverkar extent/bbox, WMTS gridsets och reprojection. Om CRS inte matchar får du ofta tom karta eller fel läge.
         </p>
       </div>
 
@@ -221,7 +220,7 @@
       <p>
         GeoServer använder <strong>SLD</strong> (Styled Layer Descriptor) för att beskriva styling.
         Det finns även en CSS-extension för enklare syntax, men den kan vara versions- eller
-        plugin-beroende. TODO: verifiera vilka styling-plugins vi använder.
+        plugin-beroende.
       </p>
 
       <div class="callout callout-warning">
