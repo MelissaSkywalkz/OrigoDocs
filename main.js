@@ -578,10 +578,148 @@ const initWizard = () => {
   });
 };
 
+const initGlossary = () => {
+  const main = document.querySelector('main');
+
+  if (!main) {
+    return;
+  }
+
+  fetch('./glossary.json')
+    .then((response) => (response.ok ? response.json() : []))
+    .then((terms) => {
+      if (!Array.isArray(terms) || !terms.length) {
+        return;
+      }
+
+      const entries = terms.flatMap((term) => {
+        const aliases = Array.isArray(term.aliases) ? term.aliases : [];
+        const allTerms = [term.term, ...aliases];
+        return allTerms.map((label) => ({
+          label,
+          short: term.short,
+          long: term.long || term.short,
+          key: term.term
+        }));
+      });
+
+      entries.sort((a, b) => b.label.length - a.label.length);
+
+      const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = entries.map((entry) => escapeRegex(entry.label)).join('|');
+      const regex = new RegExp(`(${pattern})`, 'gi');
+
+      const excludedTags = new Set(['A', 'PRE', 'CODE', 'KBD', 'SAMP', 'SCRIPT', 'STYLE']);
+      let tooltipIndex = 0;
+
+      const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+          if (!node.nodeValue || !node.nodeValue.trim()) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          const parent = node.parentElement;
+          if (!parent) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          if (parent.closest('.glossary-item')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          if (parent.closest('pre, code, kbd, samp, script, style, a')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          if (excludedTags.has(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const nodes = [];
+      while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+      }
+
+      nodes.forEach((node) => {
+        const text = node.nodeValue;
+        if (!regex.test(text)) {
+          return;
+        }
+
+        regex.lastIndex = 0;
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+          const matchedText = match[0];
+          const matchIndex = match.index;
+          const before = text.slice(lastIndex, matchIndex);
+          if (before) {
+            fragment.appendChild(document.createTextNode(before));
+          }
+
+          const entry = entries.find((item) => item.label.toLowerCase() === matchedText.toLowerCase());
+          if (!entry) {
+            fragment.appendChild(document.createTextNode(matchedText));
+            lastIndex = matchIndex + matchedText.length;
+            continue;
+          }
+
+          tooltipIndex += 1;
+          const tooltipId = `glossary-tip-${tooltipIndex}`;
+          const wrapper = document.createElement('span');
+          wrapper.className = 'glossary-item';
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'glossary-term';
+          button.textContent = matchedText;
+          button.setAttribute('aria-describedby', tooltipId);
+          button.setAttribute('aria-label', `${entry.key}: ${entry.short}`);
+          button.setAttribute('aria-expanded', 'false');
+
+          const tooltip = document.createElement('span');
+          tooltip.className = 'glossary-tooltip';
+          tooltip.id = tooltipId;
+          tooltip.setAttribute('role', 'tooltip');
+          tooltip.textContent = entry.short;
+          tooltip.dataset.short = entry.short;
+          tooltip.dataset.long = entry.long;
+
+          button.addEventListener('click', () => {
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', (!expanded).toString());
+            tooltip.textContent = expanded ? tooltip.dataset.short : tooltip.dataset.long;
+          });
+
+          wrapper.appendChild(button);
+          wrapper.appendChild(tooltip);
+          fragment.appendChild(wrapper);
+
+          lastIndex = matchIndex + matchedText.length;
+        }
+
+        const after = text.slice(lastIndex);
+        if (after) {
+          fragment.appendChild(document.createTextNode(after));
+        }
+
+        node.parentNode.replaceChild(fragment, node);
+      });
+    })
+    .catch(() => {});
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
   initSearch();
   initCodeCopy();
   initWizard();
+  initGlossary();
 });

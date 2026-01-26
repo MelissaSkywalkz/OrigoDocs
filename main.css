@@ -344,6 +344,57 @@ a {
   font-weight: 600;
 }
 
+.glossary-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.glossary-term {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.glossary-term:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.glossary-tooltip {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 20;
+  max-width: 260px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: #111827;
+  color: #f8fafc;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.glossary-term:hover + .glossary-tooltip,
+.glossary-term:focus + .glossary-tooltip {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 .doc-content {
   background: var(--card);
   border-radius: var(--radius);
