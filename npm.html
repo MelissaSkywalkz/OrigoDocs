@@ -1,130 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sv">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>npm & plugins</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="main.css">
-</head>
-<body class="layout">
-  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
-    <div class="sidebar-header">
-      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
-    </div>
-    <div class="nav-search">
-      <input
-        type="search"
-        id="navSearch"
-        placeholder="Sök i GIS-handboken…"
-        aria-label="Sök"
-      />
-      <ul id="searchResults" class="search-results hidden"></ul>
-    </div>
-    <div class="nav-content">
-    <div class="nav-section">
-      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
-        Dokumentation
-      </button>
-      <div class="accordion-panel" id="nav-docs">
-          <a href="index.html">Start</a>
-          <a href="page.html">JSON 101</a>
-          <a href="origo-guide.html">Origo – guide</a>
-          <a href="layermanager.html">Layermanager</a>
-          <a href="geoserver.html">GeoServer 101</a>
-          <a href="geoserver-styles.html">GeoServer – styles</a>
-          <a href="geowebcache.html">GeoWebCache</a>
-          <a href="origo-server.html">Origo Server</a>
-          <a href="git-vscode.html">Git & VS Code</a>
-          <a href="examples.html">Origo-recept</a>
-          <a href="faq-gis.html">FAQ GIS</a>
-          <a href="npm.html" aria-current="page">npm & plugins</a>
-          <a href="release-playbook.html">Release‑playbook</a>
-          <a href="troubleshooting.html">Felsökning</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>npm & plugins</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+      </div>
+      <div class="nav-search">
+        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
+        <ul id="searchResults" class="search-results hidden"></ul>
+      </div>
+      <div class="nav-content">
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+            Dokumentation
+          </button>
+          <div class="accordion-panel" id="nav-docs">
+            <a href="index.html">Start</a>
+            <a href="page.html">JSON 101</a>
+            <a href="origo-guide.html">Origo – guide</a>
+            <a href="layermanager.html">Layermanager</a>
+            <a href="geoserver.html">GeoServer 101</a>
+            <a href="geoserver-styles.html">GeoServer – styles</a>
+            <a href="geowebcache.html">GeoWebCache</a>
+            <a href="origo-server.html">Origo Server</a>
+            <a href="git-vscode.html">Git & VS Code</a>
+            <a href="examples.html">Origo-recept</a>
+            <a href="faq-gis.html">FAQ GIS</a>
+            <a href="npm.html" aria-current="page">npm & plugins</a>
+            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="troubleshooting.html">Felsökning</a>
+          </div>
+        </div>
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+            Snabblänkar
+          </button>
+          <div class="accordion-panel" id="nav-shortcuts" hidden>
+            <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
+              >Origo Docs (extern)</a
+            >
+          </div>
         </div>
       </div>
-      <div class="nav-section">
-      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
-        Snabblänkar
-      </button>
-      <div class="accordion-panel" id="nav-shortcuts" hidden>
-          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
-          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+    </nav>
+
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <button
+          class="nav-toggle"
+          data-nav-toggle
+          aria-label="Öppna eller stäng meny"
+          aria-expanded="true"
+        >
+          <img src="sort.png" alt="" />
+        </button>
+        <div class="topbar-title">
+          <span class="eyebrow">npm</span>
+          <h1>npm & plugins</h1>
         </div>
-      </div>
-    </div>
-  </nav>
+        <div class="topbar-meta">
+          <span class="status-pill">Verktyg</span>
+        </div>
+      </header>
 
-  <div class="nav-backdrop" hidden></div>
-
-  <main class="main" id="main">
-    <header class="topbar">
-      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
-        <img src="sort.png" alt="" />
-      </button>
-      <div class="topbar-title">
-        <span class="eyebrow">npm</span>
-        <h1>npm & plugins</h1>
-      </div>
-      <div class="topbar-meta">
-        <span class="status-pill">Verktyg</span>
-      </div>
-    </header>
-
-    <section class="doc-content">
-      <h2>Installera plugins via npm</h2>
-      <pre><code>npm install @leverantor/origo-plugin
+      <section class="doc-content">
+        <h2>Installera plugins via npm</h2>
+        <pre><code>npm install @leverantor/origo-plugin
 npm install @leverantor/origo-plugin@1.2.3
 </code></pre>
-      <ul>
-        <li>Använd <strong>exakta versioner</strong> för stabilitet.</li>
-        <li>Notera eventuella <strong>peer dependencies</strong>.</li>
-      </ul>
+        <ul>
+          <li>Använd <strong>exakta versioner</strong> för stabilitet.</li>
+          <li>Notera eventuella <strong>peer dependencies</strong>.</li>
+        </ul>
 
-      <h2>Bygg in i ett statiskt projekt</h2>
-      <p>
-        Om pluginen kräver byggsteg: använd en enkel bundler (t.ex. Vite) och generera statiska filer.
-        Kontrollera i pluginets README om bundling krävs.
-      </p>
-      <pre><code># exempel på enkel setup
+        <h2>Bygg in i ett statiskt projekt</h2>
+        <p>
+          Om pluginen kräver byggsteg: använd en enkel bundler (t.ex. Vite) och generera statiska
+          filer. Kontrollera i pluginets README om bundling krävs.
+        </p>
+        <pre><code># exempel på enkel setup
 npm create vite@latest origo-demo
 cd origo-demo
 npm install
 npm run build
 </code></pre>
 
-      <h2>Snabba kommandon</h2>
-      <div class="two-column">
-        <div>
-          <h3>Init & install</h3>
-          <pre><code>npm init -y
+        <h2>Snabba kommandon</h2>
+        <div class="two-column">
+          <div>
+            <h3>Init & install</h3>
+            <pre><code>npm init -y
 npm install paket
 npm install paket --save-dev
 </code></pre>
-        </div>
-        <div>
-          <h3>Uppdatera & audit</h3>
-          <pre><code>npm update
+          </div>
+          <div>
+            <h3>Uppdatera & audit</h3>
+            <pre><code>npm update
 npm audit
 npm audit fix
 </code></pre>
+          </div>
         </div>
-      </div>
 
-      <h2>Versioner & semver (kort)</h2>
-      <ul>
-        <li><strong>^1.2.3</strong> = tillåter mindre uppdateringar.</li>
-        <li><strong>~1.2.3</strong> = tillåter patchar.</li>
-        <li><strong>1.2.3</strong> = låst exakt version.</li>
-      </ul>
+        <h2>Versioner & semver (kort)</h2>
+        <ul>
+          <li><strong>^1.2.3</strong> = tillåter mindre uppdateringar.</li>
+          <li><strong>~1.2.3</strong> = tillåter patchar.</li>
+          <li><strong>1.2.3</strong> = låst exakt version.</li>
+        </ul>
 
-      <div class="callout callout-warning">
-        <h3>Lockfile</h3>
-        <p>Commit alltid <code>package-lock.json</code> för reproducibla byggen.</p>
-      </div>
-    </section>
-  </main>
+        <div class="callout callout-warning">
+          <h3>Lockfile</h3>
+          <p>Commit alltid <code>package-lock.json</code> för reproducibla byggen.</p>
+        </div>
+      </section>
+    </main>
 
-  <script src="main.js"></script>
-</body>
+    <script src="main.js"></script>
+  </body>
 </html>

@@ -74,7 +74,7 @@ a {
   padding: 0 1.5rem 1.25rem;
 }
 
-.nav-search input[type="search"] {
+.nav-search input[type='search'] {
   width: 100%;
   padding: 0.55rem 0.75rem;
   border-radius: 10px;
@@ -84,7 +84,7 @@ a {
   font-size: 0.85rem;
 }
 
-.nav-search input[type="search"]::placeholder {
+.nav-search input[type='search']::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -159,7 +159,7 @@ a {
   font-weight: 600;
 }
 
-.accordion-button[aria-expanded="true"]::after {
+.accordion-button[aria-expanded='true']::after {
   content: '–';
 }
 
@@ -191,7 +191,7 @@ a {
 }
 
 .accordion-panel a.active,
-.accordion-panel a[aria-current="page"] {
+.accordion-panel a[aria-current='page'] {
   background-color: var(--sidebar-hover);
   border-left-color: #9fb3c8;
   color: #ffffff;
@@ -211,11 +211,11 @@ a {
   color: rgba(230, 235, 243, 0.78);
 }
 
-.accordion-panel a[href$=".html"] + a[href^="#"] {
+.accordion-panel a[href$='.html'] + a[href^='#'] {
   margin-top: 0.35rem;
 }
 
-.accordion-panel a[href^="#"] + a[href$=".html"] {
+.accordion-panel a[href^='#'] + a[href$='.html'] {
   margin-top: 0.35rem;
 }
 
@@ -672,7 +672,9 @@ a {
     transform: translateX(-100%);
     visibility: hidden;
     pointer-events: none;
-    transition: transform 200ms ease, visibility 0s linear 200ms;
+    transition:
+      transform 200ms ease,
+      visibility 0s linear 200ms;
   }
 
   body.nav-open .sidenav {
@@ -689,7 +691,9 @@ a {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 200ms ease, visibility 0s linear 200ms;
+    transition:
+      opacity 200ms ease,
+      visibility 0s linear 200ms;
     z-index: 900;
   }
 

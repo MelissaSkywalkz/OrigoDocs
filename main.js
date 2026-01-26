@@ -142,17 +142,17 @@ const WIZARD_DATA = {
         startHere: [
           'Kör truncate för lagret i GeoWebCache.',
           'Testa lagret i GeoServer Layer Preview.',
-          'Ladda om kartan med hård refresh.'
+          'Ladda om kartan med hård refresh.',
         ],
         links: [
           { label: 'Seed / Truncate / Bypass – skillnaden', href: '#seed-truncate-bypass' },
           { label: 'Praktisk checklista', href: '#checklista' },
-          { label: 'Stale tiles', href: '#stale-tiles' }
+          { label: 'Stale tiles', href: '#stale-tiles' },
         ],
         escalate: [
           'Felet kvarstår efter truncate och ny seed.',
-          'Loggar visar återkommande renderingsfel.'
-        ]
+          'Loggar visar återkommande renderingsfel.',
+        ],
       },
       {
         key: 'offset-tiles',
@@ -160,15 +160,15 @@ const WIZARD_DATA = {
         startHere: [
           'Kontrollera gridset och CRS (EPSG:3008).',
           'Verifiera origin och matrixset i gridset.',
-          'Testa samma lager i WMS 1.1.1.'
+          'Testa samma lager i WMS 1.1.1.',
         ],
         links: [
           { label: 'CRS & gridsets', href: '#crs-gridset' },
           { label: 'Grid misalignment', href: '#grid-misalignment' },
           { label: 'Gridset, origin och matrixset', href: '#gridset-origin' },
-          { label: 'Begrepp (enkelt)', href: '#begrepp' }
+          { label: 'Begrepp (enkelt)', href: '#begrepp' },
         ],
-        escalate: ['Offset kvarstår efter gridset/CRS-kontroll.']
+        escalate: ['Offset kvarstår efter gridset/CRS-kontroll.'],
       },
       {
         key: 'holes-tiles',
@@ -176,14 +176,14 @@ const WIZARD_DATA = {
         startHere: [
           'Testa annan zoomnivå i klienten.',
           'Kontrollera datatäckning och BBOX.',
-          'Se om lagret ritar i Layer Preview.'
+          'Se om lagret ritar i Layer Preview.',
         ],
         links: [
           { label: 'Tile cache 101', href: '#tile-cache-101' },
           { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
-          { label: 'Praktisk checklista', href: '#checklista' }
+          { label: 'Praktisk checklista', href: '#checklista' },
         ],
-        escalate: ['Tomma tiles även i Layer Preview.']
+        escalate: ['Tomma tiles även i Layer Preview.'],
       },
       {
         key: 'slow-seed',
@@ -191,14 +191,14 @@ const WIZARD_DATA = {
         startHere: [
           'Seeda mindre område och färre zoomnivåer.',
           'Kontrollera datakällans prestanda.',
-          'Granska om stilen är tung.'
+          'Granska om stilen är tung.',
         ],
         links: [
           { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
           { label: 'Metastore och disk quota', href: '#metastore-disk' },
-          { label: 'Vanliga misstag', href: '#vanliga-misstag' }
+          { label: 'Vanliga misstag', href: '#vanliga-misstag' },
         ],
-        escalate: ['Seeding är fortsatt långsam på små ytor.']
+        escalate: ['Seeding är fortsatt långsam på små ytor.'],
       },
       {
         key: 'slow-external',
@@ -206,14 +206,14 @@ const WIZARD_DATA = {
         startHere: [
           'Mät svarstid direkt mot WMS-url.',
           'Cachea som proxy-lager om möjligt.',
-          'Begränsa BBOX och zoomnivåer.'
+          'Begränsa BBOX och zoomnivåer.',
         ],
         links: [
           { label: 'Cacheability och parametrar', href: '#cacheability' },
           { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
-          { label: 'Klientperspektiv', href: '#klientperspektiv' }
+          { label: 'Klientperspektiv', href: '#klientperspektiv' },
         ],
-        escalate: ['Extern tjänst är långsam även utan cache.']
+        escalate: ['Extern tjänst är långsam även utan cache.'],
       },
       {
         key: 'client-or-server',
@@ -221,16 +221,16 @@ const WIZARD_DATA = {
         startHere: [
           'Testa lagret i GeoServer Layer Preview.',
           'Testa WMS direkt i webbläsaren.',
-          'Jämför resultat i Origo och preview.'
+          'Jämför resultat i Origo och preview.',
         ],
         links: [
           { label: 'Klientperspektiv', href: '#klientperspektiv' },
           { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
-          { label: 'Tile cache 101', href: '#tile-cache-101' }
+          { label: 'Tile cache 101', href: '#tile-cache-101' },
         ],
-        escalate: ['Skillnaden mellan klient och server går inte att isolera.']
-      }
-    ]
+        escalate: ['Skillnaden mellan klient och server går inte att isolera.'],
+      },
+    ],
   },
   'geoserver-styles': {
     title: 'Felsökningswizard',
@@ -241,14 +241,14 @@ const WIZARD_DATA = {
         startHere: [
           'Validera XML och namespaces.',
           'Testa import av en minimal SLD.',
-          'Kontrollera att formatet är SE 1.1.'
+          'Kontrollera att formatet är SE 1.1.',
         ],
         links: [
           { label: 'Import och namespaces', href: '#sld-import' },
           { label: 'SLD Cookbook', href: '#sld-cookbook' },
-          { label: 'Välj rätt format', href: '#format' }
+          { label: 'Välj rätt format', href: '#format' },
         ],
-        escalate: ['Import misslyckas även med minimal SLD.']
+        escalate: ['Import misslyckas även med minimal SLD.'],
       },
       {
         key: 'sld-no-render',
@@ -256,14 +256,14 @@ const WIZARD_DATA = {
         startHere: [
           'Verifiera datatyp mot symbolizer.',
           'Kontrollera Min/MaxScaleDenominator.',
-          'Testa en enkel style utan filter.'
+          'Testa en enkel style utan filter.',
         ],
         links: [
           { label: 'SLD Cookbook', href: '#sld-cookbook' },
           { label: 'Skala och synlighet', href: '#sld-scale' },
-          { label: 'Parameterguide', href: '#parameterguide' }
+          { label: 'Parameterguide', href: '#parameterguide' },
         ],
-        escalate: ['Inget syns i preview efter förenklad style.']
+        escalate: ['Inget syns i preview efter förenklad style.'],
       },
       {
         key: 'labels-missing',
@@ -271,14 +271,14 @@ const WIZARD_DATA = {
         startHere: [
           'Kontrollera attributnamn i Label.',
           'Justera fontstorlek och placement.',
-          'Testa en enkel label utan halo.'
+          'Testa en enkel label utan halo.',
         ],
         links: [
           { label: 'Labels – enkel etikett', href: '#labels' },
           { label: 'Skala och synlighet', href: '#sld-scale' },
-          { label: 'Parameterguide', href: '#parameterguide' }
+          { label: 'Parameterguide', href: '#parameterguide' },
         ],
-        escalate: ['Labels syns inte trots förenklad label.']
+        escalate: ['Labels syns inte trots förenklad label.'],
       },
       {
         key: 'rules-fail',
@@ -286,14 +286,14 @@ const WIZARD_DATA = {
         startHere: [
           'Kontrollera filter-syntax och attributnamn.',
           'Testa en regel i taget.',
-          'Verifiera datatyper i attributen.'
+          'Verifiera datatyper i attributen.',
         ],
         links: [
           { label: 'SLD‑felsökning', href: '#sld-felsokning' },
           { label: 'Parameterguide', href: '#parameterguide' },
-          { label: 'SLD Cookbook', href: '#sld-cookbook' }
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
         ],
-        escalate: ['Filter ger fel även med enkel regel.']
+        escalate: ['Filter ger fel även med enkel regel.'],
       },
       {
         key: 'style-cache',
@@ -301,17 +301,17 @@ const WIZARD_DATA = {
         startHere: [
           'Rensa cache för lagret i GeoWebCache.',
           'Gör hård refresh i webbläsaren.',
-          'Bekräfta att rätt style är aktiv.'
+          'Bekräfta att rätt style är aktiv.',
         ],
         links: [
           { label: 'Cache och uppdatering', href: '#sld-cache' },
           { label: 'Översikt', href: '#oversikt' },
-          { label: 'Hur detta påverkar kartklienten', href: '#origo-impact' }
+          { label: 'Hur detta påverkar kartklienten', href: '#origo-impact' },
         ],
-        escalate: ['Stilen uppdateras inte efter cache‑rensing.']
-      }
-    ]
-  }
+        escalate: ['Stilen uppdateras inte efter cache‑rensing.'],
+      },
+    ],
+  },
 };
 
 const initAccordions = () => {
@@ -423,7 +423,7 @@ const getExplicitLanguage = (codeBlock, pre) => {
     codeBlock?.dataset?.lang,
     pre?.dataset?.lang,
     codeBlock?.closest('[data-lang]')?.dataset?.lang,
-    pre?.closest('[data-lang]')?.dataset?.lang
+    pre?.closest('[data-lang]')?.dataset?.lang,
   ].find(Boolean);
 
   if (explicit) {
@@ -456,7 +456,7 @@ const normalizeLanguageLabel = (lang) => {
     js: 'JavaScript',
     javascript: 'JavaScript',
     css: 'CSS',
-    mbstyle: 'MBStyle'
+    mbstyle: 'MBStyle',
   };
 
   return map[lang] || null;
@@ -471,22 +471,36 @@ const detectLanguageBadge = (codeBlock, pre) => {
   const codeText = codeBlock.textContent.trim();
   const firstLines = codeText.split(/\r?\n/).slice(0, 6).join('\n');
 
-  if (/^<\\?xml/i.test(codeText) || /<se:StyledLayerDescriptor/i.test(codeText) || /<StyledLayerDescriptor/i.test(codeText)) {
+  if (
+    /^<\\?xml/i.test(codeText) ||
+    /<se:StyledLayerDescriptor/i.test(codeText) ||
+    /<StyledLayerDescriptor/i.test(codeText)
+  ) {
     return 'XML';
   }
 
-  if (/^(\\$ )/m.test(firstLines) || /(^|\\n)\\s*(npm |git |python )/m.test(firstLines) || /npm install|python -m http\\.server/.test(firstLines)) {
+  if (
+    /^(\\$ )/m.test(firstLines) ||
+    /(^|\\n)\\s*(npm |git |python )/m.test(firstLines) ||
+    /npm install|python -m http\\.server/.test(firstLines)
+  ) {
     return 'CLI';
   }
 
   if (/^[{[]/.test(codeText)) {
-    if (/"layers"\\s*:/.test(codeText) && (/"paint"\\s*:/.test(codeText) || /"layout"\\s*:/.test(codeText))) {
+    if (
+      /"layers"\\s*:/.test(codeText) &&
+      (/"paint"\\s*:/.test(codeText) || /"layout"\\s*:/.test(codeText))
+    ) {
       return 'MBStyle';
     }
     return 'JSON';
   }
 
-  if (/(@media|@font-face)/i.test(codeText) || /(mark-size:|stroke-width:|\\bmark:)/i.test(codeText)) {
+  if (
+    /(@media|@font-face)/i.test(codeText) ||
+    /(mark-size:|stroke-width:|\\bmark:)/i.test(codeText)
+  ) {
     return 'CSS';
   }
 
@@ -839,7 +853,7 @@ const initScrollSpy = () => {
           }
         }
       },
-      { rootMargin: '-30% 0px -60% 0px' }
+      { rootMargin: '-30% 0px -60% 0px' },
     );
 
     targets.forEach(({ target }) => observer.observe(target));

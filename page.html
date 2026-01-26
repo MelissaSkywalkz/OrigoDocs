@@ -1,115 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sv">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON 101: Origo lathund</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="main.css">
-</head>
-<body class="layout">
-  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
-    <div class="sidebar-header">
-      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
-    </div>
-    <div class="nav-search">
-      <input
-        type="search"
-        id="navSearch"
-        placeholder="Sök i GIS-handboken…"
-        aria-label="Sök"
-      />
-      <ul id="searchResults" class="search-results hidden"></ul>
-    </div>
-    <div class="nav-content">
-    <div class="nav-section">
-      <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
-        Dokumentation
-      </button>
-      <div class="accordion-panel" id="nav-docs">
-          <a href="index.html">Start</a>
-          <a href="page.html" aria-current="page">JSON 101</a>
-          <a href="origo-guide.html">Origo guide</a>
-          <a href="layermanager.html">Layermanager</a>
-          <a href="geoserver.html">GeoServer 101</a>
-          <a href="geoserver-styles.html">GeoServer styles</a>
-          <a href="geowebcache.html">GeoWebCache</a>
-          <a href="origo-server.html">Origo Server</a>
-          <a href="git-vscode.html">Git & VS Code</a>
-          <a href="examples.html">Origo-recept</a>
-          <a href="faq-gis.html">FAQ GIS</a>
-          <a href="npm.html">npm & plugins</a>
-          <a href="release-playbook.html">Release‑playbook</a>
-          <a href="troubleshooting.html">Felsökning</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON 101: Origo lathund</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+      </div>
+      <div class="nav-search">
+        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
+        <ul id="searchResults" class="search-results hidden"></ul>
+      </div>
+      <div class="nav-content">
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+            Dokumentation
+          </button>
+          <div class="accordion-panel" id="nav-docs">
+            <a href="index.html">Start</a>
+            <a href="page.html" aria-current="page">JSON 101</a>
+            <a href="origo-guide.html">Origo guide</a>
+            <a href="layermanager.html">Layermanager</a>
+            <a href="geoserver.html">GeoServer 101</a>
+            <a href="geoserver-styles.html">GeoServer styles</a>
+            <a href="geowebcache.html">GeoWebCache</a>
+            <a href="origo-server.html">Origo Server</a>
+            <a href="git-vscode.html">Git & VS Code</a>
+            <a href="examples.html">Origo-recept</a>
+            <a href="faq-gis.html">FAQ GIS</a>
+            <a href="npm.html">npm & plugins</a>
+            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="troubleshooting.html">Felsökning</a>
+          </div>
+        </div>
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+            Snabblänkar
+          </button>
+          <div class="accordion-panel" id="nav-shortcuts" hidden>
+            <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
+              >Origo Docs (extern)</a
+            >
+          </div>
         </div>
       </div>
-      <div class="nav-section">
-      <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
-        Snabblänkar
-      </button>
-      <div class="accordion-panel" id="nav-shortcuts" hidden>
-          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
-          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+    </nav>
+
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <button
+          class="nav-toggle"
+          data-nav-toggle
+          aria-label="Öppna eller stäng meny"
+          aria-expanded="true"
+        >
+          <img src="sort.png" alt="" />
+        </button>
+        <div class="topbar-title">
+          <span class="eyebrow">JSON</span>
+          <h1>JSON 101</h1>
         </div>
-      </div>
-    </div>
-  </nav>
+        <div class="topbar-meta">
+          <span class="status-pill">Grund</span>
+        </div>
+      </header>
 
-  <div class="nav-backdrop" hidden></div>
+      <section class="doc-content">
+        <h2>Vad är JSON?</h2>
+        <p>
+          JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde) och
+          <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
+        </p>
 
-  <main class="main" id="main">
-    <header class="topbar">
-      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
-        <img src="sort.png" alt="" />
-      </button>
-      <div class="topbar-title">
-        <span class="eyebrow">JSON</span>
-        <h1>JSON 101</h1>
-      </div>
-      <div class="topbar-meta">
-        <span class="status-pill">Grund</span>
-      </div>
-    </header>
+        <div class="callout callout-warning">
+          <h3>Vanliga fel</h3>
+          <ul>
+            <li>Extra kommatecken (trailing comma) efter sista raden.</li>
+            <li>Felaktiga citattecken. JSON kräver dubbla "".</li>
+            <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
+          </ul>
+        </div>
 
-    <section class="doc-content">
-      <h2>Vad är JSON?</h2>
-      <p>
-        JSON är ett textformat för data. Det består av <strong>objekt</strong> (nyckel/värde)
-        och <strong>arrayer</strong> (listor). Det används ofta för konfigurationer i webbkartor.
-      </p>
-
-      <div class="callout callout-warning">
-        <h3>Vanliga fel</h3>
+        <h2>Objekt, arrayer och datatyper</h2>
         <ul>
-          <li>Extra kommatecken (trailing comma) efter sista raden.</li>
-          <li>Felaktiga citattecken. JSON kräver dubbla "".</li>
-          <li>Fel teckenkodning eller “smarta” citattecken från Word/Teams.</li>
+          <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
+          <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
+          <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
         </ul>
-      </div>
 
-      <h2>Objekt, arrayer och datatyper</h2>
-      <ul>
-        <li><strong>Objekt:</strong> { "nyckel": "värde" }</li>
-        <li><strong>Array:</strong> [ "ett", "två", "tre" ]</li>
-        <li><strong>Datatyper:</strong> sträng, nummer, boolesk, null, objekt, array.</li>
-      </ul>
+        <div class="callout callout-check">
+          <strong>Snabbcheck</strong>
+          Har du dubbelcitat överallt och inga trailing commas? Kontrollera att varje rad ligger i
+          rätt objekt/array innan du testar i Origo.
+        </div>
 
-      <div class="callout callout-check">
-        <strong>Snabbcheck</strong>
-        Har du dubbelcitat överallt och inga trailing commas? Kontrollera att varje
-        rad ligger i rätt objekt/array innan du testar i Origo.
-      </div>
-
-      <h2>Exempel: enkelt config-objekt</h2>
-      <pre><code>{
+        <h2>Exempel: enkelt config-objekt</h2>
+        <pre><code>{
   "appTitle": "Origo Demo",
   "debug": true,
   "language": "sv"
 }
 </code></pre>
 
-      <h2>Exempel: lista av lager</h2>
-      <pre><code>{
+        <h2>Exempel: lista av lager</h2>
+        <pre><code>{
   "layers": [
     {
       "name": "Baslager",
@@ -125,8 +130,8 @@
 }
 </code></pre>
 
-      <h2>Exempel: nestade objekt</h2>
-      <pre><code>{
+        <h2>Exempel: nestade objekt</h2>
+        <pre><code>{
   "map": {
     "extent": "TODO: verifiera mot Origo-dokumentation",
     "projection": "TODO: verifiera mot Origo-dokumentation"
@@ -140,34 +145,34 @@
 }
 </code></pre>
 
-      <h2>Mini-checklista</h2>
-      <ol>
-        <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
-        <li>Säkerställ att allt är inom rätt objekt/array.</li>
-        <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
-      </ol>
+        <h2>Mini-checklista</h2>
+        <ol>
+          <li>Validera JSON med en validator (t.ex. VS Code built-in).</li>
+          <li>Säkerställ att allt är inom rätt objekt/array.</li>
+          <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
+        </ol>
 
-      <h2>Debug-tips</h2>
-      <ul>
-        <li>Leta efter första felraden i konsolen. Ofta där felet börjar.</li>
-        <li>Ta bort halva filen och testa igen (binary search).</li>
-        <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
-      </ul>
+        <h2>Debug-tips</h2>
+        <ul>
+          <li>Leta efter första felraden i konsolen. Ofta där felet börjar.</li>
+          <li>Ta bort halva filen och testa igen (binary search).</li>
+          <li>Om JSON laddas via nätverk: kontrollera 404 och CORS.</li>
+        </ul>
 
-      <h2>Så läser du en riktig Origo‑konfig (exempel)</h2>
-      <p>
-        Använd en verklig konfig som referens, men jobba alltid med kopia och
-        skriv exempel med generiska placeholders.
-      </p>
-      <ol>
-        <li>Börja i toppen. Hitta övergripande sektioner (app, map, layers).</li>
-        <li>Sök efter URL:er (<code>https://</code>) för att hitta tjänster (WMS/WFS).</li>
-        <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
-      </ol>
+        <h2>Så läser du en riktig Origo‑konfig (exempel)</h2>
+        <p>
+          Använd en verklig konfig som referens, men jobba alltid med kopia och skriv exempel med
+          generiska placeholders.
+        </p>
+        <ol>
+          <li>Börja i toppen. Hitta övergripande sektioner (app, map, layers).</li>
+          <li>Sök efter URL:er (<code>https://</code>) för att hitta tjänster (WMS/WFS).</li>
+          <li>Sök efter nyckelord som “layer”, “control”, “plugin”.</li>
+        </ol>
 
-      <h3>Mini‑utdrag (små bitar)</h3>
-      <p>Plocka små bitar för att förstå strukturen:</p>
-      <pre><code>{
+        <h3>Mini‑utdrag (små bitar)</h3>
+        <p>Plocka små bitar för att förstå strukturen:</p>
+        <pre><code>{
   "controls": [
     { "name": "home" },
     { "name": "mapmenu" },
@@ -180,13 +185,13 @@
   ]
 }
 </code></pre>
-      <pre><code>{
+        <pre><code>{
   "projectionCode": "EPSG:3008",
   "extent": [100000, 6400000, 200000, 6500000],
   "resolutions": [1600, 800, 400, 200, 100]
 }
 </code></pre>
-      <pre><code>{
+        <pre><code>{
   "source": {
     "wms_example": {
       "url": "https://localhost/geoserver/example_workspace/wms",
@@ -199,7 +204,7 @@
   }
 }
 </code></pre>
-      <pre><code>{
+        <pre><code>{
   "layers": [
     { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
     { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
@@ -207,7 +212,7 @@
   ]
 }
 </code></pre>
-      <pre><code>{
+        <pre><code>{
   "styles": {
     "example_style": [
       [
@@ -218,23 +223,25 @@
 }
 </code></pre>
 
-      <h3>Arbeta baklänges</h3>
-      <p>Utgå från problemet i kartan och hitta relevant del i configen.</p>
-      <ul>
-        <li>Ingen karta → leta efter baslager och projection.</li>
-        <li>Fel lager → leta upp layernamn och service-URL.</li>
-        <li>UI saknas → leta efter controls/plugins.</li>
-      </ul>
+        <h3>Arbeta baklänges</h3>
+        <p>Utgå från problemet i kartan och hitta relevant del i configen.</p>
+        <ul>
+          <li>Ingen karta → leta efter baslager och projection.</li>
+          <li>Fel lager → leta upp layernamn och service-URL.</li>
+          <li>UI saknas → leta efter controls/plugins.</li>
+        </ul>
 
-      <h3>Mini-övning</h3>
-      <ol>
-        <li>Hitta en tjänst-URL (t.ex. <code>wms_example</code> eller <code>wfs_example</code>).</li>
-        <li>Hitta ett lagernamn som använder <code>source</code>.</li>
-        <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
-      </ol>
-    </section>
-  </main>
+        <h3>Mini-övning</h3>
+        <ol>
+          <li>
+            Hitta en tjänst-URL (t.ex. <code>wms_example</code> eller <code>wfs_example</code>).
+          </li>
+          <li>Hitta ett lagernamn som använder <code>source</code>.</li>
+          <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
+        </ol>
+      </section>
+    </main>
 
-  <script src="main.js"></script>
-</body>
+    <script src="main.js"></script>
+  </body>
 </html>
