@@ -1235,7 +1235,7 @@ const initScrollSpy = () => {
 };
 
 const initCommandPalette = () => {
-  const palette = document.querySelector('.cmdk');
+  const palette = document.getElementById('cmdk') || document.querySelector('.cmdk');
   if (!palette) {
     return;
   }
@@ -1244,11 +1244,13 @@ const initCommandPalette = () => {
   const input = palette.querySelector('#cmdk-input');
   const results = palette.querySelector('.cmdk-results');
   const status = palette.querySelector('.cmdk-status');
-  const backdrop = palette.querySelector('[data-cmdk-close]');
+  const backdrop = palette.querySelector('[data-cmdk-backdrop]');
+  const closeButton = palette.querySelector('[data-cmdk-close]');
 
   let indexCache = null;
   let activeIndex = 0;
   let lastTrigger = null;
+  let cmdkOpen = false;
 
   const fetchIndex = async () => {
     if (indexCache) {
@@ -1346,27 +1348,55 @@ const initCommandPalette = () => {
   };
 
   const openPalette = (trigger) => {
+    if (cmdkOpen) {
+      return;
+    }
     palette.hidden = false;
-    document.body.classList.add('cmdk-open');
+    document.body.style.overflow = 'hidden';
     lastTrigger = trigger || lastTrigger;
     status.textContent = '';
     fetchIndex().then(() => performSearch(input.value.trim()));
     setTimeout(() => input.focus(), 0);
+    cmdkOpen = true;
   };
 
   const closePalette = () => {
+    if (!cmdkOpen) {
+      return;
+    }
     palette.hidden = true;
-    document.body.classList.remove('cmdk-open');
-    if (lastTrigger) {
+    document.body.style.overflow = '';
+    cmdkOpen = false;
+    activeIndex = 0;
+    updateActiveItem();
+    if (lastTrigger && document.contains(lastTrigger)) {
       lastTrigger.focus();
     }
   };
 
+  const togglePalette = (trigger) => {
+    if (cmdkOpen) {
+      closePalette();
+    } else {
+      openPalette(trigger);
+    }
+  };
+
   triggerButtons.forEach((button) => {
-    button.addEventListener('click', () => openPalette(button));
+    button.addEventListener('click', () => togglePalette(button));
   });
 
-  backdrop.addEventListener('click', closePalette);
+  if (backdrop) {
+    backdrop.addEventListener('click', (event) => {
+      if (event.target === backdrop) {
+        closePalette();
+      }
+    });
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener('click', closePalette);
+  }
 
   input.addEventListener('input', (event) => {
     performSearch(event.target.value.trim());
@@ -1424,14 +1454,13 @@ const initCommandPalette = () => {
 
     if (isCmdK) {
       event.preventDefault();
-      if (palette.hidden) {
-        openPalette(lastTrigger);
-      } else {
-        closePalette();
-      }
+      togglePalette(document.activeElement);
     } else if (event.key === '/' && !isTyping && palette.hidden) {
       event.preventDefault();
-      openPalette(lastTrigger);
+      openPalette(document.activeElement);
+    } else if (event.key === 'Escape' && cmdkOpen) {
+      event.preventDefault();
+      closePalette();
     }
   });
 };
