@@ -29,15 +29,15 @@
         <div class="accordion-panel" id="nav-docs">
           <a href="index.html">Start</a>
           <a href="page.html">JSON 101</a>
-          <a href="origo-guide.html">Origo – guide</a>
+          <a href="origo-guide.html">Origo guide</a>
           <a href="layermanager.html">Layermanager</a>
           <a href="geoserver.html">GeoServer 101</a>
-          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geoserver-styles.html">GeoServer styles</a>
           <a href="geowebcache.html">GeoWebCache</a>
-          <a href="#tile-cache-101">– Tile cache 101</a>
-          <a href="#seed-truncate-bypass">– Seed/Truncate</a>
-          <a href="#crs-gridset">– CRS & gridsets</a>
-          <a href="#cacheability">– Cacheability</a>
+          <a href="#tile-cache-101">Tile cache 101</a>
+          <a href="#seed-truncate-bypass">Seed/Truncate</a>
+          <a href="#crs-gridset">CRS & gridsets</a>
+          <a href="#cacheability">Cacheability</a>
           <a href="git-vscode.html">Git & VS Code</a>
           <a href="examples.html">Origo-recept</a>
           <a href="faq-gis.html">FAQ GIS</a>
@@ -100,7 +100,7 @@
         <li><strong>Bypass:</strong> kringgå cache vid felsökning.</li>
       </ul>
 
-      <h2 id="seed-truncate-bypass">Seed / Truncate / Bypass – skillnaden</h2>
+      <h2 id="seed-truncate-bypass">Seed / Truncate / Bypass: skillnaden</h2>
       <ul>
         <li><strong>Seed:</strong> bygger nya tiles (snabbare första visning).</li>
         <li><strong>Truncate:</strong> tar bort gamla tiles (kräver ny rendering).</li>
@@ -120,7 +120,7 @@
 
       <h2 id="gridset-origin">Gridset, origin och matrixset</h2>
       <ul>
-        <li>Origin påverkar tile-alignment – fel origin ger offset.</li>
+        <li>Origin påverkar tile-alignment. Fel origin ger offset.</li>
         <li>Kontrollera att matrixset matchar gridset och CRS.</li>
         <li>Verifiera att samma gridset används i klient och cache.</li>
       </ul>
@@ -153,14 +153,14 @@
         <li>Rensa cache när stilen eller datan ändras.</li>
       </ol>
       <ol>
-        <li>Rensa inte cache i onödan – det är dyrt.</li>
+        <li>Rensa inte cache i onödan. Det är dyrt.</li>
         <li>Seeda hellre smala områden än hela världen.</li>
         <li>Testa alltid visuellt i Origo efter ändring.</li>
       </ol>
 
       <div class="callout callout-warning">
         <h3 id="stale-tiles">Stale tiles</h3>
-        <p>Om du ser gamla kartbilder – rensa cache eller ändra tile-URL för cache-busting.</p>
+        <p>Om du ser gamla kartbilder, rensa cache eller ändra tile-URL för cache-busting.</p>
       </div>
       <div class="callout callout-warning">
         <h3 id="vanliga-misstag">Vanliga misstag</h3>

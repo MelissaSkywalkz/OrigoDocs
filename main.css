@@ -115,6 +115,10 @@ a {
   display: none;
 }
 
+.no-break {
+  white-space: nowrap;
+}
+
 .nav-section {
   margin-bottom: 1rem;
 }
