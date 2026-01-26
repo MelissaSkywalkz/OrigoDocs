@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Origo Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-search">
+      <input
+        type="search"
+        id="navSearch"
+        placeholder="Sök i GIS-handboken…"
+        aria-label="Sök"
+      />
+      <ul id="searchResults" class="search-results hidden"></ul>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo-guide.html">Origo guide</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a class="active" href="origo-server.html" aria-current="page">Origo Server</a>
+          <a href="#overview">Översikt</a>
+          <a href="#anvandningsfall">Användningsfall</a>
+          <a href="#install-run">Installera & kör</a>
+          <a href="#konfiguration">Konfiguration</a>
+          <a href="#endpoints">Endpoints</a>
+          <a href="#recept">Recept</a>
+          <a href="#felsokning">Felsökning</a>
+          <a href="#release">Release‑checklista</a>
+          <a href="git-vscode.html">Git & VS Code</a>
+          <a href="examples.html">Origo-recept</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="npm.html">npm & plugins</a>
+          <a href="release-playbook.html">Release‑playbook</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="nav-backdrop" hidden></div>
+
+  <main class="main" id="main">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Origo</span>
+        <h1>Origo Server</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Drift</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <h2 id="overview">Översikt</h2>
+      <p>
+        Origo Server fungerar som ett stöd bakom Origo‑klienten. Den kan ligga mellan Origo och
+        GeoServer för att hantera vissa tjänster och förenkla klienten.
+      </p>
+      <p>TODO: verifiera exakt roll i arkitekturen mot Origo Server‑källor.</p>
+
+      <h2 id="anvandningsfall">Användningsfall</h2>
+      <ul>
+        <li>Proxy för karttjänster med gemensam hantering av CORS och auth.</li>
+        <li>Elevation‑tjänst för mätning/höjd.</li>
+        <li>State/share för att spara kartlägen.</li>
+      </ul>
+      <p>TODO: verifiera vilka use‑case som stöds i Origo Server.</p>
+
+      <h2 id="install-run">Installera & kör</h2>
+      <p>Hög nivå: hämta koden, installera beroenden och starta servern.</p>
+      <pre><code># TODO: verifiera exakta kommandon
+git clone https://example.com/origo-server.git
+cd origo-server
+npm install
+npm start
+</code></pre>
+
+      <h2 id="konfiguration">Konfiguration</h2>
+      <p>Konfigurationen styr exempelvis endpoints och proxy‑mål.</p>
+      <pre><code>{
+  "server": {
+    "port": 3001
+  },
+  "proxy": {
+    "target": "https://localhost/geoserver"
+  }
+}
+</code></pre>
+      <p>TODO: verifiera filnamn och nycklar i Origo Server‑konfig.</p>
+
+      <h2 id="endpoints">Endpoints</h2>
+      <pre><code># TODO: verifiera endpoints
+https://localhost/origoserver/health
+https://localhost/origoserver/proxy?url=https://localhost/geoserver/wms
+https://localhost/origoserver/state
+</code></pre>
+
+      <h2 id="recept">Recept</h2>
+      <h3>Proxy:a WMS/WFS</h3>
+      <pre><code># TODO: verifiera proxy‑format
+https://localhost/origoserver/proxy?url=https://localhost/geoserver/workspace/wms
+</code></pre>
+      <h3>Share/state till server</h3>
+      <pre><code># TODO: verifiera state‑endpoint och payload
+curl -X POST https://localhost/origoserver/state -H "Content-Type: application/json" -d '{ "state": "..." }'
+</code></pre>
+      <h3>Elevation</h3>
+      <pre><code># TODO: verifiera elevation‑endpoint
+https://localhost/origoserver/elevation/3008/150000/6450000
+</code></pre>
+
+      <h2 id="felsokning">Felsökning</h2>
+      <ul>
+        <li><strong>CORS:</strong> verifiera att proxy används och att klienten pekar rätt.</li>
+        <li><strong>401/403:</strong> kontrollera auth och tokens i proxy‑kedjan.</li>
+        <li><strong>Timeouts:</strong> testa kortare requests och granska serverloggar.</li>
+        <li><strong>Reverse proxy:</strong> säkerställ att rätt headers skickas vidare.</li>
+      </ul>
+      <p>TODO: verifiera loggplatser och relevanta inställningar.</p>
+
+      <h2 id="release">Release‑checklista</h2>
+      <ul>
+        <li>Verifiera vilka endpoints som påverkas.</li>
+        <li>Testa proxy‑flöden mot <code>https://localhost/geoserver</code>.</li>
+        <li>Kontrollera att Origo kan nå state/elevation.</li>
+        <li>Dokumentera ändringen i release‑playbooken.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
