@@ -1,10 +1,45 @@
 const initNavigation = () => {
   const body = document.body;
   const nav = document.getElementById('sidenav');
+  const navContent = nav ? nav.querySelector('.nav-content') : null;
   const toggleButtons = document.querySelectorAll('[data-nav-toggle]');
   const mediaQuery = window.matchMedia('(max-width: 900px)');
   let backdrop = document.querySelector('.nav-backdrop');
   let lastToggle = null;
+
+  const markActiveLink = () => {
+    if (!nav) {
+      return;
+    }
+
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = Array.from(nav.querySelectorAll('.accordion-panel a'));
+
+    navLinks.forEach((link) => {
+      if (link.getAttribute('href')?.startsWith('http')) {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+        return;
+      }
+
+      if (link.getAttribute('href')?.startsWith('#')) {
+        link.classList.add('nav-sub');
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+        return;
+      }
+
+      const linkPath = link.getAttribute('href') || '';
+      const normalized = linkPath === '/' ? 'index.html' : linkPath;
+      if (normalized === currentPath) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
 
   if (!backdrop) {
     backdrop = document.createElement('div');
@@ -38,6 +73,12 @@ const initNavigation = () => {
       } else {
         nav.setAttribute('tabindex', '-1');
         nav.focus();
+      }
+    }
+    if (navContent) {
+      const activeLink = navContent.querySelector('a.active');
+      if (activeLink) {
+        activeLink.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }
     }
   };
@@ -86,6 +127,7 @@ const initNavigation = () => {
     setExpanded(!mediaQuery.matches);
   };
 
+  markActiveLink();
   handleMediaChange();
   mediaQuery.addEventListener('change', handleMediaChange);
 };
