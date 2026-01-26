@@ -715,6 +715,44 @@ const initGlossary = () => {
     .catch(() => {});
 };
 
+const initReleasePlaybook = () => {
+  const container = document.querySelector('[data-playbook=\"release\"]');
+  if (!container) {
+    return;
+  }
+
+  const checkboxes = container.querySelectorAll('input[type=\"checkbox\"][data-playbook-id]');
+  const resetButton = document.getElementById('playbookReset');
+  const storageKey = 'playbook:release';
+  let state = {};
+
+  try {
+    state = JSON.parse(localStorage.getItem(storageKey)) || {};
+  } catch (error) {
+    state = {};
+  }
+
+  checkboxes.forEach((checkbox) => {
+    const id = checkbox.dataset.playbookId;
+    checkbox.checked = Boolean(state[id]);
+
+    checkbox.addEventListener('change', () => {
+      state[id] = checkbox.checked;
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    });
+  });
+
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      state = {};
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+      localStorage.removeItem(storageKey);
+    });
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
@@ -722,4 +760,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initCodeCopy();
   initWizard();
   initGlossary();
+  initReleasePlaybook();
 });

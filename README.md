@@ -41,6 +41,7 @@ python -m http.server 8000
 - `examples.html` – Origo-recept (copy/paste-exempel).
 - `faq-gis.html` – FAQ för GIS-nybörjare.
 - `npm.html` – npm & plugins.
+- `release-playbook.html` – release‑checklista för drift.
 - `troubleshooting.html` – felsökning.
 - `main.css` – gemensam styling.
 - `main.js` – navigation + accordion.

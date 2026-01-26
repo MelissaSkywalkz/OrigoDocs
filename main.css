@@ -403,6 +403,57 @@ a {
   line-height: 1.6;
 }
 
+.playbook-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.playbook-summary {
+  margin: 0.6rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.playbook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.playbook-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  background: #f8fafc;
+}
+
+.playbook-card h3 {
+  margin-top: 0;
+}
+
+.playbook-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.playbook-list label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.playbook-list input[type=\"checkbox\"] {
+  margin-top: 0.2rem;
+}
+
 .code-block {
   position: relative;
   margin: 1.2rem 0 2rem;

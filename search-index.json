@@ -70,5 +70,11 @@
     "title": "Felsökning",
     "url": "troubleshooting.html",
     "content": "felsökning cors crs 404 cache problem"
+  },
+  {
+    "id": "release-playbook",
+    "title": "Release‑playbook",
+    "url": "release-playbook.html",
+    "content": "release checklista geoserver geowebcache origo deploy cache styles data"
   }
 ]
