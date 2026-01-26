@@ -1,0 +1,218 @@
+[
+  {
+    "term": "Origo",
+    "aliases": [],
+    "short": "Kartklient för att visa lager och verktyg.",
+    "long": "Origo är kartklienten där användare ser kartan, lager och kontroller. Den läser konfig och visar data från GeoServer."
+  },
+  {
+    "term": "OpenLayers",
+    "aliases": ["OL"],
+    "short": "JS‑bibliotek som Origo bygger på.",
+    "long": "OpenLayers är ett JavaScript‑bibliotek för webbkartor. Origo använder OpenLayers för kartlogik och rendering."
+  },
+  {
+    "term": "GeoServer",
+    "aliases": [],
+    "short": "Server som publicerar GIS‑tjänster.",
+    "long": "GeoServer publicerar geodata som tjänster som WMS och WFS, och hanterar styles och datakällor."
+  },
+  {
+    "term": "GeoWebCache",
+    "aliases": ["GWC"],
+    "short": "Cache för tiles nära GeoServer.",
+    "long": "GeoWebCache lagrar renderade tiles för snabbare kartvisning och minskad belastning på GeoServer."
+  },
+  {
+    "term": "WMS",
+    "aliases": ["Web Map Service"],
+    "short": "Kartbilder renderas på servern.",
+    "long": "WMS skickar renderade kartbilder (PNG/JPEG). Bra för prestanda och när du inte behöver attribut i klienten."
+  },
+  {
+    "term": "WFS",
+    "aliases": ["Web Feature Service"],
+    "short": "Objekt/features skickas till klienten.",
+    "long": "WFS skickar geometri och attribut som objekt. Bra när du behöver klick, analys och attribut i klienten."
+  },
+  {
+    "term": "WMTS",
+    "aliases": ["Web Map Tile Service"],
+    "short": "Tjänst för förgenererade tiles.",
+    "long": "WMTS levererar tiles enligt ett gridset. Passar bra med GeoWebCache och statiska lager."
+  },
+  {
+    "term": "SLD",
+    "aliases": ["Styled Layer Descriptor"],
+    "short": "XML‑format för kartstilar.",
+    "long": "SLD beskriver hur kartlager ritas (symboler, linjer, färger och etiketter) i GeoServer."
+  },
+  {
+    "term": "SE 1.1",
+    "aliases": ["Symbology Encoding 1.1"],
+    "short": "Nyare standard för symbolisering.",
+    "long": "SE 1.1 är standarden för symbolisering som GeoServer stödjer med se:‑prefix i SLD."
+  },
+  {
+    "term": "CSS Extension",
+    "aliases": [],
+    "short": "Förenklad syntax för styles.",
+    "long": "CSS Extension låter dig skriva GeoServer‑styles med CSS‑liknande syntax, men kräver extension."
+  },
+  {
+    "term": "MBStyle",
+    "aliases": ["Mapbox Style"],
+    "short": "JSON‑format för kartstilar.",
+    "long": "MBStyle är ett JSON‑format för moderna kartstilar, ofta för vektor‑tiles."
+  },
+  {
+    "term": "EPSG",
+    "aliases": [],
+    "short": "Kodsystem för koordinatsystem.",
+    "long": "EPSG‑koder identifierar koordinatsystem. De används i GeoServer, Origo och karttjänster."
+  },
+  {
+    "term": "CRS",
+    "aliases": ["Coordinate Reference System"],
+    "short": "Referenssystem för koordinater.",
+    "long": "CRS beskriver hur koordinater tolkas och projiceras. CRS måste stämma mellan data, tjänst och karta."
+  },
+  {
+    "term": "SWEREF 99 13 30",
+    "aliases": [],
+    "short": "Svenskt koordinatsystem.",
+    "long": "SWEREF 99 13 30 är ett svenskt koordinatsystem som ofta används för kartdata i Sverige."
+  },
+  {
+    "term": "EPSG:3008",
+    "aliases": [],
+    "short": "Kod för SWEREF 99 13 30.",
+    "long": "EPSG:3008 är EPSG‑koden för SWEREF 99 13 30 och används i gridset och projektion."
+  },
+  {
+    "term": "gridset",
+    "aliases": [],
+    "short": "Regler för tile‑indelning.",
+    "long": "Gridset definierar upplösningar, tile‑storlek, origin och CRS för tiles i GeoWebCache."
+  },
+  {
+    "term": "matrixset",
+    "aliases": [],
+    "short": "WMTS‑motsvarighet till gridset.",
+    "long": "Matrixset används i WMTS och beskriver zoomnivåer och tilematriser."
+  },
+  {
+    "term": "tile",
+    "aliases": [],
+    "short": "Liten kartbild för en ruta.",
+    "long": "En tile är en liten kartbild som används för att snabbt bygga upp kartan vid pan/zoom."
+  },
+  {
+    "term": "metatile",
+    "aliases": ["metatile"],
+    "short": "Större tile‑yta vid rendering.",
+    "long": "Metatiles är större renderingsrutor som skärs till mindre tiles för effektivare rendering."
+  },
+  {
+    "term": "seed",
+    "aliases": ["seeding"],
+    "short": "Förgenerera tiles.",
+    "long": "Seeding skapar tiles i förväg så att användaren får snabbare visning."
+  },
+  {
+    "term": "truncate",
+    "aliases": [],
+    "short": "Rensa cache för att tvinga ny rendering.",
+    "long": "Truncate tar bort cachelagrade tiles så att GeoServer renderar om kartan."
+  },
+  {
+    "term": "GeoPackage",
+    "aliases": [],
+    "short": "Filbaserat geodataformat.",
+    "long": "GeoPackage är ett filformat som kan innehålla lager, geometri och attribut."
+  },
+  {
+    "term": "MySQL",
+    "aliases": [],
+    "short": "Relationsdatabas.",
+    "long": "MySQL är en relationsdatabas som ibland används för geodata via GeoServer."
+  },
+  {
+    "term": "PostGIS",
+    "aliases": [],
+    "short": "GIS‑tillägg för PostgreSQL.",
+    "long": "PostGIS lägger till geodatastöd i PostgreSQL och används ofta som datakälla i GeoServer."
+  },
+  {
+    "term": "workspace",
+    "aliases": [],
+    "short": "Namespace i GeoServer.",
+    "long": "Workspace grupperar lager och tjänster och används i layer‑namn som workspace:layer."
+  },
+  {
+    "term": "layer",
+    "aliases": ["lager"],
+    "short": "Ett publicerat kartlager.",
+    "long": "Ett layer är ett publicerat lager i GeoServer som kan visas i Origo."
+  },
+  {
+    "term": "datastore",
+    "aliases": [],
+    "short": "Koppling till datakälla.",
+    "long": "Datastore beskriver hur GeoServer ansluter till en datakälla, t.ex. PostGIS eller GeoPackage."
+  },
+  {
+    "term": "style",
+    "aliases": ["stil"],
+    "short": "Regler för hur ett lager ritas.",
+    "long": "En style avgör färger, symboler och labels för ett lager i GeoServer."
+  },
+  {
+    "term": "bbox",
+    "aliases": ["BBOX"],
+    "short": "Bounding box för ett område.",
+    "long": "BBOX är ett rektangulärt område som används i WMS/WFS‑anrop och cache."
+  },
+  {
+    "term": "extent",
+    "aliases": [],
+    "short": "Kartans utbredning.",
+    "long": "Extent är kartans synliga område och påverkar vilka lager som visas."
+  },
+  {
+    "term": "projection",
+    "aliases": ["projektion"],
+    "short": "Hur koordinater projiceras till karta.",
+    "long": "Projection definierar hur koordinater avbildas på kartan och måste matcha tjänsternas CRS."
+  },
+  {
+    "term": "resolution",
+    "aliases": [],
+    "short": "Upplösning per zoomnivå.",
+    "long": "Resolution anger hur många meter per pixel som används vid en zoomnivå."
+  },
+  {
+    "term": "scale denominator",
+    "aliases": ["ScaleDenominator"],
+    "short": "Skalgränser för symbolisering.",
+    "long": "Scale denominator styr när en style ska synas eller döljas via Min/MaxScaleDenominator."
+  },
+  {
+    "term": "feature",
+    "aliases": ["objekt"],
+    "short": "Ett geografiskt objekt.",
+    "long": "Ett feature är en geometri med attribut, t.ex. en punkt, linje eller polygon."
+  },
+  {
+    "term": "attribute",
+    "aliases": ["attribut"],
+    "short": "Egenskap på ett objekt.",
+    "long": "Attributes är egenskaper som finns på ett feature, t.ex. namn eller status."
+  },
+  {
+    "term": "filter",
+    "aliases": [],
+    "short": "Regel för urval av objekt.",
+    "long": "Filter används i SLD eller WFS för att välja vilka objekt som ska visas eller matchas."
+  }
+]
