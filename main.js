@@ -313,6 +313,89 @@ const initSearch = () => {
   });
 };
 
+const getExplicitLanguage = (codeBlock, pre) => {
+  const explicit = [
+    codeBlock?.dataset?.lang,
+    pre?.dataset?.lang,
+    codeBlock?.closest('[data-lang]')?.dataset?.lang,
+    pre?.closest('[data-lang]')?.dataset?.lang
+  ].find(Boolean);
+
+  if (explicit) {
+    return explicit.toLowerCase();
+  }
+
+  const classMatch = (node) => {
+    if (!node || !node.className) {
+      return null;
+    }
+    const match = node.className.match(/language-([a-z0-9-]+)/i);
+    return match ? match[1].toLowerCase() : null;
+  };
+
+  return classMatch(codeBlock) || classMatch(pre);
+};
+
+const normalizeLanguageLabel = (lang) => {
+  if (!lang) {
+    return null;
+  }
+
+  const map = {
+    bash: 'CLI',
+    cli: 'CLI',
+    shell: 'CLI',
+    sh: 'CLI',
+    xml: 'XML',
+    json: 'JSON',
+    js: 'JavaScript',
+    javascript: 'JavaScript',
+    css: 'CSS',
+    mbstyle: 'MBStyle'
+  };
+
+  return map[lang] || null;
+};
+
+const detectLanguageBadge = (codeBlock, pre) => {
+  const explicitLang = normalizeLanguageLabel(getExplicitLanguage(codeBlock, pre));
+  if (explicitLang) {
+    return explicitLang;
+  }
+
+  const codeText = codeBlock.textContent.trim();
+  const firstLines = codeText.split(/\r?\n/).slice(0, 6).join('\n');
+
+  if (/^<\\?xml/i.test(codeText) || /<se:StyledLayerDescriptor/i.test(codeText) || /<StyledLayerDescriptor/i.test(codeText)) {
+    return 'XML';
+  }
+
+  if (/^(\\$ )/m.test(firstLines) || /(^|\\n)\\s*(npm |git |python )/m.test(firstLines) || /npm install|python -m http\\.server/.test(firstLines)) {
+    return 'CLI';
+  }
+
+  if (/^[{[]/.test(codeText)) {
+    if (/"layers"\\s*:/.test(codeText) && (/"paint"\\s*:/.test(codeText) || /"layout"\\s*:/.test(codeText))) {
+      return 'MBStyle';
+    }
+    return 'JSON';
+  }
+
+  if (/(@media|@font-face)/i.test(codeText) || /(mark-size:|stroke-width:|\\bmark:)/i.test(codeText)) {
+    return 'CSS';
+  }
+
+  if (/^[\\s]*[.#*:@].*\\{/.test(firstLines) && /:/.test(firstLines)) {
+    return 'CSS';
+  }
+
+  if (/\\b(const|let|var|function)\\b|=>|document\\.|window\\./.test(codeText)) {
+    return 'JavaScript';
+  }
+
+  return 'Kod';
+};
+
 const initCodeCopy = () => {
   const codeBlocks = document.querySelectorAll('pre code');
   let codeIndex = 0;
@@ -330,16 +413,7 @@ const initCodeCopy = () => {
     pre.parentNode.insertBefore(wrapper, pre);
     wrapper.appendChild(pre);
 
-    const codeText = codeBlock.textContent.trim();
-    let badgeLabel = 'Kod';
-
-    if (/^<\\?xml/i.test(codeText) || /<se:StyledLayerDescriptor/i.test(codeText) || /<StyledLayerDescriptor/i.test(codeText)) {
-      badgeLabel = 'XML';
-    } else if (/^[\\[{]/.test(codeText)) {
-      badgeLabel = 'JSON';
-    } else if (/^(\\$ |npm |git |python )/m.test(codeText)) {
-      badgeLabel = 'CLI';
-    }
+    const badgeLabel = detectLanguageBadge(codeBlock, pre);
 
     const badge = document.createElement('span');
     badge.className = 'code-badge';
@@ -412,7 +486,7 @@ const initCodeCopy = () => {
         <li>Om stilen laddas men inte syns: kontrollera datatyp (point/line/polygon) och skala (Min/MaxScaleDenominator).</li>
         <li>Om du ser gamla resultat: rensa/seed cache i GeoWebCache vid behov (inte alltid).</li>
       `;
-    } else if (badgeLabel === 'JSON') {
+    } else if (badgeLabel === 'JSON' || badgeLabel === 'MBStyle') {
       troubleshootTitle.textContent = 'Felsök: Origo-konfig';
       troubleshootList.innerHTML = `
         <li>Validera JSON (kommatecken, citattecken, trailing commas).</li>
