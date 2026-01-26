@@ -1,60 +1,89 @@
 const initNavigation = () => {
   const body = document.body;
+  const nav = document.getElementById('sidenav');
   const toggleButtons = document.querySelectorAll('[data-nav-toggle]');
-  const mediaQuery = window.matchMedia('(max-width: 960px)');
-  let overlay = document.querySelector('.nav-overlay');
+  const mediaQuery = window.matchMedia('(max-width: 900px)');
+  let backdrop = document.querySelector('.nav-backdrop');
+  let lastToggle = null;
 
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'nav-overlay';
-    overlay.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(overlay);
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'nav-backdrop';
+    backdrop.hidden = true;
+    backdrop.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(backdrop);
   }
 
-  const setCollapsed = (collapsed) => {
-    body.classList.toggle('nav-collapsed', collapsed);
-    body.classList.toggle('nav-open', !collapsed && mediaQuery.matches);
+  const setExpanded = (expanded) => {
     toggleButtons.forEach((button) => {
-      button.setAttribute('aria-expanded', (!collapsed).toString());
+      button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      if (!button.getAttribute('aria-controls')) {
+        button.setAttribute('aria-controls', 'sidenav');
+      }
     });
+  };
 
-    if (!collapsed && mediaQuery.matches) {
-      const firstLink = document.querySelector('.sidenav a');
+  const openNav = (triggerButton) => {
+    if (!mediaQuery.matches) {
+      return;
+    }
+    lastToggle = triggerButton || lastToggle;
+    body.classList.add('nav-open');
+    backdrop.hidden = false;
+    setExpanded(true);
+    if (nav) {
+      const firstLink = nav.querySelector('a, button');
       if (firstLink) {
         firstLink.focus();
+      } else {
+        nav.setAttribute('tabindex', '-1');
+        nav.focus();
       }
     }
   };
 
-  const handleToggle = () => {
-    setCollapsed(!body.classList.contains('nav-collapsed'));
+  const closeNav = () => {
+    if (!mediaQuery.matches) {
+      return;
+    }
+    body.classList.remove('nav-open');
+    backdrop.hidden = true;
+    setExpanded(false);
+    if (lastToggle) {
+      lastToggle.focus();
+    }
+  };
+
+  const toggleNav = (event) => {
+    if (!mediaQuery.matches) {
+      body.classList.toggle('nav-collapsed');
+      return;
+    }
+
+    if (body.classList.contains('nav-open')) {
+      closeNav();
+    } else {
+      openNav(event?.currentTarget);
+    }
   };
 
   toggleButtons.forEach((button) => {
-    if (!button.getAttribute('aria-controls')) {
-      button.setAttribute('aria-controls', 'sidenav');
-    }
-    button.addEventListener('click', handleToggle);
+    button.addEventListener('click', toggleNav);
   });
 
-  overlay.addEventListener('click', () => {
-    if (mediaQuery.matches) {
-      setCollapsed(true);
-    }
-  });
+  backdrop.addEventListener('click', closeNav);
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && mediaQuery.matches && !body.classList.contains('nav-collapsed')) {
-      setCollapsed(true);
+    if (event.key === 'Escape' && body.classList.contains('nav-open')) {
+      closeNav();
     }
   });
 
   const handleMediaChange = () => {
-    if (mediaQuery.matches) {
-      setCollapsed(true);
-    } else {
-      setCollapsed(false);
-    }
+    body.classList.remove('nav-open');
+    body.classList.remove('nav-collapsed');
+    backdrop.hidden = true;
+    setExpanded(!mediaQuery.matches);
   };
 
   handleMediaChange();
