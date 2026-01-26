@@ -404,6 +404,27 @@
           <p>Skapa en stil i QGIS, exportera som SLD och importera i GeoServer via Styles.</p>
         </div>
 
+        <h2>Testa SLD</h2>
+        <div class="tryit" data-tryit="sld">
+          <div class="tryit-grid">
+            <div>
+              <label for="sld-tryit-input"><strong>Inmatning</strong></label>
+              <textarea id="sld-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-sld-action="check" type="button">Kontrollera</button>
+                <button class="tryit-button" data-sld-action="template" type="button">Ladda mall</button>
+                <button class="tryit-button secondary" data-sld-action="copy" type="button">Kopiera</button>
+                <button class="tryit-button secondary" data-sld-action="clear" type="button">Rensa</button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat</strong>
+              <pre class="tryit-output" id="sld-tryit-output"></pre>
+              <div class="tryit-status" id="sld-tryit-status"></div>
+            </div>
+          </div>
+        </div>
+
         <h2 id="origo-impact">Hur detta påverkar kartklienten i Origo</h2>
         <p>
           Origo visar resultatet av GeoServers rendering. Om du byter style i GeoServer syns det i

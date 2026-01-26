@@ -642,6 +642,358 @@ const initCodeCopy = () => {
   });
 };
 
+const copyText = async (text) => {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+};
+
+const initTryIt = () => {
+  const tryItBlocks = document.querySelectorAll('[data-tryit]');
+  if (!tryItBlocks.length) {
+    return;
+  }
+
+  const updateStatus = (element, message) => {
+    if (element) {
+      element.textContent = message;
+    }
+  };
+
+  const initJsonTryIt = (block) => {
+    const input = block.querySelector('#json-tryit-input');
+    const output = block.querySelector('#json-tryit-output');
+    const status = block.querySelector('#json-tryit-status');
+    const buttons = block.querySelectorAll('[data-json-action]');
+
+    if (!input || !output || !status || !buttons.length) {
+      return;
+    }
+
+    const setOutput = (value) => {
+      output.textContent = value;
+    };
+
+    const validateJson = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatus(status, 'Fyll i JSON att validera.');
+        setOutput('');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        setOutput(JSON.stringify(parsed, null, 2));
+        updateStatus(status, 'JSON är giltig.');
+      } catch (error) {
+        setOutput('');
+        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+      }
+    };
+
+    const prettifyJson = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatus(status, 'Fyll i JSON att prettify.');
+        setOutput('');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const pretty = JSON.stringify(parsed, null, 2);
+        input.value = pretty;
+        setOutput(pretty);
+        updateStatus(status, 'JSON prettify klar.');
+      } catch (error) {
+        setOutput('');
+        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+      }
+    };
+
+    const minifyJson = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatus(status, 'Fyll i JSON att minify.');
+        setOutput('');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const minified = JSON.stringify(parsed);
+        input.value = minified;
+        setOutput(minified);
+        updateStatus(status, 'JSON minify klar.');
+      } catch (error) {
+        setOutput('');
+        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+      }
+    };
+
+    const copyJson = async () => {
+      const text = output.textContent || input.value;
+      if (!text.trim()) {
+        updateStatus(status, 'Inget att kopiera.');
+        return;
+      }
+      try {
+        await copyText(text);
+        updateStatus(status, 'Kopierat till urklipp.');
+      } catch (error) {
+        updateStatus(status, 'Kunde inte kopiera.');
+      }
+    };
+
+    const clearJson = () => {
+      input.value = '';
+      setOutput('');
+      updateStatus(status, '');
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.jsonAction;
+        switch (action) {
+          case 'validate':
+            validateJson();
+            break;
+          case 'prettify':
+            prettifyJson();
+            break;
+          case 'minify':
+            minifyJson();
+            break;
+          case 'copy':
+            copyJson();
+            break;
+          case 'clear':
+            clearJson();
+            break;
+          default:
+            break;
+        }
+      });
+    });
+  };
+
+  const initSldTryIt = (block) => {
+    const input = block.querySelector('#sld-tryit-input');
+    const output = block.querySelector('#sld-tryit-output');
+    const status = block.querySelector('#sld-tryit-status');
+    const buttons = block.querySelectorAll('[data-sld-action]');
+
+    if (!input || !output || !status || !buttons.length) {
+      return;
+    }
+
+    const template = `<?xml version="1.0" encoding="UTF-8"?>
+<se:StyledLayerDescriptor version="1.1.0"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/se http://schemas.opengis.net/se/1.1.0/StyledLayerDescriptor.xsd">
+  <se:NamedLayer>
+    <se:Name>example_layer</se:Name>
+    <se:UserStyle>
+      <se:Title>Example style</se:Title>
+      <se:FeatureTypeStyle>
+        <se:Rule>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#3b82f6</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#1d4ed8</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
+      </se:FeatureTypeStyle>
+    </se:UserStyle>
+  </se:NamedLayer>
+</se:StyledLayerDescriptor>`;
+
+    const setOutput = (value) => {
+      output.textContent = value;
+    };
+
+    const checkSld = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatus(status, 'Fyll i SLD att kontrollera.');
+        setOutput('');
+        return;
+      }
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(raw, 'application/xml');
+      const errors = doc.querySelector('parsererror');
+      if (errors) {
+        updateStatus(status, 'XML-fel hittades. Kontrollera namespaces och syntax.');
+        setOutput(errors.textContent || 'XML-fel hittades.');
+        return;
+      }
+
+      const isSld =
+        doc.querySelector('StyledLayerDescriptor') || doc.querySelector('se\\:StyledLayerDescriptor');
+      if (!isSld) {
+        updateStatus(status, 'Ingen StyledLayerDescriptor hittades.');
+        setOutput('Tips: kontrollera att SLD/SE är korrekt och innehåller StyledLayerDescriptor.');
+        return;
+      }
+
+      updateStatus(status, 'SLD ser giltig ut.');
+      setOutput('XML är välformad och innehåller StyledLayerDescriptor.');
+    };
+
+    const loadTemplate = () => {
+      input.value = template;
+      setOutput('');
+      updateStatus(status, 'Mall laddad.');
+    };
+
+    const copySld = async () => {
+      const text = input.value;
+      if (!text.trim()) {
+        updateStatus(status, 'Inget att kopiera.');
+        return;
+      }
+      try {
+        await copyText(text);
+        updateStatus(status, 'Kopierat till urklipp.');
+      } catch (error) {
+        updateStatus(status, 'Kunde inte kopiera.');
+      }
+    };
+
+    const clearSld = () => {
+      input.value = '';
+      setOutput('');
+      updateStatus(status, '');
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.sldAction;
+        switch (action) {
+          case 'check':
+            checkSld();
+            break;
+          case 'template':
+            loadTemplate();
+            break;
+          case 'copy':
+            copySld();
+            break;
+          case 'clear':
+            clearSld();
+            break;
+          default:
+            break;
+        }
+      });
+    });
+  };
+
+  const initUrlBuilder = (block) => {
+    const base = block.querySelector('#urlbuilder-base');
+    const service = block.querySelector('#urlbuilder-service');
+    const layer = block.querySelector('#urlbuilder-layer');
+    const format = block.querySelector('#urlbuilder-format');
+    const crs = block.querySelector('#urlbuilder-crs');
+    const bbox = block.querySelector('#urlbuilder-bbox');
+    const output = block.querySelector('#urlbuilder-output');
+    const status = block.querySelector('#urlbuilder-status');
+    const buttons = block.querySelectorAll('[data-url-action]');
+
+    if (!base || !service || !layer || !format || !crs || !bbox || !output || !status) {
+      return;
+    }
+
+    const buildQuery = (serviceValue) => {
+      const params = new URLSearchParams();
+      const isWfs = serviceValue.toUpperCase() === 'WFS';
+      params.set('service', serviceValue.toUpperCase());
+      params.set('version', isWfs ? '2.0.0' : '1.1.1');
+      params.set('request', isWfs ? 'GetFeature' : 'GetMap');
+      params.set(isWfs ? 'typenames' : 'layers', layer.value.trim());
+      params.set(isWfs ? 'outputFormat' : 'format', format.value.trim());
+      if (!isWfs) {
+        params.set('bbox', bbox.value.trim());
+        params.set('crs', crs.value.trim());
+        params.set('width', '256');
+        params.set('height', '256');
+      }
+      return params;
+    };
+
+    const generate = () => {
+      const baseValue = base.value.trim();
+      if (!baseValue) {
+        updateStatus(status, 'Fyll i en bas‑URL.');
+        output.value = '';
+        return;
+      }
+
+      try {
+        const url = new URL(baseValue, window.location.href);
+        url.search = buildQuery(service.value).toString();
+        output.value = url.toString();
+        updateStatus(status, 'URL genererad.');
+      } catch (error) {
+        updateStatus(status, 'Ogiltig bas‑URL.');
+        output.value = '';
+      }
+    };
+
+    const copyUrl = async () => {
+      const text = output.value.trim();
+      if (!text) {
+        updateStatus(status, 'Generera en URL först.');
+        return;
+      }
+      try {
+        await copyText(text);
+        updateStatus(status, 'URL kopierad.');
+      } catch (error) {
+        updateStatus(status, 'Kunde inte kopiera.');
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.urlAction;
+        if (action === 'generate') {
+          generate();
+        } else if (action === 'copy') {
+          copyUrl();
+        }
+      });
+    });
+  };
+
+  tryItBlocks.forEach((block) => {
+    const type = block.dataset.tryit;
+    if (type === 'json') {
+      initJsonTryIt(block);
+    } else if (type === 'sld') {
+      initSldTryIt(block);
+    } else if (type === 'urlbuilder') {
+      initUrlBuilder(block);
+    }
+  });
+};
+
 const initWizard = () => {
   const wizards = document.querySelectorAll('.wizard[data-wizard]');
 
@@ -1089,6 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initSearch();
   initCodeCopy();
+  initTryIt();
   initWizard();
   initReleasePlaybook();
   initScrollSpy();

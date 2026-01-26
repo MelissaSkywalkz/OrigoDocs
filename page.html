@@ -155,6 +155,28 @@
           <li>Testa att läsa filen i webbläsaren utan fel i konsolen.</li>
         </ol>
 
+        <h2>Testa JSON</h2>
+        <div class="tryit" data-tryit="json">
+          <div class="tryit-grid">
+            <div>
+              <label for="json-tryit-input"><strong>Inmatning</strong></label>
+              <textarea id="json-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-json-action="validate" type="button">Validera</button>
+                <button class="tryit-button" data-json-action="prettify" type="button">Prettify</button>
+                <button class="tryit-button" data-json-action="minify" type="button">Minify</button>
+                <button class="tryit-button secondary" data-json-action="copy" type="button">Kopiera</button>
+                <button class="tryit-button secondary" data-json-action="clear" type="button">Rensa</button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat</strong>
+              <pre class="tryit-output" id="json-tryit-output"></pre>
+              <div class="tryit-status" id="json-tryit-status"></div>
+            </div>
+          </div>
+        </div>
+
         <h2>Debug-tips</h2>
         <ul>
           <li>Leta efter första felraden i konsolen. Ofta där felet börjar.</li>

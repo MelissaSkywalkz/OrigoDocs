@@ -160,6 +160,52 @@
 </code></pre>
         <p>TODO: verifiera kontroll‑nycklar mot Origo‑repo.</p>
 
+        <h2>Bygg en tjänste-URL</h2>
+        <div class="tryit" data-tryit="urlbuilder">
+          <div class="tryit-grid">
+            <div>
+              <label for="urlbuilder-base"><strong>Bas‑URL</strong></label>
+              <input
+                id="urlbuilder-base"
+                class="tryit-input"
+                type="text"
+                value="https://localhost/geoserver/workspace/ows"
+              />
+              <label for="urlbuilder-service"><strong>Tjänst</strong></label>
+              <select id="urlbuilder-service" class="tryit-input">
+                <option value="WMS">WMS</option>
+                <option value="WFS">WFS</option>
+              </select>
+              <label for="urlbuilder-layer"><strong>Layer</strong></label>
+              <input id="urlbuilder-layer" class="tryit-input" type="text" value="workspace:layer" />
+              <label for="urlbuilder-format"><strong>Outputformat</strong></label>
+              <input id="urlbuilder-format" class="tryit-input" type="text" value="image/png" />
+              <label for="urlbuilder-crs"><strong>CRS</strong></label>
+              <input id="urlbuilder-crs" class="tryit-input" type="text" value="EPSG:3008" />
+              <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
+              <input
+                id="urlbuilder-bbox"
+                class="tryit-input"
+                type="text"
+                value="100000,6400000,200000,6500000"
+              />
+              <div class="tryit-actions">
+                <button class="tryit-button" data-url-action="generate" type="button">
+                  Generera
+                </button>
+                <button class="tryit-button secondary" data-url-action="copy" type="button">
+                  Kopiera
+                </button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat</strong>
+              <textarea id="urlbuilder-output" class="tryit-output" readonly></textarea>
+              <div class="tryit-status" id="urlbuilder-status"></div>
+            </div>
+          </div>
+        </div>
+
         <h2>Clustering</h2>
         <pre><code>{
   "layers": [
