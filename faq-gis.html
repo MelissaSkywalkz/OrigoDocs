@@ -123,6 +123,20 @@
         <li>Cache gör att gamla tiles ligger kvar.</li>
       </ul>
 
+      <h2>Vanliga fel från communityn</h2>
+      <ul>
+        <li><strong>Tiles ligger fel:</strong> kontrollera gridset/origin och CRS i <a href="geowebcache.html#gridset-origin">GeoWebCache‑guiden</a>.</li>
+        <li><strong>Cacheas inte:</strong> undvik filter/viewparams eller gör lagret cachebart, se <a href="geowebcache.html#cacheability">cacheability</a>.</li>
+        <li><strong>Seeding ger inga tiles:</strong> testa mindre BBOX/zoom och granska loggar, se <a href="geowebcache.html#seeding-rest">seeding och REST</a>.</li>
+        <li><strong>Diskquota stoppar cache:</strong> rensa rätt cache‑kataloger, se <a href="geowebcache.html#metastore-disk">metastore och disk quota</a>.</li>
+        <li><strong>Gamla tiles efter style‑ändring:</strong> rensa cache och gör hård refresh, se <a href="geowebcache.html#seed-truncate-bypass">seed/truncate</a>.</li>
+        <li><strong>SLD importeras inte:</strong> kontrollera namespaces och version, se <a href="geoserver-styles.html#sld-import">import och namespaces</a>.</li>
+        <li><strong>SLD syns inte:</strong> kontrollera datatyp och skala, se <a href="geoserver-styles.html#sld-scale">skala och synlighet</a>.</li>
+        <li><strong>Labels saknas:</strong> kontrollera attribut och placement, se <a href="geoserver-styles.html#labels">labels</a>.</li>
+        <li><strong>Filterregler fungerar inte:</strong> verifiera filter-syntax och attribut, se <a href="geoserver-styles.html#sld-felsokning">SLD‑felsökning</a>.</li>
+        <li><strong>Gamla stilar visas:</strong> rensa cache och bekräfta aktiv style, se <a href="geoserver-styles.html#sld-cache">cache och uppdatering</a>.</li>
+      </ul>
+
       <p>TODO: komplettera med Origo-specifika tips när verifierade.</p>
     </section>
   </main>

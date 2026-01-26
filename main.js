@@ -30,154 +30,180 @@ const initNavigation = () => {
 
 const WIZARD_DATA = {
   geowebcache: {
-    quickChecks: [
-      'Testa Layer Preview i GeoServer för att bekräfta att lagret ritar.',
-      'Bekräfta att du använder rätt gridset och CRS (t.ex. EPSG:3008).',
-      'Testa en annan zoomnivå för att se om felet är nivåspecifikt.',
-      'Verifiera att lagret är cache-aktiverat i GeoWebCache.'
-    ],
-    escalate: [
-      'Felet kvarstår efter truncate/seed och kontroll av gridset.',
-      'Du ser fel i GeoServer-loggar eller upprepade renderingsfel.',
-      'Extern tjänst är långsam även i enkel WMS-preview.'
-    ],
+    title: 'Felsökningswizard',
     symptoms: [
       {
-        id: 'stale-tiles',
-        label: 'Jag ser gamla tiles (förändringar syns inte)',
-        actions: [
+        key: 'stale-tiles',
+        label: 'Jag ser gamla tiles',
+        startHere: [
           'Kör truncate för lagret i GeoWebCache.',
-          'Seed om endast de zoomnivåer och områden som används.',
-          'Verifera att klienten inte cacherar egna tiles.',
-          'Testa BBOX med cache-bypass i WMS om möjligt.'
-        ],
-        check: 'Kontrollera detta: testa samma lager i GeoServer Layer Preview.',
-        avoid: 'Undvik detta: seed inte allt på alla zoomar.'
-      },
-      {
-        id: 'offset-tiles',
-        label: 'Tiles hamnar fel / offset (grid/projection)',
-        actions: [
-          'Verifiera att gridset matchar kartans CRS (EPSG:3008).',
-          'Kontrollera att layer är publicerat i rätt CRS.',
-          'Rensa cache efter CRS/gridset-ändringar.',
-          'Säkerställ att Origo använder samma projectionCode.'
-        ],
-        check: 'Kontrollera detta: testa samma lager i WMS 1.1.1 med rätt CRS.',
-        avoid: 'Undvik detta: blanda olika gridset för samma lager.'
-      },
-      {
-        id: 'holes-tiles',
-        label: 'Tomma tiles eller “hål” i kartan',
-        actions: [
-          'Kontrollera datatäckning och BBOX för lagret.',
-          'Seed om området med korrekt zoomintervall.',
-          'Verifiera att stilen fungerar i GeoServer Preview.',
-          'Testa med en förenklad style om möjligt.'
-        ],
-        check: 'Kontrollera detta: testa annan zoom och panorera över området.',
-        avoid: 'Undvik detta: seeda extremt höga zoomnivåer utan behov.'
-      },
-      {
-        id: 'slow-seed',
-        label: 'Långsam rendering / seeding tar evigheter',
-        actions: [
-          'Seeda i mindre geografiska rutor.',
-          'Minska antal zoomnivåer som seedas.',
-          'Kontrollera att datakällan presterar (index i PostGIS).',
-          'Granska style-komplexitet (tunga symbolizers).'
-        ],
-        check: 'Kontrollera detta: testa att seeda ett litet område.',
-        avoid: 'Undvik detta: kör full seed på hela världen.'
-      },
-      {
-        id: 'slow-external',
-        label: 'Extern WMS är långsam',
-        actions: [
-          'Mät svarstid direkt mot den externa WMS-url:en.',
-          'Cachea som proxy-lager om möjligt.',
-          'Begränsa upplösning och zoomnivåer.',
-          'Undvik för stora BBOX i enskilda anrop.'
-        ],
-        check: 'Kontrollera detta: jämför svarstid med och utan cache.',
-        avoid: 'Undvik detta: skicka onödigt stora kartutdrag.'
-      },
-      {
-        id: 'client-or-server',
-        label: 'Jag vet inte om felet är klient (Origo) eller server (GeoServer/GWC)',
-        actions: [
           'Testa lagret i GeoServer Layer Preview.',
-          'Testa samma lager i Origo med cache-bypass om möjligt.',
-          'Jämför resultat mellan WMS och cache-lager.',
-          'Kontrollera nätverksflödet i webbläsarens devtools.'
+          'Ladda om kartan med hård refresh.'
         ],
-        check: 'Kontrollera detta: isolera felet genom att testa WMS direkt.',
-        avoid: 'Undvik detta: ändra flera inställningar samtidigt.'
+        links: [
+          { label: 'Seed / Truncate / Bypass – skillnaden', href: '#seed-truncate-bypass' },
+          { label: 'Praktisk checklista', href: '#checklista' },
+          { label: 'Stale tiles', href: '#stale-tiles' }
+        ],
+        escalate: [
+          'Felet kvarstår efter truncate och ny seed.',
+          'Loggar visar återkommande renderingsfel.'
+        ]
+      },
+      {
+        key: 'offset-tiles',
+        label: 'Tiles hamnar fel / offset',
+        startHere: [
+          'Kontrollera gridset och CRS (EPSG:3008).',
+          'Verifiera origin och matrixset i gridset.',
+          'Testa samma lager i WMS 1.1.1.'
+        ],
+        links: [
+          { label: 'CRS & gridsets', href: '#crs-gridset' },
+          { label: 'Gridset, origin och matrixset', href: '#gridset-origin' },
+          { label: 'Begrepp (enkelt)', href: '#begrepp' }
+        ],
+        escalate: ['Offset kvarstår efter gridset/CRS-kontroll.']
+      },
+      {
+        key: 'holes-tiles',
+        label: 'Tomma tiles eller “hål”',
+        startHere: [
+          'Testa annan zoomnivå i klienten.',
+          'Kontrollera datatäckning och BBOX.',
+          'Se om lagret ritar i Layer Preview.'
+        ],
+        links: [
+          { label: 'Tile cache 101', href: '#tile-cache-101' },
+          { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
+          { label: 'Praktisk checklista', href: '#checklista' }
+        ],
+        escalate: ['Tomma tiles även i Layer Preview.']
+      },
+      {
+        key: 'slow-seed',
+        label: 'Långsam rendering / seeding',
+        startHere: [
+          'Seeda mindre område och färre zoomnivåer.',
+          'Kontrollera datakällans prestanda.',
+          'Granska om stilen är tung.'
+        ],
+        links: [
+          { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
+          { label: 'Metastore och disk quota', href: '#metastore-disk' },
+          { label: 'Vanliga misstag', href: '#vanliga-misstag' }
+        ],
+        escalate: ['Seeding är fortsatt långsam på små ytor.']
+      },
+      {
+        key: 'slow-external',
+        label: 'Extern WMS är långsam',
+        startHere: [
+          'Mät svarstid direkt mot WMS-url.',
+          'Cachea som proxy-lager om möjligt.',
+          'Begränsa BBOX och zoomnivåer.'
+        ],
+        links: [
+          { label: 'Cacheability och parametrar', href: '#cacheability' },
+          { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
+          { label: 'Klientperspektiv', href: '#klientperspektiv' }
+        ],
+        escalate: ['Extern tjänst är långsam även utan cache.']
+      },
+      {
+        key: 'client-or-server',
+        label: 'Osäker om felet är klient eller server',
+        startHere: [
+          'Testa lagret i GeoServer Layer Preview.',
+          'Testa WMS direkt i webbläsaren.',
+          'Jämför resultat i Origo och preview.'
+        ],
+        links: [
+          { label: 'Klientperspektiv', href: '#klientperspektiv' },
+          { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
+          { label: 'Tile cache 101', href: '#tile-cache-101' }
+        ],
+        escalate: ['Skillnaden mellan klient och server går inte att isolera.']
       }
     ]
   },
   'geoserver-styles': {
-    quickChecks: [
-      'Testa stilen i GeoServer Layer Preview.',
-      'Säkerställ att rätt style är kopplad som default.',
-      'Kontrollera att lagret och stilen matchar datatyp.',
-      'Bekräfta att SLD/SE-versionen är korrekt.'
-    ],
-    escalate: [
-      'Stilen laddas inte trots ren XML och korrekt format.',
-      'Inget syns i preview efter flera validerade ändringar.',
-      'Loggar visar upprepade schema- eller renderingsfel.'
-    ],
+    title: 'Felsökningswizard',
     symptoms: [
       {
-        id: 'sld-import-fail',
-        label: 'SLD importeras inte (XML/schema-fel)',
-        actions: [
-          'Validera XML-strukturen och namespaces.',
-          'Använd SE 1.1 och rätt schemaLocation.',
-          'Kontrollera att filen är ren UTF-8 utan extra tecken.',
-          'Testa att importera en minimal referensstyle.'
-        ]
+        key: 'sld-import-fail',
+        label: 'SLD importeras inte',
+        startHere: [
+          'Validera XML och namespaces.',
+          'Testa import av en minimal SLD.',
+          'Kontrollera att formatet är SE 1.1.'
+        ],
+        links: [
+          { label: 'Import och namespaces', href: '#sld-import' },
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
+          { label: 'Välj rätt format', href: '#format' }
+        ],
+        escalate: ['Import misslyckas även med minimal SLD.']
       },
       {
-        id: 'sld-no-render',
-        label: 'SLD importeras men inget syns på kartan',
-        actions: [
-          'Verifiera datatyp (point/line/polygon) mot symbolizer.',
+        key: 'sld-no-render',
+        label: 'SLD importeras men syns inte',
+        startHere: [
+          'Verifiera datatyp mot symbolizer.',
           'Kontrollera Min/MaxScaleDenominator.',
-          'Testa en enkel färg/linjestil utan filter.',
-          'Bekräfta att rätt style är aktiv på lagret.'
-        ]
+          'Testa en enkel style utan filter.'
+        ],
+        links: [
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
+          { label: 'Skala och synlighet', href: '#sld-scale' },
+          { label: 'Parameterguide', href: '#parameterguide' }
+        ],
+        escalate: ['Inget syns i preview efter förenklad style.']
       },
       {
-        id: 'labels-missing',
-        label: 'Labels syns inte eller ligger fel',
-        actions: [
-          'Kontrollera att rätt attribut används i Label.',
-          'Justera fontstorlek och halo/placement.',
-          'Testa med större text och enklare placement.',
-          'Verifiera att data faktiskt har värden.'
-        ]
+        key: 'labels-missing',
+        label: 'Labels syns inte / ligger fel',
+        startHere: [
+          'Kontrollera attributnamn i Label.',
+          'Justera fontstorlek och placement.',
+          'Testa en enkel label utan halo.'
+        ],
+        links: [
+          { label: 'Labels – enkel etikett', href: '#labels' },
+          { label: 'Skala och synlighet', href: '#sld-scale' },
+          { label: 'Parameterguide', href: '#parameterguide' }
+        ],
+        escalate: ['Labels syns inte trots förenklad label.']
       },
       {
-        id: 'rules-fail',
-        label: 'Rule-baserad styling fungerar inte (filter)',
-        actions: [
-          'Dubbelkolla filter-syntax och attributnamn.',
+        key: 'rules-fail',
+        label: 'Filter-regler fungerar inte',
+        startHere: [
+          'Kontrollera filter-syntax och attributnamn.',
           'Testa en regel i taget.',
-          'Kontrollera att datatypen matchar filtervillkoret.',
-          'Verifiera med en enklare OGC-filterregel.'
-        ]
+          'Verifiera datatyper i attributen.'
+        ],
+        links: [
+          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
+          { label: 'Parameterguide', href: '#parameterguide' },
+          { label: 'SLD Cookbook', href: '#sld-cookbook' }
+        ],
+        escalate: ['Filter ger fel även med enkel regel.']
       },
       {
-        id: 'style-cache',
-        label: 'Jag ser gamla stilar (cache)',
-        actions: [
-          'Rensa cache i GeoWebCache för lagret.',
-          'Testa med cache-bypass i WMS.',
-          'Uppdatera kartan med hård refresh.',
-          'Bekräfta att rätt style-version är aktiv.'
-        ]
+        key: 'style-cache',
+        label: 'Jag ser gamla stilar',
+        startHere: [
+          'Rensa cache för lagret i GeoWebCache.',
+          'Gör hård refresh i webbläsaren.',
+          'Bekräfta att rätt style är aktiv.'
+        ],
+        links: [
+          { label: 'Cache och uppdatering', href: '#sld-cache' },
+          { label: 'Översikt', href: '#oversikt' },
+          { label: 'Hur detta påverkar kartklienten', href: '#origo-impact' }
+        ],
+        escalate: ['Stilen uppdateras inte efter cache‑rensing.']
       }
     ]
   }
@@ -424,31 +450,75 @@ const initCodeCopy = () => {
 };
 
 const initWizard = () => {
-  const wizards = document.querySelectorAll('[data-wizard]');
+  const wizards = document.querySelectorAll('.wizard[data-wizard]');
 
   wizards.forEach((wizard) => {
     const wizardId = wizard.getAttribute('data-wizard');
     const config = WIZARD_DATA[wizardId];
 
-    if (!config) {
+    if (!config || !config.symptoms.length) {
       return;
     }
 
-    const optionsContainer = wizard.querySelector('[data-wizard-options]');
-    const actionsContainer = wizard.querySelector('[data-wizard-actions]');
-    const quickContainer = wizard.querySelector('[data-wizard-quick]');
-    const escalateContainer = wizard.querySelector('[data-wizard-escalate]');
-    const checkContainer = wizard.querySelector('[data-wizard-check]');
-    const avoidContainer = wizard.querySelector('[data-wizard-avoid]');
+    wizard.innerHTML = '';
 
-    if (!optionsContainer || !actionsContainer || !quickContainer || !escalateContainer) {
-      return;
-    }
+    const title = document.createElement('h2');
+    title.textContent = config.title;
 
-    const storageKey = `wizard-selection-${wizardId}`;
-    const defaultSymptom = config.symptoms[0];
-    const savedId = localStorage.getItem(storageKey);
-    let activeSymptom = config.symptoms.find((item) => item.id === savedId) || defaultSymptom;
+    const optionsSection = document.createElement('div');
+    optionsSection.className = 'wizard-section';
+
+    const optionsTitle = document.createElement('h3');
+    optionsTitle.textContent = 'Vad ser du?';
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'wizard-options';
+
+    const startSection = document.createElement('div');
+    startSection.className = 'wizard-section';
+
+    const startTitle = document.createElement('h3');
+    startTitle.textContent = 'Starta här';
+
+    const startList = document.createElement('ol');
+    startList.className = 'wizard-steps';
+
+    const linkSection = document.createElement('div');
+    linkSection.className = 'wizard-section';
+
+    const linkTitle = document.createElement('h3');
+    linkTitle.textContent = 'Gå vidare här';
+
+    const linkList = document.createElement('ul');
+    linkList.className = 'wizard-links';
+
+    const escalateSection = document.createElement('div');
+    escalateSection.className = 'wizard-section';
+
+    const escalateTitle = document.createElement('h3');
+    escalateTitle.textContent = 'När eskalera?';
+
+    const escalateList = document.createElement('ul');
+    escalateList.className = 'wizard-escalate';
+
+    optionsSection.appendChild(optionsTitle);
+    optionsSection.appendChild(optionsContainer);
+    startSection.appendChild(startTitle);
+    startSection.appendChild(startList);
+    linkSection.appendChild(linkTitle);
+    linkSection.appendChild(linkList);
+    escalateSection.appendChild(escalateTitle);
+    escalateSection.appendChild(escalateList);
+
+    wizard.appendChild(title);
+    wizard.appendChild(optionsSection);
+    wizard.appendChild(startSection);
+    wizard.appendChild(linkSection);
+    wizard.appendChild(escalateSection);
+
+    const storageKey = `wizard:${wizardId}`;
+    const savedKey = localStorage.getItem(storageKey);
+    let activeSymptom = config.symptoms.find((item) => item.key === savedKey) || config.symptoms[0];
 
     const renderList = (container, items) => {
       container.innerHTML = '';
@@ -459,39 +529,34 @@ const initWizard = () => {
       });
     };
 
-    renderList(quickContainer, config.quickChecks);
-    renderList(escalateContainer, config.escalate);
-
-    const renderActions = (symptom) => {
-      actionsContainer.innerHTML = '';
-      symptom.actions.forEach((action) => {
+    const renderLinks = (items) => {
+      linkList.innerHTML = '';
+      items.forEach((item) => {
         const li = document.createElement('li');
-        li.textContent = action;
-        actionsContainer.appendChild(li);
+        const link = document.createElement('a');
+        link.href = item.href;
+        link.textContent = item.label;
+        li.appendChild(link);
+        linkList.appendChild(li);
       });
-
-      if (checkContainer) {
-        checkContainer.textContent = symptom.check ? symptom.check : '';
-        checkContainer.classList.toggle('hidden', !symptom.check);
-      }
-
-      if (avoidContainer) {
-        avoidContainer.textContent = symptom.avoid ? symptom.avoid : '';
-        avoidContainer.classList.toggle('hidden', !symptom.avoid);
-      }
     };
 
-    const updateActive = (symptomId) => {
-      const nextSymptom = config.symptoms.find((item) => item.id === symptomId);
+    const renderSymptom = (symptom) => {
+      renderList(startList, symptom.startHere, true);
+      renderLinks(symptom.links);
+      renderList(escalateList, symptom.escalate);
+    };
+
+    const updateActive = (symptomKey) => {
+      const nextSymptom = config.symptoms.find((item) => item.key === symptomKey);
       if (!nextSymptom) {
         return;
       }
-
       activeSymptom = nextSymptom;
-      localStorage.setItem(storageKey, symptomId);
-      renderActions(activeSymptom);
+      localStorage.setItem(storageKey, symptomKey);
+      renderSymptom(activeSymptom);
       optionsContainer.querySelectorAll('.wizard-option').forEach((button) => {
-        const isActive = button.dataset.symptom === symptomId;
+        const isActive = button.dataset.symptom === symptomKey;
         button.classList.toggle('active', isActive);
         button.setAttribute('aria-pressed', isActive.toString());
       });
@@ -503,13 +568,13 @@ const initWizard = () => {
       button.type = 'button';
       button.className = 'wizard-option';
       button.textContent = symptom.label;
-      button.dataset.symptom = symptom.id;
+      button.dataset.symptom = symptom.key;
       button.setAttribute('aria-pressed', 'false');
-      button.addEventListener('click', () => updateActive(symptom.id));
+      button.addEventListener('click', () => updateActive(symptom.key));
       optionsContainer.appendChild(button);
     });
 
-    updateActive(activeSymptom.id);
+    updateActive(activeSymptom.key);
   });
 };
 

@@ -67,36 +67,16 @@
       </div>
     </header>
 
-    <section class="wizard-card" data-wizard="geowebcache">
-      <h2>Felsökningsguide</h2>
-      <div class="wizard-section">
-        <h3>Vad ser du?</h3>
-        <div class="wizard-options" data-wizard-options></div>
-      </div>
-      <div class="wizard-section">
-        <h3>Snabbkontroll</h3>
-        <ul class="wizard-list" data-wizard-quick></ul>
-      </div>
-      <div class="wizard-section">
-        <h3>Rekommenderade åtgärder</h3>
-        <ol class="wizard-list" data-wizard-actions></ol>
-        <p class="wizard-note" data-wizard-check></p>
-        <p class="wizard-note" data-wizard-avoid></p>
-      </div>
-      <div class="wizard-section">
-        <h3>När är det dags att gå vidare?</h3>
-        <ul class="wizard-list" data-wizard-escalate></ul>
-      </div>
-    </section>
+    <section class="wizard" data-wizard="geowebcache"></section>
 
     <section class="doc-content">
-      <h2>Tile cache 101</h2>
+      <h2 id="tile-cache-101">Tile cache 101</h2>
       <p>
         GeoWebCache är tile-cachen som sitter nära GeoServer. Den lagrar kartbilder som små tiles
         så att klienten (Origo) får snabba svar vid pan/zoom.
       </p>
 
-      <h2>Hur GeoWebCache hänger ihop med GeoServer</h2>
+      <h2 id="geoserver-koppling">Hur GeoWebCache hänger ihop med GeoServer</h2>
       <ul>
         <li>GeoServer renderar kartan.</li>
         <li>GeoWebCache sparar resultatet som tiles.</li>
@@ -104,7 +84,7 @@
       </ul>
       <p>TODO: verifiera konfigurationen i vår GeoServer-installation.</p>
 
-      <h2>Begrepp (enkelt)</h2>
+      <h2 id="begrepp">Begrepp (enkelt)</h2>
       <ul>
         <li><strong>Gridset / tiling scheme:</strong> hur tiles delas upp (t.ex. 256x256).</li>
         <li><strong>Seed:</strong> förgenerera tiles i förväg.</li>
@@ -115,20 +95,48 @@
         <li><strong>Bypass:</strong> kringgå cache vid felsökning.</li>
       </ul>
 
-      <h2>Seed / Truncate / Bypass – skillnaden</h2>
+      <h2 id="seed-truncate-bypass">Seed / Truncate / Bypass – skillnaden</h2>
       <ul>
         <li><strong>Seed:</strong> bygger nya tiles (snabbare första visning).</li>
         <li><strong>Truncate:</strong> tar bort gamla tiles (kräver ny rendering).</li>
         <li><strong>Bypass:</strong> går förbi cache för att se “live” rendering.</li>
       </ul>
 
-      <h2>CRS & gridsets</h2>
+      <h2 id="crs-gridset">CRS & gridsets</h2>
       <p>
         Gridset måste matcha kartans CRS. Om gridset/CRS inte stämmer får du fel placering
         eller tomma tiles. Vår vanligaste CRS är EPSG:3008.
       </p>
 
-      <h2>Praktisk checklista</h2>
+      <h2 id="gridset-origin">Gridset, origin och matrixset</h2>
+      <ul>
+        <li>Origin påverkar tile-alignment – fel origin ger offset.</li>
+        <li>Kontrollera att matrixset matchar gridset och CRS.</li>
+        <li>Verifiera att samma gridset används i klient och cache.</li>
+      </ul>
+
+      <h2 id="seeding-rest">Seeding och REST-anrop</h2>
+      <ul>
+        <li>Seed kan misslyckas om REST-payload är felaktig.</li>
+        <li>Testa seeding med små BBOX och få zoomnivåer.</li>
+        <li>Kommunikationsfel syns ofta i GeoServer-loggar.</li>
+      </ul>
+
+      <h2 id="cacheability">Cacheability och parametrar</h2>
+      <ul>
+        <li>Filter och viewparams gör att cache inte kan återanvändas.</li>
+        <li>Undvik dynamiska parametrar för lager som ska cacheas.</li>
+        <li>Testa samma request utan filter för att jämföra.</li>
+      </ul>
+
+      <h2 id="metastore-disk">Metastore och disk quota</h2>
+      <ul>
+        <li>Disk quota kan stoppa seeding om cache-disken är full.</li>
+        <li>Rensa endast cache-kataloger, inte konfig.</li>
+        <li>Metastore går ofta att återskapa om cache rensas korrekt.</li>
+      </ul>
+
+      <h2 id="checklista">Praktisk checklista</h2>
       <ol>
         <li>Använd cache för publika bakgrundskartor och statiska lager.</li>
         <li>Seeda bara de zoom-nivåer som faktiskt används.</li>
@@ -141,11 +149,11 @@
       </ol>
 
       <div class="callout callout-warning">
-        <h3>Stale tiles</h3>
+        <h3 id="stale-tiles">Stale tiles</h3>
         <p>Om du ser gamla kartbilder – rensa cache eller ändra tile-URL för cache-busting.</p>
       </div>
       <div class="callout callout-warning">
-        <h3>Vanliga misstag</h3>
+        <h3 id="vanliga-misstag">Vanliga misstag</h3>
         <ul>
           <li>Rensa cache i live utan plan.</li>
           <li>Seeda för många zoom‑nivåer samtidigt.</li>
@@ -153,7 +161,7 @@
         </ul>
       </div>
 
-      <h2>Klientperspektiv (Origo + browser)</h2>
+      <h2 id="klientperspektiv">Klientperspektiv (Origo + browser)</h2>
       <ul>
         <li>Kontrollera Network-fliken: ser du tiles (.png/.jpeg)?</li>
         <li>Granska cache headers (t.ex. <code>Cache-Control</code>).</li>

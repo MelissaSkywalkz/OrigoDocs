@@ -67,28 +67,10 @@
       </div>
     </header>
 
-    <section class="wizard-card" data-wizard="geoserver-styles">
-      <h2>Felsökningsguide</h2>
-      <div class="wizard-section">
-        <h3>Vad ser du?</h3>
-        <div class="wizard-options" data-wizard-options></div>
-      </div>
-      <div class="wizard-section">
-        <h3>Snabbkontroll</h3>
-        <ul class="wizard-list" data-wizard-quick></ul>
-      </div>
-      <div class="wizard-section">
-        <h3>Rekommenderade åtgärder</h3>
-        <ol class="wizard-list" data-wizard-actions></ol>
-      </div>
-      <div class="wizard-section">
-        <h3>När är det dags att gå vidare?</h3>
-        <ul class="wizard-list" data-wizard-escalate></ul>
-      </div>
-    </section>
+    <section class="wizard" data-wizard="geoserver-styles"></section>
 
     <section class="doc-content">
-      <h2>Översikt</h2>
+      <h2 id="oversikt">Översikt</h2>
       <p>
         GeoServer använder <strong>styles</strong> för att beskriva hur ett lager ska ritas.
         En style är en egen resurs som kan kopplas som <em>default</em> eller som alternativ.
@@ -99,14 +81,14 @@
         <li><strong>Layer ↔ style:</strong> kopplas i GeoServer, inte i klienten.</li>
       </ul>
 
-      <h2>Välj rätt format</h2>
+      <h2 id="format">Välj rätt format</h2>
       <ul>
         <li><strong>SLD/SE 1.1:</strong> standardiserat och stabilt.</li>
         <li><strong>CSS Extension:</strong> snabbare att skriva, kräver extension.</li>
         <li><strong>MBStyle:</strong> passar vektor‑tiles och moderna kartstilar.</li>
       </ul>
 
-      <h2>SLD Cookbook – färdiga exempel (SE 1.1)</h2>
+      <h2 id="sld-cookbook">SLD Cookbook – färdiga exempel (SE 1.1)</h2>
       <p><strong>Denna SLD är en referensmall.</strong> Kopiera exakt.</p>
       <p><strong>Ändra endast:</strong> färg (fill, stroke), storlek (Size), stroke‑width. <strong>Ändra INTE:</strong> namespaces, <code>se:</code>-prefix, version, struktur.</p>
 
@@ -278,7 +260,7 @@
       <p><strong>När?</strong> Områden.</p>
       <p><strong>Om detta inte fungerar:</strong> säkerställ att lagret är polygon.</p>
 
-      <h3>LABELS – enkel etikett</h3>
+      <h3 id="labels">LABELS – enkel etikett</h3>
       <pre><code><?xml version="1.0" encoding="UTF-8"?>
 <se:StyledLayerDescriptor version="1.1.0"
   xmlns:se="http://www.opengis.net/se"
@@ -315,7 +297,7 @@
       <p><strong>När?</strong> Namn på objekt. <strong>Om detta inte fungerar:</strong> kontrollera fältnamn.</p>
       <p><strong>Om detta inte fungerar:</strong> testa med ett hårdkodat label‑värde för felsökning.</p>
 
-      <h2>Parameterguide (kort)</h2>
+      <h2 id="parameterguide">Parameterguide (kort)</h2>
       <table>
         <thead>
           <tr>
@@ -373,7 +355,22 @@
 </se:Label>
 </code></pre>
 
-      <h2>SLD‑felsökning</h2>
+      <h2 id="sld-felsokning">SLD‑felsökning</h2>
+      <h3 id="sld-import">Import och namespaces</h3>
+      <ul>
+        <li>Schemafel beror ofta på fel namespace eller version.</li>
+        <li>Validera att <code>se:</code>-prefix används konsekvent.</li>
+      </ul>
+      <h3 id="sld-scale">Skala och synlighet</h3>
+      <ul>
+        <li>Min/MaxScaleDenominator kan göra att inget syns.</li>
+        <li>Labels kräver rätt attribut och rimlig storlek.</li>
+      </ul>
+      <h3 id="sld-cache">Cache och uppdatering</h3>
+      <ul>
+        <li>Gamla stilar beror ofta på cache i GeoWebCache.</li>
+        <li>Testa hård refresh när stilen uppdateras.</li>
+      </ul>
       <ul>
         <li>Vanligt fel: SLD 1.0 vs SE 1.1 (prefix och schema).</li>
         <li>Styles som laddar men inte syns → fel datatyp eller fel skala.</li>
@@ -382,14 +379,14 @@
       </ul>
 
       <div class="callout callout-info">
-        <h3>QGIS‑tips (hög nivå)</h3>
+      <h3>QGIS‑tips (hög nivå)</h3>
         <p>
           Skapa en stil i QGIS, exportera som SLD och importera i GeoServer.
           TODO: verifiera exakta klicksteg i vår miljö.
         </p>
       </div>
 
-      <h2>Hur detta påverkar kartklienten (Origo)</h2>
+      <h2 id="origo-impact">Hur detta påverkar kartklienten (Origo)</h2>
       <p>
         Origo visar resultatet av GeoServers rendering. Om du byter style i GeoServer syns det
         i WMS‑bilder och tiles utan att Origo‑konfigurationen behöver ändras.

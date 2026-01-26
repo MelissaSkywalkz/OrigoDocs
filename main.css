@@ -294,7 +294,7 @@ a {
   font-weight: 600;
 }
 
-.wizard-card {
+.wizard {
   background: var(--card);
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -302,7 +302,7 @@ a {
   margin-bottom: 2rem;
 }
 
-.wizard-card h2 {
+.wizard h2 {
   margin-top: 0;
 }
 
@@ -332,15 +332,16 @@ a {
   border-color: var(--primary);
 }
 
-.wizard-list {
+.wizard-steps,
+.wizard-links,
+.wizard-escalate {
   margin: 0.4rem 0 0;
   padding-left: 1.2rem;
 }
 
-.wizard-note {
-  margin: 0.5rem 0 0;
-  font-size: 0.85rem;
-  color: var(--muted);
+.wizard-links a {
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .doc-content {
