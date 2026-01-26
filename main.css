@@ -353,6 +353,11 @@ a {
 
 .code-block {
   position: relative;
+  margin: 1.2rem 0 2rem;
+}
+
+.code-block pre {
+  margin: 0;
 }
 
 .code-badge {

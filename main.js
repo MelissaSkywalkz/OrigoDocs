@@ -307,11 +307,11 @@ const initCodeCopy = () => {
     const codeText = codeBlock.textContent.trim();
     let badgeLabel = 'Kod';
 
-    if (/^<\\?xml/i.test(codeText) || /^<se:/i.test(codeText) || /^<StyledLayerDescriptor/i.test(codeText)) {
+    if (/^<\\?xml/i.test(codeText) || /<se:StyledLayerDescriptor/i.test(codeText) || /<StyledLayerDescriptor/i.test(codeText)) {
       badgeLabel = 'XML';
     } else if (/^[\\[{]/.test(codeText)) {
       badgeLabel = 'JSON';
-    } else if (/^\\$\\s/m.test(codeText) || /python -m http\\.server|\\bnpm\\s|\\bgit\\s/.test(codeText)) {
+    } else if (/^(\\$ |npm |git |python )/m.test(codeText)) {
       badgeLabel = 'CLI';
     }
 
