@@ -132,8 +132,67 @@ const initSearch = () => {
   });
 };
 
+const initCodeCopy = () => {
+  const codeBlocks = document.querySelectorAll('pre code');
+
+  codeBlocks.forEach((codeBlock) => {
+    const pre = codeBlock.parentElement;
+
+    if (!pre || pre.closest('.code-block')) {
+      return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-btn';
+    button.textContent = 'Kopiera';
+    button.setAttribute('aria-label', 'Kopiera kod');
+    button.setAttribute('aria-live', 'polite');
+
+    const resetLabel = () => {
+      button.textContent = 'Kopiera';
+      button.classList.remove('copied');
+    };
+
+    button.addEventListener('click', async () => {
+      const text = codeBlock.textContent;
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'absolute';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+
+        button.textContent = 'Kopierat ✓';
+        button.classList.add('copied');
+        setTimeout(resetLabel, 1500);
+      } catch (error) {
+        button.textContent = 'Kopiera';
+        button.classList.remove('copied');
+      }
+    });
+
+    wrapper.appendChild(button);
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
   initSearch();
+  initCodeCopy();
 });

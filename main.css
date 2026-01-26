@@ -302,6 +302,37 @@ a {
   line-height: 1.6;
 }
 
+.code-block {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--primary-dark);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.copy-btn:hover,
+.copy-btn:focus {
+  background: var(--primary);
+  color: #fff;
+}
+
+.copy-btn.copied {
+  background: #e8f5e9;
+  border-color: #a7d7b1;
+  color: #1b5e20;
+}
+
 .doc-content h2 {
   margin-top: 1.8rem;
 }
