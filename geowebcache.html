@@ -74,6 +74,9 @@
         >
           <img src="sort.png" alt="" />
         </button>
+        <button class="cmdk-trigger" type="button" aria-label="Öppna sök" data-cmdk-trigger>
+          Sök
+        </button>
         <div class="topbar-title">
           <span class="eyebrow">GeoServer</span>
           <h1>GeoWebCache</h1>
@@ -228,5 +231,18 @@ https://geoserver.example.com/geoserver/gwc/service/wms?layer=workspace:layer&v=
     </main>
 
     <script src="main.js"></script>
+    <div class="cmdk" hidden>
+      <div class="cmdk-backdrop" data-cmdk-close></div>
+      <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="Sök">
+        <div class="cmdk-header">
+          <label class="cmdk-label" for="cmdk-input">Sök i portalen</label>
+          <input id="cmdk-input" type="search" placeholder="Skriv för att söka…" autocomplete="off" />
+        </div>
+        <div class="cmdk-status" aria-live="polite"></div>
+        <ul class="cmdk-results" role="listbox" aria-label="Sökresultat"></ul>
+        <div class="cmdk-hint">Tryck Enter för att öppna, Esc för att stänga.</div>
+      </div>
+    </div>
+
   </body>
 </html>

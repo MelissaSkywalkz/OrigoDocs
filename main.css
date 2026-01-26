@@ -247,6 +247,21 @@ a {
   height: 28px;
 }
 
+.cmdk-trigger {
+  border: none;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.cmdk-trigger:focus-visible {
+  outline: 2px solid #c7d2fe;
+  outline-offset: 2px;
+}
+
 .topbar-title h1 {
   margin: 0.2rem 0 0;
   font-size: 1.75rem;
@@ -327,6 +342,114 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+}
+
+.cmdk-open {
+  overflow: hidden;
+}
+
+.cmdk {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: start center;
+  padding: 4.5rem 1rem 1rem;
+}
+
+.cmdk-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.cmdk-panel {
+  position: relative;
+  width: min(92vw, 720px);
+  max-height: 70vh;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1;
+}
+
+.cmdk-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cmdk-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+#cmdk-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.cmdk-status {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.cmdk-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 40vh;
+}
+
+.cmdk-results li {
+  border-bottom: 1px solid var(--border);
+}
+
+.cmdk-results li:last-child {
+  border-bottom: none;
+}
+
+.cmdk-result {
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.cmdk-result mark {
+  background: #fde68a;
+  border-radius: 4px;
+  padding: 0 2px;
+}
+
+.cmdk-result.is-active,
+.cmdk-result:hover {
+  background: var(--bg);
+}
+
+.cmdk-result-title {
+  font-weight: 600;
+}
+
+.cmdk-result-snippet {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.cmdk-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
 }
 
 .card h3 {
