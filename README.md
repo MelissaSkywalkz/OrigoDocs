@@ -44,6 +44,7 @@ python -m http.server 8000
 - `troubleshooting.html` – felsökning.
 - `main.css` – gemensam styling.
 - `main.js` – navigation + accordion.
+- `search-index.json` – sökindex för sidomenyn.
 
 ## Test & verifiering (manuellt)
 

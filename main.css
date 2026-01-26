@@ -70,6 +70,51 @@ a {
   align-items: center;
 }
 
+.nav-search {
+  padding: 0 1.5rem 1.25rem;
+}
+
+.nav-search input[type="search"] {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--sidebar-accent);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.nav-search input[type="search"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-results {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  border-radius: 10px;
+  background: var(--sidebar-accent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.search-results li a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: #e6ebf3;
+}
+
+.search-results li a:hover,
+.search-results li a:focus {
+  background: var(--sidebar-hover);
+}
+
+.hidden {
+  display: none;
+}
+
 .nav-section {
   margin-bottom: 1rem;
 }
