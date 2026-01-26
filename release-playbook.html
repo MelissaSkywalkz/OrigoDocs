@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release‑playbook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="layout">
+  <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
+    </div>
+    <div class="nav-search">
+      <input
+        type="search"
+        id="navSearch"
+        placeholder="Sök i GIS-handboken…"
+        aria-label="Sök"
+      />
+      <ul id="searchResults" class="search-results hidden"></ul>
+    </div>
+    <div class="nav-content">
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          Dokumentation
+        </button>
+        <div class="accordion-panel" id="nav-docs">
+          <a href="index.html">Start</a>
+          <a href="page.html">JSON 101</a>
+          <a href="origo-guide.html">Origo – guide</a>
+          <a href="layermanager.html">Layermanager</a>
+          <a href="geoserver.html">GeoServer 101</a>
+          <a href="geoserver-styles.html">GeoServer – styles</a>
+          <a href="geowebcache.html">GeoWebCache</a>
+          <a href="git-vscode.html">Git & VS Code</a>
+          <a href="examples.html">Origo-recept</a>
+          <a href="faq-gis.html">FAQ GIS</a>
+          <a href="npm.html">npm & plugins</a>
+          <a class="active" href="release-playbook.html">Release‑playbook</a>
+          <a href="troubleshooting.html">Felsökning</a>
+        </div></div>
+      </div>
+      <div class="nav-section">
+        <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          Snabblänkar
+        </button>
+        <div class="accordion-panel" id="nav-shortcuts" hidden>
+          <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
+          <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
+        </div></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main" id="main" data-playbook="release">
+    <header class="topbar">
+      <button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true">
+        <img src="sort.png" alt="" />
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Release</span>
+        <h1>Release‑playbook</h1>
+      </div>
+      <div class="topbar-meta">
+        <span class="status-pill">Checklistor</span>
+      </div>
+    </header>
+
+    <section class="doc-content">
+      <div class="playbook-header">
+        <div>
+          <h2>Snabb överblick</h2>
+          <ul class="playbook-summary">
+            <li>Planera vad som ändras och vilka lager som påverkas.</li>
+            <li>Verifiera data, styles och cache innan du publicerar.</li>
+            <li>Testa lokalt i Origo och i GeoServer Preview.</li>
+            <li>Dokumentera vad som gjorts och hur du kan backa.</li>
+            <li>Verifiera live och gör en snabb sanity‑check.</li>
+          </ul>
+        </div>
+        <button class="button button-secondary" id="playbookReset" type="button">Återställ checklistor</button>
+      </div>
+
+      <div class="playbook-grid">
+        <section class="playbook-card">
+          <h3>Förberedelser</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="prep-pull">Pull senaste ändringar</label></li>
+            <li><label><input type="checkbox" data-playbook-id="prep-branch">Skapa ny branch</label></li>
+            <li><label><input type="checkbox" data-playbook-id="prep-env">Bekräfta testmiljö/konfig</label></li>
+            <li><label><input type="checkbox" data-playbook-id="prep-impact">Bekräfta vilka lager/stilar/cache som påverkas</label></li>
+            <li><label><input type="checkbox" data-playbook-id="prep-backup">Ta snapshot/backup av kritiska filer</label></li>
+          </ul>
+        </section>
+
+        <section class="playbook-card">
+          <h3>GeoServer: uppdatera data</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="data-datastore">Ladda/uppdatera datastore (GeoPackage/MySQL)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="data-preview">Verifiera layer preview</label></li>
+            <li><label><input type="checkbox" data-playbook-id="data-crs">Kontrollera bounding boxes / CRS (EPSG:3008)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="data-permissions">Kontrollera permissions / service endpoints (https://localhost/geoserver)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="data-services">Verifiera WMS + WFS</label></li>
+          </ul>
+        </section>
+
+        <section class="playbook-card">
+          <h3>GeoServer: styles</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="style-import">Importera style (SLD/SE 1.1)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="style-assign">Koppla style till layer</label></li>
+            <li><label><input type="checkbox" data-playbook-id="style-preview">Kontroll i preview</label></li>
+            <li><label><input type="checkbox" data-playbook-id="style-labels">Labels/scale kontroller</label></li>
+            <li><label><input type="checkbox" data-playbook-id="style-scope">Undvik att byta 10 saker samtidigt</label></li>
+          </ul>
+        </section>
+
+        <section class="playbook-card">
+          <h3>GeoWebCache / tiles</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="cache-impact">Bedöm om cache påverkas</label></li>
+            <li><label><input type="checkbox" data-playbook-id="cache-seed-truncate">När seeda vs truncate</label></li>
+            <li><label><input type="checkbox" data-playbook-id="cache-seed">Seed relevant område + zoomintervall</label></li>
+            <li><label><input type="checkbox" data-playbook-id="cache-gridset">Kontrollera gridset/matrixset för EPSG:3008</label></li>
+            <li><label><input type="checkbox" data-playbook-id="cache-stale">Verifiera att gamla tiles inte ligger kvar</label></li>
+          </ul>
+        </section>
+
+        <section class="playbook-card">
+          <h3>Origo‑konfig</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="origo-validate">Validera JSON</label></li>
+            <li><label><input type="checkbox" data-playbook-id="origo-sources">Kontrollera sources (WMS/WFS/WMTS)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="origo-layers">Kontrollera groups/layers</label></li>
+            <li><label><input type="checkbox" data-playbook-id="origo-local">Testa i lokal server</label></li>
+            <li><label><input type="checkbox" data-playbook-id="origo-perf">Snabb prestandacheck</label></li>
+          </ul>
+        </section>
+
+        <section class="playbook-card">
+          <h3>Git & deploy</h3>
+          <ul class="playbook-list">
+            <li><label><input type="checkbox" data-playbook-id="git-commit">Commit med tydligt meddelande</label></li>
+            <li><label><input type="checkbox" data-playbook-id="git-push">Push till rätt remote/branch</label></li>
+            <li><label><input type="checkbox" data-playbook-id="git-tag">Tag/Release (om ni gör det)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="git-deploy">Deploy steg (generiskt)</label></li>
+            <li><label><input type="checkbox" data-playbook-id="git-verify">Verifiera live + rollback‑plan</label></li>
+          </ul>
+        </section>
+      </div>
+
+      <h2>Verifiering efter release</h2>
+      <ul>
+        <li>Kontrollera att Origo laddar kartan utan fel i konsolen.</li>
+        <li>Testa WMS/WFS‑anrop mot https://localhost/geoserver.</li>
+        <li>Verifiera att styles och labels syns på rätt zoomnivå.</li>
+        <li>Bekräfta att cache ger uppdaterade tiles.</li>
+      </ul>
+
+      <h2>Vanliga misstag</h2>
+      <ul>
+        <li>Seeda för stora ytor eller för många zoomnivåer.</li>
+        <li>Glömmer att rensa cache efter style‑ändring.</li>
+        <li>Byter flera parametrar samtidigt utan att testa.</li>
+        <li>Fel CRS i layer eller config.</li>
+        <li>Commit utan tydligt meddelande.</li>
+        <li>Ingen rollback‑plan.</li>
+        <li>Glömmer att testa i Origo efter deploy.</li>
+        <li>Hoppar över layer preview.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
