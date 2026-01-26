@@ -71,6 +71,12 @@
     <section class="wizard" data-wizard="geowebcache"></section>
 
     <section class="doc-content">
+      <div class="callout callout-start">
+        <strong>Läs detta först</strong>
+        Cache påverkar vad du ser. Seed och truncate ska göras med eftertanke och
+        bara på de zoomnivåer och områden som behövs.
+      </div>
+
       <h2 id="tile-cache-101">Tile cache 101</h2>
       <p>
         GeoWebCache är tile-cachen som sitter nära GeoServer. Den lagrar kartbilder som små tiles
@@ -102,6 +108,11 @@
         <li><strong>Truncate:</strong> tar bort gamla tiles (kräver ny rendering).</li>
         <li><strong>Bypass:</strong> går förbi cache för att se “live” rendering.</li>
       </ul>
+      <div class="callout callout-warn">
+        <strong>Vanligt misstag</strong>
+        Att seeda allt på alla zoomnivåer. Välj hellre relevant område och nivåer
+        för att undvika långa körningar.
+      </div>
 
       <h2 id="crs-gridset">CRS & gridsets</h2>
       <p>

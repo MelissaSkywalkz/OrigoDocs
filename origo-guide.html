@@ -69,6 +69,12 @@
     </header>
 
     <section class="doc-content">
+      <div class="callout callout-start">
+        <strong>Läs detta först</strong>
+        Origo läser en JSON‑konfig och visar data från GeoServer. Säkerställ att
+        projectionCode är EPSG:3008 och att dina tjänster svarar.
+      </div>
+
       <h2>Snabbstart</h2>
       <p>
         Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON‑konfig
@@ -154,6 +160,12 @@
         </tbody>
       </table>
       <p><strong>Tumregel:</strong> Om du är osäker – börja med WMS.</p>
+
+      <div class="callout callout-warn">
+        <strong>Vanligt misstag</strong>
+        Att blanda WMS och WFS utan att förstå skillnaden. WMS är för snabb visning,
+        WFS för attribut och klientlogik – klienten löser inte fel val automatiskt.
+      </div>
 
       <h2>Controls</h2>
       <pre><code>{

@@ -71,6 +71,12 @@
     <section class="wizard" data-wizard="geoserver-styles"></section>
 
     <section class="doc-content">
+      <div class="callout callout-start">
+        <strong>Läs detta först</strong>
+        Importera style i GeoServer → Styles, koppla den till lagret och testa i preview
+        innan du går vidare.
+      </div>
+
       <h2 id="oversikt">Översikt</h2>
       <p>
         GeoServer använder <strong>styles</strong> för att beskriva hur ett lager ska ritas.
@@ -92,6 +98,11 @@
       <h2 id="sld-cookbook">SLD Cookbook – färdiga exempel (SE 1.1)</h2>
       <p><strong>Denna SLD är en referensmall.</strong> Kopiera exakt.</p>
       <p><strong>Ändra endast:</strong> färg (fill, stroke), storlek (Size), stroke‑width. <strong>Ändra INTE:</strong> namespaces, <code>se:</code>-prefix, version, struktur.</p>
+      <div class="callout callout-warn">
+        <strong>Vanligt misstag</strong>
+        Fel namespace/schema eller fel datatyp (point/line/polygon) gör att inget
+        syns, även om SLD importeras.
+      </div>
 
       <h3>POINT – enkel punkt (cirkel)</h3>
       <pre><code><?xml version="1.0" encoding="UTF-8"?>

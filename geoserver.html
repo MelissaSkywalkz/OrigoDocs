@@ -69,6 +69,12 @@
     </header>
 
     <section class="doc-content">
+      <div class="callout callout-check">
+        <strong>Snabbcheck</strong>
+        Workspace → datastore → layer → style → preview. Om ett steg saknas kommer
+        lagret inte att synas i klienten.
+      </div>
+
       <h2>Vad är GeoServer?</h2>
       <p>
         GeoServer är en server som publicerar geografisk data via standardiserade tjänster.
@@ -126,6 +132,11 @@
       </div>
 
       <h2>Databaser & datakällor (översikt)</h2>
+      <div class="callout callout-tip">
+        <strong>Tips</strong>
+        GeoPackage/MySQL passar när data är filbaserad eller redan finns i databas.
+        Välj WMS när du vill ha snabb rendering och WFS när du behöver attribut.
+      </div>
       <ul>
         <li><strong>PostGIS:</strong> Databas för geodata (robust, ofta i produktion).</li>
         <li><strong>GeoPackage/Shapefile:</strong> Filbaserade datakällor (enkla att dela).</li>

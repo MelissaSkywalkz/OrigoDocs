@@ -579,8 +579,14 @@ a {
 
 .callout {
   border-radius: var(--radius);
-  padding: 1rem 1.2rem;
+  padding: 1rem 1.2rem 1rem 3rem;
   margin: 1.5rem 0;
+  position: relative;
+}
+
+.callout strong {
+  display: block;
+  margin-bottom: 0.4rem;
 }
 
 .callout-warning {
@@ -591,6 +597,55 @@ a {
 .callout-info {
   background: var(--info);
   border: 1px solid var(--info-border);
+}
+
+.callout-start {
+  background: #e9f5ff;
+  border: 1px solid #b6d9f4;
+}
+
+.callout-check {
+  background: #f1f7e8;
+  border: 1px solid #cfe1b9;
+}
+
+.callout-warn {
+  background: #fff5e5;
+  border: 1px solid #f1c27d;
+}
+
+.callout-tip {
+  background: #f0f7ff;
+  border: 1px solid #c3d9f6;
+}
+
+.callout-start::before,
+.callout-check::before,
+.callout-warn::before,
+.callout-tip::before {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1rem;
+}
+
+.callout-start::before {
+  content: '▶';
+  color: #2563eb;
+}
+
+.callout-check::before {
+  content: '✓';
+  color: #2f855a;
+}
+
+.callout-warn::before {
+  content: '!';
+  color: #b45309;
+}
+
+.callout-tip::before {
+  content: '💡';
 }
 
 @media (max-width: 960px) {
