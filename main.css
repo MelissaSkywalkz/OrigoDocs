@@ -306,6 +306,21 @@ a {
   position: relative;
 }
 
+.code-badge {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.75rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .copy-btn {
   position: absolute;
   top: 0.75rem;
@@ -331,6 +346,42 @@ a {
   background: #e8f5e9;
   border-color: #a7d7b1;
   color: #1b5e20;
+}
+
+.troubleshoot-toggle {
+  margin-top: 0.6rem;
+  border: none;
+  background: none;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.troubleshoot-toggle:hover,
+.troubleshoot-toggle:focus {
+  text-decoration: underline;
+}
+
+.troubleshoot-panel {
+  margin-top: 0.6rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: #f3f6fb;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.troubleshoot-panel h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+}
+
+.troubleshoot-panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
 }
 
 .doc-content h2 {

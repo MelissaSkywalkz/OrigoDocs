@@ -134,6 +134,7 @@ const initSearch = () => {
 
 const initCodeCopy = () => {
   const codeBlocks = document.querySelectorAll('pre code');
+  let codeIndex = 0;
 
   codeBlocks.forEach((codeBlock) => {
     const pre = codeBlock.parentElement;
@@ -142,10 +143,28 @@ const initCodeCopy = () => {
       return;
     }
 
+    codeIndex += 1;
     const wrapper = document.createElement('div');
     wrapper.className = 'code-block';
     pre.parentNode.insertBefore(wrapper, pre);
     wrapper.appendChild(pre);
+
+    const codeText = codeBlock.textContent.trim();
+    let badgeLabel = 'Kod';
+
+    if (/^<\\?xml/i.test(codeText) || /^<se:/i.test(codeText) || /^<StyledLayerDescriptor/i.test(codeText)) {
+      badgeLabel = 'XML';
+    } else if (/^[\\[{]/.test(codeText)) {
+      badgeLabel = 'JSON';
+    } else if (/^\\$\\s/m.test(codeText) || /python -m http\\.server|\\bnpm\\s|\\bgit\\s/.test(codeText)) {
+      badgeLabel = 'CLI';
+    }
+
+    const badge = document.createElement('span');
+    badge.className = 'code-badge';
+    badge.textContent = badgeLabel;
+    badge.setAttribute('aria-hidden', 'true');
+    wrapper.appendChild(badge);
 
     const button = document.createElement('button');
     button.type = 'button';
@@ -187,6 +206,65 @@ const initCodeCopy = () => {
     });
 
     wrapper.appendChild(button);
+
+    const troubleshootButton = document.createElement('button');
+    const troubleshootPanel = document.createElement('div');
+    const troubleshootId = `code-troubleshoot-${codeIndex}`;
+    const troubleshootList = document.createElement('ul');
+    const troubleshootTitle = document.createElement('h4');
+
+    troubleshootButton.type = 'button';
+    troubleshootButton.className = 'troubleshoot-toggle';
+    troubleshootButton.textContent = 'Felsök';
+    troubleshootButton.setAttribute('aria-expanded', 'false');
+    troubleshootButton.setAttribute('aria-controls', troubleshootId);
+
+    troubleshootPanel.className = 'troubleshoot-panel';
+    troubleshootPanel.id = troubleshootId;
+    troubleshootPanel.hidden = true;
+
+    if (badgeLabel === 'XML') {
+      troubleshootTitle.textContent = 'Felsök: SLD';
+      troubleshootList.innerHTML = `
+        <li>Kontrollera att du laddar upp i GeoServer → Styles och väljer rätt format (SLD/SE).</li>
+        <li>Kontrollera namespaces och att filen är välformad XML (inga extra tecken).</li>
+        <li>Om stilen laddas men inte syns: kontrollera datatyp (point/line/polygon) och skala (Min/MaxScaleDenominator).</li>
+        <li>Om du ser gamla resultat: rensa/seed cache i GeoWebCache vid behov (inte alltid).</li>
+      `;
+    } else if (badgeLabel === 'JSON') {
+      troubleshootTitle.textContent = 'Felsök: Origo-konfig';
+      troubleshootList.innerHTML = `
+        <li>Validera JSON (kommatecken, citattecken, trailing commas).</li>
+        <li>Kontrollera att layer/source-namn matchar GeoServer (workspace:layer, URL).</li>
+        <li>Om inget syns: kontrollera projectionCode (EPSG:3008) och extent/center.</li>
+        <li>Om WFS är segt: testa WMS för rendering och använd WFS bara när attribut/klientlogik krävs.</li>
+      `;
+    } else if (badgeLabel === 'CLI') {
+      troubleshootTitle.textContent = 'Felsök: Kommando';
+      troubleshootList.innerHTML = `
+        <li>Kör från rätt mapp (repo-root).</li>
+        <li>Om “command not found”: kontrollera att python/node/git är installerat och ligger i PATH.</li>
+        <li>Om port upptagen: byt port (t.ex. 8001).</li>
+      `;
+    } else {
+      troubleshootTitle.textContent = 'Felsök';
+      troubleshootList.innerHTML = `
+        <li>Kontrollera att sidan laddas utan JS-fel (F12 → Console).</li>
+        <li>Uppdatera sidan med hård refresh (Ctrl+F5).</li>
+      `;
+    }
+
+    troubleshootPanel.appendChild(troubleshootTitle);
+    troubleshootPanel.appendChild(troubleshootList);
+
+    troubleshootButton.addEventListener('click', () => {
+      const expanded = troubleshootButton.getAttribute('aria-expanded') === 'true';
+      troubleshootButton.setAttribute('aria-expanded', (!expanded).toString());
+      troubleshootPanel.hidden = expanded;
+    });
+
+    wrapper.appendChild(troubleshootButton);
+    wrapper.appendChild(troubleshootPanel);
   });
 };
 
