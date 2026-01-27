@@ -172,6 +172,35 @@
           </div>
         </div>
 
+        <h3 id="sld-preview">SLD – Symbol preview</h3>
+        <p>Förhandsgranska symbolik från SLD utan att behöva en kartserver.</p>
+
+        <div class="tryit" data-tryit="sldpreview">
+          <div class="tryit-grid">
+            <div>
+              <label for="sldp-input"><strong>SLD-inmatning</strong></label>
+              <textarea id="sldp-input" class="tryit-input" spellcheck="false" placeholder="Klistra in SLD här…"></textarea>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-sldp-action="preview" type="button">Förhandsgranska</button>
+                <button class="tryit-button" data-sldp-action="sample-point" type="button">Punkt-exempel</button>
+                <button class="tryit-button" data-sldp-action="sample-line" type="button">Linje-exempel</button>
+                <button class="tryit-button" data-sldp-action="sample-polygon" type="button">Polygon-exempel</button>
+                <button class="tryit-button secondary" data-sldp-action="clear" type="button">Rensa</button>
+              </div>
+              <div class="callout callout-check" style="margin-top: 1rem; font-size: 0.9rem;">
+                <strong>Not:</strong> Detta är en symbol-preview (legend). Den renderar inte hela SLD-regelverket.
+              </div>
+            </div>
+            <div>
+              <label><strong>Preview</strong></label>
+              <div id="sldp-preview" style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"></div>
+              <label style="display: block; margin-top: 1rem;"><strong>Sammanfattning</strong></label>
+              <pre id="sldp-summary" class="tryit-output" style="min-height: 80px; font-size: 0.85rem;"></pre>
+              <div class="tryit-status" id="sldp-status"></div>
+            </div>
+          </div>
+        </div>
+
         <h2 id="bbox">BBOX / Extent</h2>
         <p>Generera BBOX-sträng och WMS GetMap URL för <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.</p>
 
@@ -236,6 +265,38 @@
           </div>
         </div>
 
+        <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
+        <p>Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
+
+        <div class="tryit" data-tryit="resolutions">
+          <div class="tryit-grid">
+            <div>
+              <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
+              <textarea id="res-input" class="tryit-input" spellcheck="false" placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"></textarea>
+              <p style="margin: 0.75rem 0; color: #666; font-size: 0.9rem;">
+                CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
+              </p>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-res-action="validate" type="button">Validera</button>
+                <button class="tryit-button" data-res-action="export-origo" type="button">Origo JSON</button>
+                <button class="tryit-button" data-res-action="export-gwc" type="button">GWC format</button>
+                <button class="tryit-button secondary" data-res-action="clear" type="button">Rensa</button>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 1rem;">
+                <strong>Rapport</strong>
+                <pre id="res-report" class="tryit-output" style="font-size: 0.9rem; min-height: 6rem;"></pre>
+              </label>
+              <label style="display: block; margin-bottom: 1rem;">
+                <strong>Export</strong>
+                <textarea id="res-output" class="tryit-output" style="font-family: monospace; min-height: 8rem;" readonly></textarea>
+              </label>
+              <div class="tryit-status" id="res-status"></div>
+            </div>
+          </div>
+        </div>
+
         <h2 id="gridcalc">Gridset / Tile-kalkylator</h2>
         <p>Beräkna resolutioner, tile-storlekar och seed-rekommendationer för GeoWebCache gridsets.</p>
 
@@ -270,6 +331,37 @@
                 <textarea id="gridcalc-output" class="tryit-output" style="font-family: monospace; min-height: 12rem;" readonly></textarea>
               </label>
               <div class="tryit-status" id="gridcalc-status"></div>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="mapsandbox">Map sandbox</h2>
+        <p>Visualisera BBOX, tile-grid och metatile-grid utan externa tjänster.</p>
+
+        <div class="tryit" data-tryit="mapsandbox">
+          <div class="tryit-grid">
+            <div>
+              <label for="ms-bbox-width"><strong>BBOX Bredd (m)</strong></label>
+              <input id="ms-bbox-width" class="tryit-input" type="number" step="any" value="100000" />
+              <label for="ms-bbox-height"><strong>BBOX Höjd (m)</strong></label>
+              <input id="ms-bbox-height" class="tryit-input" type="number" step="any" value="100000" />
+              <label for="ms-resolution"><strong>Resolution (m/px)</strong></label>
+              <input id="ms-resolution" class="tryit-input" type="number" step="any" value="100" />
+              <label for="ms-tile"><strong>Tile Size (px)</strong></label>
+              <input id="ms-tile" class="tryit-input" type="number" value="256" />
+              <label for="ms-meta"><strong>Metatile (N×N)</strong></label>
+              <input id="ms-meta" class="tryit-input" type="number" value="4" />
+              <p style="margin: 0.75rem 0; color: #666; font-size: 0.9rem;">
+                CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
+              </p>
+              <div class="tryit-actions">
+                <button class="tryit-button" data-ms-action="draw" type="button">Rita</button>
+                <button class="tryit-button secondary" data-ms-action="clear" type="button">Rensa</button>
+              </div>
+            </div>
+            <div>
+              <canvas id="ms-canvas" width="600" height="400" style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"></canvas>
+              <div class="tryit-status" id="ms-status"></div>
             </div>
           </div>
         </div>

@@ -792,6 +792,214 @@ const copyText = async (text) => {
   document.body.removeChild(textarea);
 };
 
+const initResolutionsTryIt = (block) => {
+  const input = block.querySelector('#res-input');
+  const report = block.querySelector('#res-report');
+  const output = block.querySelector('#res-output');
+  const status = block.querySelector('#res-status');
+  const buttons = block.querySelectorAll('[data-res-action]');
+
+  if (!input || !report || !output || !status) {
+    return;
+  }
+
+  // Helper to add styled text to report
+  const addReportLine = (text, type = 'normal') => {
+    const line = document.createElement('div');
+    if (type === 'ok') {
+      line.style.color = '#28a745'; // green
+      text = '✓ ' + text;
+    } else if (type === 'error') {
+      line.style.color = '#dc3545'; // red
+      text = '✗ ' + text;
+    } else if (type === 'warning') {
+      line.style.color = '#ffc107'; // yellow/orange
+      text = '⚠ ' + text;
+    }
+    line.textContent = text;
+    report.appendChild(line);
+  };
+
+  const clearReport = () => {
+    report.innerHTML = '';
+  };
+
+  const updateStatus = (message) => {
+    if (status) {
+      status.textContent = message;
+    }
+  };
+
+  const parseResolutions = () => {
+    const lines = input.value
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    const resolutions = [];
+    const parseErrors = [];
+
+    lines.forEach((line, idx) => {
+      const val = parseFloat(line);
+      if (isNaN(val)) {
+        parseErrors.push(`Rad ${idx + 1}: "${line}" är inte ett tal`);
+      } else {
+        resolutions.push(val);
+      }
+    });
+
+    return { resolutions, parseErrors };
+  };
+
+  const validate = () => {
+    clearReport();
+    output.value = '';
+    updateStatus('');
+
+    const { resolutions, parseErrors } = parseResolutions();
+
+    if (parseErrors.length > 0) {
+      addReportLine('Parse errors:', 'error');
+      parseErrors.forEach((err) => addReportLine(err, 'error'));
+      return;
+    }
+
+    if (resolutions.length === 0) {
+      addReportLine('Ingen input.');
+      return;
+    }
+
+    // Start validation report
+    addReportLine(`Antal: ${resolutions.length}`, 'ok');
+
+    // Check 1: All positive
+    let allPositive = true;
+    resolutions.forEach((res, idx) => {
+      if (res <= 0) {
+        addReportLine(`Rad ${idx + 1}: ${res} är inte > 0`, 'error');
+        allPositive = false;
+      }
+    });
+    if (allPositive) {
+      addReportLine('Alla värden > 0', 'ok');
+    }
+
+    // Check 2: Strictly descending order
+    let validOrder = true;
+    for (let i = 0; i < resolutions.length - 1; i++) {
+      if (resolutions[i] <= resolutions[i + 1]) {
+        addReportLine(`Rad ${i + 1}→${i + 2}: ${resolutions[i]} ≤ ${resolutions[i + 1]} (måste vara fallande)`, 'error');
+        validOrder = false;
+      }
+    }
+    if (validOrder) {
+      addReportLine('Strikt fallande ordning', 'ok');
+    }
+
+    // Check 3: No duplicates
+    const unique = new Set(resolutions);
+    if (unique.size === resolutions.length) {
+      addReportLine('Inga dubbletter', 'ok');
+    } else {
+      addReportLine(`Dubbletter hittade (${resolutions.length} rader, ${unique.size} unika)`, 'error');
+    }
+
+    // Check 4: Warning for too similar values (< 0.1% difference)
+    let tooSimilar = [];
+    for (let i = 0; i < resolutions.length - 1; i++) {
+      const diff = resolutions[i] - resolutions[i + 1];
+      const pctDiff = (diff / resolutions[i]) * 100;
+      if (pctDiff < 0.1) {
+        tooSimilar.push(`Rad ${i + 1}→${i + 2}: ${resolutions[i]} och ${resolutions[i + 1]} skiljer < 0.1%`);
+      }
+    }
+    if (tooSimilar.length > 0) {
+      tooSimilar.forEach((warn) => addReportLine(warn, 'warning'));
+    } else {
+      addReportLine('Tillräckliga avstånd mellan värdena', 'ok');
+    }
+
+    // Summary
+    const isValid = allPositive && validOrder && unique.size === resolutions.length && tooSimilar.length === 0;
+    if (isValid) {
+      addReportLine('STATUS: Giltigt', 'ok');
+      updateStatus('Validering OK.');
+    } else {
+      addReportLine('STATUS: Fel hittade', 'error');
+      updateStatus('Fel hittade. Se rapport ovan.');
+    }
+
+    return resolutions;
+  };
+
+  const exportOrigo = () => {
+    const { resolutions, parseErrors } = parseResolutions();
+
+    if (parseErrors.length > 0) {
+      updateStatus('Parse error. Validera först.');
+      output.value = '';
+      return;
+    }
+
+    if (resolutions.length === 0) {
+      updateStatus('Ingen input.');
+      output.value = '';
+      return;
+    }
+
+    const json = JSON.stringify(resolutions);
+    output.value = json;
+    clearReport();
+    addReportLine('Origo resolutions array:', 'ok');
+    updateStatus('Exporterad som Origo JSON.');
+  };
+
+  const exportGwc = () => {
+    const { resolutions, parseErrors } = parseResolutions();
+
+    if (parseErrors.length > 0) {
+      updateStatus('Parse error. Validera först.');
+      output.value = '';
+      return;
+    }
+
+    if (resolutions.length === 0) {
+      updateStatus('Ingen input.');
+      output.value = '';
+      return;
+    }
+
+    const lines = resolutions.map((res) => `    <resolution>${res}</resolution>`).join('\n');
+    const gwcXml = `  <resolutions>\n${lines}\n  </resolutions>`;
+    output.value = gwcXml;
+    clearReport();
+    addReportLine('GeoWebCache gridset format:', 'ok');
+    updateStatus('Exporterad som GWC XML.');
+  };
+
+  const clearAll = () => {
+    input.value = '';
+    output.value = '';
+    clearReport();
+    updateStatus('');
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.resAction;
+      if (action === 'validate') {
+        validate();
+      } else if (action === 'export-origo') {
+        exportOrigo();
+      } else if (action === 'export-gwc') {
+        exportGwc();
+      } else if (action === 'clear') {
+        clearAll();
+      }
+    });
+  });
+};
+
 const initGridCalcTryIt = (block) => {
   const resolution = block.querySelector('#gridcalc-resolution');
   const scale = block.querySelector('#gridcalc-scale');
@@ -1116,6 +1324,461 @@ const initBboxTryIt = (block) => {
         copyUrl();
       } else if (action === 'clear') {
         clearBbox();
+      }
+    });
+  });
+};
+
+const initSldPreviewTryIt = (block) => {
+  const input = block.querySelector('#sldp-input');
+  const preview = block.querySelector('#sldp-preview');
+  const summary = block.querySelector('#sldp-summary');
+  const status = block.querySelector('#sldp-status');
+  const buttons = block.querySelectorAll('[data-sldp-action]');
+
+  if (!input || !preview || !summary || !status) {
+    return;
+  }
+
+  // Helper functions
+  const findFirst = (node, localName) => {
+    if (!node || !node.childNodes) return null;
+    for (let child of node.childNodes) {
+      if (child.localName === localName) return child;
+      const found = findFirst(child, localName);
+      if (found) return found;
+    }
+    return null;
+  };
+
+  const findAll = (node, localName) => {
+    const results = [];
+    const traverse = (n) => {
+      if (!n || !n.childNodes) return;
+      for (let child of n.childNodes) {
+        if (child.localName === localName) results.push(child);
+        traverse(child);
+      }
+    };
+    traverse(node);
+    return results;
+  };
+
+  const textOf = (el) => (el ? el.textContent?.trim() || '' : '');
+
+  const getParamValue = (parent, paramName) => {
+    if (!parent || !parent.childNodes) return null;
+    for (let child of parent.childNodes) {
+      if (child.localName === 'CssParameter' || child.localName === 'SvgParameter') {
+        const name = child.getAttribute('name');
+        if (name === paramName) return textOf(child);
+      }
+    }
+    return null;
+  };
+
+  const getCssColor = (val) => val || '#000000';
+
+  const samplePointSld = `<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.1.0" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NamedLayer>
+    <Name>points</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PointSymbolizer>
+            <Graphic>
+              <Mark>
+                <WellKnownName>circle</WellKnownName>
+                <Fill>
+                  <CssParameter name="fill">#0066ff</CssParameter>
+                  <CssParameter name="fill-opacity">0.8</CssParameter>
+                </Fill>
+                <Stroke>
+                  <CssParameter name="stroke">#003399</CssParameter>
+                  <CssParameter name="stroke-width">2</CssParameter>
+                </Stroke>
+              </Mark>
+              <Size>12</Size>
+            </Graphic>
+          </PointSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>`;
+
+  const sampleLineSld = `<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.1.0" xmlns="http://www.opengis.net/sld">
+  <NamedLayer>
+    <Name>lines</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#ff6600</CssParameter>
+              <CssParameter name="stroke-width">3</CssParameter>
+              <CssParameter name="stroke-opacity">0.9</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>`;
+
+  const samplePolygonSld = `<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.1.0" xmlns="http://www.opengis.net/sld">
+  <NamedLayer>
+    <Name>polygons</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#99ff33</CssParameter>
+              <CssParameter name="fill-opacity">0.6</CssParameter>
+            </Fill>
+            <Stroke>
+              <CssParameter name="stroke">#339900</CssParameter>
+              <CssParameter name="stroke-width">2</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>`;
+
+  const generateSvgMarker = (wellKnownName, size, fill, stroke, strokeWidth, opacity) => {
+    const centerX = 24;
+    const centerY = 24;
+    const fillOpacity = opacity || 1;
+
+    let path = '';
+    const r = (size / 2) || 8;
+
+    if (wellKnownName === 'square') {
+      return `<rect x="${centerX - r}" y="${centerY - r}" width="${r * 2}" height="${r * 2}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
+    } else if (wellKnownName === 'triangle') {
+      const h = r * Math.sqrt(3);
+      path = `M ${centerX} ${centerY - h} L ${centerX + r} ${centerY + h / 2} L ${centerX - r} ${centerY + h / 2} Z`;
+      return `<path d="${path}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
+    } else if (wellKnownName === 'star') {
+      const points = [];
+      for (let i = 0; i < 10; i++) {
+        const angle = (i * Math.PI) / 5 - Math.PI / 2;
+        const rad = i % 2 === 0 ? r : r / 2;
+        points.push(centerX + rad * Math.cos(angle) + ',' + (centerY + rad * Math.sin(angle)));
+      }
+      path = `M ${points.join(' L ')} Z`;
+      return `<path d="${path}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
+    } else if (wellKnownName === 'cross') {
+      return `<g opacity="${fillOpacity}"><line x1="${centerX - r}" y1="${centerY}" x2="${centerX + r}" y2="${centerY}" stroke="${stroke}" stroke-width="${strokeWidth}"/><line x1="${centerX}" y1="${centerY - r}" x2="${centerX}" y2="${centerY + r}" stroke="${stroke}" stroke-width="${strokeWidth}"/></g>`;
+    } else if (wellKnownName === 'x') {
+      return `<g opacity="${fillOpacity}"><line x1="${centerX - r}" y1="${centerY - r}" x2="${centerX + r}" y2="${centerY + r}" stroke="${stroke}" stroke-width="${strokeWidth}"/><line x1="${centerX + r}" y1="${centerY - r}" x2="${centerX - r}" y2="${centerY + r}" stroke="${stroke}" stroke-width="${strokeWidth}"/></g>`;
+    } else {
+      // Default circle
+      return `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
+    }
+  };
+
+  const parseAndPreview = () => {
+    const xmlText = input.value.trim();
+    if (!xmlText) {
+      status.textContent = 'Ingen SLD-input.';
+      preview.innerHTML = '';
+      summary.textContent = '';
+      return;
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, 'application/xml');
+
+    // Check for parse errors
+    if (doc.querySelector('parsererror')) {
+      status.textContent = 'XML-fel i SLD.';
+      preview.innerHTML = '';
+      summary.textContent = 'Felaktig XML.';
+      return;
+    }
+
+    // Find symbolizer (priority: Point > Line > Polygon)
+    let symbolizerType = null;
+    let symbolizer = null;
+    let symbolInfo = {};
+
+    const pointSym = findFirst(doc, 'PointSymbolizer');
+    const lineSym = findFirst(doc, 'LineSymbolizer');
+    const polySym = findFirst(doc, 'PolygonSymbolizer');
+
+    if (pointSym) {
+      symbolizerType = 'Point';
+      symbolizer = pointSym;
+
+      // Extract point properties
+      const graphic = findFirst(symbolizer, 'Graphic');
+      const mark = findFirst(graphic, 'Mark');
+      const wkn = findFirst(mark, 'WellKnownName');
+      const wellKnownName = textOf(wkn) || 'circle';
+
+      const sizeEl = findFirst(graphic, 'Size');
+      const size = parseInt(textOf(sizeEl)) || 10;
+
+      const fillEl = findFirst(mark, 'Fill');
+      const fill = getCssColor(getParamValue(fillEl, 'fill'));
+      const fillOpacity = getParamValue(fillEl, 'fill-opacity') || '1';
+
+      const strokeEl = findFirst(mark, 'Stroke');
+      const stroke = getCssColor(getParamValue(strokeEl, 'stroke') || '#000000');
+      const strokeWidth = getParamValue(strokeEl, 'stroke-width') || '1';
+      const strokeOpacity = getParamValue(strokeEl, 'stroke-opacity') || '1';
+
+      symbolInfo = { wellKnownName, size, fill, fillOpacity, stroke, strokeWidth, strokeOpacity };
+    } else if (lineSym) {
+      symbolizerType = 'Line';
+      symbolizer = lineSym;
+
+      const strokeEl = findFirst(symbolizer, 'Stroke');
+      const stroke = getCssColor(getParamValue(strokeEl, 'stroke') || '#000000');
+      const strokeWidth = parseFloat(getParamValue(strokeEl, 'stroke-width') || '2');
+      const strokeOpacity = getParamValue(strokeEl, 'stroke-opacity') || '1';
+
+      symbolInfo = { stroke, strokeWidth, strokeOpacity };
+    } else if (polySym) {
+      symbolizerType = 'Polygon';
+      symbolizer = polySym;
+
+      const fillEl = findFirst(symbolizer, 'Fill');
+      const fill = getCssColor(getParamValue(fillEl, 'fill'));
+      const fillOpacity = getParamValue(fillEl, 'fill-opacity') || '1';
+
+      const strokeEl = findFirst(symbolizer, 'Stroke');
+      const stroke = getCssColor(getParamValue(strokeEl, 'stroke') || '#000000');
+      const strokeWidth = getParamValue(strokeEl, 'stroke-width') || '1';
+      const strokeOpacity = getParamValue(strokeEl, 'stroke-opacity') || '1';
+
+      symbolInfo = { fill, fillOpacity, stroke, strokeWidth, strokeOpacity };
+    }
+
+    if (!symbolizerType) {
+      status.textContent = 'Ingen symbolizer hittades.';
+      preview.innerHTML = '';
+      summary.textContent = 'Ingen PointSymbolizer, LineSymbolizer eller PolygonSymbolizer hittades.';
+      return;
+    }
+
+    // Generate SVG preview
+    let svgContent = '';
+
+    if (symbolizerType === 'Point') {
+      const { wellKnownName, size, fill, fillOpacity, stroke, strokeWidth } = symbolInfo;
+      const marker = generateSvgMarker(wellKnownName, size, fill, stroke, strokeWidth, fillOpacity);
+      svgContent = `<svg width="240" height="120" viewBox="0 0 240 120" style="border: none;">
+        <rect width="240" height="120" fill="#ffffff"/>
+        ${marker}
+      </svg>`;
+    } else if (symbolizerType === 'Line') {
+      const { stroke, strokeWidth, strokeOpacity } = symbolInfo;
+      svgContent = `<svg width="240" height="120" viewBox="0 0 240 120" style="border: none;">
+        <rect width="240" height="120" fill="#ffffff"/>
+        <line x1="30" y1="60" x2="210" y2="60" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${strokeOpacity}"/>
+      </svg>`;
+    } else if (symbolizerType === 'Polygon') {
+      const { fill, fillOpacity, stroke, strokeWidth, strokeOpacity } = symbolInfo;
+      svgContent = `<svg width="240" height="120" viewBox="0 0 240 120" style="border: none;">
+        <rect width="240" height="120" fill="#ffffff"/>
+        <rect x="60" y="30" width="120" height="60" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>
+      </svg>`;
+    }
+
+    preview.innerHTML = svgContent;
+
+    // Generate summary
+    let summaryText = `Typ: ${symbolizerType}Symbolizer\n\n`;
+    Object.entries(symbolInfo).forEach(([key, value]) => {
+      summaryText += `${key}: ${value}\n`;
+    });
+
+    summary.textContent = summaryText;
+    status.textContent = `Hittade ${symbolizerType}Symbolizer.`;
+  };
+
+  const fillSample = (sldText) => {
+    input.value = sldText;
+    parseAndPreview();
+  };
+
+  const clearAll = () => {
+    input.value = '';
+    preview.innerHTML = '';
+    summary.textContent = '';
+    status.textContent = '';
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.sldpAction;
+      if (action === 'preview') {
+        parseAndPreview();
+      } else if (action === 'sample-point') {
+        fillSample(samplePointSld);
+      } else if (action === 'sample-line') {
+        fillSample(sampleLineSld);
+      } else if (action === 'sample-polygon') {
+        fillSample(samplePolygonSld);
+      } else if (action === 'clear') {
+        clearAll();
+      }
+    });
+  });
+};
+
+const initMapSandboxTryIt = (block) => {
+  const bboxWidth = block.querySelector('#ms-bbox-width');
+  const bboxHeight = block.querySelector('#ms-bbox-height');
+  const resolution = block.querySelector('#ms-resolution');
+  const tile = block.querySelector('#ms-tile');
+  const meta = block.querySelector('#ms-meta');
+  const canvas = block.querySelector('#ms-canvas');
+  const status = block.querySelector('#ms-status');
+  const buttons = block.querySelectorAll('[data-ms-action]');
+
+  if (!bboxWidth || !bboxHeight || !resolution || !tile || !meta || !canvas || !status) {
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
+
+  const updateStatus = (message) => {
+    if (status) {
+      status.textContent = message;
+    }
+  };
+
+  const draw = () => {
+    const bboxW = parseFloat(bboxWidth.value);
+    const bboxH = parseFloat(bboxHeight.value);
+    const resVal = parseFloat(resolution.value);
+    const tileVal = parseFloat(tile.value);
+    const metaVal = parseFloat(meta.value);
+
+    // Validation
+    if (
+      isNaN(bboxW) || isNaN(bboxH) || isNaN(resVal) || isNaN(tileVal) || isNaN(metaVal) ||
+      bboxW <= 0 || bboxH <= 0 || resVal <= 0 || tileVal <= 0 || metaVal <= 0
+    ) {
+      updateStatus('Alla värden måste vara tal > 0.');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+
+    // Calculate tile and meta spans in meters
+    const tileSpanM = resVal * tileVal;
+    const metaSpanM = tileSpanM * metaVal;
+
+    // Calculate number of tiles
+    const numTilesX = Math.ceil(bboxW / tileSpanM);
+    const numTilesY = Math.ceil(bboxH / tileSpanM);
+
+    // Scale BBOX to fit in canvas with padding
+    const padding = 20;
+    const availWidth = canvas.width - 2 * padding;
+    const availHeight = canvas.height - 2 * padding;
+
+    // Aspect ratio preservation
+    const bboxAspect = bboxW / bboxH;
+    const canvasAspect = availWidth / availHeight;
+
+    let scaledWidth, scaledHeight;
+    if (bboxAspect > canvasAspect) {
+      // BBOX is wider, constrain to width
+      scaledWidth = availWidth;
+      scaledHeight = availWidth / bboxAspect;
+    } else {
+      // BBOX is taller, constrain to height
+      scaledHeight = availHeight;
+      scaledWidth = availHeight * bboxAspect;
+    }
+
+    // Center the drawn rectangle in canvas
+    const startX = padding + (availWidth - scaledWidth) / 2;
+    const startY = padding + (availHeight - scaledHeight) / 2;
+
+    // Scale factors: meters to pixels
+    const scaleX = scaledWidth / bboxW;
+    const scaleY = scaledHeight / bboxH;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw meta-tile grid (darker, thicker)
+    ctx.strokeStyle = '#555555';
+    ctx.lineWidth = 2;
+    for (let i = 0; i <= numTilesX; i++) {
+      const xPixels = (i * metaSpanM) * scaleX;
+      if (xPixels <= scaledWidth) {
+        ctx.beginPath();
+        ctx.moveTo(startX + xPixels, startY);
+        ctx.lineTo(startX + xPixels, startY + scaledHeight);
+        ctx.stroke();
+      }
+    }
+    for (let j = 0; j <= numTilesY; j++) {
+      const yPixels = (j * metaSpanM) * scaleY;
+      if (yPixels <= scaledHeight) {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY + yPixels);
+        ctx.lineTo(startX + scaledWidth, startY + yPixels);
+        ctx.stroke();
+      }
+    }
+
+    // Draw tile grid (lighter)
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= Math.ceil(bboxW / tileSpanM); i++) {
+      const xPixels = (i * tileSpanM) * scaleX;
+      if (xPixels <= scaledWidth) {
+        ctx.beginPath();
+        ctx.moveTo(startX + xPixels, startY);
+        ctx.lineTo(startX + xPixels, startY + scaledHeight);
+        ctx.stroke();
+      }
+    }
+    for (let j = 0; j <= Math.ceil(bboxH / tileSpanM); j++) {
+      const yPixels = (j * tileSpanM) * scaleY;
+      if (yPixels <= scaledHeight) {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY + yPixels);
+        ctx.lineTo(startX + scaledWidth, startY + yPixels);
+        ctx.stroke();
+      }
+    }
+
+    // Draw BBOX border (black, thick)
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(startX, startY, scaledWidth, scaledHeight);
+
+    // Update status with info
+    const infoMsg = `BBOX: ${bboxW}×${bboxH}m | Tile: ${tileSpanM.toFixed(0)}m | Meta: ${metaSpanM.toFixed(0)}m | Grid: ${numTilesX}×${numTilesY} tiles`;
+    updateStatus(infoMsg);
+  };
+
+  const clearCanvas = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    updateStatus('');
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.msAction;
+      if (action === 'draw') {
+        draw();
+      } else if (action === 'clear') {
+        clearCanvas();
       }
     });
   });
@@ -1451,12 +2114,18 @@ const initTryIt = () => {
       initJsonTryIt(block);
     } else if (type === 'sld') {
       initSldTryIt(block);
+    } else if (type === 'sldpreview') {
+      initSldPreviewTryIt(block);
     } else if (type === 'urlbuilder') {
       initUrlBuilder(block);
     } else if (type === 'bbox') {
       initBboxTryIt(block);
+    } else if (type === 'resolutions') {
+      initResolutionsTryIt(block);
     } else if (type === 'gridcalc') {
       initGridCalcTryIt(block);
+    } else if (type === 'mapsandbox') {
+      initMapSandboxTryIt(block);
     }
   });
 };
