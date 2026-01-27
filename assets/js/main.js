@@ -9,85 +9,85 @@ const OFFLINE_SEARCH_INDEX = [
   {
     id: 'json-101',
     title: 'JSON 101',
-    url: 'page.html',
+    url: 'pages/page.html',
     content: 'json objekt arrayer datatyper exempel validering felsökning',
   },
   {
     id: 'origo-guide',
     title: 'Origo – guide',
-    url: 'origo-guide.html',
+    url: 'pages/origo-guide.html',
     content: 'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
   },
   {
     id: 'layermanager',
     title: 'Layermanager',
-    url: 'layermanager.html',
+    url: 'pages/layermanager.html',
     content: 'layermanager katalog sök lager plugin',
   },
   {
     id: 'geoserver',
     title: 'GeoServer 101',
-    url: 'geoserver.html',
+    url: 'pages/geoserver.html',
     content: 'geoserver wms wfs datakällor postgis geopackage publicera lager',
   },
   {
     id: 'geoserver-styles',
     title: 'GeoServer – styles',
-    url: 'geoserver-styles.html',
+    url: 'pages/geoserver-styles.html',
     content: 'sld se 1.1 styling symbolizer etiketter filter skalstyrning',
   },
   {
     id: 'geowebcache',
     title: 'GeoWebCache',
-    url: 'geowebcache.html',
+    url: 'pages/geowebcache.html',
     content: 'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
   },
   {
     id: 'origo-server',
     title: 'Origo Server',
-    url: 'origo-server.html',
+    url: 'pages/origo-server.html',
     content: 'origo server proxy state elevation backend endpoints drift felsökning localhost',
   },
   {
     id: 'git-vscode',
     title: 'Git & VS Code',
-    url: 'git-vscode.html',
+    url: 'pages/git-vscode.html',
     content: 'git versionering vscode grunder arbetsflöde',
   },
   {
     id: 'examples',
     title: 'Origo-recept',
-    url: 'examples.html',
+    url: 'pages/examples.html',
     content: 'recept kopiera konfig wms wfs wmts controls',
   },
   {
     id: 'try-it',
     title: 'Try it-lab',
-    url: 'try-it.html',
+    url: 'pages/try-it.html',
     content: 'try it json validera url builder bbox sld styling',
   },
   {
     id: 'faq-gis',
     title: 'FAQ GIS',
-    url: 'faq-gis.html',
+    url: 'pages/faq-gis.html',
     content: 'vanliga frågor gis begrepp crs',
   },
   {
     id: 'npm',
     title: 'npm & plugins',
-    url: 'npm.html',
+    url: 'pages/npm.html',
     content: 'npm paket plugin installera versionslåsning',
   },
   {
     id: 'troubleshooting',
     title: 'Felsökning',
-    url: 'troubleshooting.html',
+    url: 'pages/troubleshooting.html',
     content: 'felsökning cors crs 404 cache problem',
   },
   {
     id: 'release-playbook',
     title: 'Release‑playbook',
-    url: 'release-playbook.html',
+    url: 'pages/release-playbook.html',
     content: 'release checklista geoserver geowebcache origo deploy cache styles data',
   },
 ];
@@ -467,7 +467,8 @@ const initSearch = () => {
   let searchIndex = IS_OFFLINE_FILE ? OFFLINE_SEARCH_INDEX : [];
 
   if (!IS_OFFLINE_FILE) {
-    fetch('search-index.json')
+    const searchIndexUrl = new URL('search/search-index.json', document.baseURI).href;
+    fetch(searchIndexUrl)
       .then((response) => (response.ok ? response.json() : []))
       .then((data) => {
         if (Array.isArray(data)) {
