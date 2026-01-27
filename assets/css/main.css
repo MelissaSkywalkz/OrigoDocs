@@ -738,6 +738,15 @@ a {
   color: #1b5e20;
 }
 
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius);
+}
+.table-wrap table {
+  min-width: 560px;
+}
+
 .troubleshoot-toggle {
   margin-top: 0.6rem;
   border: none;

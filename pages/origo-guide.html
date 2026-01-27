@@ -10,15 +10,18 @@
     />
     <link rel="stylesheet" href="../assets/css/main.css" />
   </head>
+
   <body class="layout">
     <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
       <div class="sidebar-header">
         <a href="../index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
       </div>
+
       <div class="nav-search">
         <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
         <ul id="searchResults" class="search-results hidden"></ul>
       </div>
+
       <div class="nav-content">
         <div class="nav-section">
           <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
@@ -28,16 +31,8 @@
             <a href="../index.html">Start</a>
             <a href="page.html">JSON 101</a>
             <a class="active" href="origo-guide.html" aria-current="page">Origo guide</a>
-            <a href="#snabbstart">Snabbstart</a>
-            <a href="#minimal-init">Minimal init</a>
-            <a href="#lager">Lager</a>
-            <a href="#wms">WMS</a>
-            <a href="#wfs">WFS</a>
-            <a href="#wmts">WMTS</a>
-            <a href="#clustering">Clustering</a>
-            <a href="#controls">Controls</a>
-            <a href="#prestanda">Prestanda</a>
-            <a href="#vanliga-fel">Vanliga fel</a>
+
+            <!-- OBS: ankarlänkar hör hemma i innehållsmenyn på sidan, inte i globala navet -->
             <a href="layermanager.html">Layermanager</a>
             <a href="geoserver.html">GeoServer 101</a>
             <a href="geoserver-styles.html">GeoServer styles</a>
@@ -48,10 +43,11 @@
             <a href="try-it.html">Try it-lab</a>
             <a href="faq-gis.html">FAQ GIS</a>
             <a href="npm.html">npm & plugins</a>
-            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="release-playbook.html">Release-playbook</a>
             <a href="troubleshooting.html">Felsökning</a>
           </div>
         </div>
+
         <div class="nav-section">
           <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
             Snabblänkar
@@ -78,22 +74,48 @@
         >
           <img src="../sort.png" alt="" />
         </button>
+
         <div class="topbar-title">
           <span class="eyebrow">Origo</span>
           <h1>Origo guide</h1>
         </div>
+
         <div class="topbar-meta">
           <span class="status-pill">Guide</span>
         </div>
       </header>
 
       <section class="doc-content">
+        <!-- Innehållsmeny (TOC) – återanvänd exakt samma komponent som troubleshooting -->
+        <nav class="troubleshoot-toc" aria-label="Innehåll">
+          <strong>Innehåll</strong>
+          <a href="#minimal-init">Minimal init</a>
+          <a href="#lager">Lager</a>
+          <a href="#wms">WMS</a>
+          <a href="#wfs">WFS</a>
+          <a href="#wmts">WMTS</a>
+          <a href="#clustering">Clustering</a>
+          <a href="#wms-vs-wfs">WMS vs WFS</a>
+          <a href="#controls">Controls</a>
+          <a href="#layermanager">Grupper & LayerManager</a>
+          <a href="#prestanda">Prestanda</a>
+          <a href="#vanliga-fel">Vanliga fel</a>
+        </nav>
+
         <h2 id="snabbstart">Snabbstart</h2>
         <p>
-          Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON‑konfig
+          Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON-konfig
           och bygger kartan utifrån lager, controls och plugins.
         </p>
-        <p>TODO: verifiera exakta Origo‑nycklar i upstream.</p>
+
+        <div class="callout callout-info">
+          <h3>Att verifiera</h3>
+          <p>
+            Den här sidan innehåller exempel som är “rätt typ” men vissa exakta nycklar behöver
+            verifieras mot Origo-versionen ni kör. När du bekräftat en nyckel: byt ut “TODO” och
+            lås exemplet.
+          </p>
+        </div>
 
         <h2 id="minimal-init">Minimal init</h2>
         <p>En minsta konfiguration som sätter projektion, extent och startvy.</p>
@@ -106,9 +128,9 @@
   "resolutions": [560, 280, 140, 70, 35]
 }
 </code></pre>
-        <p>TODO: verifiera nycklar för startvy och resolutions.</p>
 
         <h2 id="lager">Lager: WMS, WFS, WMTS</h2>
+
         <h3 id="wms">WMS</h3>
         <pre><code>{
   "source": {
@@ -123,7 +145,10 @@
   ]
 }
 </code></pre>
-        <p>TODO: verifiera nycklar för WMS‑lager och synlighet.</p>
+        <p>
+          <strong>Tumregel:</strong> börja med WMS för rendering. Lägg WFS först när du behöver
+          attribut/klick/logik.
+        </p>
 
         <h3 id="wfs">WFS</h3>
         <pre><code>{
@@ -138,8 +163,7 @@
   ]
 }
 </code></pre>
-        <p>TODO: verifiera WFS‑nycklar och strategy.</p>
-        <p>WFS passar när du behöver attribut i klienten eller klick‑logik.</p>
+        <p>WFS passar när du behöver attribut i klienten eller klick-logik.</p>
 
         <h3 id="wmts">WMTS</h3>
         <pre><code>{
@@ -156,7 +180,6 @@
   ]
 }
 </code></pre>
-        <p>TODO: verifiera Origo‑nycklar för WMTS.</p>
 
         <h2 id="clustering">Clustering</h2>
         <p>Clustering används när många punktfeatures ska visas utan att kartan blir tung.</p>
@@ -175,35 +198,39 @@
   ]
 }
 </code></pre>
-        <p>TODO: verifiera nycklar för clustering och layerType.</p>
 
-        <h2>Beslutsruta: WMS eller WFS?</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Fråga</th>
-              <th>Välj WMS</th>
-              <th>Välj WFS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Vill du visa lager snabbt?</td>
-              <td>Ja</td>
-              <td>Nej</td>
-            </tr>
-            <tr>
-              <td>Behöver du klick/attribut?</td>
-              <td>Nej</td>
-              <td>Ja</td>
-            </tr>
-            <tr>
-              <td>Är prestanda kritisk?</td>
-              <td>Ja</td>
-              <td>Nej</td>
-            </tr>
-          </tbody>
-        </table>
+        <h2 id="wms-vs-wfs">Beslutsruta: WMS eller WFS?</h2>
+
+        <!-- Wrapper så tabellen inte blir ful på mobil -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fråga</th>
+                <th>Välj WMS</th>
+                <th>Välj WFS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Vill du visa lager snabbt?</td>
+                <td>Ja</td>
+                <td>Nej</td>
+              </tr>
+              <tr>
+                <td>Behöver du klick/attribut?</td>
+                <td>Nej</td>
+                <td>Ja</td>
+              </tr>
+              <tr>
+                <td>Är prestanda kritisk?</td>
+                <td>Ja</td>
+                <td>Nej</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <p><strong>Tumregel:</strong> Om du är osäker, börja med WMS.</p>
 
         <div class="callout callout-warn">
@@ -224,16 +251,14 @@
   ]
 }
 </code></pre>
-        <p>TODO: verifiera kontroll‑nycklar mot Origo‑repo.</p>
 
-        <h2>Grupper & LayerManager</h2>
+        <h2 id="layermanager">Grupper & LayerManager</h2>
         <pre><code>{
   "groups": [
     { "name": "grp_example", "title": "Exempelgrupp" }
   ]
 }
 </code></pre>
-        <p>TODO: verifiera group‑struktur och LayerManager‑koppling.</p>
 
         <h2 id="prestanda">Prestanda</h2>
         <ul>
@@ -246,21 +271,16 @@
         <ul>
           <li>Fel CRS eller fel extent gör att inget syns i kartan.</li>
           <li>WMS fungerar men WFS blir segt utan filter eller bbox.</li>
-          <li>Fel source‑namn i layer gör att lager inte laddas.</li>
+          <li>Fel source-namn i layer gör att lager inte laddas.</li>
         </ul>
 
-        <div class="callout callout-info">
-          <h3>CRS‑notis</h3>
-          <p>
-            Vi jobbar oftast i
-            <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>. CRS påverkar extent/bbox, WMTS gridsets och reprojection. Fel CRS ger tom karta eller
-            fel läge.
-          </p>
+        <div class="callout callout-check">
+          <strong>Tips:</strong> Om du fastnar – börja på
+          <a href="troubleshooting.html">Felsökning</a> och följ “symptom → nästa steg”.
         </div>
       </section>
     </main>
 
     <script src="../assets/js/main.js"></script>
-
   </body>
 </html>
