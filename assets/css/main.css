@@ -954,3 +954,159 @@ a {
     transition: opacity 200ms ease;
   }
 }
+
+.doc-content .code-block {
+  background: linear-gradient(135deg, #141e2e 0%, #1a2636 100%);
+  border: 1px solid rgba(65, 90, 119, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.doc-content .code-block pre {
+  margin: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(65, 90, 119, 0.3) transparent;
+}
+
+.doc-content .code-block pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.doc-content .code-block pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.doc-content .code-block pre::-webkit-scrollbar-thumb {
+  background: rgba(65, 90, 119, 0.3);
+  border-radius: 3px;
+}
+
+.doc-content .code-block pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(65, 90, 119, 0.5);
+}
+
+.doc-content .code-block code {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  display: block;
+  white-space: pre;
+}
+
+.code-badge {
+  display: none;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(65, 90, 119, 0.15) 0%, rgba(47, 64, 88, 0.1) 100%);
+  padding: 0.75rem 1.2rem;
+  border-bottom: 1px solid rgba(65, 90, 119, 0.15);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.code-lang {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #a3b5cc;
+  font-family: 'Montserrat', sans-serif;
+  background: rgba(65, 90, 119, 0.2);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid rgba(65, 90, 119, 0.25);
+}
+
+.copy-btn {
+  border: none;
+  background: rgba(65, 90, 119, 0.2);
+  color: #b0c4de;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 150ms ease;
+  border: 1px solid rgba(65, 90, 119, 0.3);
+  white-space: nowrap;
+  order: 2;
+}
+
+.copy-btn:hover {
+  background: rgba(65, 90, 119, 0.35);
+  border-color: rgba(65, 90, 119, 0.5);
+  color: #d8e7f5;
+}
+
+.copy-btn:active {
+  background: rgba(65, 90, 119, 0.15);
+  border-color: rgba(65, 90, 119, 0.2);
+}
+
+.copy-btn.copied {
+  color: #7dd3fc;
+  border-color: rgba(125, 211, 252, 0.4);
+  background: rgba(125, 211, 252, 0.1);
+}
+
+.troubleshoot-toggle {
+  display: none;
+}
+
+.troubleshoot-panel {
+  display: none !important;
+}
+
+.code-block pre code .tok-key { color: #9cdcfe; }
+.code-block pre code .tok-string { color: #ce9178; }
+.code-block pre code .tok-number { color: #b5cea8; }
+.code-block pre code .tok-boolean { color: #569cd6; }
+.code-block pre code .tok-null { color: #c586c0; }
+.code-block pre code .tok-punct { color: #d4d4d4; opacity: 0.9; }
+
+.code-block pre code .tok-tag { color: #4ec9b0; }
+.code-block pre code .tok-attr { color: #9cdcfe; }
+.code-block pre code .tok-value { color: #ce9178; }
+.code-block pre code .tok-comment { color: #6a9955; }
+
+.code-block pre code .tok-keyword { color: #c586c0; }
+.code-block pre code .tok-operator { color: #d4d4d4; opacity: 0.9; }
+
+.code-block pre code .tok-prompt { color: #4fc1ff; }
+.code-block pre code .tok-flag { color: #dcdcaa; }
+.code-block pre code .tok-path { color: #b5cea8; }
+
+@media (max-width: 768px) {
+  .doc-content .code-block {
+    margin: 1.2rem 0;
+  }
+
+  .doc-content .code-block pre {
+    padding: 1rem;
+  }
+
+  .doc-content .code-block code {
+    font-size: 0.9rem;
+  }
+
+  .copy-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+  }
+}

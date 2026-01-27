@@ -649,6 +649,139 @@ const detectLanguageBadge = (codeBlock, pre) => {
   return 'Kod';
 };
 
+const escapeHTML = (str) =>
+  str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const detectLangFromBadge = (badgeLabel) => {
+  const v = (badgeLabel || '').toLowerCase();
+  if (v === 'json' || v === 'mbstyle') return 'json';
+  if (v === 'xml' || v === 'sld') return 'xml';
+  if (v === 'css') return 'css';
+  if (v === 'js' || v === 'javascript') return 'js';
+  if (v === 'cli' || v === 'bash' || v === 'shell') return 'cli';
+  return '';
+};
+
+const detectLangFromClasses = (codeEl) => {
+  const cls = (codeEl.className || '').toLowerCase();
+  if (cls.includes('language-json')) return 'json';
+  if (cls.includes('language-xml') || cls.includes('language-sld')) return 'xml';
+  if (cls.includes('language-css')) return 'css';
+  if (cls.includes('language-js') || cls.includes('language-javascript')) return 'js';
+  if (cls.includes('language-bash') || cls.includes('language-shell') || cls.includes('language-cli')) return 'cli';
+  return '';
+};
+
+const autoDetectLang = (text) => {
+  const t = (text || '').trim();
+  if (!t) return '';
+  if (t.startsWith('{') || t.startsWith('[')) return 'json';
+  if (t.startsWith('<')) return 'xml';
+  if (t.includes('{') && t.includes(':')) return 'css';
+  return '';
+};
+
+const highlightJSON = (text) => {
+  let s = escapeHTML(text);
+  s = s.replace(/"(\\.|[^"\\])*"/g, (m) => `<span class="tok-string">${m}</span>`);
+  s = s.replace(
+    /<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g,
+    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`
+  );
+  s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
+  s = s.replace(/\btrue\b|\bfalse\b/g, (m) => `<span class="tok-boolean">${m}</span>`);
+  s = s.replace(/\bnull\b/g, `<span class="tok-null">null</span>`);
+  s = s.replace(/[{}\[\],]/g, (m) => `<span class="tok-punct">${m}</span>`);
+  return s;
+};
+
+const highlightXML = (text) => {
+  let s = escapeHTML(text);
+  s = s.replace(/&lt;!--[\s\S]*?--&gt;/g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(/(&lt;\/?)([A-Za-z0-9:_-]+)([^&]*?)(\/?&gt;)/g, (full, open, tag, attrs, close) => {
+    const attrsHL = attrs.replace(
+      /([A-Za-z0-9:_-]+)(=)(&quot;[^&]*?&quot;)/g,
+      (m, a, eq, v) =>
+        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`
+    );
+    return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
+  });
+  return s;
+};
+
+const highlightCSS = (text) => {
+  let s = escapeHTML(text);
+  s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(/"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/g, (m) => `<span class="tok-string">${m}</span>`);
+  s = s.replace(/(^|[{\s;])([a-zA-Z-]+)(\s*:)/g, (m, p1, prop, p3) => {
+    return `${p1}<span class="tok-key">${prop}</span><span class="tok-punct">:</span>`;
+  });
+  s = s.replace(/(-?\b\d+(?:\.\d+)?)(px|rem|em|%|vh|vw)?\b/g, (m, n, u) => {
+    const unit = u ? u : '';
+    return `<span class="tok-number">${n}</span>${unit ? `<span class="tok-punct">${unit}</span>` : ''}`;
+  });
+  s = s.replace(/[{}();,]/g, (m) => `<span class="tok-punct">${m}</span>`);
+  return s;
+};
+
+const highlightJS = (text) => {
+  let s = escapeHTML(text);
+  s = s.replace(/\/\/[^\n]*/g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(/"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g, (m) => `<span class="tok-string">${m}</span>`);
+  s = s.replace(
+    /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|import|export|from|try|catch|finally|throw|await|async)\b/g,
+    `<span class="tok-keyword">$1</span>`
+  );
+  s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
+  s = s.replace(/[{}()[\],.;:+\-*/=<>!&|?]/g, (m) => `<span class="tok-operator">${m}</span>`);
+  return s;
+};
+
+const highlightCLI = (text) => {
+  let s = escapeHTML(text);
+  s = s.replace(/(^|\n)\s*([$>])\s?/g, (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `);
+  s = s.replace(/(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g, (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`);
+  s = s.replace(/(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g, (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`);
+  return s;
+};
+
+const highlightCode = (lang, text) => {
+  switch (lang) {
+    case 'json':
+      return highlightJSON(text);
+    case 'xml':
+      return highlightXML(text);
+    case 'css':
+      return highlightCSS(text);
+    case 'js':
+      return highlightJS(text);
+    case 'cli':
+      return highlightCLI(text);
+    default:
+      return null;
+  }
+};
+
+const applyCodeHighlighting = (codeEl, badgeLabel) => {
+  const lang =
+    detectLangFromClasses(codeEl) ||
+    detectLangFromBadge(badgeLabel) ||
+    autoDetectLang(codeEl.textContent);
+  if (!lang) return;
+
+  const raw = codeEl.textContent;
+  const html = highlightCode(lang, raw);
+  if (!html) return;
+
+  codeEl.innerHTML = html;
+};
+
 const initCodeCopy = () => {
   const codeBlocks = document.querySelectorAll('pre code');
   let codeIndex = 0;
@@ -667,6 +800,7 @@ const initCodeCopy = () => {
     wrapper.appendChild(pre);
 
     const badgeLabel = detectLanguageBadge(codeBlock, pre);
+    applyCodeHighlighting(codeBlock, badgeLabel);
 
     const badge = document.createElement('span');
     badge.className = 'code-badge';
@@ -751,7 +885,7 @@ const initCodeCopy = () => {
       troubleshootTitle.textContent = 'Felsök: Kommando';
       troubleshootList.innerHTML = `
         <li>Kör från rätt mapp (repo-root).</li>
-        <li>Om “command not found”: kontrollera att python/node/git är installerat och ligger i PATH.</li>
+        <li>Om "command not found": kontrollera att python/node/git är installerat och ligger i PATH.</li>
         <li>Om port upptagen: byt port (t.ex. 8001).</li>
       `;
     } else {
@@ -773,6 +907,26 @@ const initCodeCopy = () => {
 
     wrapper.appendChild(troubleshootButton);
     wrapper.appendChild(troubleshootPanel);
+  });
+
+  document.querySelectorAll('.code-block').forEach((wrapper) => {
+    const badge = wrapper.querySelector('.code-badge');
+    const button = wrapper.querySelector('.copy-btn');
+
+    if (badge && button && !wrapper.querySelector('.code-header')) {
+      const header = document.createElement('div');
+      header.className = 'code-header';
+
+      const langSpan = document.createElement('span');
+      langSpan.className = 'code-lang';
+      langSpan.textContent = badge.textContent;
+      langSpan.setAttribute('aria-hidden', 'true');
+
+      header.appendChild(langSpan);
+      header.appendChild(button);
+
+      wrapper.insertBefore(header, wrapper.firstChild);
+    }
   });
 };
 
