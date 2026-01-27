@@ -804,6 +804,46 @@ a {
   background: #eef2f7;
 }
 
+.troubleshooting-symptoms .symptom-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.troubleshooting-symptoms .symptom-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.troubleshooting-symptoms .symptom-title {
+  font-weight: 600;
+}
+
+.troubleshooting-symptoms .symptom-cause {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.15rem;
+}
+
+.troubleshooting-symptoms .symptom-next {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.troubleshooting-symptoms .muted {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}
+
+.troubleshooting-symptoms .symptom-list li:hover {
+  background: #f9fafb;
+}
+
+.troubleshooting-symptoms .symptom-next a {
+  font-weight: 500;
+}
+
 .two-column {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

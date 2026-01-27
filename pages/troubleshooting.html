@@ -77,7 +77,105 @@
         </div>
       </header>
 
-      <section class="doc-content">
+     <section class="doc-content">
+      <section class="doc-section troubleshooting-symptoms">
+        <h2>Symptom → rotorsak → nästa steg</h2>
+        <p class="muted">
+          Börja här om något inte fungerar. Matcha ditt symptom och gå vidare till rätt steg.
+        </p>
+
+        <ul class="symptom-list">
+          <li>
+            <div class="symptom-title">Tom karta</div>
+            <div class="symptom-cause">Fel CRS, extent eller URL</div>
+            <div class="symptom-next">
+              → <a href="origo-guide.html">Origo guide</a>,
+              <a href="try-it.html#bbox">Try it-lab: BBOX / URL</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">WMS funkar i browser men inte i Origo</div>
+            <div class="symptom-cause">CORS, mixed content eller fel URL</div>
+            <div class="symptom-next">
+              → <a href="origo-guide.html">Origo guide</a>,
+              <a href="#cors">CORS-felsökning</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">Syns bara vid vissa zoomnivåer</div>
+            <div class="symptom-cause">Resolutions mismatch</div>
+            <div class="symptom-next">
+              → <a href="geowebcache.html">GeoWebCache</a>,
+              <a href="try-it.html#resolutions">Try it-lab: Resolutions / Gridcalc</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">Tiles är förskjutna</div>
+            <div class="symptom-cause">Gridset, resolutions eller CRS fel</div>
+            <div class="symptom-next">
+              → <a href="geowebcache.html">GeoWebCache</a>,
+              <a href="try-it.html#mapsandbox">Try it-lab: Map sandbox</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">Gamla tiles efter ändring</div>
+            <div class="symptom-cause">Cache behöver truncate eller seed</div>
+            <div class="symptom-next">
+              → <a href="geowebcache.html">GeoWebCache</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">SLD importeras inte</div>
+            <div class="symptom-cause">Namespace- eller XML-fel</div>
+            <div class="symptom-next">
+              → <a href="geoserver-styles.html">GeoServer styles</a>,
+              <a href="try-it.html#sld">Try it-lab: SLD-check</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">SLD syns inte trots import</div>
+            <div class="symptom-cause">Scale-filter eller fel datatyp</div>
+            <div class="symptom-next">
+              → <a href="geoserver-styles.html">GeoServer styles</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">WFS är långsamt</div>
+            <div class="symptom-cause">Fel tjänst för rendering eller för stora dataset</div>
+            <div class="symptom-next">
+              → <a href="origo-guide.html">Origo guide</a>,
+              <a href="geoserver.html">GeoServer 101</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">GeoPackage bytt men inget händer</div>
+            <div class="symptom-cause">Bounds eller cache uppdateras inte</div>
+            <div class="symptom-next">
+              → <a href="geowebcache.html">GeoWebCache</a>,
+              <a href="geoserver.html">GeoServer 101</a>
+            </div>
+          </li>
+
+          <li>
+            <div class="symptom-title">JS-fel stoppar allt</div>
+            <div class="symptom-cause">Fel script-ordning, import eller global scope</div>
+            <div class="symptom-next">
+              → <a href="origo-guide.html">Origo guide</a>,
+              DevTools → Console
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="doc-section">
         <h2>Snabb checklista</h2>
         <ol>
           <li>Öppna DevTools → Console och Network.</li>
@@ -87,7 +185,8 @@
         </ol>
 
         <h2>Vanliga fel och lösningar</h2>
-        <div class="callout callout-warning">
+
+        <div class="callout callout-warning" id="cors">
           <h3>CORS-blockering</h3>
           <p>Säkerställ att tjänsten tillåter din domän eller använd proxy.</p>
         </div>
@@ -118,10 +217,8 @@
 
         <h2>Origo Server-relaterat</h2>
         <ul>
-          <li><strong>Timeouts:</strong> testa kortare requests och granska proxy‑loggar.</li>
-          <li>
-            <strong>401/403:</strong> kontrollera auth mellan Origo, Origo Server och GeoServer.
-          </li>
+          <li><strong>Timeouts:</strong> testa kortare requests och granska proxy-loggar.</li>
+          <li><strong>401/403:</strong> kontrollera auth mellan Origo, Origo Server och GeoServer.</li>
           <li><strong>CORS:</strong> säkerställ att klienten går via proxy när det behövs.</li>
         </ul>
 
@@ -142,8 +239,9 @@ localStorage.clear()
 
 # curl för att se headers
 curl -I https://exempel.se/config.json
-</code></pre>
+    </code></pre>
       </section>
+    </section>
     </main>
 
     <script src="../assets/js/main.js"></script>
