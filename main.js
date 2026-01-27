@@ -1,3 +1,91 @@
+const IS_OFFLINE_FILE = window.location.protocol === 'file:';
+const OFFLINE_SEARCH_INDEX = [
+  {
+    id: 'index',
+    title: 'Start',
+    url: 'index.html',
+    content: 'startsida översikt snabbstart länkar guide recept',
+  },
+  {
+    id: 'json-101',
+    title: 'JSON 101',
+    url: 'page.html',
+    content: 'json objekt arrayer datatyper exempel validering felsökning',
+  },
+  {
+    id: 'origo-guide',
+    title: 'Origo – guide',
+    url: 'origo-guide.html',
+    content: 'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
+  },
+  {
+    id: 'layermanager',
+    title: 'Layermanager',
+    url: 'layermanager.html',
+    content: 'layermanager katalog sök lager plugin',
+  },
+  {
+    id: 'geoserver',
+    title: 'GeoServer 101',
+    url: 'geoserver.html',
+    content: 'geoserver wms wfs datakällor postgis geopackage publicera lager',
+  },
+  {
+    id: 'geoserver-styles',
+    title: 'GeoServer – styles',
+    url: 'geoserver-styles.html',
+    content: 'sld se 1.1 styling symbolizer etiketter filter skalstyrning',
+  },
+  {
+    id: 'geowebcache',
+    title: 'GeoWebCache',
+    url: 'geowebcache.html',
+    content: 'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
+  },
+  {
+    id: 'origo-server',
+    title: 'Origo Server',
+    url: 'origo-server.html',
+    content: 'origo server proxy state elevation backend endpoints drift felsökning localhost',
+  },
+  {
+    id: 'git-vscode',
+    title: 'Git & VS Code',
+    url: 'git-vscode.html',
+    content: 'git versionering vscode grunder arbetsflöde',
+  },
+  {
+    id: 'examples',
+    title: 'Origo-recept',
+    url: 'examples.html',
+    content: 'recept kopiera konfig wms wfs wmts controls',
+  },
+  {
+    id: 'faq-gis',
+    title: 'FAQ GIS',
+    url: 'faq-gis.html',
+    content: 'vanliga frågor gis begrepp crs',
+  },
+  {
+    id: 'npm',
+    title: 'npm & plugins',
+    url: 'npm.html',
+    content: 'npm paket plugin installera versionslåsning',
+  },
+  {
+    id: 'troubleshooting',
+    title: 'Felsökning',
+    url: 'troubleshooting.html',
+    content: 'felsökning cors crs 404 cache problem',
+  },
+  {
+    id: 'release-playbook',
+    title: 'Release‑playbook',
+    url: 'release-playbook.html',
+    content: 'release checklista geoserver geowebcache origo deploy cache styles data',
+  },
+];
+
 const initNavigation = () => {
   const body = document.body;
   const nav = document.getElementById('sidenav');
@@ -339,6 +427,29 @@ const initAccordions = () => {
   });
 };
 
+const initOfflineNotice = () => {
+  if (!IS_OFFLINE_FILE) {
+    return;
+  }
+
+  const main = document.querySelector('main');
+  if (!main || main.querySelector('.offline-note')) {
+    return;
+  }
+
+  const note = document.createElement('div');
+  note.className = 'offline-note';
+  note.textContent =
+    'Offline-läge: vissa funktioner är begränsade. Rekommenderat: python -m http.server 8000';
+
+  const topbar = main.querySelector('.topbar');
+  if (topbar) {
+    topbar.insertAdjacentElement('afterend', note);
+  } else {
+    main.insertAdjacentElement('afterbegin', note);
+  }
+};
+
 const initSearch = () => {
   const input = document.getElementById('navSearch');
   const results = document.getElementById('searchResults');
@@ -347,18 +458,20 @@ const initSearch = () => {
     return;
   }
 
-  let searchIndex = [];
+  let searchIndex = IS_OFFLINE_FILE ? OFFLINE_SEARCH_INDEX : [];
 
-  fetch('search-index.json')
-    .then((response) => (response.ok ? response.json() : []))
-    .then((data) => {
-      if (Array.isArray(data)) {
-        searchIndex = data;
-      }
-    })
-    .catch(() => {
-      searchIndex = [];
-    });
+  if (!IS_OFFLINE_FILE) {
+    fetch('search-index.json')
+      .then((response) => (response.ok ? response.json() : []))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          searchIndex = data;
+        }
+      })
+      .catch(() => {
+        searchIndex = [];
+      });
+  }
 
   const clearResults = () => {
     results.innerHTML = '';
@@ -1256,6 +1369,10 @@ const initCommandPalette = () => {
     if (indexCache) {
       return indexCache;
     }
+    if (IS_OFFLINE_FILE) {
+      indexCache = OFFLINE_SEARCH_INDEX;
+      return indexCache;
+    }
     try {
       const url = new URL('search-index.json', window.location.href);
       const response = await fetch(url.toString());
@@ -1468,6 +1585,7 @@ const initCommandPalette = () => {
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initAccordions();
+  initOfflineNotice();
   initSearch();
   initCodeCopy();
   initTryIt();
