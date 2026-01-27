@@ -77,16 +77,30 @@
         </div>
       </header>
 
-     <section class="doc-content">
+      <section class="doc-content">
+      <nav class="troubleshoot-toc">
+        <strong>Innehålls meny:</strong>
+        <a href="#symptom-rotorsak">Symptom → rotorsak → nästa steg</a>
+        <a href="#snabb-checklista">Snabb checklista</a>
+        <a href="#vanliga-fel">Vanliga fel</a>
+        <a href="#geoserver-relaterade">GeoServer-relaterade</a>
+        <a href="#origo-server-relaterat">Origo Server-relaterat</a>
+        <a href="#prestanda">Prestanda</a>
+        <a href="#debug-kommandon">Debug-kommandon</a>
+      </nav>
+
       <section class="doc-section troubleshooting-symptoms">
-        <h2>Symptom → rotorsak → nästa steg</h2>
+        <h2 id="symptom-rotorsak">Symptom → rotorsak → nästa steg</h2>
         <p class="muted">
           Börja här om något inte fungerar. Matcha ditt symptom och gå vidare till rätt steg.
         </p>
 
         <ul class="symptom-list">
-          <li>
-            <div class="symptom-title">Tom karta</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">Tom karta</div>
+              <span class="symptom-badge badge-frontend">Frontend</span>
+            </div>
             <div class="symptom-cause">Fel CRS, extent eller URL</div>
             <div class="symptom-next">
               → <a href="origo-guide.html">Origo guide</a>,
@@ -94,8 +108,11 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">WMS funkar i browser men inte i Origo</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">WMS funkar i browser men inte i Origo</div>
+              <span class="symptom-badge badge-frontend">Frontend</span>
+            </div>
             <div class="symptom-cause">CORS, mixed content eller fel URL</div>
             <div class="symptom-next">
               → <a href="origo-guide.html">Origo guide</a>,
@@ -103,8 +120,11 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">Syns bara vid vissa zoomnivåer</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">Syns bara vid vissa zoomnivåer</div>
+              <span class="symptom-badge badge-backend">GeoWebCache</span>
+            </div>
             <div class="symptom-cause">Resolutions mismatch</div>
             <div class="symptom-next">
               → <a href="geowebcache.html">GeoWebCache</a>,
@@ -112,8 +132,11 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">Tiles är förskjutna</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">Tiles är förskjutna</div>
+              <span class="symptom-badge badge-backend">GeoWebCache</span>
+            </div>
             <div class="symptom-cause">Gridset, resolutions eller CRS fel</div>
             <div class="symptom-next">
               → <a href="geowebcache.html">GeoWebCache</a>,
@@ -121,16 +144,22 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">Gamla tiles efter ändring</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">Gamla tiles efter ändring</div>
+              <span class="symptom-badge badge-backend">GeoWebCache</span>
+            </div>
             <div class="symptom-cause">Cache behöver truncate eller seed</div>
             <div class="symptom-next">
               → <a href="geowebcache.html">GeoWebCache</a>
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">SLD importeras inte</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">SLD importeras inte</div>
+              <span class="symptom-badge badge-geoserver">GeoServer</span>
+            </div>
             <div class="symptom-cause">Namespace- eller XML-fel</div>
             <div class="symptom-next">
               → <a href="geoserver-styles.html">GeoServer styles</a>,
@@ -138,16 +167,22 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">SLD syns inte trots import</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">SLD syns inte trots import</div>
+              <span class="symptom-badge badge-geoserver">GeoServer</span>
+            </div>
             <div class="symptom-cause">Scale-filter eller fel datatyp</div>
             <div class="symptom-next">
               → <a href="geoserver-styles.html">GeoServer styles</a>
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">WFS är långsamt</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">WFS är långsamt</div>
+              <span class="symptom-badge badge-geoserver">GeoServer</span>
+            </div>
             <div class="symptom-cause">Fel tjänst för rendering eller för stora dataset</div>
             <div class="symptom-next">
               → <a href="origo-guide.html">Origo guide</a>,
@@ -155,8 +190,11 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">GeoPackage bytt men inget händer</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">GeoPackage bytt men inget händer</div>
+              <span class="symptom-badge badge-data">Data</span>
+            </div>
             <div class="symptom-cause">Bounds eller cache uppdateras inte</div>
             <div class="symptom-next">
               → <a href="geowebcache.html">GeoWebCache</a>,
@@ -164,8 +202,11 @@
             </div>
           </li>
 
-          <li>
-            <div class="symptom-title">JS-fel stoppar allt</div>
+          <li class="symptom-item">
+            <div class="symptom-head">
+              <div class="symptom-title">JS-fel stoppar allt</div>
+              <span class="symptom-badge badge-frontend">Frontend</span>
+            </div>
             <div class="symptom-cause">Fel script-ordning, import eller global scope</div>
             <div class="symptom-next">
               → <a href="origo-guide.html">Origo guide</a>,
@@ -176,7 +217,7 @@
       </section>
 
       <section class="doc-section">
-        <h2>Snabb checklista</h2>
+        <h2 id="snabb-checklista">Snabb checklista</h2>
         <ol>
           <li>Öppna DevTools → Console och Network.</li>
           <li>Bekräfta att JSON/config laddas utan 404.</li>
@@ -184,7 +225,7 @@
           <li>Kontrollera CORS och mixed content.</li>
         </ol>
 
-        <h2>Vanliga fel och lösningar</h2>
+        <h2 id="vanliga-fel">Vanliga fel och lösningar</h2>
 
         <div class="callout callout-warning" id="cors">
           <h3>CORS-blockering</h3>
@@ -206,7 +247,7 @@
           <p>Testa hård reload (Ctrl/Cmd + Shift + R) eller lägg till cache-busting.</p>
         </div>
 
-        <h2>GeoServer-relaterade fel (klientperspektiv)</h2>
+        <h2 id="geoserver-relaterade">GeoServer-relaterade fel (klientperspektiv)</h2>
         <ul>
           <li><strong>Tom karta:</strong> fel layernamn eller CRS/projection mismatch.</li>
           <li><strong>403/401:</strong> GeoServer kräver inloggning eller saknar rättigheter.</li>
@@ -215,14 +256,14 @@
           <li><strong>WMS funkar men WFS är segt:</strong> begränsa med filter/bbox.</li>
         </ul>
 
-        <h2>Origo Server-relaterat</h2>
+        <h2 id="origo-server-relaterat">Origo Server-relaterat</h2>
         <ul>
           <li><strong>Timeouts:</strong> testa kortare requests och granska proxy-loggar.</li>
           <li><strong>401/403:</strong> kontrollera auth mellan Origo, Origo Server och GeoServer.</li>
           <li><strong>CORS:</strong> säkerställ att klienten går via proxy när det behövs.</li>
         </ul>
 
-        <h2>Prestanda: snabb felsökning</h2>
+        <h2 id="prestanda">Prestanda: snabb felsökning</h2>
         <ul>
           <li>Om WFS är segt: byt till WMS för visning.</li>
           <li>Om tiles är gamla: kontrollera GeoWebCache.</li>
@@ -233,7 +274,7 @@
           <li>Om det slöar i klienten: minska antal features.</li>
         </ul>
 
-        <h2>Debug-kommandon (webb)</h2>
+        <h2 id="debug-kommandon">Debug-kommandon (webb)</h2>
         <pre><code># i browserns console
 localStorage.clear()
 

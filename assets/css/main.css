@@ -1150,3 +1150,179 @@ a {
     font-size: 0.75rem;
   }
 }
+
+.troubleshooting-symptoms {
+  margin-top: 2rem;
+}
+
+.troubleshooting-symptoms .symptom-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0;
+}
+
+.troubleshooting-symptoms .symptom-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: background-color 150ms ease;
+}
+
+.troubleshooting-symptoms .symptom-item:hover {
+  background-color: #f8fafc;
+}
+
+.troubleshooting-symptoms .symptom-item:last-child {
+  border-bottom: none;
+}
+
+.troubleshooting-symptoms .symptom-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.troubleshooting-symptoms .symptom-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.troubleshooting-symptoms .symptom-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border: 1px solid;
+}
+
+.troubleshooting-symptoms .symptom-badge.badge-frontend {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #7dd3fc;
+}
+
+.troubleshooting-symptoms .symptom-badge.badge-backend {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.troubleshooting-symptoms .symptom-badge.badge-geoserver {
+  background: #fff7ed;
+  color: #7c2d12;
+  border-color: #fdba74;
+}
+
+.troubleshooting-symptoms .symptom-badge.badge-data {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border-color: #d8b4fe;
+}
+
+.troubleshooting-symptoms .symptom-cause {
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.troubleshooting-symptoms .symptom-next {
+  font-size: 0.92rem;
+  margin-top: 0.15rem;
+  color: var(--text);
+}
+
+.troubleshooting-symptoms .symptom-next a {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.troubleshooting-symptoms .symptom-next a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .troubleshooting-symptoms .symptom-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .troubleshooting-symptoms .symptom-badge {
+    height: 20px;
+    font-size: 0.66rem;
+    padding: 0 0.5rem;
+  }
+}
+
+.troubleshoot-toc {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f6 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.troubleshoot-toc strong {
+  flex-basis: 100%;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 0.35rem 0;
+}
+
+.troubleshoot-toc a {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.troubleshoot-toc a:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .troubleshoot-toc {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .troubleshoot-toc strong {
+    flex-basis: auto;
+    margin: 0;
+  }
+
+  .troubleshoot-toc a {
+    width: 100%;
+    text-align: left;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.9rem;
+  }
+}
