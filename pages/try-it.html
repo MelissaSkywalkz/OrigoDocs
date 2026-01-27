@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@latest/ol.css" />
   </head>
   <body class="layout">
     <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
@@ -192,7 +193,7 @@
               </div>
             </div>
             <div>
-              <label><strong>Preview</strong></label>
+              <div class="field-label"><strong>Preview</strong></div>
               <div id="sldp-preview" style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"></div>
               <label style="display: block; margin-top: 1rem;"><strong>Sammanfattning</strong></label>
               <pre id="sldp-summary" class="tryit-output" style="min-height: 80px; font-size: 0.85rem;"></pre>
@@ -366,8 +367,67 @@
           </div>
         </div>
       </section>
+
+      <h2 id="gridset-explorer">Gridset Explorer</h2>
+      <p>Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i <span class="crs-nowrap">EPSG:3006</span>.</p>
+
+      <div class="gridset-explorer" id="gridset-explorer-container">
+        <div class="gridset-actions">
+          <button class="tryit-button" data-extent-action="sverige" type="button">Sverige</button>
+          <button class="tryit-button" data-extent-action="skaraborg" type="button">Skaraborg</button>
+        </div>
+
+        <div class="gridset-layout">
+          <div id="gridset-map" class="gridset-map" aria-label="Karta: Gridset Explorer"></div>
+
+          <div class="gridset-panel">
+            <div class="gridset-row">
+              <strong>Extent:</strong> <span id="gridset-info-extent">—</span>
+            </div>
+
+            <div class="gridset-row">
+              <strong>BBOX (EPSG:3006):</strong>
+              <div class="gridset-mono"><span id="gridset-info-bbox">—</span></div>
+            </div>
+
+            <div class="gridset-row">
+              <strong>Zoomnivå:</strong> <span id="gridset-info-zoom">—</span>
+            </div>
+
+            <div class="gridset-row">
+              <strong>Tile size:</strong> 256px
+            </div>
+
+            <div class="gridset-row">
+              <strong>CRS:</strong> EPSG:3006
+            </div>
+
+            <div class="gridset-row">
+              <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
+            </div>
+
+            <div class="gridset-note">
+              Förenklat exempel för att förstå gridsets/tiles.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        @media (max-width: 768px) {
+          .gridset-explorer > div:nth-child(2) {
+            grid-template-columns: 1fr !important;
+          }
+
+          #gridset-map {
+            min-height: 240px !important;
+          }
+        }
+      </style>
     </main>
 
-    <script src="../assets/js/main.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/proj4@2.9.2/dist/proj4.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/ol@latest/dist/ol.js"></script>
+    <script defer src="../assets/js/main.js"></script>
   </body>
 </html>

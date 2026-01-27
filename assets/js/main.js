@@ -467,7 +467,7 @@ const initSearch = () => {
   let searchIndex = IS_OFFLINE_FILE ? OFFLINE_SEARCH_INDEX : [];
 
   if (!IS_OFFLINE_FILE) {
-    const searchIndexUrl = new URL('search/search-index.json', document.baseURI).href;
+    const searchIndexUrl = new URL('../search/search-index.json', document.baseURI).href;
     fetch(searchIndexUrl)
       .then((response) => (response.ok ? response.json() : []))
       .then((data) => {
@@ -2371,7 +2371,170 @@ const initScrollSpy = () => {
   handleScroll();
 };
 
+const initGridsetExplorer = () => {
+  const container = document.getElementById('gridset-explorer-container');
+  if (!container || typeof ol === 'undefined') return;
 
+  const EPSG3006 = 'EPSG:3006';
+
+  const extents = {
+    sverige: {
+      name: 'Sverige',
+      bounds: [150000, 6100000, 1120000, 7710000],
+    },
+    skaraborg: {
+      name: 'Skaraborg',
+      bounds: [370000, 6428000, 489000, 6531500],
+    },
+  };
+
+  const setUiStatus = (msg) => {
+    const el = container.querySelector('[data-gridset-status]');
+    if (el) el.textContent = msg;
+  };
+
+  const hasProj4 = typeof proj4 !== 'undefined';
+  const canRegister =
+    ol?.proj?.proj4 && typeof ol.proj.proj4.register === 'function' && typeof proj4?.defs === 'function';
+
+  if (!hasProj4 || !canRegister) {
+    setUiStatus('Kunde inte initiera EPSG:3006 (proj4/OpenLayers saknas).');
+    return;
+  }
+
+  try {
+    proj4.defs(
+      EPSG3006,
+      '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+    );
+    ol.proj.proj4.register(proj4);
+  } catch (e) {
+    setUiStatus('Kunde inte registrera EPSG:3006 (proj4-registrering misslyckades).');
+    return;
+  }
+
+  const projection = ol.proj.get(EPSG3006);
+  if (!projection) {
+    setUiStatus('Kunde inte initiera EPSG:3006 (projection saknas).');
+    return;
+  }
+
+  try {
+    projection.setExtent([0, 6000000, 1500000, 7800000]);
+  } catch (e) {}
+
+  const mapTarget = document.getElementById('gridset-map');
+  if (!mapTarget) {
+    setUiStatus('Kunde inte initiera karta (gridset-map saknas i HTML).');
+    return;
+  }
+
+  const vectorSource = new ol.source.Vector();
+
+  const vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({ color: '#3b82f6', width: 2 }),
+      fill: new ol.style.Fill({ color: 'rgba(59,130,246,0.12)' }),
+    }),
+  });
+
+  const view = new ol.View({
+    projection,
+    center: ol.extent.getCenter(extents.sverige.bounds),
+    zoom: 4,
+    constrainResolution: true,
+    minZoom: 2,
+    maxZoom: 14,
+  });
+
+  const map = new ol.Map({
+    target: 'gridset-map',
+    layers: [
+      new ol.layer.Tile({ source: new ol.source.OSM() }),
+      vectorLayer,
+    ],
+    view,
+  });
+
+  const setActiveButton = (extentKey) => {
+    container.querySelectorAll('[data-extent-action]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.extentAction === extentKey);
+      btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+    });
+  };
+
+  const updateInfo = (extentKey) => {
+    const extent = extents[extentKey];
+    if (!extent) return;
+
+    const [minx, miny, maxx, maxy] = extent.bounds;
+    const zoom = view.getZoom();
+    const resolution = view.getResolution();
+    if (!resolution) return;
+
+    const width = maxx - minx;
+    const height = maxy - miny;
+    const tileSize = 256;
+
+    const tilesX = Math.ceil(width / (resolution * tileSize));
+    const tilesY = Math.ceil(height / (resolution * tileSize));
+    const totalTiles = tilesX * tilesY;
+
+    const elExtent = document.getElementById('gridset-info-extent');
+    const elBbox = document.getElementById('gridset-info-bbox');
+    const elZoom = document.getElementById('gridset-info-zoom');
+    const elTiles = document.getElementById('gridset-info-tiles');
+
+    if (elExtent) elExtent.textContent = extent.name;
+    if (elBbox) elBbox.textContent = `minx: ${minx}, miny: ${miny}\nmaxx: ${maxx}, maxy: ${maxy}`;
+    if (elZoom) elZoom.textContent = typeof zoom === 'number' ? zoom.toFixed(2) : '—';
+    if (elTiles) elTiles.textContent = `${tilesX} × ${tilesY} = ${totalTiles}`;
+  };
+
+  const drawBbox = (bounds) => {
+    const [minx, miny, maxx, maxy] = bounds;
+
+    vectorSource.clear();
+
+    const ring = [
+      [minx, miny],
+      [maxx, miny],
+      [maxx, maxy],
+      [minx, maxy],
+      [minx, miny],
+    ];
+
+    vectorSource.addFeature(new ol.Feature(new ol.geom.Polygon([ring])));
+  };
+
+  let activeExtentKey = 'skaraborg';
+
+  const applyExtent = (extentKey) => {
+    const extent = extents[extentKey];
+    if (!extent) return;
+
+    activeExtentKey = extentKey;
+    setActiveButton(extentKey);
+    drawBbox(extent.bounds);
+
+    view.fit(extent.bounds, { padding: [28, 28, 28, 28], duration: 250, maxZoom: 7 });
+
+    const z = view.getZoom();
+    if (typeof z === 'number' && z < 2) view.setZoom(2);
+
+    updateInfo(extentKey);
+  };
+
+  container.querySelectorAll('[data-extent-action]').forEach((button) => {
+    button.addEventListener('click', () => applyExtent(button.dataset.extentAction));
+  });
+
+  view.on('change:resolution', () => updateInfo(activeExtentKey));
+  view.on('change:center', () => updateInfo(activeExtentKey));
+
+  applyExtent('skaraborg');
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
@@ -2383,4 +2546,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initWizard();
   initReleasePlaybook();
   initScrollSpy();
+  initGridsetExplorer();
 });
