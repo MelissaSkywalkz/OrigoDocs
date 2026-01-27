@@ -28,22 +28,60 @@ Detta är inte en teoretisk manual utan en **arbetsyta**.
 
 ---
 
-## 🧭 Innehåll (urval)
-- Introduktion till Origo Map
-- JSON-konfiguration & layermanager
-- GeoServer & GeoWebCache
-- SLD-stilar
-- Troubleshooting
-- 🧪 **Try it-lab** (JSON builder, BBOX/extent m.m.)
+## 🧭 Innehål & sidor
+
+**Huvuddokumentation:**
+- **Origo guide** – grundläggande konfiguration, lager, WMS/WFS/WMTS
+- **JSON 101** – Origo JSON-format med valideringsverktyg
+- **Layermanager** – så fungerar lag-hiearkier
+- **GeoServer 101** – servering av data, WMS/WFS, CRS
+- **GeoServer styles** – SLD-format, styling, renderingskontroll
+- **GeoWebCache** – tile-caching, resolutions, gridsets
+- **Felsökning** – systematisk felsökning med symptom → orsak → nästa steg
+- **Try it-lab** – interaktiva verktyg
+- **Git & VS Code** – versionshantering för kollegor
+- **Origo-recept** – copy/paste-exempel
+
+**Try it-lab verktyg:**
+- JSON-validering & builder
+- BBOX/Extent explorer (EPSG:3008, EPSG:3006)
+- Resolutions & Gridcalc
+- SLD-validering & preview
+- Map sandbox (OpenLayers-preview)
+- Gridset Explorer (3006)
 
 ---
 
-## 🚀 Quick start (lokalt)
+## 🚀 Utveckling lokalt
+
 OrigoDocs är en statisk HTML-site och kräver ingen backend.
 
+**Live Server (VS Code):**
+```
+Högerklicka på index.html → Open with Live Server
+```
+
+**Python HTTP Server:**
+```bash
+python -m http.server 8000
+Öppna: http://localhost:8000
+```
+
+**Kodformatering (Prettier):**
 ```bash
 npm install
 npm run format
-python -m http.server 8000
 ```
-Öppna sedan: http://localhost:8000
+
+---
+
+## 📦 Publicering (GitHub Pages)
+
+Sajten publiceras automatiskt från `main`-branch till:  
+👉 https://melissaskywalkz.github.io/OrigoDocs/
+
+**Lokala ändringar verifieras via:**
+1. Lokal server (se ovan)
+2. Kolla mobile-viewport (~560px)
+3. Verifiera interna länkar & navigering
+4. Testa Try it-lab verktyg

@@ -537,7 +537,6 @@ const initSearch = () => {
     }
   });
 
-  // Keyboard shortcuts to focus navbar search
   document.addEventListener('keydown', (event) => {
     const isCmdK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
     const activeTag = document.activeElement?.tagName?.toLowerCase();
@@ -848,65 +847,6 @@ const initCodeCopy = () => {
     });
 
     wrapper.appendChild(button);
-
-    const troubleshootButton = document.createElement('button');
-    const troubleshootPanel = document.createElement('div');
-    const troubleshootId = `code-troubleshoot-${codeIndex}`;
-    const troubleshootList = document.createElement('ul');
-    const troubleshootTitle = document.createElement('h4');
-
-    troubleshootButton.type = 'button';
-    troubleshootButton.className = 'troubleshoot-toggle';
-    troubleshootButton.textContent = 'Felsök';
-    troubleshootButton.setAttribute('aria-expanded', 'false');
-    troubleshootButton.setAttribute('aria-controls', troubleshootId);
-
-    troubleshootPanel.className = 'troubleshoot-panel';
-    troubleshootPanel.id = troubleshootId;
-    troubleshootPanel.hidden = true;
-
-    if (badgeLabel === 'XML') {
-      troubleshootTitle.textContent = 'Felsök: SLD';
-      troubleshootList.innerHTML = `
-        <li>Kontrollera att du laddar upp i GeoServer → Styles och väljer rätt format (SLD/SE).</li>
-        <li>Kontrollera namespaces och att filen är välformad XML (inga extra tecken).</li>
-        <li>Om stilen laddas men inte syns: kontrollera datatyp (point/line/polygon) och skala (Min/MaxScaleDenominator).</li>
-        <li>Om du ser gamla resultat: rensa/seed cache i GeoWebCache vid behov (inte alltid).</li>
-      `;
-    } else if (badgeLabel === 'JSON' || badgeLabel === 'MBStyle') {
-      troubleshootTitle.textContent = 'Felsök: Origo-konfig';
-      troubleshootList.innerHTML = `
-        <li>Validera JSON (kommatecken, citattecken, trailing commas).</li>
-        <li>Kontrollera att layer/source-namn matchar GeoServer (workspace:layer, URL).</li>
-        <li>Om inget syns: kontrollera projectionCode (EPSG:3008) och extent/center.</li>
-        <li>Om WFS är segt: testa WMS för rendering och använd WFS bara när attribut/klientlogik krävs.</li>
-      `;
-    } else if (badgeLabel === 'CLI') {
-      troubleshootTitle.textContent = 'Felsök: Kommando';
-      troubleshootList.innerHTML = `
-        <li>Kör från rätt mapp (repo-root).</li>
-        <li>Om "command not found": kontrollera att python/node/git är installerat och ligger i PATH.</li>
-        <li>Om port upptagen: byt port (t.ex. 8001).</li>
-      `;
-    } else {
-      troubleshootTitle.textContent = 'Felsök';
-      troubleshootList.innerHTML = `
-        <li>Kontrollera att sidan laddas utan JS-fel (F12 → Console).</li>
-        <li>Uppdatera sidan med hård refresh (Ctrl+F5).</li>
-      `;
-    }
-
-    troubleshootPanel.appendChild(troubleshootTitle);
-    troubleshootPanel.appendChild(troubleshootList);
-
-    troubleshootButton.addEventListener('click', () => {
-      const expanded = troubleshootButton.getAttribute('aria-expanded') === 'true';
-      troubleshootButton.setAttribute('aria-expanded', (!expanded).toString());
-      troubleshootPanel.hidden = expanded;
-    });
-
-    wrapper.appendChild(troubleshootButton);
-    wrapper.appendChild(troubleshootPanel);
   });
 
   document.querySelectorAll('.code-block').forEach((wrapper) => {
@@ -958,17 +898,16 @@ const initResolutionsTryIt = (block) => {
     return;
   }
 
-  // Helper to add styled text to report
   const addReportLine = (text, type = 'normal') => {
     const line = document.createElement('div');
     if (type === 'ok') {
-      line.style.color = '#28a745'; // green
+      line.style.color = '#28a745';
       text = '✓ ' + text;
     } else if (type === 'error') {
-      line.style.color = '#dc3545'; // red
+      line.style.color = '#dc3545';
       text = '✗ ' + text;
     } else if (type === 'warning') {
-      line.style.color = '#ffc107'; // yellow/orange
+      line.style.color = '#ffc107';
       text = '⚠ ' + text;
     }
     line.textContent = text;
@@ -1024,10 +963,8 @@ const initResolutionsTryIt = (block) => {
       return;
     }
 
-    // Start validation report
     addReportLine(`Antal: ${resolutions.length}`, 'ok');
 
-    // Check 1: All positive
     let allPositive = true;
     resolutions.forEach((res, idx) => {
       if (res <= 0) {
@@ -1039,7 +976,6 @@ const initResolutionsTryIt = (block) => {
       addReportLine('Alla värden > 0', 'ok');
     }
 
-    // Check 2: Strictly descending order
     let validOrder = true;
     for (let i = 0; i < resolutions.length - 1; i++) {
       if (resolutions[i] <= resolutions[i + 1]) {
@@ -1051,7 +987,6 @@ const initResolutionsTryIt = (block) => {
       addReportLine('Strikt fallande ordning', 'ok');
     }
 
-    // Check 3: No duplicates
     const unique = new Set(resolutions);
     if (unique.size === resolutions.length) {
       addReportLine('Inga dubbletter', 'ok');
@@ -1059,7 +994,6 @@ const initResolutionsTryIt = (block) => {
       addReportLine(`Dubbletter hittade (${resolutions.length} rader, ${unique.size} unika)`, 'error');
     }
 
-    // Check 4: Warning for too similar values (< 0.1% difference)
     let tooSimilar = [];
     for (let i = 0; i < resolutions.length - 1; i++) {
       const diff = resolutions[i] - resolutions[i + 1];
@@ -1074,7 +1008,6 @@ const initResolutionsTryIt = (block) => {
       addReportLine('Tillräckliga avstånd mellan värdena', 'ok');
     }
 
-    // Summary
     const isValid = allPositive && validOrder && unique.size === resolutions.length && tooSimilar.length === 0;
     if (isValid) {
       addReportLine('STATUS: Giltigt', 'ok');
@@ -1170,7 +1103,7 @@ const initGridCalcTryIt = (block) => {
     return;
   }
 
-  const PIXEL_SIZE_M = 0.00028; // OGC standard: 0.28 mm = 0.00028 m
+  const PIXEL_SIZE_M = 0.00028;
 
   const updateStatus = (message) => {
     if (status) {
@@ -1196,16 +1129,13 @@ const initGridCalcTryIt = (block) => {
       return;
     }
 
-    // Calculate tile and meta spans in meters
     const tileSpanM = resVal * tileVal;
     const metaSpanM = tileSpanM * metaVal;
 
-    // Estimate tiles for bbox
     const tilesX = Math.ceil(bboxwVal / tileSpanM);
     const tilesY = Math.ceil(bboxhVal / tileSpanM);
     const approxTiles = tilesX * tilesY;
 
-    // Determine seed recommendation
     let seedRec = '';
     if (approxTiles < 5000) {
       seedRec = 'Seed hela området på denna zoom.';
@@ -1215,7 +1145,6 @@ const initGridCalcTryIt = (block) => {
       seedRec = 'Seed bara vid behov, dela upp bbox och/eller minska zoomintervall.';
     }
 
-    // Format output
     const outText = [
       `Resolution: ${resVal.toFixed(4)} m/px`,
       `Scale: 1:${scaleVal.toFixed(0)}`,
@@ -1235,7 +1164,6 @@ const initGridCalcTryIt = (block) => {
       updateStatus('Resolution måste vara ett tal > 0.');
       return;
     }
-    // scale = resolution / pixel_size
     const scaleVal = resVal / PIXEL_SIZE_M;
     scale.value = scaleVal.toFixed(0);
     calculate();
@@ -1247,7 +1175,6 @@ const initGridCalcTryIt = (block) => {
       updateStatus('Scale måste vara ett tal > 0.');
       return;
     }
-    // resolution = scale * pixel_size
     const resVal = scaleVal * PIXEL_SIZE_M;
     resolution.value = resVal.toFixed(4);
     calculate();
@@ -1307,7 +1234,6 @@ const initGridCalcTryIt = (block) => {
     });
   });
 
-  // Initialize with default values
   calculate();
 };
 
@@ -1363,7 +1289,6 @@ const initBboxTryIt = (block) => {
       return null;
     }
 
-    // EPSG:3008 bounds: X 0-1500000, Y 5500000-8000000
     if (minxVal < 0 || maxxVal > 1500000) {
       updateStatus('X-värden måste ligga mellan 0 och 1,500,000.');
       return null;
@@ -1495,7 +1420,6 @@ const initSldPreviewTryIt = (block) => {
     return;
   }
 
-  // Helper functions
   const findFirst = (node, localName) => {
     if (!node || !node.childNodes) return null;
     for (let child of node.childNodes) {
@@ -1634,7 +1558,6 @@ const initSldPreviewTryIt = (block) => {
     } else if (wellKnownName === 'x') {
       return `<g opacity="${fillOpacity}"><line x1="${centerX - r}" y1="${centerY - r}" x2="${centerX + r}" y2="${centerY + r}" stroke="${stroke}" stroke-width="${strokeWidth}"/><line x1="${centerX + r}" y1="${centerY - r}" x2="${centerX - r}" y2="${centerY + r}" stroke="${stroke}" stroke-width="${strokeWidth}"/></g>`;
     } else {
-      // Default circle
       return `<circle cx="${centerX}" cy="${centerY}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
     }
   };
@@ -1651,7 +1574,6 @@ const initSldPreviewTryIt = (block) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlText, 'application/xml');
 
-    // Check for parse errors
     if (doc.querySelector('parsererror')) {
       status.textContent = 'XML-fel i SLD.';
       preview.innerHTML = '';
@@ -1659,7 +1581,6 @@ const initSldPreviewTryIt = (block) => {
       return;
     }
 
-    // Find symbolizer (priority: Point > Line > Polygon)
     let symbolizerType = null;
     let symbolizer = null;
     let symbolInfo = {};
@@ -1672,7 +1593,6 @@ const initSldPreviewTryIt = (block) => {
       symbolizerType = 'Point';
       symbolizer = pointSym;
 
-      // Extract point properties
       const graphic = findFirst(symbolizer, 'Graphic');
       const mark = findFirst(graphic, 'Mark');
       const wkn = findFirst(mark, 'WellKnownName');
@@ -1724,7 +1644,6 @@ const initSldPreviewTryIt = (block) => {
       return;
     }
 
-    // Generate SVG preview
     let svgContent = '';
 
     if (symbolizerType === 'Point') {
@@ -1750,7 +1669,6 @@ const initSldPreviewTryIt = (block) => {
 
     preview.innerHTML = svgContent;
 
-    // Generate summary
     let summaryText = `Typ: ${symbolizerType}Symbolizer\n\n`;
     Object.entries(symbolInfo).forEach(([key, value]) => {
       summaryText += `${key}: ${value}\n`;
@@ -1819,7 +1737,6 @@ const initMapSandboxTryIt = (block) => {
     const tileVal = parseFloat(tile.value);
     const metaVal = parseFloat(meta.value);
 
-    // Validation
     if (
       isNaN(bboxW) || isNaN(bboxH) || isNaN(resVal) || isNaN(tileVal) || isNaN(metaVal) ||
       bboxW <= 0 || bboxH <= 0 || resVal <= 0 || tileVal <= 0 || metaVal <= 0
@@ -1829,46 +1746,36 @@ const initMapSandboxTryIt = (block) => {
       return;
     }
 
-    // Calculate tile and meta spans in meters
     const tileSpanM = resVal * tileVal;
     const metaSpanM = tileSpanM * metaVal;
 
-    // Calculate number of tiles
     const numTilesX = Math.ceil(bboxW / tileSpanM);
     const numTilesY = Math.ceil(bboxH / tileSpanM);
 
-    // Scale BBOX to fit in canvas with padding
     const padding = 20;
     const availWidth = canvas.width - 2 * padding;
     const availHeight = canvas.height - 2 * padding;
 
-    // Aspect ratio preservation
     const bboxAspect = bboxW / bboxH;
     const canvasAspect = availWidth / availHeight;
 
     let scaledWidth, scaledHeight;
     if (bboxAspect > canvasAspect) {
-      // BBOX is wider, constrain to width
       scaledWidth = availWidth;
       scaledHeight = availWidth / bboxAspect;
     } else {
-      // BBOX is taller, constrain to height
       scaledHeight = availHeight;
       scaledWidth = availHeight * bboxAspect;
     }
 
-    // Center the drawn rectangle in canvas
     const startX = padding + (availWidth - scaledWidth) / 2;
     const startY = padding + (availHeight - scaledHeight) / 2;
 
-    // Scale factors: meters to pixels
     const scaleX = scaledWidth / bboxW;
     const scaleY = scaledHeight / bboxH;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw meta-tile grid (darker, thicker)
     ctx.strokeStyle = '#555555';
     ctx.lineWidth = 2;
     for (let i = 0; i <= numTilesX; i++) {
@@ -1890,7 +1797,6 @@ const initMapSandboxTryIt = (block) => {
       }
     }
 
-    // Draw tile grid (lighter)
     ctx.strokeStyle = '#cccccc';
     ctx.lineWidth = 1;
     for (let i = 0; i <= Math.ceil(bboxW / tileSpanM); i++) {
@@ -1912,12 +1818,10 @@ const initMapSandboxTryIt = (block) => {
       }
     }
 
-    // Draw BBOX border (black, thick)
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 3;
     ctx.strokeRect(startX, startY, scaledWidth, scaledHeight);
 
-    // Update status with info
     const infoMsg = `BBOX: ${bboxW}×${bboxH}m | Tile: ${tileSpanM.toFixed(0)}m | Meta: ${metaSpanM.toFixed(0)}m | Grid: ${numTilesX}×${numTilesY} tiles`;
     updateStatus(infoMsg);
   };
@@ -2210,7 +2114,6 @@ const initTryIt = () => {
       params.set(isWfs ? 'outputFormat' : 'format', format.value.trim());
       if (!isWfs) {
         params.set('bbox', bbox.value.trim());
-        // WMS 1.1.1 uses SRS, WMS 1.3.0 uses CRS
         params.set('srs', crs.value.trim());
         params.set('width', '256');
         params.set('height', '256');
