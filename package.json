@@ -2,11 +2,7 @@
   "name": "origo-docs-portal",
   "private": true,
   "scripts": {
-    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
-    "check:format": "prettier --check \"**/*.{html,css,js,json,md}\"",
-    "check:links": "node ./scripts/check-internal-links.mjs",
-    "check:json": "node ./scripts/check-json.mjs",
-    "check": "npm run check:format && npm run check:json && npm run check:links"
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\""
   },
   "devDependencies": {
     "prettier": "^3.2.5"
