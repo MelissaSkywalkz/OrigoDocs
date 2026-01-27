@@ -2,7 +2,6 @@ glossary.json
 glossary*.json
 # Dependencies
 node_modules/
-package-lock.json
 yarn.lock
 
 # Logs
