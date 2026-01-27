@@ -61,6 +61,12 @@ const OFFLINE_SEARCH_INDEX = [
     content: 'recept kopiera konfig wms wfs wmts controls',
   },
   {
+    id: 'try-it',
+    title: 'Try it-lab',
+    url: 'try-it.html',
+    content: 'try it json validera url builder bbox sld styling',
+  },
+  {
     id: 'faq-gis',
     title: 'FAQ GIS',
     url: 'faq-gis.html',
@@ -786,6 +792,335 @@ const copyText = async (text) => {
   document.body.removeChild(textarea);
 };
 
+const initGridCalcTryIt = (block) => {
+  const resolution = block.querySelector('#gridcalc-resolution');
+  const scale = block.querySelector('#gridcalc-scale');
+  const tile = block.querySelector('#gridcalc-tile');
+  const meta = block.querySelector('#gridcalc-meta');
+  const bboxwidth = block.querySelector('#gridcalc-bboxwidth');
+  const bboxheight = block.querySelector('#gridcalc-bboxheight');
+  const output = block.querySelector('#gridcalc-output');
+  const status = block.querySelector('#gridcalc-status');
+  const buttons = block.querySelectorAll('[data-gridcalc-action]');
+
+  if (!resolution || !scale || !tile || !meta || !bboxwidth || !bboxheight || !output || !status) {
+    return;
+  }
+
+  const PIXEL_SIZE_M = 0.00028; // OGC standard: 0.28 mm = 0.00028 m
+
+  const updateStatus = (message) => {
+    if (status) {
+      status.textContent = message;
+    }
+  };
+
+  const calculate = () => {
+    const resVal = parseFloat(resolution.value);
+    const scaleVal = parseFloat(scale.value);
+    const tileVal = parseFloat(tile.value);
+    const metaVal = parseFloat(meta.value);
+    const bboxwVal = parseFloat(bboxwidth.value);
+    const bboxhVal = parseFloat(bboxheight.value);
+
+    if (isNaN(resVal) || isNaN(tileVal) || isNaN(metaVal) || isNaN(bboxwVal) || isNaN(bboxhVal)) {
+      updateStatus('Alle värden måste vara tal.');
+      return;
+    }
+
+    if (resVal <= 0 || tileVal <= 0 || metaVal <= 0 || bboxwVal <= 0 || bboxhVal <= 0) {
+      updateStatus('Alla värden måste vara större än 0.');
+      return;
+    }
+
+    // Calculate tile and meta spans in meters
+    const tileSpanM = resVal * tileVal;
+    const metaSpanM = tileSpanM * metaVal;
+
+    // Estimate tiles for bbox
+    const tilesX = Math.ceil(bboxwVal / tileSpanM);
+    const tilesY = Math.ceil(bboxhVal / tileSpanM);
+    const approxTiles = tilesX * tilesY;
+
+    // Determine seed recommendation
+    let seedRec = '';
+    if (approxTiles < 5000) {
+      seedRec = 'Seed hela området på denna zoom.';
+    } else if (approxTiles <= 50000) {
+      seedRec = 'Seed selektivt (prioritera kärnområde).';
+    } else {
+      seedRec = 'Seed bara vid behov, dela upp bbox och/eller minska zoomintervall.';
+    }
+
+    // Format output
+    const outText = [
+      `Resolution: ${resVal.toFixed(4)} m/px`,
+      `Scale: 1:${scaleVal.toFixed(0)}`,
+      `Tile span (${tileVal}px): ${tileSpanM.toFixed(2)} m`,
+      `Meta span (${metaVal}×${metaVal}): ${metaSpanM.toFixed(2)} m`,
+      `Approx tiles for bbox: ${approxTiles.toLocaleString('sv-SE')}`,
+      `Rekommendation: ${seedRec}`,
+    ].join('\n');
+
+    output.value = outText;
+    updateStatus('Beräknad.');
+  };
+
+  const fromResolution = () => {
+    const resVal = parseFloat(resolution.value);
+    if (isNaN(resVal) || resVal <= 0) {
+      updateStatus('Resolution måste vara ett tal > 0.');
+      return;
+    }
+    // scale = resolution / pixel_size
+    const scaleVal = resVal / PIXEL_SIZE_M;
+    scale.value = scaleVal.toFixed(0);
+    calculate();
+  };
+
+  const fromScale = () => {
+    const scaleVal = parseFloat(scale.value);
+    if (isNaN(scaleVal) || scaleVal <= 0) {
+      updateStatus('Scale måste vara ett tal > 0.');
+      return;
+    }
+    // resolution = scale * pixel_size
+    const resVal = scaleVal * PIXEL_SIZE_M;
+    resolution.value = resVal.toFixed(4);
+    calculate();
+  };
+
+  const setPreset = () => {
+    resolution.value = '100';
+    scale.value = (100 / PIXEL_SIZE_M).toFixed(0);
+    tile.value = '256';
+    meta.value = '4';
+    bboxwidth.value = '100000';
+    bboxheight.value = '100000';
+    output.value = '';
+    updateStatus('');
+    calculate();
+  };
+
+  const copyOutput = async () => {
+    const text = output.value.trim();
+    if (!text) {
+      updateStatus('Beräkna först.');
+      return;
+    }
+    try {
+      await copyText(text);
+      updateStatus('Kopierat.');
+    } catch (error) {
+      updateStatus('Kunde inte kopiera.');
+    }
+  };
+
+  const clearAll = () => {
+    resolution.value = '100';
+    scale.value = (100 / PIXEL_SIZE_M).toFixed(0);
+    tile.value = '256';
+    meta.value = '4';
+    bboxwidth.value = '100000';
+    bboxheight.value = '100000';
+    output.value = '';
+    updateStatus('');
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.gridcalcAction;
+      if (action === 'from-resolution') {
+        fromResolution();
+      } else if (action === 'from-scale') {
+        fromScale();
+      } else if (action === 'preset') {
+        setPreset();
+      } else if (action === 'copy') {
+        copyOutput();
+      } else if (action === 'clear') {
+        clearAll();
+      }
+    });
+  });
+
+  // Initialize with default values
+  calculate();
+};
+
+const initBboxTryIt = (block) => {
+  const base = block.querySelector('#bbox-base');
+  const layer = block.querySelector('#bbox-layer');
+  const format = block.querySelector('#bbox-format');
+  const width = block.querySelector('#bbox-width');
+  const height = block.querySelector('#bbox-height');
+  const minx = block.querySelector('#bbox-minx');
+  const maxx = block.querySelector('#bbox-maxx');
+  const miny = block.querySelector('#bbox-miny');
+  const maxy = block.querySelector('#bbox-maxy');
+  const output = block.querySelector('#bbox-output');
+  const urlOutput = block.querySelector('#bbox-url-output');
+  const status = block.querySelector('#bbox-status');
+  const buttons = block.querySelectorAll('[data-bbox-action]');
+
+  if (!base || !layer || !format || !width || !height || !minx || !maxx || !miny || !maxy || !output || !urlOutput || !status) {
+    return;
+  }
+
+  const presets = {
+    'preset-1': { minx: 100000, miny: 6400000, maxx: 200000, maxy: 6500000 },
+    'preset-2': { minx: 200000, miny: 6500000, maxx: 350000, maxy: 6650000 },
+    'preset-3': { minx: 350000, miny: 6650000, maxx: 500000, maxy: 6800000 },
+  };
+
+  const updateStatus = (message) => {
+    if (status) {
+      status.textContent = message;
+    }
+  };
+
+  const validateBbox = () => {
+    const minxVal = parseFloat(minx.value);
+    const maxxVal = parseFloat(maxx.value);
+    const minyVal = parseFloat(miny.value);
+    const maxyVal = parseFloat(maxy.value);
+
+    if (isNaN(minxVal) || isNaN(maxxVal) || isNaN(minyVal) || isNaN(maxyVal)) {
+      updateStatus('Alla koordinater måste vara tal.');
+      return null;
+    }
+
+    if (minxVal >= maxxVal) {
+      updateStatus('Min X måste vara mindre än Max X.');
+      return null;
+    }
+
+    if (minyVal >= maxyVal) {
+      updateStatus('Min Y måste vara mindre än Max Y.');
+      return null;
+    }
+
+    // EPSG:3008 bounds: X 0-1500000, Y 5500000-8000000
+    if (minxVal < 0 || maxxVal > 1500000) {
+      updateStatus('X-värden måste ligga mellan 0 och 1,500,000.');
+      return null;
+    }
+
+    if (minyVal < 5500000 || maxyVal > 8000000) {
+      updateStatus('Y-värden måste ligga mellan 5,500,000 och 8,000,000.');
+      return null;
+    }
+
+    return { minx: minxVal, maxx: maxxVal, miny: minyVal, maxy: maxyVal };
+  };
+
+  const generate = () => {
+    const bbox = validateBbox();
+    if (!bbox) {
+      output.value = '';
+      urlOutput.value = '';
+      return;
+    }
+
+    const bboxStr = `${bbox.minx},${bbox.miny},${bbox.maxx},${bbox.maxy}`;
+    output.value = bboxStr;
+
+    const baseValue = base.value.trim();
+    if (!baseValue) {
+      updateStatus('Fyll i en bas‑URL för WMS-anropet.');
+      urlOutput.value = '';
+      return;
+    }
+
+    try {
+      const url = new URL(baseValue, window.location.href);
+      const params = new URLSearchParams();
+      params.set('service', 'WMS');
+      params.set('version', '1.1.1');
+      params.set('request', 'GetMap');
+      params.set('layers', layer.value.trim());
+      params.set('styles', '');
+      params.set('format', format.value.trim());
+      params.set('bbox', bboxStr);
+      params.set('width', width.value.trim());
+      params.set('height', height.value.trim());
+      params.set('srs', 'EPSG:3008');
+
+      url.search = params.toString();
+      urlOutput.value = url.toString();
+      updateStatus('Klar.');
+    } catch (error) {
+      updateStatus('Ogiltig bas‑URL.');
+      urlOutput.value = '';
+    }
+  };
+
+  const setBboxPreset = (preset) => {
+    minx.value = preset.minx;
+    miny.value = preset.miny;
+    maxx.value = preset.maxx;
+    maxy.value = preset.maxy;
+    output.value = '';
+    urlOutput.value = '';
+    updateStatus('');
+  };
+
+  const copyBbox = async () => {
+    const text = output.value.trim();
+    if (!text) {
+      updateStatus('Generera en BBOX först.');
+      return;
+    }
+    try {
+      await copyText(text);
+      updateStatus('BBOX kopierad.');
+    } catch (error) {
+      updateStatus('Kunde inte kopiera.');
+    }
+  };
+
+  const copyUrl = async () => {
+    const text = urlOutput.value.trim();
+    if (!text) {
+      updateStatus('Generera en URL först.');
+      return;
+    }
+    try {
+      await copyText(text);
+      updateStatus('URL kopierad.');
+    } catch (error) {
+      updateStatus('Kunde inte kopiera.');
+    }
+  };
+
+  const clearBbox = () => {
+    minx.value = '100000';
+    miny.value = '6400000';
+    maxx.value = '200000';
+    maxy.value = '6500000';
+    output.value = '';
+    urlOutput.value = '';
+    updateStatus('');
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.bboxAction;
+      if (action === 'preset-1' || action === 'preset-2' || action === 'preset-3') {
+        setBboxPreset(presets[action]);
+      } else if (action === 'generate') {
+        generate();
+      } else if (action === 'copy-bbox') {
+        copyBbox();
+      } else if (action === 'copy-url') {
+        copyUrl();
+      } else if (action === 'clear') {
+        clearBbox();
+      }
+    });
+  });
+};
+
 const initTryIt = () => {
   const tryItBlocks = document.querySelectorAll('[data-tryit]');
   if (!tryItBlocks.length) {
@@ -1118,6 +1453,10 @@ const initTryIt = () => {
       initSldTryIt(block);
     } else if (type === 'urlbuilder') {
       initUrlBuilder(block);
+    } else if (type === 'bbox') {
+      initBboxTryIt(block);
+    } else if (type === 'gridcalc') {
+      initGridCalcTryIt(block);
     }
   });
 };

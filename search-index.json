@@ -60,6 +60,12 @@
     "content": "recept kopiera konfig wms wfs wmts controls"
   },
   {
+    "id": "try-it",
+    "title": "Try it-lab",
+    "url": "try-it.html",
+    "content": "try it json validera url builder bbox sld styling"
+  },
+  {
     "id": "faq-gis",
     "title": "FAQ GIS",
     "url": "faq-gis.html",
