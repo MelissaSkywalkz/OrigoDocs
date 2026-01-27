@@ -6,6 +6,9 @@ En statisk docs-site med praktiska exempel, felsökning och “Try it”-verktyg
 🌍 **Live docs:**  
 👉 https://melissaskywalkz.github.io/OrigoDocs/
 
+📖 **Projekt Wiki:**  
+👉 https://github.com/MelissaSkywalkz/OrigoDocs/wiki
+
 ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)
 ![Static](https://img.shields.io/badge/site-static-blue)
 ![Prettier](https://img.shields.io/badge/code%20style-prettier-ff69b4)
