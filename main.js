@@ -529,6 +529,20 @@ const initSearch = () => {
       results.classList.add('hidden');
     }
   });
+
+  // Keyboard shortcuts to focus navbar search
+  document.addEventListener('keydown', (event) => {
+    const isCmdK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
+    const activeTag = document.activeElement?.tagName?.toLowerCase();
+    const isTyping =
+      activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
+
+    if ((isCmdK || (event.key === '/' && !isTyping)) && document.activeElement !== input) {
+      event.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
 };
 
 const getExplicitLanguage = (codeBlock, pre) => {
@@ -1043,7 +1057,8 @@ const initTryIt = () => {
       params.set(isWfs ? 'outputFormat' : 'format', format.value.trim());
       if (!isWfs) {
         params.set('bbox', bbox.value.trim());
-        params.set('crs', crs.value.trim());
+        // WMS 1.1.1 uses SRS, WMS 1.3.0 uses CRS
+        params.set('srs', crs.value.trim());
         params.set('width', '256');
         params.set('height', '256');
       }
@@ -1347,240 +1362,7 @@ const initScrollSpy = () => {
   handleScroll();
 };
 
-const initCommandPalette = () => {
-  const palette = document.getElementById('cmdk') || document.querySelector('.cmdk');
-  if (!palette) {
-    return;
-  }
 
-  const triggerButtons = document.querySelectorAll('[data-cmdk-trigger]');
-  const input = palette.querySelector('#cmdk-input');
-  const results = palette.querySelector('.cmdk-results');
-  const status = palette.querySelector('.cmdk-status');
-  const backdrop = palette.querySelector('[data-cmdk-backdrop]');
-  const closeButton = palette.querySelector('[data-cmdk-close]');
-
-  let indexCache = null;
-  let activeIndex = 0;
-  let lastTrigger = null;
-  let cmdkOpen = false;
-
-  const fetchIndex = async () => {
-    if (indexCache) {
-      return indexCache;
-    }
-    if (IS_OFFLINE_FILE) {
-      indexCache = OFFLINE_SEARCH_INDEX;
-      return indexCache;
-    }
-    try {
-      const url = new URL('search-index.json', window.location.href);
-      const response = await fetch(url.toString());
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-      indexCache = await response.json();
-      return indexCache;
-    } catch (error) {
-      indexCache = [];
-      status.textContent =
-        'Sök kräver att sidan körs via en server (t.ex. python -m http.server).';
-      return indexCache;
-    }
-  };
-
-  const escapeHtml = (value) =>
-    value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-  const highlightMatch = (text, query) => {
-    if (!query) {
-      return escapeHtml(text);
-    }
-    const escaped = escapeHtml(text);
-    const pattern = new RegExp(`(${query.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi');
-    return escaped.replace(pattern, '<mark>$1</mark>');
-  };
-
-  const renderResults = (items, query) => {
-    results.innerHTML = '';
-    if (!items.length) {
-      const li = document.createElement('li');
-      li.className = 'cmdk-result';
-      li.innerHTML = '<span class="cmdk-result-title">Inga träffar</span>';
-      results.appendChild(li);
-      return;
-    }
-
-    items.forEach((item, index) => {
-      const li = document.createElement('li');
-      li.className = 'cmdk-result';
-      li.setAttribute('role', 'option');
-      li.dataset.url = item.url;
-      li.dataset.index = index.toString();
-      li.innerHTML = `
-        <span class="cmdk-result-title">${highlightMatch(item.title, query)}</span>
-        <span class="cmdk-result-snippet">${highlightMatch(item.content, query)}</span>
-      `;
-      results.appendChild(li);
-    });
-
-    activeIndex = 0;
-    updateActiveItem();
-  };
-
-  const updateActiveItem = () => {
-    const items = results.querySelectorAll('.cmdk-result');
-    items.forEach((item, index) => {
-      const isActive = index === activeIndex;
-      item.classList.toggle('is-active', isActive);
-      item.setAttribute('aria-selected', isActive ? 'true' : 'false');
-    });
-  };
-
-  const performSearch = async (query) => {
-    const data = await fetchIndex();
-    if (!query) {
-      renderResults(data.slice(0, 10), '');
-      return;
-    }
-
-    const normalized = query.toLowerCase();
-    const scored = data
-      .map((item) => {
-        const haystack = `${item.title} ${item.content}`.toLowerCase();
-        const titleMatch = item.title.toLowerCase().includes(normalized);
-        const contentMatch = item.content.toLowerCase().includes(normalized);
-        return {
-          item,
-          score: titleMatch ? 2 : contentMatch ? 1 : 0
-        };
-      })
-      .filter((entry) => entry.score > 0)
-      .sort((a, b) => b.score - a.score);
-
-    renderResults(
-      scored.slice(0, 12).map((entry) => entry.item),
-      query
-    );
-  };
-
-  const openPalette = (trigger) => {
-    if (cmdkOpen) {
-      return;
-    }
-    palette.hidden = false;
-    document.body.style.overflow = 'hidden';
-    lastTrigger = trigger || lastTrigger;
-    status.textContent = '';
-    fetchIndex().then(() => performSearch(input.value.trim()));
-    setTimeout(() => input.focus(), 0);
-    cmdkOpen = true;
-  };
-
-  const closePalette = () => {
-    if (!cmdkOpen) {
-      return;
-    }
-    palette.hidden = true;
-    document.body.style.overflow = '';
-    cmdkOpen = false;
-    activeIndex = 0;
-    updateActiveItem();
-    if (lastTrigger && document.contains(lastTrigger)) {
-      lastTrigger.focus();
-    }
-  };
-
-  const togglePalette = (trigger) => {
-    if (cmdkOpen) {
-      closePalette();
-    } else {
-      openPalette(trigger);
-    }
-  };
-
-  triggerButtons.forEach((button) => {
-    button.addEventListener('click', () => togglePalette(button));
-  });
-
-  if (backdrop) {
-    backdrop.addEventListener('click', (event) => {
-      if (event.target === backdrop) {
-        closePalette();
-      }
-    });
-  }
-
-  if (closeButton) {
-    closeButton.addEventListener('click', closePalette);
-  }
-
-  input.addEventListener('input', (event) => {
-    performSearch(event.target.value.trim());
-  });
-
-  results.addEventListener('click', (event) => {
-    const target = event.target.closest('.cmdk-result');
-    if (target?.dataset.url) {
-      window.location.href = target.dataset.url;
-    }
-  });
-
-  results.addEventListener('mousemove', (event) => {
-    const target = event.target.closest('.cmdk-result');
-    if (target?.dataset.index) {
-      activeIndex = Number(target.dataset.index);
-      updateActiveItem();
-    }
-  });
-
-  palette.addEventListener('keydown', (event) => {
-    const items = results.querySelectorAll('.cmdk-result');
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      closePalette();
-      return;
-    }
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      activeIndex = Math.min(activeIndex + 1, items.length - 1);
-      updateActiveItem();
-      return;
-    }
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      activeIndex = Math.max(activeIndex - 1, 0);
-      updateActiveItem();
-      return;
-    }
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const active = items[activeIndex];
-      const url = active?.dataset.url;
-      if (url) {
-        window.location.href = url;
-      }
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    const isCmdK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
-    const activeTag = document.activeElement?.tagName?.toLowerCase();
-    const isTyping =
-      activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
-
-    if (isCmdK) {
-      event.preventDefault();
-      togglePalette(document.activeElement);
-    } else if (event.key === '/' && !isTyping && palette.hidden) {
-      event.preventDefault();
-      openPalette(document.activeElement);
-    } else if (event.key === 'Escape' && cmdkOpen) {
-      event.preventDefault();
-      closePalette();
-    }
-  });
-};
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
@@ -1592,5 +1374,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initWizard();
   initReleasePlaybook();
   initScrollSpy();
-  initCommandPalette();
 });

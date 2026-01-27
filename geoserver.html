@@ -67,9 +67,6 @@
         >
           <img src="sort.png" alt="" />
         </button>
-        <button class="cmdk-trigger" type="button" aria-label="Öppna sök" data-cmdk-trigger>
-          Sök
-        </button>
         <div class="topbar-title">
           <span class="eyebrow">GeoServer</span>
           <h1>GeoServer 101</h1>
@@ -137,8 +134,7 @@
           <h3>CRS‑notis (vår verklighet)</h3>
           <p>
             Vi jobbar oftast i
-            <span class="no-break"><strong>SWEREF 99 13 30 (EPSG:3008)</strong></span
-            >. CRS påverkar extent/bbox, WMTS gridsets och reprojection. Om CRS inte matchar får du
+            <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>. CRS påverkar extent/bbox, WMTS gridsets och reprojection. Om CRS inte matchar får du
             ofta tom karta eller fel läge.
           </p>
         </div>
@@ -272,20 +268,5 @@
     </main>
 
     <script src="main.js"></script>
-        <div class="cmdk" id="cmdk" hidden>
-          <div class="cmdk-backdrop" data-cmdk-backdrop>
-            <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="Sök">
-              <button class="cmdk-close" type="button" aria-label="Stäng" data-cmdk-close>×</button>
-              <div class="cmdk-header">
-                <label class="cmdk-label" for="cmdk-input">Sök i portalen</label>
-                <input id="cmdk-input" type="search" placeholder="Skriv för att söka…" autocomplete="off" />
-              </div>
-              <div class="cmdk-status" aria-live="polite"></div>
-              <ul class="cmdk-results" role="listbox" aria-label="Sökresultat"></ul>
-              <div class="cmdk-hint">Tryck Enter för att öppna, Esc för att stänga.</div>
-            </div>
-          </div>
-        </div>
-
   </body>
 </html>
