@@ -64,19 +64,6 @@ python -m http.server 8000
 - Klicka igenom navigationen och öppna Snabblänkar.
 - Kontrollera mobilbrytpunkter visuellt.
 
-## CI och automatiska kontroller
-
-Det här repot saknar medvetet CI/automatiska checks. Testa manuellt genom att öppna sidan lokalt och klicka runt.
-
-## Bidra
-
-1. Installera verktyg:
-   - `npm install`
-2. Formatera filer:
-   - `npm run format`
-
-**Viktigt:** Glossary-funktionen är borttagen och ska inte återinföras.
-
 ## TODO
 
 - Lägg en anonymiserad exempelkonfig i `/examples/` för verifiering av våra mallar.
