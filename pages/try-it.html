@@ -95,6 +95,7 @@
           <a href="#mapsandbox">Map sandbox</a>
         </nav>
 
+        <!-- JSON -->
         <section class="tool-card" aria-labelledby="json">
           <div class="tool-card-head">
             <h2 id="json">JSON</h2>
@@ -123,15 +124,22 @@
           </div>
         </section>
 
+        <!-- URL-builder -->
         <section class="tool-card" aria-labelledby="urlbuilder">
           <div class="tool-card-head">
             <h2 id="urlbuilder">URL-builder</h2>
             <p>
-              Skapa giltiga WMS/WFS-URL:er. Ange bas-URL, tjänst, lager och parametrar för att generera ett korrekt anrop.
+              Skapa giltiga WMS/WFS-tjänste-URL:er. Ange bas-URL, tjänst, lager och parametrar för att generera ett korrekt anrop.
             </p>
           </div>
 
           <div class="tryit" data-tryit="urlbuilder">
+              <div class="tryit-quick-actions">
+              <button class="tryit-pill" type="button" data-url-quick="cap-wms">WMS GetCapabilities</button>
+              <button class="tryit-pill" type="button" data-url-quick="cap-wfs">WFS GetCapabilities</button>
+              <button class="tryit-pill secondary" type="button" data-url-quick="getmap-demo">WMS GetMap (demo)</button>
+              <button class="tryit-pill secondary" type="button" data-url-quick="clear">Rensa</button>
+            </div>
             <div class="tryit-grid">
               <div>
                 <label for="urlbuilder-base"><strong>Bas-URL</strong></label>
@@ -162,6 +170,8 @@
                 <div class="tryit-actions">
                   <button class="tryit-button" data-url-action="generate" type="button">Generera</button>
                   <button class="tryit-button secondary" data-url-action="copy" type="button">Kopiera</button>
+                  <button class="tryit-button secondary" data-url-action="test" type="button">Testa URL</button>
+                  <button class="tryit-button secondary" data-url-action="open" type="button">Öppna</button>
                 </div>
               </div>
               <div>
@@ -173,24 +183,18 @@
           </div>
         </section>
 
+        <!-- BBOX -->
         <section class="tool-card" aria-labelledby="bbox">
           <div class="tool-card-head">
             <h2 id="bbox">BBOX / Extent</h2>
-            <p>
-              Generera BBOX-sträng och WMS GetMap URL för <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.
-            </p>
+            <p>Generera BBOX-sträng och WMS GetMap URL för <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.</p>
           </div>
 
           <div class="tryit" data-tryit="bbox">
             <div class="tryit-grid">
               <div>
                 <label for="bbox-base"><strong>Bas-URL</strong></label>
-                <input
-                  id="bbox-base"
-                  class="tryit-input"
-                  type="text"
-                  value="https://localhost/geoserver/workspace/wms"
-                />
+                <input id="bbox-base" class="tryit-input" type="text" value="https://localhost/geoserver/workspace/wms" />
                 <label for="bbox-layer"><strong>Layer</strong></label>
                 <input id="bbox-layer" class="tryit-input" type="text" value="workspace:layer" />
                 <label for="bbox-format"><strong>Format</strong></label>
@@ -199,7 +203,6 @@
                 <input id="bbox-width" class="tryit-input" type="number" value="512" />
                 <label for="bbox-height"><strong>Höjd</strong></label>
                 <input id="bbox-height" class="tryit-input" type="number" value="512" />
-
                 <p class="tryit-hint">
                   CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
                   Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
@@ -234,9 +237,7 @@
                   <button class="tryit-button" data-bbox-action="generate" type="button">Generera</button>
                   <button class="tryit-button secondary" data-bbox-action="copy-bbox" type="button">Kopiera BBOX</button>
                   <button class="tryit-button secondary" data-bbox-action="copy-url" type="button">Kopiera URL</button>
-                  <button class="tryit-button secondary" data-bbox-action="send-to-urlbuilder" type="button">
-                    Skicka till URL builder
-                  </button>
+                  <button class="tryit-button secondary" data-bbox-action="send-to-urlbuilder" type="button">Skicka till URL builder</button>
                   <button class="tryit-button secondary" data-bbox-action="clear" type="button">Rensa</button>
                 </div>
               </div>
@@ -246,18 +247,17 @@
                   <strong>BBOX-sträng</strong>
                   <textarea id="bbox-output" class="tryit-output tryit-mono" readonly></textarea>
                 </label>
-
                 <label class="tryit-block">
                   <strong>WMS GetMap URL</strong>
                   <textarea id="bbox-url-output" class="tryit-output tryit-mono" readonly></textarea>
                 </label>
-
                 <div class="tryit-status" id="bbox-status"></div>
               </div>
             </div>
           </div>
         </section>
 
+        <!-- Resolutions -->
         <section class="tool-card" aria-labelledby="resolutions">
           <div class="tool-card-head">
             <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
@@ -268,12 +268,8 @@
             <div class="tryit-grid">
               <div>
                 <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
-                <textarea
-                  id="res-input"
-                  class="tryit-input"
-                  spellcheck="false"
-                  placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"
-                ></textarea>
+                <textarea id="res-input" class="tryit-input" spellcheck="false"
+                  placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"></textarea>
                 <p class="tryit-hint">
                   CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
                 </p>
@@ -284,7 +280,6 @@
                   <button class="tryit-button secondary" data-res-action="clear" type="button">Rensa</button>
                 </div>
               </div>
-
               <div>
                 <label class="tryit-block">
                   <strong>Rapport</strong>
@@ -300,6 +295,7 @@
           </div>
         </section>
 
+        <!-- Gridcalc -->
         <section class="tool-card" aria-labelledby="gridcalc">
           <div class="tool-card-head">
             <h2 id="gridcalc">Gridset / Tile-kalkylator</h2>
@@ -344,19 +340,19 @@
           </div>
         </section>
 
+        <!-- Gridset Explorer -->
         <section class="tool-card" aria-labelledby="gridset-explorer">
           <div class="tool-card-head">
             <h2 id="gridset-explorer">Gridset Explorer</h2>
-            <p>
-              Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i
-              <span class="crs-nowrap">EPSG:3006</span>.
-            </p>
+            <p>Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i <span class="crs-nowrap">EPSG:3006</span>.</p>
           </div>
 
           <div class="gridset-explorer" id="gridset-explorer-container">
             <div class="gridset-actions">
               <button class="tryit-button" data-extent-action="sverige" type="button">Sverige</button>
               <button class="tryit-button" data-extent-action="skaraborg" type="button">Skaraborg</button>
+              <button class="tryit-button secondary" data-gridset-action="copy-bbox" type="button">Kopiera BBOX</button>
+              <button class="tryit-button secondary" data-gridset-action="send-to-urlbuilder" type="button">Skicka till URL builder</button>
             </div>
 
             <div class="gridset-layout">
@@ -388,7 +384,9 @@
                   <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
                 </div>
 
-                <div class="gridset-note">Förenklat exempel för att förstå gridsets/tiles.</div>
+                <div class="gridset-note">
+                  Förenklat exempel för att förstå gridsets/tiles.
+                </div>
               </div>
             </div>
           </div>
@@ -398,7 +396,6 @@
               .gridset-layout {
                 grid-template-columns: 1fr !important;
               }
-
               #gridset-map {
                 min-height: 240px !important;
               }
@@ -406,6 +403,7 @@
           </style>
         </section>
 
+        <!-- SLD -->
         <section class="tool-card" aria-labelledby="sld">
           <div class="tool-card-head">
             <h2 id="sld">SLD</h2>
@@ -434,18 +432,13 @@
 
           <div class="tool-card-sub">
             <h3 id="sld-preview">SLD – Symbol preview</h3>
-            <p>Förhandsgranska symbolik från SLD utan kartserver (legend-preview).</p>
+            <p>Förhandsgranska symbolik från SLD utan att behöva en kartserver (legend preview).</p>
 
             <div class="tryit" data-tryit="sldpreview">
               <div class="tryit-grid">
                 <div>
                   <label for="sldp-input"><strong>SLD-inmatning</strong></label>
-                  <textarea
-                    id="sldp-input"
-                    class="tryit-input"
-                    spellcheck="false"
-                    placeholder="Klistra in SLD här…"
-                  ></textarea>
+                  <textarea id="sldp-input" class="tryit-input" spellcheck="false" placeholder="Klistra in SLD här…"></textarea>
                   <div class="tryit-actions">
                     <button class="tryit-button" data-sldp-action="preview" type="button">Förhandsgranska</button>
                     <button class="tryit-button" data-sldp-action="sample-point" type="button">Punkt-exempel</button>
@@ -453,18 +446,13 @@
                     <button class="tryit-button" data-sldp-action="sample-polygon" type="button">Polygon-exempel</button>
                     <button class="tryit-button secondary" data-sldp-action="clear" type="button">Rensa</button>
                   </div>
-
                   <div class="callout callout-check" style="margin-top: 1rem; font-size: 0.9rem;">
                     <strong>Not:</strong> Detta är en symbol-preview (legend). Den renderar inte hela SLD-regelverket.
                   </div>
                 </div>
-
                 <div>
                   <div class="field-label"><strong>Preview</strong></div>
-                  <div
-                    id="sldp-preview"
-                    style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"
-                  ></div>
+                  <div id="sldp-preview" style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"></div>
                   <label style="display: block; margin-top: 1rem;"><strong>Sammanfattning</strong></label>
                   <pre id="sldp-summary" class="tryit-output" style="min-height: 80px; font-size: 0.85rem;"></pre>
                   <div class="tryit-status" id="sldp-status"></div>
@@ -474,6 +462,7 @@
           </div>
         </section>
 
+        <!-- Map sandbox -->
         <section class="tool-card" aria-labelledby="mapsandbox">
           <div class="tool-card-head">
             <h2 id="mapsandbox">Map sandbox</h2>
@@ -493,24 +482,16 @@
                 <input id="ms-tile" class="tryit-input" type="number" value="256" />
                 <label for="ms-meta"><strong>Metatile (N×N)</strong></label>
                 <input id="ms-meta" class="tryit-input" type="number" value="4" />
-
                 <p class="tryit-hint">
                   CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
                 </p>
-
                 <div class="tryit-actions">
                   <button class="tryit-button" data-ms-action="draw" type="button">Rita</button>
                   <button class="tryit-button secondary" data-ms-action="clear" type="button">Rensa</button>
                 </div>
               </div>
-
               <div>
-                <canvas
-                  id="ms-canvas"
-                  width="600"
-                  height="400"
-                  style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"
-                ></canvas>
+                <canvas id="ms-canvas" width="600" height="400" style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"></canvas>
                 <div class="tryit-status" id="ms-status"></div>
               </div>
             </div>

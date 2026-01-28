@@ -354,6 +354,26 @@ a {
   margin-top: 0.8rem;
 }
 
+.tryit-pill {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.tryit-pill.secondary {
+  background: #f8fafc;
+}
+
+.tryit-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.18);
+}
+
 .tryit-input,
 .tryit-output {
   width: 100%;
@@ -2106,4 +2126,10 @@ html {
 
 #main [id] {
   scroll-margin-top: 50px;
+}
+
+.gridset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

@@ -2265,6 +2265,104 @@ const initTryIt = () => {
       return params;
     };
 
+     const quicks = block.querySelectorAll('[data-url-quick]');
+    quicks.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.urlQuick;
+
+        const setBaseIfEmpty = () => {
+          if (!base.value.trim()) base.value = 'https://example.com/geoserver/ows';
+        };
+
+        if (action === 'cap-wms') {
+          setBaseIfEmpty();
+          service.value = 'WMS';
+
+          layer.value = '';
+          format.value = '';
+          crs.value = '';
+          bbox.value = '';
+
+          try {
+            const url = new URL(base.value.trim(), window.location.href);
+            url.search = new URLSearchParams({
+              service: 'WMS',
+              request: 'GetCapabilities',
+            }).toString();
+            output.value = url.toString();
+            updateStatus(status, 'Template: WMS GetCapabilities.');
+          } catch {
+            output.value = '';
+            updateStatus(status, 'Ogiltig bas-URL.');
+          }
+          return;
+        }
+
+        if (action === 'cap-wfs') {
+          setBaseIfEmpty();
+          service.value = 'WFS';
+
+          layer.value = '';
+          format.value = '';
+          crs.value = '';
+          bbox.value = '';
+
+          try {
+            const url = new URL(base.value.trim(), window.location.href);
+            url.search = new URLSearchParams({
+              service: 'WFS',
+              request: 'GetCapabilities',
+            }).toString();
+            output.value = url.toString();
+            updateStatus(status, 'Template: WFS GetCapabilities.');
+          } catch {
+            output.value = '';
+            updateStatus(status, 'Ogiltig bas-URL.');
+          }
+          return;
+        }
+
+        if (action === 'getmap-demo') {
+          setBaseIfEmpty();
+          service.value = 'WMS';
+          layer.value = layer.value.trim() || 'workspace:layer';
+          format.value = format.value.trim() || 'image/png';
+          crs.value = crs.value.trim() || 'EPSG:3006';
+          bbox.value = bbox.value.trim() || '200000,6100000,900000,7700000';
+          try {
+            const url = new URL(base.value.trim(), window.location.href);
+            url.search = new URLSearchParams({
+              service: 'WMS',
+              version: '1.1.1',
+              request: 'GetMap',
+              layers: layer.value.trim(),
+              format: format.value.trim(),
+              bbox: bbox.value.trim(),
+              srs: crs.value.trim(),
+              width: '256',
+              height: '256',
+            }).toString();
+            output.value = url.toString();
+            updateStatus(status, 'Template: WMS GetMap (demo).');
+          } catch {
+            output.value = '';
+            updateStatus(status, 'Ogiltig bas-URL.');
+          }
+          return;
+        }
+
+        if (action === 'clear') {
+          base.value = '';
+          layer.value = '';
+          format.value = '';
+          crs.value = '';
+          bbox.value = '';
+          output.value = '';
+          updateStatus(status, 'Rensat.');
+        }
+      });
+    });
+
     const generate = () => {
       const baseValue = base.value.trim();
       if (!baseValue) {
@@ -2299,13 +2397,53 @@ const initTryIt = () => {
     };
 
     buttons.forEach((button) => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', async () => {
         const action = button.dataset.urlAction;
         if (action === 'generate') {
           generate();
         } else if (action === 'copy') {
           copyUrl();
-        }
+        } else if (action === 'open') {
+          const url = output.value.trim();
+          if (!url) {
+            updateStatus('Generera en URL först.');
+            return;
+          }
+          window.open(url, '_blank', 'noopener,noreferrer');
+          updateStatus('Öppnade URL i ny flik.');
+        } else if (action === 'test') {
+            try {
+              const generated = output.value.trim();
+              if (!generated) {
+                updateStatus(status, 'Generera en URL först.');
+                return;
+              }
+
+              const url = new URL(generated, window.location.href);
+
+              if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+                updateStatus(status, 'Det här pekar på localhost. Starta GeoServer lokalt eller byt bas-URL för att testa.');
+                return;
+              }
+
+              updateStatus(status, 'Testar…');
+
+              const t0 = performance.now();
+
+              let res;
+              try {
+                res = await fetch(url.toString(), { method: 'HEAD' });
+              } catch {
+                res = await fetch(url.toString(), { method: 'GET' });
+              }
+
+              const ms = Math.round(performance.now() - t0);
+              const ct = res.headers.get('content-type') || 'okänt';
+              updateStatus(status, `Svar: ${res.status} ${res.statusText} • ${ms} ms • ${ct}`);
+            } catch (error) {
+              updateStatus(status, 'Kunde inte testa URL (CORS/nätverk). Prova “Öppna” eller byt bas-URL.');
+            }
+          }
       });
     });
   };
@@ -2686,6 +2824,52 @@ const initGridsetExplorer = () => {
     const elBbox = document.getElementById('gridset-info-bbox');
     const elZoom = document.getElementById('gridset-info-zoom');
     const elTiles = document.getElementById('gridset-info-tiles');
+
+    const initGridsetWorkflow = () => {
+      const copyBtn = document.querySelector('[data-gridset-action="copy-bbox"]');
+      const sendBtn = document.querySelector('[data-gridset-action="send-to-urlbuilder"]');
+      const bboxEl = document.getElementById('gridset-info-bbox');
+
+      const getBbox = () => (bboxEl?.textContent || '').trim();
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+        const bbox = getBbox();
+        if (!bbox || bbox === '—') return;
+
+        const original = copyBtn.textContent;
+
+        try {
+          await navigator.clipboard.writeText(bbox);
+          copyBtn.textContent = 'Kopierat!';
+        } catch {
+          copyBtn.textContent = 'Kunde inte kopiera';
+        }
+
+        window.setTimeout(() => {
+          copyBtn.textContent = original;
+        }, 1200);
+      });
+      }
+
+      if (sendBtn) {
+        sendBtn.addEventListener('click', () => {
+          const bbox = getBbox();
+          if (!bbox || bbox === '—') return;
+
+          const urlBbox = document.getElementById('urlbuilder-bbox');
+          const urlCrs = document.getElementById('urlbuilder-crs');
+
+          if (urlBbox) urlBbox.value = bbox;
+          if (urlCrs) urlCrs.value = 'EPSG:3006';
+
+          const target = document.getElementById('urlbuilder');
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    };
+
+    initGridsetWorkflow();
 
     if (elExtent) elExtent.textContent = extent.name;
     if (elBbox) elBbox.textContent = `minx: ${minx}, miny: ${miny}\nmaxx: ${maxx}, maxy: ${maxy}`;
