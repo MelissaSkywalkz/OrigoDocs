@@ -81,6 +81,19 @@
         <h2>Så använder du recepten</h2>
         <p>Kopiera blocket som matchar ditt behov och byt ut URL:er, layernamn och CRS.</p>
         <p>Testa alltid lokalt innan du pushar.</p>
+        <h2>Minimal init</h2>
+        <pre><code>{
+  "init": {
+    "target": "map",
+    "view": {
+      "center": [0, 0],
+      "zoom": 2,
+      "projection": "EPSG:3857"
+    }
+  }
+}
+</code></pre>
+        <p>Verifiera att init‑nycklar fungerar i din Origo-version.</p>
 
         <h2>WMS-lager</h2>
         <pre><code>{

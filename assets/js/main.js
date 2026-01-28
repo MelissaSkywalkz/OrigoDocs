@@ -1530,6 +1530,22 @@ const initBboxTryIt = (block) => {
         copyBbox();
       } else if (action === 'copy-url') {
         copyUrl();
+      } else if (action === 'send-to-urlbuilder') {
+        const bboxText = output.value.trim();
+        if (!bboxText) {
+          updateStatus('Generera en BBOX först.');
+          return;
+        }
+
+        const urlBbox = document.getElementById('urlbuilder-bbox');
+        const urlCrs = document.getElementById('urlbuilder-crs');
+
+        if (urlBbox) urlBbox.value = bboxText;
+        if (urlCrs) urlCrs.value = 'EPSG:3006';
+
+        updateStatus('Skickade BBOX till URL builder.');
+        const target = document.getElementById('url-builder') || document.getElementById('urlbuilder-base');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (action === 'clear') {
         clearBbox();
       }

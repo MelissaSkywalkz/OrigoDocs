@@ -39,7 +39,7 @@
             <a class="active" href="try-it.html" aria-current="page">Try it-lab</a>
             <a href="faq-gis.html">FAQ GIS</a>
             <a href="npm.html">npm & plugins</a>
-            <a href="release-playbook.html">Release‑playbook</a>
+            <a href="release-playbook.html">Release-playbook</a>
             <a href="troubleshooting.html">Felsökning</a>
           </div>
         </div>
@@ -79,351 +79,444 @@
       </header>
 
       <section class="doc-content">
-        <p>Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren.</p>
+        <p>
+          Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren.
+        </p>
 
-        <h2 id="json">JSON</h2>
-        <p>Validera och formatera JSON. Använd detta för att kontrollera syntax och strukturen på dina JSON-filer.</p>
-        <div class="tryit" data-tryit="json">
-          <div class="tryit-grid">
-            <div>
-              <label for="json-tryit-input"><strong>Inmatning</strong></label>
-              <textarea id="json-tryit-input" class="tryit-input" spellcheck="false"></textarea>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-json-action="validate" type="button">Validera</button>
-                <button class="tryit-button" data-json-action="prettify" type="button">Prettify</button>
-                <button class="tryit-button" data-json-action="minify" type="button">Minify</button>
-                <button class="tryit-button secondary" data-json-action="copy" type="button">Kopiera</button>
-                <button class="tryit-button secondary" data-json-action="clear" type="button">Rensa</button>
-              </div>
-            </div>
-            <div>
-              <strong>Resultat</strong>
-              <pre class="tryit-output" id="json-tryit-output"></pre>
-              <div class="tryit-status" id="json-tryit-status"></div>
-            </div>
+        <nav class="troubleshoot-toc tryit-toc" aria-label="Snabbstart: Try it-lab">
+          <strong>Snabbstart:</strong>
+          <a href="#json">JSON</a>
+          <a href="#urlbuilder">URL-builder</a>
+          <a href="#bbox">BBOX / Extent</a>
+          <a href="#resolutions">Resolutions</a>
+          <a href="#gridcalc">Gridset / Tile</a>
+          <a href="#gridset-explorer">Gridset Explorer</a>
+          <a href="#sld">SLD</a>
+          <a href="#mapsandbox">Map sandbox</a>
+        </nav>
+
+        <section class="tool-card" aria-labelledby="json">
+          <div class="tool-card-head">
+            <h2 id="json">JSON</h2>
+            <p>Validera och formatera JSON. Bra för att kontrollera syntax och struktur.</p>
           </div>
-        </div>
 
-        <h2 id="urlbuilder">URL-builder</h2>
-        <p>Skapa giltiga WMS/WFS-tjänste-URL:er. Ange bas-URL, tjänst, lager och andra parametrar för att generera en korrekt anropsbild.</p>
-        <div class="tryit" data-tryit="urlbuilder">
-          <div class="tryit-grid">
-            <div>
-              <label for="urlbuilder-base"><strong>Bas‑URL</strong></label>
-              <input
-                id="urlbuilder-base"
-                class="tryit-input"
-                type="text"
-                value="https://localhost/geoserver/workspace/ows"
-              />
-              <label for="urlbuilder-service"><strong>Tjänst</strong></label>
-              <select id="urlbuilder-service" class="tryit-input">
-                <option value="WMS">WMS</option>
-                <option value="WFS">WFS</option>
-              </select>
-              <label for="urlbuilder-layer"><strong>Layer</strong></label>
-              <input id="urlbuilder-layer" class="tryit-input" type="text" value="workspace:layer" />
-              <label for="urlbuilder-format"><strong>Outputformat</strong></label>
-              <input id="urlbuilder-format" class="tryit-input" type="text" value="image/png" />
-              <label for="urlbuilder-crs"><strong>CRS</strong></label>
-              <input id="urlbuilder-crs" class="tryit-input" type="text" value="EPSG:3008" />
-              <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
-              <input
-                id="urlbuilder-bbox"
-                class="tryit-input"
-                type="text"
-                value="100000,6400000,200000,6500000"
-              />
-              <div class="tryit-actions">
-                <button class="tryit-button" data-url-action="generate" type="button">
-                  Generera
-                </button>
-                <button class="tryit-button secondary" data-url-action="copy" type="button">
-                  Kopiera
-                </button>
-              </div>
-            </div>
-            <div>
-              <strong>Resultat</strong>
-              <textarea id="urlbuilder-output" class="tryit-output" readonly></textarea>
-              <div class="tryit-status" id="urlbuilder-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="sld">SLD</h2>
-        <p>Testa och validera SLD (Styled Layer Descriptor) stildefitioner. Använd detta för att kontrollera din styling före import i GeoServer.</p>
-        <div class="tryit" data-tryit="sld">
-          <div class="tryit-grid">
-            <div>
-              <label for="sld-tryit-input"><strong>Inmatning</strong></label>
-              <textarea id="sld-tryit-input" class="tryit-input" spellcheck="false"></textarea>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-sld-action="check" type="button">Kontrollera</button>
-                <button class="tryit-button" data-sld-action="template" type="button">Ladda mall</button>
-                <button class="tryit-button secondary" data-sld-action="copy" type="button">Kopiera</button>
-                <button class="tryit-button secondary" data-sld-action="clear" type="button">Rensa</button>
-              </div>
-            </div>
-            <div>
-              <strong>Resultat</strong>
-              <pre class="tryit-output" id="sld-tryit-output"></pre>
-              <div class="tryit-status" id="sld-tryit-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h3 id="sld-preview">SLD – Symbol preview</h3>
-        <p>Förhandsgranska symbolik från SLD utan att behöva en kartserver.</p>
-
-        <div class="tryit" data-tryit="sldpreview">
-          <div class="tryit-grid">
-            <div>
-              <label for="sldp-input"><strong>SLD-inmatning</strong></label>
-              <textarea id="sldp-input" class="tryit-input" spellcheck="false" placeholder="Klistra in SLD här…"></textarea>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-sldp-action="preview" type="button">Förhandsgranska</button>
-                <button class="tryit-button" data-sldp-action="sample-point" type="button">Punkt-exempel</button>
-                <button class="tryit-button" data-sldp-action="sample-line" type="button">Linje-exempel</button>
-                <button class="tryit-button" data-sldp-action="sample-polygon" type="button">Polygon-exempel</button>
-                <button class="tryit-button secondary" data-sldp-action="clear" type="button">Rensa</button>
-              </div>
-              <div class="callout callout-check" style="margin-top: 1rem; font-size: 0.9rem;">
-                <strong>Not:</strong> Detta är en symbol-preview (legend). Den renderar inte hela SLD-regelverket.
-              </div>
-            </div>
-            <div>
-              <div class="field-label"><strong>Preview</strong></div>
-              <div id="sldp-preview" style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"></div>
-              <label style="display: block; margin-top: 1rem;"><strong>Sammanfattning</strong></label>
-              <pre id="sldp-summary" class="tryit-output" style="min-height: 80px; font-size: 0.85rem;"></pre>
-              <div class="tryit-status" id="sldp-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="bbox">BBOX / Extent</h2>
-        <p>Generera BBOX-sträng och WMS GetMap URL för <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.</p>
-
-        <div class="tryit" data-tryit="bbox">
-          <div class="tryit-grid">
-            <div>
-              <label for="bbox-base"><strong>Bas-URL</strong></label>
-              <input id="bbox-base" class="tryit-input" type="text" value="https://localhost/geoserver/workspace/wms" />
-              <label for="bbox-layer"><strong>Layer</strong></label>
-              <input id="bbox-layer" class="tryit-input" type="text" value="workspace:layer" />
-              <label for="bbox-format"><strong>Format</strong></label>
-              <input id="bbox-format" class="tryit-input" type="text" value="image/png" />
-              <label for="bbox-width"><strong>Bredd</strong></label>
-              <input id="bbox-width" class="tryit-input" type="number" value="512" />
-              <label for="bbox-height"><strong>Höjd</strong></label>
-              <input id="bbox-height" class="tryit-input" type="number" value="512" />
-              <p style="margin: 0.75rem 0; color: #666; font-size: 0.9rem;">
-                CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
-                Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
-              </p>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-                <div>
-                  <label for="bbox-minx" style="font-size: 0.85rem;"><strong>Min X</strong></label>
-                  <input id="bbox-minx" class="tryit-input" type="number" value="100000" />
-                </div>
-                <div>
-                  <label for="bbox-maxx" style="font-size: 0.85rem;"><strong>Max X</strong></label>
-                  <input id="bbox-maxx" class="tryit-input" type="number" value="200000" />
-                </div>
-                <div>
-                  <label for="bbox-miny" style="font-size: 0.85rem;"><strong>Min Y</strong></label>
-                  <input id="bbox-miny" class="tryit-input" type="number" value="6400000" />
-                </div>
-                <div>
-                  <label for="bbox-maxy" style="font-size: 0.85rem;"><strong>Max Y</strong></label>
-                  <input id="bbox-maxy" class="tryit-input" type="number" value="6500000" />
+          <div class="tryit" data-tryit="json">
+            <div class="tryit-grid">
+              <div>
+                <label for="json-tryit-input"><strong>Inmatning</strong></label>
+                <textarea id="json-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-json-action="validate" type="button">Validera</button>
+                  <button class="tryit-button" data-json-action="prettify" type="button">Prettify</button>
+                  <button class="tryit-button" data-json-action="minify" type="button">Minify</button>
+                  <button class="tryit-button secondary" data-json-action="copy" type="button">Kopiera</button>
+                  <button class="tryit-button secondary" data-json-action="clear" type="button">Rensa</button>
                 </div>
               </div>
-              <div class="tryit-actions" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
-                <button class="tryit-button" data-bbox-action="preset-1" type="button">Preset 1</button>
-                <button class="tryit-button" data-bbox-action="preset-2" type="button">Preset 2</button>
-                <button class="tryit-button" data-bbox-action="preset-3" type="button">Preset 3</button>
-              </div>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-bbox-action="generate" type="button">Generera</button>
-                <button class="tryit-button secondary" data-bbox-action="copy-bbox" type="button">Kopiera BBOX</button>
-                <button class="tryit-button secondary" data-bbox-action="copy-url" type="button">Kopiera URL</button>
-                <button class="tryit-button secondary" data-bbox-action="clear" type="button">Rensa</button>
-              </div>
-            </div>
-            <div>
-              <label style="display: block; margin-bottom: 1rem;">
-                <strong>BBOX-sträng</strong>
-                <textarea id="bbox-output" class="tryit-output" style="font-family: monospace; min-height: 3rem;" readonly></textarea>
-              </label>
-              <label style="display: block; margin-bottom: 1rem;">
-                <strong>WMS GetMap URL</strong>
-                <textarea id="bbox-url-output" class="tryit-output" style="font-family: monospace; min-height: 8rem;" readonly></textarea>
-              </label>
-              <div class="tryit-status" id="bbox-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
-        <p>Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
-
-        <div class="tryit" data-tryit="resolutions">
-          <div class="tryit-grid">
-            <div>
-              <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
-              <textarea id="res-input" class="tryit-input" spellcheck="false" placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"></textarea>
-              <p style="margin: 0.75rem 0; color: #666; font-size: 0.9rem;">
-                CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
-              </p>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-res-action="validate" type="button">Validera</button>
-                <button class="tryit-button" data-res-action="export-origo" type="button">Origo JSON</button>
-                <button class="tryit-button" data-res-action="export-gwc" type="button">GWC format</button>
-                <button class="tryit-button secondary" data-res-action="clear" type="button">Rensa</button>
-              </div>
-            </div>
-            <div>
-              <label style="display: block; margin-bottom: 1rem;">
-                <strong>Rapport</strong>
-                <pre id="res-report" class="tryit-output" style="font-size: 0.9rem; min-height: 6rem;"></pre>
-              </label>
-              <label style="display: block; margin-bottom: 1rem;">
-                <strong>Export</strong>
-                <textarea id="res-output" class="tryit-output" style="font-family: monospace; min-height: 8rem;" readonly></textarea>
-              </label>
-              <div class="tryit-status" id="res-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="gridcalc">Gridset / Tile-kalkylator</h2>
-        <p>Beräkna resolutioner, tile-storlekar och seed-rekommendationer för GeoWebCache gridsets.</p>
-
-        <div class="tryit" data-tryit="gridcalc">
-          <div class="tryit-grid">
-            <div>
-              <label for="gridcalc-resolution"><strong>Resolution (m/px)</strong></label>
-              <input id="gridcalc-resolution" class="tryit-input" type="number" step="any" value="100" />
-              <label for="gridcalc-scale"><strong>Scale (1:)</strong></label>
-              <input id="gridcalc-scale" class="tryit-input" type="number" step="any" value="357142" />
-              <label for="gridcalc-tile"><strong>Tile Size (px)</strong></label>
-              <input id="gridcalc-tile" class="tryit-input" type="number" value="256" />
-              <label for="gridcalc-meta"><strong>Metatile (N×N)</strong></label>
-              <input id="gridcalc-meta" class="tryit-input" type="number" value="4" />
-              <label for="gridcalc-bboxwidth"><strong>BBOX Bredd (m)</strong></label>
-              <input id="gridcalc-bboxwidth" class="tryit-input" type="number" step="any" value="100000" />
-              <label for="gridcalc-bboxheight"><strong>BBOX Höjd (m)</strong></label>
-              <input id="gridcalc-bboxheight" class="tryit-input" type="number" step="any" value="100000" />
-              <div class="tryit-actions">
-                <button class="tryit-button" data-gridcalc-action="from-resolution" type="button">Från Resolution</button>
-                <button class="tryit-button" data-gridcalc-action="from-scale" type="button">Från Scale</button>
-              </div>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-gridcalc-action="preset" type="button">Preset (256/4x4)</button>
-                <button class="tryit-button secondary" data-gridcalc-action="copy" type="button">Kopiera</button>
-                <button class="tryit-button secondary" data-gridcalc-action="clear" type="button">Rensa</button>
-              </div>
-            </div>
-            <div>
-              <label style="display: block; margin-bottom: 1rem;">
+              <div>
                 <strong>Resultat</strong>
-                <textarea id="gridcalc-output" class="tryit-output" style="font-family: monospace; min-height: 12rem;" readonly></textarea>
-              </label>
-              <div class="tryit-status" id="gridcalc-status"></div>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="mapsandbox">Map sandbox</h2>
-        <p>Visualisera BBOX, tile-grid och metatile-grid utan externa tjänster.</p>
-
-        <div class="tryit" data-tryit="mapsandbox">
-          <div class="tryit-grid">
-            <div>
-              <label for="ms-bbox-width"><strong>BBOX Bredd (m)</strong></label>
-              <input id="ms-bbox-width" class="tryit-input" type="number" step="any" value="100000" />
-              <label for="ms-bbox-height"><strong>BBOX Höjd (m)</strong></label>
-              <input id="ms-bbox-height" class="tryit-input" type="number" step="any" value="100000" />
-              <label for="ms-resolution"><strong>Resolution (m/px)</strong></label>
-              <input id="ms-resolution" class="tryit-input" type="number" step="any" value="100" />
-              <label for="ms-tile"><strong>Tile Size (px)</strong></label>
-              <input id="ms-tile" class="tryit-input" type="number" value="256" />
-              <label for="ms-meta"><strong>Metatile (N×N)</strong></label>
-              <input id="ms-meta" class="tryit-input" type="number" value="4" />
-              <p style="margin: 0.75rem 0; color: #666; font-size: 0.9rem;">
-                CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
-              </p>
-              <div class="tryit-actions">
-                <button class="tryit-button" data-ms-action="draw" type="button">Rita</button>
-                <button class="tryit-button secondary" data-ms-action="clear" type="button">Rensa</button>
+                <pre class="tryit-output" id="json-tryit-output"></pre>
+                <div class="tryit-status" id="json-tryit-status"></div>
               </div>
             </div>
-            <div>
-              <canvas id="ms-canvas" width="600" height="400" style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"></canvas>
-              <div class="tryit-status" id="ms-status"></div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="urlbuilder">
+          <div class="tool-card-head">
+            <h2 id="urlbuilder">URL-builder</h2>
+            <p>
+              Skapa giltiga WMS/WFS-URL:er. Ange bas-URL, tjänst, lager och parametrar för att generera ett korrekt anrop.
+            </p>
+          </div>
+
+          <div class="tryit" data-tryit="urlbuilder">
+            <div class="tryit-grid">
+              <div>
+                <label for="urlbuilder-base"><strong>Bas-URL</strong></label>
+                <input
+                  id="urlbuilder-base"
+                  class="tryit-input"
+                  type="text"
+                  value="https://localhost/geoserver/workspace/ows"
+                />
+                <label for="urlbuilder-service"><strong>Tjänst</strong></label>
+                <select id="urlbuilder-service" class="tryit-input">
+                  <option value="WMS">WMS</option>
+                  <option value="WFS">WFS</option>
+                </select>
+                <label for="urlbuilder-layer"><strong>Layer</strong></label>
+                <input id="urlbuilder-layer" class="tryit-input" type="text" value="workspace:layer" />
+                <label for="urlbuilder-format"><strong>Outputformat</strong></label>
+                <input id="urlbuilder-format" class="tryit-input" type="text" value="image/png" />
+                <label for="urlbuilder-crs"><strong>CRS</strong></label>
+                <input id="urlbuilder-crs" class="tryit-input" type="text" value="EPSG:3008" />
+                <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
+                <input
+                  id="urlbuilder-bbox"
+                  class="tryit-input"
+                  type="text"
+                  value="100000,6400000,200000,6500000"
+                />
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-url-action="generate" type="button">Generera</button>
+                  <button class="tryit-button secondary" data-url-action="copy" type="button">Kopiera</button>
+                </div>
+              </div>
+              <div>
+                <strong>Resultat</strong>
+                <textarea id="urlbuilder-output" class="tryit-output" readonly></textarea>
+                <div class="tryit-status" id="urlbuilder-status"></div>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="bbox">
+          <div class="tool-card-head">
+            <h2 id="bbox">BBOX / Extent</h2>
+            <p>
+              Generera BBOX-sträng och WMS GetMap URL för <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.
+            </p>
+          </div>
+
+          <div class="tryit" data-tryit="bbox">
+            <div class="tryit-grid">
+              <div>
+                <label for="bbox-base"><strong>Bas-URL</strong></label>
+                <input
+                  id="bbox-base"
+                  class="tryit-input"
+                  type="text"
+                  value="https://localhost/geoserver/workspace/wms"
+                />
+                <label for="bbox-layer"><strong>Layer</strong></label>
+                <input id="bbox-layer" class="tryit-input" type="text" value="workspace:layer" />
+                <label for="bbox-format"><strong>Format</strong></label>
+                <input id="bbox-format" class="tryit-input" type="text" value="image/png" />
+                <label for="bbox-width"><strong>Bredd</strong></label>
+                <input id="bbox-width" class="tryit-input" type="number" value="512" />
+                <label for="bbox-height"><strong>Höjd</strong></label>
+                <input id="bbox-height" class="tryit-input" type="number" value="512" />
+
+                <p class="tryit-hint">
+                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
+                  Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
+                </p>
+
+                <div class="tryit-two-col">
+                  <div>
+                    <label for="bbox-minx"><strong>Min X</strong></label>
+                    <input id="bbox-minx" class="tryit-input" type="number" value="100000" />
+                  </div>
+                  <div>
+                    <label for="bbox-maxx"><strong>Max X</strong></label>
+                    <input id="bbox-maxx" class="tryit-input" type="number" value="200000" />
+                  </div>
+                  <div>
+                    <label for="bbox-miny"><strong>Min Y</strong></label>
+                    <input id="bbox-miny" class="tryit-input" type="number" value="6400000" />
+                  </div>
+                  <div>
+                    <label for="bbox-maxy"><strong>Max Y</strong></label>
+                    <input id="bbox-maxy" class="tryit-input" type="number" value="6500000" />
+                  </div>
+                </div>
+
+                <div class="tryit-actions tryit-actions-grid">
+                  <button class="tryit-button" data-bbox-action="preset-1" type="button">Preset 1</button>
+                  <button class="tryit-button" data-bbox-action="preset-2" type="button">Preset 2</button>
+                  <button class="tryit-button" data-bbox-action="preset-3" type="button">Preset 3</button>
+                </div>
+
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-bbox-action="generate" type="button">Generera</button>
+                  <button class="tryit-button secondary" data-bbox-action="copy-bbox" type="button">Kopiera BBOX</button>
+                  <button class="tryit-button secondary" data-bbox-action="copy-url" type="button">Kopiera URL</button>
+                  <button class="tryit-button secondary" data-bbox-action="send-to-urlbuilder" type="button">
+                    Skicka till URL builder
+                  </button>
+                  <button class="tryit-button secondary" data-bbox-action="clear" type="button">Rensa</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="tryit-block">
+                  <strong>BBOX-sträng</strong>
+                  <textarea id="bbox-output" class="tryit-output tryit-mono" readonly></textarea>
+                </label>
+
+                <label class="tryit-block">
+                  <strong>WMS GetMap URL</strong>
+                  <textarea id="bbox-url-output" class="tryit-output tryit-mono" readonly></textarea>
+                </label>
+
+                <div class="tryit-status" id="bbox-status"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="resolutions">
+          <div class="tool-card-head">
+            <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
+            <p>Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
+          </div>
+
+          <div class="tryit" data-tryit="resolutions">
+            <div class="tryit-grid">
+              <div>
+                <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
+                <textarea
+                  id="res-input"
+                  class="tryit-input"
+                  spellcheck="false"
+                  placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"
+                ></textarea>
+                <p class="tryit-hint">
+                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
+                </p>
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-res-action="validate" type="button">Validera</button>
+                  <button class="tryit-button" data-res-action="export-origo" type="button">Origo JSON</button>
+                  <button class="tryit-button" data-res-action="export-gwc" type="button">GWC format</button>
+                  <button class="tryit-button secondary" data-res-action="clear" type="button">Rensa</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="tryit-block">
+                  <strong>Rapport</strong>
+                  <pre id="res-report" class="tryit-output"></pre>
+                </label>
+                <label class="tryit-block">
+                  <strong>Export</strong>
+                  <textarea id="res-output" class="tryit-output tryit-mono" readonly></textarea>
+                </label>
+                <div class="tryit-status" id="res-status"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="gridcalc">
+          <div class="tool-card-head">
+            <h2 id="gridcalc">Gridset / Tile-kalkylator</h2>
+            <p>Beräkna resolutioner, tile-storlekar och seed-rekommendationer för GeoWebCache gridsets.</p>
+          </div>
+
+          <div class="tryit" data-tryit="gridcalc">
+            <div class="tryit-grid">
+              <div>
+                <label for="gridcalc-resolution"><strong>Resolution (m/px)</strong></label>
+                <input id="gridcalc-resolution" class="tryit-input" type="number" step="any" value="100" />
+                <label for="gridcalc-scale"><strong>Scale (1:)</strong></label>
+                <input id="gridcalc-scale" class="tryit-input" type="number" step="any" value="357142" />
+                <label for="gridcalc-tile"><strong>Tile Size (px)</strong></label>
+                <input id="gridcalc-tile" class="tryit-input" type="number" value="256" />
+                <label for="gridcalc-meta"><strong>Metatile (N×N)</strong></label>
+                <input id="gridcalc-meta" class="tryit-input" type="number" value="4" />
+                <label for="gridcalc-bboxwidth"><strong>BBOX Bredd (m)</strong></label>
+                <input id="gridcalc-bboxwidth" class="tryit-input" type="number" step="any" value="100000" />
+                <label for="gridcalc-bboxheight"><strong>BBOX Höjd (m)</strong></label>
+                <input id="gridcalc-bboxheight" class="tryit-input" type="number" step="any" value="100000" />
+
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-gridcalc-action="from-resolution" type="button">Från Resolution</button>
+                  <button class="tryit-button" data-gridcalc-action="from-scale" type="button">Från Scale</button>
+                </div>
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-gridcalc-action="preset" type="button">Preset (256/4x4)</button>
+                  <button class="tryit-button secondary" data-gridcalc-action="copy" type="button">Kopiera</button>
+                  <button class="tryit-button secondary" data-gridcalc-action="clear" type="button">Rensa</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="tryit-block">
+                  <strong>Resultat</strong>
+                  <textarea id="gridcalc-output" class="tryit-output tryit-mono" readonly></textarea>
+                </label>
+                <div class="tryit-status" id="gridcalc-status"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="gridset-explorer">
+          <div class="tool-card-head">
+            <h2 id="gridset-explorer">Gridset Explorer</h2>
+            <p>
+              Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i
+              <span class="crs-nowrap">EPSG:3006</span>.
+            </p>
+          </div>
+
+          <div class="gridset-explorer" id="gridset-explorer-container">
+            <div class="gridset-actions">
+              <button class="tryit-button" data-extent-action="sverige" type="button">Sverige</button>
+              <button class="tryit-button" data-extent-action="skaraborg" type="button">Skaraborg</button>
+            </div>
+
+            <div class="gridset-layout">
+              <div id="gridset-map" class="gridset-map" aria-label="Karta: Gridset Explorer"></div>
+
+              <div class="gridset-panel">
+                <div class="gridset-row">
+                  <strong>Extent:</strong> <span id="gridset-info-extent">—</span>
+                </div>
+
+                <div class="gridset-row">
+                  <strong>BBOX (EPSG:3006):</strong>
+                  <div class="gridset-mono"><span id="gridset-info-bbox">—</span></div>
+                </div>
+
+                <div class="gridset-row">
+                  <strong>Zoomnivå:</strong> <span id="gridset-info-zoom">—</span>
+                </div>
+
+                <div class="gridset-row">
+                  <strong>Tile size:</strong> 256px
+                </div>
+
+                <div class="gridset-row">
+                  <strong>CRS:</strong> EPSG:3006
+                </div>
+
+                <div class="gridset-row">
+                  <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
+                </div>
+
+                <div class="gridset-note">Förenklat exempel för att förstå gridsets/tiles.</div>
+              </div>
+            </div>
+          </div>
+
+          <style>
+            @media (max-width: 768px) {
+              .gridset-layout {
+                grid-template-columns: 1fr !important;
+              }
+
+              #gridset-map {
+                min-height: 240px !important;
+              }
+            }
+          </style>
+        </section>
+
+        <section class="tool-card" aria-labelledby="sld">
+          <div class="tool-card-head">
+            <h2 id="sld">SLD</h2>
+            <p>Testa och validera SLD (Styled Layer Descriptor). Kontrollera din styling före import i GeoServer.</p>
+          </div>
+
+          <div class="tryit" data-tryit="sld">
+            <div class="tryit-grid">
+              <div>
+                <label for="sld-tryit-input"><strong>Inmatning</strong></label>
+                <textarea id="sld-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-sld-action="check" type="button">Kontrollera</button>
+                  <button class="tryit-button" data-sld-action="template" type="button">Ladda mall</button>
+                  <button class="tryit-button secondary" data-sld-action="copy" type="button">Kopiera</button>
+                  <button class="tryit-button secondary" data-sld-action="clear" type="button">Rensa</button>
+                </div>
+              </div>
+              <div>
+                <strong>Resultat</strong>
+                <pre class="tryit-output" id="sld-tryit-output"></pre>
+                <div class="tryit-status" id="sld-tryit-status"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tool-card-sub">
+            <h3 id="sld-preview">SLD – Symbol preview</h3>
+            <p>Förhandsgranska symbolik från SLD utan kartserver (legend-preview).</p>
+
+            <div class="tryit" data-tryit="sldpreview">
+              <div class="tryit-grid">
+                <div>
+                  <label for="sldp-input"><strong>SLD-inmatning</strong></label>
+                  <textarea
+                    id="sldp-input"
+                    class="tryit-input"
+                    spellcheck="false"
+                    placeholder="Klistra in SLD här…"
+                  ></textarea>
+                  <div class="tryit-actions">
+                    <button class="tryit-button" data-sldp-action="preview" type="button">Förhandsgranska</button>
+                    <button class="tryit-button" data-sldp-action="sample-point" type="button">Punkt-exempel</button>
+                    <button class="tryit-button" data-sldp-action="sample-line" type="button">Linje-exempel</button>
+                    <button class="tryit-button" data-sldp-action="sample-polygon" type="button">Polygon-exempel</button>
+                    <button class="tryit-button secondary" data-sldp-action="clear" type="button">Rensa</button>
+                  </div>
+
+                  <div class="callout callout-check" style="margin-top: 1rem; font-size: 0.9rem;">
+                    <strong>Not:</strong> Detta är en symbol-preview (legend). Den renderar inte hela SLD-regelverket.
+                  </div>
+                </div>
+
+                <div>
+                  <div class="field-label"><strong>Preview</strong></div>
+                  <div
+                    id="sldp-preview"
+                    style="border: 1px solid #ddd; padding: 1rem; min-height: 140px; background: #f9f9f9;"
+                  ></div>
+                  <label style="display: block; margin-top: 1rem;"><strong>Sammanfattning</strong></label>
+                  <pre id="sldp-summary" class="tryit-output" style="min-height: 80px; font-size: 0.85rem;"></pre>
+                  <div class="tryit-status" id="sldp-status"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="mapsandbox">
+          <div class="tool-card-head">
+            <h2 id="mapsandbox">Map sandbox</h2>
+            <p>Visualisera BBOX, tile-grid och metatile-grid utan externa tjänster.</p>
+          </div>
+
+          <div class="tryit" data-tryit="mapsandbox">
+            <div class="tryit-grid">
+              <div>
+                <label for="ms-bbox-width"><strong>BBOX Bredd (m)</strong></label>
+                <input id="ms-bbox-width" class="tryit-input" type="number" step="any" value="100000" />
+                <label for="ms-bbox-height"><strong>BBOX Höjd (m)</strong></label>
+                <input id="ms-bbox-height" class="tryit-input" type="number" step="any" value="100000" />
+                <label for="ms-resolution"><strong>Resolution (m/px)</strong></label>
+                <input id="ms-resolution" class="tryit-input" type="number" step="any" value="100" />
+                <label for="ms-tile"><strong>Tile Size (px)</strong></label>
+                <input id="ms-tile" class="tryit-input" type="number" value="256" />
+                <label for="ms-meta"><strong>Metatile (N×N)</strong></label>
+                <input id="ms-meta" class="tryit-input" type="number" value="4" />
+
+                <p class="tryit-hint">
+                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
+                </p>
+
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-ms-action="draw" type="button">Rita</button>
+                  <button class="tryit-button secondary" data-ms-action="clear" type="button">Rensa</button>
+                </div>
+              </div>
+
+              <div>
+                <canvas
+                  id="ms-canvas"
+                  width="600"
+                  height="400"
+                  style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"
+                ></canvas>
+                <div class="tryit-status" id="ms-status"></div>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
-
-      <h2 id="gridset-explorer">Gridset Explorer</h2>
-      <p>Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i <span class="crs-nowrap">EPSG:3006</span>.</p>
-
-      <div class="gridset-explorer" id="gridset-explorer-container">
-        <div class="gridset-actions">
-          <button class="tryit-button" data-extent-action="sverige" type="button">Sverige</button>
-          <button class="tryit-button" data-extent-action="skaraborg" type="button">Skaraborg</button>
-        </div>
-
-        <div class="gridset-layout">
-          <div id="gridset-map" class="gridset-map" aria-label="Karta: Gridset Explorer"></div>
-
-          <div class="gridset-panel">
-            <div class="gridset-row">
-              <strong>Extent:</strong> <span id="gridset-info-extent">—</span>
-            </div>
-
-            <div class="gridset-row">
-              <strong>BBOX (EPSG:3006):</strong>
-              <div class="gridset-mono"><span id="gridset-info-bbox">—</span></div>
-            </div>
-
-            <div class="gridset-row">
-              <strong>Zoomnivå:</strong> <span id="gridset-info-zoom">—</span>
-            </div>
-
-            <div class="gridset-row">
-              <strong>Tile size:</strong> 256px
-            </div>
-
-            <div class="gridset-row">
-              <strong>CRS:</strong> EPSG:3006
-            </div>
-
-            <div class="gridset-row">
-              <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
-            </div>
-
-            <div class="gridset-note">
-              Förenklat exempel för att förstå gridsets/tiles.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <style>
-        @media (max-width: 768px) {
-          .gridset-explorer > div:nth-child(2) {
-            grid-template-columns: 1fr !important;
-          }
-
-          #gridset-map {
-            min-height: 240px !important;
-          }
-        }
-      </style>
     </main>
 
     <script defer src="https://cdn.jsdelivr.net/npm/proj4@2.9.2/dist/proj4.min.js"></script>

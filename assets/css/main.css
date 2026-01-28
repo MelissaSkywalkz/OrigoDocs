@@ -2047,3 +2047,63 @@ table tbody tr:hover {
   padding: 0.9rem 1rem 1rem;
   color: var(--muted);
 }
+
+.tryit-quick {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 1rem 1rem 1.1rem;
+  margin: 1rem 0 1.6rem;
+}
+
+.tryit-quick-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.tryit-quick-subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+.tryit-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.tryit-quick-actions .button {
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+}
+
+.tool-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 1.1rem;
+  margin: 1.2rem 0;
+}
+
+.tool-card-head h2,
+.tool-card-head h3 {
+  margin-top: 0;
+}
+
+.tool-card-head p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+.tool-card .tryit {
+  margin-top: 0.9rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#main [id] {
+  scroll-margin-top: 50px;
+}
