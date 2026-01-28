@@ -78,113 +78,129 @@
       </header>
 
       <section class="doc-content">
-        <h2>Jag får ingen karta — vad gör jag nu?</h2>
-        <ol>
-          <li>Öppna DevTools → Console och Network.</li>
-          <li>Ser du 404/403? Då är URL eller behörighet fel.</li>
-          <li>Kontrollera att CRS/projection matchar.</li>
-        </ol>
-        <pre><code># snabbtest av tjänst\ncurl -I https://localhost/geoserver/example_workspace/wms\n</code></pre>
+        <h2>Vanligaste felen och lösningar</h2>
 
-        <h2>Vad är CRS/projection?</h2>
-        <p>
-          CRS beskriver hur koordinater mäts. Om CRS skiljer sig mellan data och karta kan lagret
-          hamna på fel plats eller bli osynligt.
-        </p>
+        <details class="faq-item">
+          <summary class="faq-question">Kartan visar inte mina lager</summary>
+          <div class="faq-answer">
+            <h4>Möjliga orsaker</h4>
+            <ol>
+              <li>CORS blockerar anrop (kontrollera Console → CORS-fel).</li>
+              <li>Fel URL (workspace/layer/endpoint) eller 404/403.</li>
+              <li>Fel CRS/projection (t.ex. kartan i 3006 men tjänsten svarar i 3857).</li>
+              <li>GeoServer saknar rättigheter för användaren/rollen.</li>
+            </ol>
 
-        <h2>Vad betyder WMS och WFS?</h2>
-        <ul>
-          <li><strong>WMS</strong> = kartbilder (bra för bakgrundskartor).</li>
-          <li><strong>WFS</strong> = objekt/features (bra för analys och attribut).</li>
-        </ul>
+            <h4>Snabbt test</h4>
+            <pre><code>curl -I https://server/geoserver/workspace/wms</code></pre>
 
-        <h2>Varför är kartan seg?</h2>
-        <ul>
-          <li>Vi kollar först om det är WFS med mycket data.</li>
-          <li>Vi kollar cache (GeoWebCache) och gridset.</li>
-          <li>Vi kollar om stilen är tung (ikoner, filter, labels).</li>
-        </ul>
+            <h4>Tips</h4>
+            <ul>
+              <li>Testa samma URL i webbläsaren (GetCapabilities).</li>
+              <li>Jämför CRS i Origo-konfig och i tjänstens svar.</li>
+            </ul>
+          </div>
+        </details>
 
-        <h2>Varför ser jag gamla tiles?</h2>
-        <ul>
-          <li>GeoWebCache kan ligga kvar efter style‑ändring.</li>
-          <li>Vi rensar cache endast när det behövs.</li>
-          <li>Testa hård reload i webbläsaren först.</li>
-        </ul>
+        <details class="faq-item">
+          <summary class="faq-question">Lagret syns men hamnar “fel” på kartan</summary>
+          <div class="faq-answer">
+            <ul>
+              <li>CRS mismatch: säkerställ att Origo och tjänsten använder samma EPSG (t.ex. 3006).</li>
+              <li>Fel axis order (WMS 1.3.0 kan byta ordning för vissa CRS).</li>
+              <li>Data är publicerad i ett annat CRS än du tror.</li>
+            </ul>
+          </div>
+        </details>
 
-        <h2>Checklistor</h2>
-        <ol>
-          <li>Testa tjänsten i webbläsaren.</li>
-          <li>Stäm av layernamn i GeoServer.</li>
-          <li>Kontrollera CORS.</li>
-        </ol>
+        <details class="faq-item">
+          <summary class="faq-question">WMS eller WFS – vad ska jag använda?</summary>
+          <div class="faq-answer">
+            <ul>
+              <li><strong>WMS</strong>: bilder (snabbt, bra för visning).</li>
+              <li><strong>WFS</strong>: geometrier/attribut (bra för klick/urval/analys, kan bli tungt).</li>
+              <li>För stora datamängder: överväg generalisering, bounding box-filter, paging.</li>
+            </ul>
+          </div>
+        </details>
 
-        <h2>Vanliga fel</h2>
-        <ul>
-          <li>Fel workspace:layer.</li>
-          <li>Felaktig bbox/extent.</li>
-          <li>Cache gör att gamla tiles ligger kvar.</li>
-          <li>Origo laddar men inget syns på grund av fel CRS eller fel extent.</li>
-          <li>WFS blir segt när du hämtar för många features utan filter.</li>
-          <li>Lokala filer utan http‑server ger CORS‑problem i webbläsaren.</li>
-          <li>Tiles hamnar fel när gridset och CRS inte matchar.</li>
-        </ul>
+        <details class="faq-item">
+          <summary class="faq-question">Prestanda är dålig – vad är vanligast?</summary>
+          <div class="faq-answer">
+            <ol>
+              <li>För många features i WFS utan filter.</li>
+              <li>Ingen caching (t.ex. GeoWebCache) för WMS.</li>
+              <li>Stilar (SLD) är tunga eller gör många beräkningar.</li>
+              <li>Felaktiga index i databasen (PostGIS).</li>
+            </ol>
+          </div>
+        </details>
 
-        <h2>Vanliga fel från communityn</h2>
-        <ul>
-          <li>
-            <strong>Inget syns i kartan:</strong> kontrollera CRS, extent och layer‑namn i
-            Origo‑konfig.
-          </li>
-          <li>
-            <strong>Tiles ligger fel:</strong> kontrollera gridset/origin och CRS i
-            <a href="geowebcache.html#gridset-origin">GeoWebCache‑guiden</a>.
-          </li>
-          <li>
-            <strong>Cacheas inte:</strong> undvik filter/viewparams eller gör lagret cachebart, se
-            <a href="geowebcache.html#cacheability">cacheability</a>.
-          </li>
-          <li>
-            <strong>Seeding ger inga tiles:</strong> testa mindre BBOX/zoom och granska loggar, se
-            <a href="geowebcache.html#seeding-rest">seeding och REST</a>.
-          </li>
-          <li>
-            <strong>Diskquota stoppar cache:</strong> rensa rätt cache‑kataloger, se
-            <a href="geowebcache.html#metastore-disk">metastore och disk quota</a>.
-          </li>
-          <li>
-            <strong>Gamla tiles efter style‑ändring:</strong> rensa cache och gör hård refresh, se
-            <a href="geowebcache.html#seed-truncate-bypass">seed/truncate</a>.
-          </li>
-          <li>
-            <strong>Grid misalignment:</strong> kontrollera gridset/resolutions i
-            <a href="geowebcache.html#grid-misalignment">grid misalignment</a>.
-          </li>
-          <li>
-            <strong>Timeout i proxy:</strong> testa kortare requests och kontrollera Origo
-            Server‑loggar.
-          </li>
-          <li>
-            <strong>SLD importeras inte:</strong> kontrollera namespaces och version, se
-            <a href="geoserver-styles.html#sld-import">import och namespaces</a>.
-          </li>
-          <li>
-            <strong>SLD syns inte:</strong> kontrollera datatyp och skala, se
-            <a href="geoserver-styles.html#sld-scale">skala och synlighet</a>.
-          </li>
-          <li>
-            <strong>Labels saknas:</strong> kontrollera attribut och placement, se
-            <a href="geoserver-styles.html#labels">labels</a>.
-          </li>
-          <li>
-            <strong>Filterregler fungerar inte:</strong> verifiera filter-syntax och attribut, se
-            <a href="geoserver-styles.html#sld-felsokning">SLD‑felsökning</a>.
-          </li>
-          <li>
-            <strong>Gamla stilar visas:</strong> rensa cache och bekräfta aktiv style, se
-            <a href="geoserver-styles.html#sld-cache">cache och uppdatering</a>.
-          </li>
-        </ul>
+        <h2>Felsökning</h2>
+
+        <details class="faq-item">
+          <summary class="faq-question">Vad ska jag kolla först?</summary>
+          <div class="faq-answer">
+            <ol>
+              <li>DevTools → Console (CORS, 401/403, JS-fel).</li>
+              <li>DevTools → Network (statuskoder, responstid, GetCapabilities).</li>
+              <li>Verifiera CRS i config och i tjänstens svar.</li>
+              <li>Testa endpoint med curl.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">Hur testar jag en WMS/WFS URL?</summary>
+          <div class="faq-answer">
+            <pre><code>curl -I "https://server/geoserver/workspace/wms?service=WMS&request=GetCapabilities"</code></pre>
+            <pre><code>curl -I "https://server/geoserver/workspace/wfs?service=WFS&request=GetCapabilities"</code></pre>
+            <p>
+              Kontrollera att du får svar med status 200. Om du får 401/403 – kontrollera
+              autentisering och rättigheter.
+            </p>
+          </div>
+        </details> 
+
+        <details class="faq-item">
+          <summary class="faq-question">Hur vet jag om det är CORS-problem?</summary>
+          <div class="faq-answer">
+            <p>
+              Öppna DevTools (F12) och gå till Console-fliken. Leta efter felmeddelanden som
+              nämner CORS eller “Access-Control-Allow-Origin”.
+            </p>
+            <pre><code>Access to XMLHttpRequest at 'https://server/geoserver/...' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.</code></pre>
+            <p>
+              Om du ser sådana fel, behöver servern (GeoServer) konfigureras för att tillåta
+              förfrågningar från din Origo-klient.
+            </p>
+          </div>
+        </details>
+
+        <h2 id="wms-wfs-wmts">WMS, WFS och WMTS i Origo</h2>
+        <p>Exempel på hur du definierar olika lager i Origo-konfigurationen:</p>
+        <pre><code>{  "source": {
+    "wms_example": {
+      "url": "https://localhost/geoserver/example_workspace/wms",
+      "version": "1.1.1"
+    },
+    "wfs_example": {
+      "url": "https://localhost/geoserver/example_workspace/ows",
+      "strategy": "all"
+    },
+    "wmts_example": {
+      "url": "https://localhost/geoserver/example_workspace/gwc/service/wmts",
+      "matrixSet": "EXAMPLE_3008_GRID",
+      "matrixIdsPrefix": "EXAMPLE_3008_GRID:",
+      "tileSize": [512, 512]
+    }
+  },
+  "layers": [
+    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
+    { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
+    { "name": "example_layer_wmts", "type": "WMTS", "source": "wmts_example" }
+  ]}
+</code></pre>
       </section>
     </main>
 

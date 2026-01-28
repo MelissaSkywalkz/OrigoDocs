@@ -551,6 +551,75 @@ const initSearch = () => {
   });
 };
 
+const initPageMeta = () => {
+  const header = document.querySelector('.topbar');
+  const h1 = document.querySelector('.topbar-title h1');
+  if (!header || !h1) return;
+
+  const meta = document.createElement('div');
+  meta.className = 'page-meta';
+
+  const crumbs = document.createElement('nav');
+  crumbs.className = 'breadcrumbs';
+  crumbs.setAttribute('aria-label', 'Brödsmulor');
+
+  const isInPages = window.location.pathname.includes('/pages/');
+  const homeHref = isInPages ? '../index.html' : 'index.html';
+
+  const aHome = document.createElement('a');
+  aHome.href = homeHref;
+  aHome.textContent = 'Start';
+
+  const sep = document.createElement('span');
+  sep.className = 'sep';
+  sep.textContent = '/';
+
+  const current = document.createElement('span');
+  current.textContent = h1.textContent?.trim() || 'Sida';
+
+  crumbs.appendChild(aHome);
+  crumbs.appendChild(sep);
+  crumbs.appendChild(current);
+
+  meta.appendChild(crumbs);
+
+  const renderLastUpdated = async () => {
+  let dateStr = null;
+
+  try {
+    const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
+    const lastMod = res.headers.get('last-modified');
+    if (lastMod) {
+      const d = new Date(lastMod);
+      dateStr = new Intl.DateTimeFormat('sv-SE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(d);
+    }
+  } catch {
+  }
+
+  if (!dateStr) {
+    const manual = document
+      .querySelector('meta[name="last-updated"]')
+      ?.getAttribute('content');
+    if (manual) dateStr = manual;
+  }
+
+  if (dateStr) {
+    const updated = document.createElement('span');
+    updated.className = 'last-updated';
+    updated.textContent = `Uppdaterad: ${dateStr}`;
+    meta.appendChild(updated);
+  }
+};
+
+renderLastUpdated();
+
+  header.insertAdjacentElement('afterend', meta);
+};
+
 const getExplicitLanguage = (codeBlock, pre) => {
   const explicit = [
     codeBlock?.dataset?.lang,
@@ -837,7 +906,7 @@ const initCodeCopy = () => {
           document.body.removeChild(textarea);
         }
 
-        button.textContent = 'Kopierat ✓';
+        button.textContent = 'Kopierat';
         button.classList.add('copied');
         setTimeout(resetLabel, 1500);
       } catch (error) {
@@ -2657,6 +2726,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initOfflineNotice();
   initSearch();
+  initPageMeta(); 
   initCodeCopy();
   initTryIt();
   initWizard();
