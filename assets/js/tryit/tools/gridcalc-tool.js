@@ -1,0 +1,328 @@
+/**
+ * Gridcalc Tool Module
+ * Calculates tile sizes, cache estimates, and seed recommendations
+ */
+
+const gridcalcTool = (() => {
+  const TOOL_KEY = 'gridcalc';
+  const PIXEL_SIZE_M = 0.00028;
+
+  let elements = {
+    resolution: null,
+    scale: null,
+    tile: null,
+    meta: null,
+    bboxwidth: null,
+    bboxheight: null,
+    output: null,
+    status: null,
+    reportEl: null,
+    logEl: null,
+    tileKbInput: null,
+    compressionInput: null,
+    estimatorOutput: null,
+  };
+
+  let state = {
+    lastCalculation: null,
+  };
+
+  function init(block) {
+    if (!block) return false;
+
+    elements.resolution = block.querySelector('#gridcalc-resolution');
+    elements.scale = block.querySelector('#gridcalc-scale');
+    elements.tile = block.querySelector('#gridcalc-tile');
+    elements.meta = block.querySelector('#gridcalc-meta');
+    elements.bboxwidth = block.querySelector('#gridcalc-bboxwidth');
+    elements.bboxheight = block.querySelector('#gridcalc-bboxheight');
+    elements.output = block.querySelector('#gridcalc-output');
+    elements.status = block.querySelector('#gridcalc-status');
+    elements.reportEl = block.querySelector('#gridcalc-validation');
+    elements.logEl = block.querySelector('#gridcalc-runlog');
+    elements.tileKbInput = block.querySelector('#gridcalc-tilekb');
+    elements.compressionInput = block.querySelector('#gridcalc-compression');
+    elements.estimatorOutput = block.querySelector('#gridcalc-estimator-output');
+
+    if (!elements.resolution || !elements.output || !elements.status) return false;
+
+    block.querySelectorAll('[data-gridcalc-action]').forEach((btn) => {
+      btn.addEventListener('click', () => handleAction(btn.dataset.gridcalcAction));
+    });
+
+    appState.addLog(TOOL_KEY, 'INFO', 'Gridcalc-verktyg initierat');
+    calculate('init');
+    updateUI();
+    return true;
+  }
+
+  function handleAction(action) {
+    switch (action) {
+      case 'from-resolution':
+        fromResolution();
+        break;
+      case 'from-scale':
+        fromScale();
+        break;
+      case 'estimate-cache':
+        estimateCache();
+        break;
+      case 'preset':
+        setPreset();
+        break;
+      case 'copy':
+        copyOutput();
+        break;
+      case 'download-txt':
+        downloadTxt();
+        break;
+      case 'download-json':
+        downloadJson();
+        break;
+      case 'clear':
+        actionClear();
+        break;
+    }
+  }
+
+  function parseInputs() {
+    return {
+      resolution: parseFloat(elements.resolution?.value || 0),
+      scale: parseFloat(elements.scale?.value || 0),
+      tile: parseFloat(elements.tile?.value || 256),
+      meta: parseFloat(elements.meta?.value || 4),
+      bboxwidth: parseFloat(elements.bboxwidth?.value || 100000),
+      bboxheight: parseFloat(elements.bboxheight?.value || 100000),
+    };
+  }
+
+  function calculate(source = 'manual') {
+    const inputs = parseInputs();
+    const issues = [];
+
+    if (!Number.isFinite(inputs.resolution) || inputs.resolution <= 0)
+      issues.push('Resolution invalid');
+    if (!Number.isFinite(inputs.scale) || inputs.scale <= 0) issues.push('Scale invalid');
+    if (!Number.isFinite(inputs.tile) || inputs.tile <= 0) issues.push('Tile size invalid');
+    if (!Number.isFinite(inputs.meta) || inputs.meta <= 0) issues.push('Metatile invalid');
+    if (!Number.isFinite(inputs.bboxwidth) || inputs.bboxwidth <= 0)
+      issues.push('BBOX width invalid');
+    if (!Number.isFinite(inputs.bboxheight) || inputs.bboxheight <= 0)
+      issues.push('BBOX height invalid');
+
+    if (issues.length > 0) {
+      if (elements.output) elements.output.value = '';
+      updateStatus(issues[0]);
+      appState.addLog(TOOL_KEY, 'ERROR', issues[0]);
+      appState.setReport(TOOL_KEY, ['═══ VALIDERINGSRAPPORT ═══', '', '[ERROR] ' + issues[0]]);
+      updateUI();
+      return;
+    }
+
+    const tileSpanM = inputs.resolution * inputs.tile;
+    const metaSpanM = tileSpanM * inputs.meta;
+    const tilesX = Math.ceil(inputs.bboxwidth / tileSpanM);
+    const tilesY = Math.ceil(inputs.bboxheight / tileSpanM);
+    const totalTiles = tilesX * tilesY;
+
+    let seedRec = '';
+    if (totalTiles < 5000) seedRec = 'Seed hela området.';
+    else if (totalTiles <= 50000) seedRec = 'Seed selektivt (prioritera kärnområde).';
+    else seedRec = 'Seed vid behov.';
+
+    const output = [
+      `Resolution: ${inputs.resolution.toFixed(4)} m/px`,
+      `Scale: 1:${inputs.scale.toFixed(0)}`,
+      `Tile span (${inputs.tile}px): ${tileSpanM.toFixed(2)} m`,
+      `Meta span (${inputs.meta}×${inputs.meta}): ${metaSpanM.toFixed(2)} m`,
+      `Total tiles: ${formatNumber(totalTiles)}`,
+      `Recommendation: ${seedRec}`,
+    ].join('\n');
+
+    if (elements.output) elements.output.value = output;
+
+    state.lastCalculation = {
+      inputs,
+      derived: { tileSpanM, metaSpanM, tilesX, tilesY, totalTiles, seedRec },
+    };
+
+    updateStatus('Beräknad.');
+    appState.addLog(TOOL_KEY, 'OK', `Beräkning från ${source}: ${formatNumber(totalTiles)} tiles`);
+
+    const report = [
+      '═══ VALIDERINGSRAPPORT ═══',
+      '',
+      '[OK] Giltig',
+      `Resolution: ${inputs.resolution.toFixed(4)} m/px`,
+      `Scale: 1:${inputs.scale.toFixed(0)}`,
+      `Tiles: ${formatNumber(totalTiles)}`,
+    ];
+    appState.setReport(TOOL_KEY, report);
+    updateUI();
+  }
+
+  function fromResolution() {
+    const res = parseFloat(elements.resolution?.value || 0);
+    if (!Number.isFinite(res) || res <= 0) {
+      updateStatus('Invalid resolution');
+      return;
+    }
+    if (elements.scale) elements.scale.value = (res / PIXEL_SIZE_M).toFixed(0);
+    calculate('resolution');
+  }
+
+  function fromScale() {
+    const scale = parseFloat(elements.scale?.value || 0);
+    if (!Number.isFinite(scale) || scale <= 0) {
+      updateStatus('Invalid scale');
+      return;
+    }
+    if (elements.resolution) elements.resolution.value = (scale * PIXEL_SIZE_M).toFixed(4);
+    calculate('scale');
+  }
+
+  function setPreset() {
+    if (elements.resolution) elements.resolution.value = '100';
+    if (elements.scale) elements.scale.value = (100 / PIXEL_SIZE_M).toFixed(0);
+    if (elements.tile) elements.tile.value = '256';
+    if (elements.meta) elements.meta.value = '4';
+    if (elements.bboxwidth) elements.bboxwidth.value = '100000';
+    if (elements.bboxheight) elements.bboxheight.value = '100000';
+
+    updateStatus('Preset applicerad');
+    appState.addLog(TOOL_KEY, 'INFO', 'Preset 256/4x4 applicerad');
+    calculate('preset');
+  }
+
+  async function copyOutput() {
+    const text = elements.output?.value;
+    if (!text) {
+      updateStatus('Beräkna först');
+      return;
+    }
+
+    if (await copyToClipboard(text)) {
+      updateStatus('Kopierat');
+      appState.addLog(TOOL_KEY, 'OK', 'Resultat kopierat');
+    } else {
+      updateStatus('Kopieringen misslyckades');
+      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+    }
+    updateUI();
+  }
+
+  function estimateCache() {
+    if (!state.lastCalculation) {
+      updateStatus('Beräkna grid först');
+      return;
+    }
+
+    const tileKb = parseFloat(elements.tileKbInput?.value || 20);
+    const compression = parseFloat(elements.compressionInput?.value || 1.0);
+
+    if (!Number.isFinite(tileKb) || tileKb <= 0) {
+      updateStatus('Invalid tile KB');
+      return;
+    }
+
+    const totalTiles = state.lastCalculation.derived.totalTiles;
+    const totalKB = totalTiles * tileKb * compression;
+    const totalMB = totalKB / 1024;
+    const totalGB = totalMB / 1024;
+
+    const estimatorText = [
+      'Cache Estimator Report',
+      '',
+      `Avg tile size: ${tileKb} KB`,
+      `Compression: ${compression}x`,
+      `Total tiles: ${formatNumber(totalTiles)}`,
+      `Estimated size: ${totalMB.toFixed(2)} MB (${totalGB.toFixed(2)} GB)`,
+    ].join('\n');
+
+    if (elements.estimatorOutput) elements.estimatorOutput.textContent = estimatorText;
+
+    updateStatus('Cache-estimat beräknat');
+    appState.addLog(TOOL_KEY, 'OK', `Cache-estimat: ${totalMB.toFixed(2)} MB`);
+    updateUI();
+  }
+
+  function downloadTxt() {
+    if (!state.lastCalculation) {
+      updateStatus('Beräkna först');
+      return;
+    }
+
+    const inp = state.lastCalculation.inputs;
+    const der = state.lastCalculation.derived;
+
+    const content = [
+      '═══ GRIDCALC RAPPORT ═══',
+      '',
+      'INPUTS:',
+      `  Resolution: ${inp.resolution.toFixed(4)} m/px`,
+      `  Scale: 1:${inp.scale.toFixed(0)}`,
+      `  Tile Size: ${inp.tile} px`,
+      `  Metatile: ${inp.meta}×${inp.meta}`,
+      `  BBOX: ${inp.bboxwidth.toFixed(0)} × ${inp.bboxheight.toFixed(0)} m`,
+      '',
+      'CALCULATED:',
+      `  Tile span: ${der.tileSpanM.toFixed(2)} m`,
+      `  Meta span: ${der.metaSpanM.toFixed(2)} m`,
+      `  Tiles X/Y: ${der.tilesX} / ${der.tilesY}`,
+      `  Total tiles: ${formatNumber(der.totalTiles)}`,
+      `  Recommendation: ${der.seedRec}`,
+    ].join('\n');
+
+    downloadFile(`gridcalc-${Date.now()}.txt`, content, 'text/plain');
+    updateStatus('TXT nedladdat');
+    appState.addLog(TOOL_KEY, 'OK', 'TXT nedladdat');
+    updateUI();
+  }
+
+  function downloadJson() {
+    if (!state.lastCalculation) {
+      updateStatus('Beräkna först');
+      return;
+    }
+
+    const jsonData = {
+      ...state.lastCalculation,
+      timestamp: new Date().toISOString(),
+    };
+
+    downloadFile(
+      `gridcalc-${Date.now()}.json`,
+      JSON.stringify(jsonData, null, 2),
+      'application/json',
+    );
+    updateStatus('JSON nedladdat');
+    appState.addLog(TOOL_KEY, 'OK', 'JSON nedladdat');
+    updateUI();
+  }
+
+  function actionClear() {
+    if (elements.resolution) elements.resolution.value = '100';
+    if (elements.tile) elements.tile.value = '256';
+    if (elements.meta) elements.meta.value = '4';
+    if (elements.bboxwidth) elements.bboxwidth.value = '100000';
+    if (elements.bboxheight) elements.bboxheight.value = '100000';
+    if (elements.output) elements.output.value = '';
+    if (elements.estimatorOutput) elements.estimatorOutput.textContent = '';
+    updateStatus('');
+    state.lastCalculation = null;
+    appState.clearTool(TOOL_KEY);
+    appState.addLog(TOOL_KEY, 'INFO', 'Formulär rensat');
+    updateUI();
+  }
+
+  function updateStatus(message) {
+    if (elements.status) elements.status.textContent = message;
+  }
+
+  function updateUI() {
+    if (elements.reportEl) renderReport(elements.reportEl, appState.getReport(TOOL_KEY));
+    if (elements.logEl) renderRunLog(elements.logEl, appState.getLogs(TOOL_KEY));
+  }
+
+  return { init, getState: () => state };
+})();
