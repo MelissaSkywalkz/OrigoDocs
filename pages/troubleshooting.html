@@ -78,291 +78,309 @@
       </header>
 
       <section class="doc-content">
-      <nav class="troubleshoot-toc">
-        <strong>Innehålls meny:</strong>
-        <a href="#symptom-rotorsak">Symptom → nästa steg</a>
-        <a href="#snabb-checklista">Snabb checklista</a>
-        <a href="#vanliga-fel">Vanliga fel</a>
-        <a href="#geoserver-relaterade">GeoServer-relaterade</a>
-        <a href="#origo-server-relaterat">Origo Server-relaterat</a>
-        <a href="#prestanda">Prestanda</a>
-        <a href="#debug-kommandon">Debug-kommandon</a>
-      </nav>
+        <nav class="troubleshoot-toc">
+          <strong>Innehålls meny:</strong>
+          <a href="#symptom-rotorsak">Symptom → nästa steg</a>
+          <a href="#snabb-checklista">Snabb checklista</a>
+          <a href="#vanliga-fel">Vanliga fel</a>
+          <a href="#geoserver-relaterade">GeoServer-relaterade</a>
+          <a href="#origo-server-relaterat">Origo Server-relaterat</a>
+          <a href="#prestanda">Prestanda</a>
+          <a href="#debug-kommandon">Debug-kommandon</a>
+        </nav>
 
-      <section class="doc-section troubleshooting-symptoms">
-        <h2 id="symptom-rotorsak">Symptom → nästa steg</h2>
-        <p class="muted">
-          Välj symptom, läs vanlig rotorsak och gå vidare till rätt sida/verktyg.
-        </p>
+        <section class="doc-section troubleshooting-symptoms">
+          <h2 id="symptom-rotorsak">Symptom → nästa steg</h2>
+          <p class="muted">
+            Välj symptom, läs vanlig rotorsak och gå vidare till rätt sida/verktyg.
+          </p>
 
-        <div class="symptom-table" role="region" aria-label="Symptom och nästa steg">
-          <div class="symptom-header" role="row">
-            <div class="symptom-col symptom-col--symptom" role="columnheader">Symptom</div>
-            <div class="symptom-col symptom-col--cause" role="columnheader">Vanlig rotorsak</div>
-            <div class="symptom-col symptom-col--next" role="columnheader">Nästa steg</div>
-          </div>
+          <div class="symptom-table" role="region" aria-label="Symptom och nästa steg">
+            <div class="symptom-header" role="row">
+              <div class="symptom-col symptom-col--symptom" role="columnheader">Symptom</div>
+              <div class="symptom-col symptom-col--cause" role="columnheader">Vanlig rotorsak</div>
+              <div class="symptom-col symptom-col--next" role="columnheader">Nästa steg</div>
+            </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">Tom karta</h3>
-                <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend">Frontend</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">Tom karta</h3>
+                  <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend"
+                    >Frontend</span
+                  >
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Fel CRS, extent eller URL
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
+                  <a class="symptom-pill" href="try-it.html#bbox">Try it-lab: BBOX/URL</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Fel CRS, extent eller URL
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
-                <a class="symptom-pill" href="try-it.html#bbox">Try it-lab: BBOX/URL</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">WMS funkar i browser men inte i Origo</h3>
-                <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend">Frontend</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">WMS funkar i browser men inte i Origo</h3>
+                  <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend"
+                    >Frontend</span
+                  >
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                CORS, mixed content eller fel URL
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
+                  <a class="symptom-pill" href="#cors">CORS</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              CORS, mixed content eller fel URL
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
-                <a class="symptom-pill" href="#cors">CORS</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">Syns bara vid vissa zoomnivåer</h3>
-                <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache">GeoWebCache</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">Syns bara vid vissa zoomnivåer</h3>
+                  <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache"
+                    >GeoWebCache</span
+                  >
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Resolutions mismatch mellan Origo och GeoWebCache
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
+                  <a class="symptom-pill" href="try-it.html#resolutions"
+                    >Try it-lab: Resolutions/Gridcalc</a
+                  >
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Resolutions mismatch mellan Origo och GeoWebCache
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
-                <a class="symptom-pill" href="try-it.html#resolutions">Try it-lab: Resolutions/Gridcalc</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">Tiles är förskjutna</h3>
-                <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache">GeoWebCache</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">Tiles är förskjutna</h3>
+                  <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache"
+                    >GeoWebCache</span
+                  >
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Gridset, resolutions eller CRS fel
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
+                  <a class="symptom-pill" href="try-it.html#mapsandbox">Try it-lab: Map sandbox</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Gridset, resolutions eller CRS fel
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
-                <a class="symptom-pill" href="try-it.html#mapsandbox">Try it-lab: Map sandbox</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">Gamla tiles efter ändring</h3>
-                <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache">GeoWebCache</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">Gamla tiles efter ändring</h3>
+                  <span class="symptom-tag tag-gwc" aria-label="Kategori: GeoWebCache"
+                    >GeoWebCache</span
+                  >
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Cache behöver truncate eller seed
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Cache behöver truncate eller seed
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">SLD importeras inte</h3>
-                <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">SLD importeras inte</h3>
+                  <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Namespace- eller XML-fel
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geoserver-styles.html">GeoServer styles</a>
+                  <a class="symptom-pill" href="try-it.html#sld">Try it-lab: SLD-check</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Namespace- eller XML-fel
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geoserver-styles.html">GeoServer styles</a>
-                <a class="symptom-pill" href="try-it.html#sld">Try it-lab: SLD-check</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">SLD syns inte trots import</h3>
-                <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">SLD syns inte trots import</h3>
+                  <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Scale-filter eller fel datatyp
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geoserver-styles.html">GeoServer styles</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Scale-filter eller fel datatyp
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geoserver-styles.html">GeoServer styles</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">WFS är långsamt</h3>
-                <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">WFS är långsamt</h3>
+                  <span class="symptom-tag tag-gs" aria-label="Kategori: GeoServer">GeoServer</span>
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Fel tjänst för rendering eller för stora dataset
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
+                  <a class="symptom-pill" href="geoserver.html">GeoServer 101</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Fel tjänst för rendering eller för stora dataset
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
-                <a class="symptom-pill" href="geoserver.html">GeoServer 101</a>
-              </div>
-            </div>
-          </div>
 
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">GeoPackage bytt men inget händer</h3>
-                <span class="symptom-tag tag-data" aria-label="Kategori: Data">Data</span>
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">GeoPackage bytt men inget händer</h3>
+                  <span class="symptom-tag tag-data" aria-label="Kategori: Data">Data</span>
+                </div>
+              </div>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Bounds eller cache uppdateras inte
+              </div>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
+                  <a class="symptom-pill" href="geoserver.html">GeoServer 101</a>
+                </div>
               </div>
             </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Bounds eller cache uppdateras inte
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="geowebcache.html">GeoWebCache</a>
-                <a class="symptom-pill" href="geoserver.html">GeoServer 101</a>
+
+            <div class="symptom-row" role="row">
+              <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
+                <div class="symptom-cell-head">
+                  <h3 class="symptom-title">JS-fel stoppar allt</h3>
+                  <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend"
+                    >Frontend</span
+                  >
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div class="symptom-row" role="row">
-            <div class="symptom-cell symptom-col--symptom" role="cell" data-label="Symptom">
-              <div class="symptom-cell-head">
-                <h3 class="symptom-title">JS-fel stoppar allt</h3>
-                <span class="symptom-tag tag-frontend" aria-label="Kategori: Frontend">Frontend</span>
+              <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
+                Fel script-ordning, import eller global scope
               </div>
-            </div>
-            <div class="symptom-cell symptom-col--cause" role="cell" data-label="Vanlig rotorsak">
-              Fel script-ordning, import eller global scope
-            </div>
-            <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
-              <div class="symptom-actions">
-                <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
-                <span class="symptom-pill is-static">DevTools: Console</span>
+              <div class="symptom-cell symptom-col--next" role="cell" data-label="Nästa steg">
+                <div class="symptom-actions">
+                  <a class="symptom-pill" href="origo-guide.html">Origo guide</a>
+                  <span class="symptom-pill is-static">DevTools: Console</span>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="doc-section troubleshooting-page">
-        <h2 id="snabb-checklista">Snabb checklista</h2>
-
-        <div class="ts-steps" role="list">
-          <div class="ts-step" role="listitem">
-            <div class="ts-step-num" aria-hidden="true">1</div>
-            <div class="ts-step-body">
-              <h3 class="ts-step-title">Öppna DevTools</h3>
-              <p class="ts-step-text">Console + Network. Leta efter fel och 404:or först.</p>
-            </div>
-          </div>
-
-          <div class="ts-step" role="listitem">
-            <div class="ts-step-num" aria-hidden="true">2</div>
-            <div class="ts-step-body">
-              <h3 class="ts-step-title">Verifiera att config laddas</h3>
-              <p class="ts-step-text">JSON/config ska inte ge 404 och ska vara rätt fil.</p>
             </div>
           </div>
+        </section>
 
-          <div class="ts-step" role="listitem">
-            <div class="ts-step-num" aria-hidden="true">3</div>
-            <div class="ts-step-body">
-              <h3 class="ts-step-title">Matcha CRS/projection</h3>
-              <p class="ts-step-text">Samma CRS/extent i GeoServer → GWC → Origo.</p>
+        <section class="doc-section troubleshooting-page">
+          <h2 id="snabb-checklista">Snabb checklista</h2>
+
+          <div class="ts-steps" role="list">
+            <div class="ts-step" role="listitem">
+              <div class="ts-step-num" aria-hidden="true">1</div>
+              <div class="ts-step-body">
+                <h3 class="ts-step-title">Öppna DevTools</h3>
+                <p class="ts-step-text">Console + Network. Leta efter fel och 404:or först.</p>
+              </div>
             </div>
-          </div>
 
-          <div class="ts-step" role="listitem">
-            <div class="ts-step-num" aria-hidden="true">4</div>
-            <div class="ts-step-body">
-              <h3 class="ts-step-title">Kolla CORS & mixed content</h3>
-              <p class="ts-step-text">https-sidan får inte hämta http-resurser.</p>
+            <div class="ts-step" role="listitem">
+              <div class="ts-step-num" aria-hidden="true">2</div>
+              <div class="ts-step-body">
+                <h3 class="ts-step-title">Verifiera att config laddas</h3>
+                <p class="ts-step-text">JSON/config ska inte ge 404 och ska vara rätt fil.</p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <h2 id="vanliga-fel">Vanliga fel</h2>
-
-        <div class="callout callout-warning">
-          <h3>Vanligaste orsaken till tom karta</h3>
-          <p>Fel CRS eller extent mellan GeoServer, GeoWebCache och Origo.</p>
-        </div>
-
-        <div class="ts-issues">
-          <div class="ts-issue">
-            <div class="ts-issue-head">
-              <h3 class="ts-issue-title">CORS</h3>
-              <span class="ts-issue-tag">Browser</span>
+            <div class="ts-step" role="listitem">
+              <div class="ts-step-num" aria-hidden="true">3</div>
+              <div class="ts-step-body">
+                <h3 class="ts-step-title">Matcha CRS/projection</h3>
+                <p class="ts-step-text">Samma CRS/extent i GeoServer → GWC → Origo.</p>
+              </div>
             </div>
-            <p class="ts-issue-text">Domänen blockeras → använd proxy eller rätt CORS-inställning.</p>
-            <div class="ts-issue-actions">
-              <a class="ts-pill" href="#cors">CORS-sektionen</a>
-              <a class="ts-pill" href="origo-guide.html">Origo guide</a>
+
+            <div class="ts-step" role="listitem">
+              <div class="ts-step-num" aria-hidden="true">4</div>
+              <div class="ts-step-body">
+                <h3 class="ts-step-title">Kolla CORS & mixed content</h3>
+                <p class="ts-step-text">https-sidan får inte hämta http-resurser.</p>
+              </div>
             </div>
           </div>
 
-          <div class="ts-issue">
-            <div class="ts-issue-head">
-              <h3 class="ts-issue-title">http/https</h3>
-              <span class="ts-issue-tag">Browser</span>
+          <h2 id="vanliga-fel">Vanliga fel</h2>
+
+          <div class="callout callout-warning">
+            <h3>Vanligaste orsaken till tom karta</h3>
+            <p>Fel CRS eller extent mellan GeoServer, GeoWebCache och Origo.</p>
+          </div>
+
+          <div class="ts-issues">
+            <div class="ts-issue">
+              <div class="ts-issue-head">
+                <h3 class="ts-issue-title">CORS</h3>
+                <span class="ts-issue-tag">Browser</span>
+              </div>
+              <p class="ts-issue-text">
+                Domänen blockeras → använd proxy eller rätt CORS-inställning.
+              </p>
+              <div class="ts-issue-actions">
+                <a class="ts-pill" href="#cors">CORS-sektionen</a>
+                <a class="ts-pill" href="origo-guide.html">Origo guide</a>
+              </div>
             </div>
-            <p class="ts-issue-text">Blandat innehåll blockeras i browsern (mixed content).</p>
-            <div class="ts-issue-actions">
-              <a class="ts-pill" href="origo-guide.html">Origo guide</a>
+
+            <div class="ts-issue">
+              <div class="ts-issue-head">
+                <h3 class="ts-issue-title">http/https</h3>
+                <span class="ts-issue-tag">Browser</span>
+              </div>
+              <p class="ts-issue-text">Blandat innehåll blockeras i browsern (mixed content).</p>
+              <div class="ts-issue-actions">
+                <a class="ts-pill" href="origo-guide.html">Origo guide</a>
+              </div>
+            </div>
+
+            <div class="ts-issue">
+              <div class="ts-issue-head">
+                <h3 class="ts-issue-title">Cache</h3>
+                <span class="ts-issue-tag">GeoWebCache</span>
+              </div>
+              <p class="ts-issue-text">
+                Reload ≠ cache clear → truncate/seed i GeoWebCache vid behov.
+              </p>
+              <div class="ts-issue-actions">
+                <a class="ts-pill" href="geowebcache.html">GeoWebCache</a>
+              </div>
             </div>
           </div>
 
-          <div class="ts-issue">
-            <div class="ts-issue-head">
-              <h3 class="ts-issue-title">Cache</h3>
-              <span class="ts-issue-tag">GeoWebCache</span>
-            </div>
-            <p class="ts-issue-text">Reload ≠ cache clear → truncate/seed i GeoWebCache vid behov.</p>
-            <div class="ts-issue-actions">
-              <a class="ts-pill" href="geowebcache.html">GeoWebCache</a>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="geoserver-relaterade">GeoServer-relaterade</h2>
+          <h2 id="geoserver-relaterade">GeoServer-relaterade</h2>
           <div class="ts-mini-cards">
             <article class="ts-mini-card">
               <h3>Tom karta</h3>
@@ -406,7 +424,6 @@
 
           <h2 id="prestanda">Prestanda</h2>
           <div class="ts-mini-cards">
-
             <article class="ts-mini-card">
               <h3>Gamla tiles</h3>
               <p>Reload räcker inte – cache måste tömmas.</p>
@@ -428,14 +445,14 @@
             </article>
           </div>
 
-        <h2 id="debug-kommandon">Debug-kommandon</h2>
-        <pre><code># i browserns console
+          <h2 id="debug-kommandon">Debug-kommandon</h2>
+          <pre><code># i browserns console
 localStorage.clear()
 
 # curl för att se headers
 curl -I https://exempel.se/config.json
         </code></pre>
-      </section>
+        </section>
       </section>
     </main>
     <script src="../assets/js/main.js"></script>

@@ -14,7 +14,7 @@ This repository is a static documentation portal for Origo Map. The guidance bel
 
 - **Key integration points & externals:**
   - Origo (client library) — pages reference Origo concepts and configuration snippets.
-  - GeoServer and GeoWebCache — several pages (geoserver*, geowebcache) explain server-side configs and caches.
+  - GeoServer and GeoWebCache — several pages (geoserver\*, geowebcache) explain server-side configs and caches.
   - Origo Server (backend) — referenced in `origo-server.html`.
 
 - **Common developer workflows and where to change things:**
@@ -32,10 +32,10 @@ This repository is a static documentation portal for Origo Map. The guidance bel
   - Add a search index item in `main.js` (near the top):
 
     {
-      id: 'my-page-id',
-      title: 'My Page Title',
-      url: 'my-page.html',
-      content: 'short keywords used by offline search',
+    id: 'my-page-id',
+    title: 'My Page Title',
+    url: 'my-page.html',
+    content: 'short keywords used by offline search',
     }
 
   - Run formatting after edits:

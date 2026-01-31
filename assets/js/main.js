@@ -16,7 +16,8 @@ const OFFLINE_SEARCH_INDEX = [
     id: 'origo-guide',
     title: 'Origo – guide',
     url: 'pages/origo-guide.html',
-    content: 'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
+    content:
+      'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
   },
   {
     id: 'layermanager',
@@ -40,7 +41,8 @@ const OFFLINE_SEARCH_INDEX = [
     id: 'geowebcache',
     title: 'GeoWebCache',
     url: 'pages/geowebcache.html',
-    content: 'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
+    content:
+      'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
   },
   {
     id: 'origo-server',
@@ -268,101 +270,6 @@ const WIZARD_DATA = {
         key: 'holes-tiles',
         label: 'Tomma tiles eller “hål”',
         startHere: [
-          'Testa annan zoomnivå i klienten.',
-          'Kontrollera datatäckning och BBOX.',
-          'Se om lagret ritar i Layer Preview.',
-        ],
-        links: [
-          { label: 'Tile cache 101', href: '#tile-cache-101' },
-          { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
-          { label: 'Praktisk checklista', href: '#checklista' },
-        ],
-        escalate: ['Tomma tiles även i Layer Preview.'],
-      },
-      {
-        key: 'slow-seed',
-        label: 'Långsam rendering / seeding',
-        startHere: [
-          'Seeda mindre område och färre zoomnivåer.',
-          'Kontrollera datakällans prestanda.',
-          'Granska om stilen är tung.',
-        ],
-        links: [
-          { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
-          { label: 'Metastore och disk quota', href: '#metastore-disk' },
-          { label: 'Vanliga misstag', href: '#vanliga-misstag' },
-        ],
-        escalate: ['Seeding är fortsatt långsam på små ytor.'],
-      },
-      {
-        key: 'slow-external',
-        label: 'Extern WMS är långsam',
-        startHere: [
-          'Mät svarstid direkt mot WMS-url.',
-          'Cachea som proxy-lager om möjligt.',
-          'Begränsa BBOX och zoomnivåer.',
-        ],
-        links: [
-          { label: 'Cacheability och parametrar', href: '#cacheability' },
-          { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
-          { label: 'Klientperspektiv', href: '#klientperspektiv' },
-        ],
-        escalate: ['Extern tjänst är långsam även utan cache.'],
-      },
-      {
-        key: 'client-or-server',
-        label: 'Osäker om felet är klient eller server',
-        startHere: [
-          'Testa lagret i GeoServer Layer Preview.',
-          'Testa WMS direkt i webbläsaren.',
-          'Jämför resultat i Origo och preview.',
-        ],
-        links: [
-          { label: 'Klientperspektiv', href: '#klientperspektiv' },
-          { label: 'Hur GeoWebCache hänger ihop med GeoServer', href: '#geoserver-koppling' },
-          { label: 'Tile cache 101', href: '#tile-cache-101' },
-        ],
-        escalate: ['Skillnaden mellan klient och server går inte att isolera.'],
-      },
-    ],
-  },
-  'geoserver-styles': {
-    title: 'Felsökningswizard',
-    symptoms: [
-      {
-        key: 'sld-import-fail',
-        label: 'SLD importeras inte',
-        startHere: [
-          'Validera XML och namespaces.',
-          'Testa import av en minimal SLD.',
-          'Kontrollera att formatet är SE 1.1.',
-        ],
-        links: [
-          { label: 'Import och namespaces', href: '#sld-import' },
-          { label: 'SLD Cookbook', href: '#sld-cookbook' },
-          { label: 'Välj rätt format', href: '#format' },
-        ],
-        escalate: ['Import misslyckas även med minimal SLD.'],
-      },
-      {
-        key: 'sld-no-render',
-        label: 'SLD importeras men syns inte',
-        startHere: [
-          'Verifiera datatyp mot symbolizer.',
-          'Kontrollera Min/MaxScaleDenominator.',
-          'Testa en enkel style utan filter.',
-        ],
-        links: [
-          { label: 'SLD Cookbook', href: '#sld-cookbook' },
-          { label: 'Skala och synlighet', href: '#sld-scale' },
-          { label: 'Parameterguide', href: '#parameterguide' },
-        ],
-        escalate: ['Inget syns i preview efter förenklad style.'],
-      },
-      {
-        key: 'labels-missing',
-        label: 'Labels syns inte / ligger fel',
-        startHere: [
           'Kontrollera attributnamn i Label.',
           'Justera fontstorlek och placement.',
           'Testa en enkel label utan halo.',
@@ -541,7 +448,9 @@ const initSearch = () => {
     const isCmdK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
     const activeTag = document.activeElement?.tagName?.toLowerCase();
     const isTyping =
-      activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
+      activeTag === 'input' ||
+      activeTag === 'textarea' ||
+      document.activeElement?.isContentEditable;
 
     if ((isCmdK || (event.key === '/' && !isTyping)) && document.activeElement !== input) {
       event.preventDefault();
@@ -584,38 +493,35 @@ const initPageMeta = () => {
   meta.appendChild(crumbs);
 
   const renderLastUpdated = async () => {
-  let dateStr = null;
+    let dateStr = null;
 
-  try {
-    const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
-    const lastMod = res.headers.get('last-modified');
-    if (lastMod) {
-      const d = new Date(lastMod);
-      dateStr = new Intl.DateTimeFormat('sv-SE', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(d);
+    try {
+      const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
+      const lastMod = res.headers.get('last-modified');
+      if (lastMod) {
+        const d = new Date(lastMod);
+        dateStr = new Intl.DateTimeFormat('sv-SE', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(d);
+      }
+    } catch {}
+
+    if (!dateStr) {
+      const manual = document.querySelector('meta[name="last-updated"]')?.getAttribute('content');
+      if (manual) dateStr = manual;
     }
-  } catch {
-  }
 
-  if (!dateStr) {
-    const manual = document
-      .querySelector('meta[name="last-updated"]')
-      ?.getAttribute('content');
-    if (manual) dateStr = manual;
-  }
+    if (dateStr) {
+      const updated = document.createElement('span');
+      updated.className = 'last-updated';
+      updated.textContent = `Uppdaterad: ${dateStr}`;
+      meta.appendChild(updated);
+    }
+  };
 
-  if (dateStr) {
-    const updated = document.createElement('span');
-    updated.className = 'last-updated';
-    updated.textContent = `Uppdaterad: ${dateStr}`;
-    meta.appendChild(updated);
-  }
-};
-
-renderLastUpdated();
+  renderLastUpdated();
 
   header.insertAdjacentElement('afterend', meta);
 };
@@ -741,7 +647,12 @@ const detectLangFromClasses = (codeEl) => {
   if (cls.includes('language-xml') || cls.includes('language-sld')) return 'xml';
   if (cls.includes('language-css')) return 'css';
   if (cls.includes('language-js') || cls.includes('language-javascript')) return 'js';
-  if (cls.includes('language-bash') || cls.includes('language-shell') || cls.includes('language-cli')) return 'cli';
+  if (
+    cls.includes('language-bash') ||
+    cls.includes('language-shell') ||
+    cls.includes('language-cli')
+  )
+    return 'cli';
   return '';
 };
 
@@ -759,7 +670,7 @@ const highlightJSON = (text) => {
   s = s.replace(/"(\\.|[^"\\])*"/g, (m) => `<span class="tok-string">${m}</span>`);
   s = s.replace(
     /<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g,
-    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`
+    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`,
   );
   s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
   s = s.replace(/\btrue\b|\bfalse\b/g, (m) => `<span class="tok-boolean">${m}</span>`);
@@ -775,7 +686,7 @@ const highlightXML = (text) => {
     const attrsHL = attrs.replace(
       /([A-Za-z0-9:_-]+)(=)(&quot;[^&]*?&quot;)/g,
       (m, a, eq, v) =>
-        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`
+        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
     );
     return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
   });
@@ -801,10 +712,13 @@ const highlightJS = (text) => {
   let s = escapeHTML(text);
   s = s.replace(/\/\/[^\n]*/g, (m) => `<span class="tok-comment">${m}</span>`);
   s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="tok-comment">${m}</span>`);
-  s = s.replace(/"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g, (m) => `<span class="tok-string">${m}</span>`);
+  s = s.replace(
+    /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g,
+    (m) => `<span class="tok-string">${m}</span>`,
+  );
   s = s.replace(
     /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|import|export|from|try|catch|finally|throw|await|async)\b/g,
-    `<span class="tok-keyword">$1</span>`
+    `<span class="tok-keyword">$1</span>`,
   );
   s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
   s = s.replace(/[{}()[\],.;:+\-*/=<>!&|?]/g, (m) => `<span class="tok-operator">${m}</span>`);
@@ -813,9 +727,18 @@ const highlightJS = (text) => {
 
 const highlightCLI = (text) => {
   let s = escapeHTML(text);
-  s = s.replace(/(^|\n)\s*([$>])\s?/g, (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `);
-  s = s.replace(/(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g, (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`);
-  s = s.replace(/(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g, (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`);
+  s = s.replace(
+    /(^|\n)\s*([$>])\s?/g,
+    (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `,
+  );
+  s = s.replace(
+    /(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g,
+    (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`,
+  );
+  s = s.replace(
+    /(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g,
+    (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`,
+  );
   return s;
 };
 
@@ -916,7 +839,7 @@ const initCodeCopy = () => {
     });
 
     wrapper.appendChild(button);
-    
+
     const troubleshootButton = document.createElement('button');
     const troubleshootPanel = document.createElement('div');
     const troubleshootId = `code-troubleshoot-${codeIndex}`;
@@ -1017,188 +940,462 @@ const copyText = async (text) => {
 
 const initResolutionsTryIt = (block) => {
   const input = block.querySelector('#res-input');
-  const report = block.querySelector('#res-report');
   const output = block.querySelector('#res-output');
   const status = block.querySelector('#res-status');
   const buttons = block.querySelectorAll('[data-res-action]');
 
-  if (!input || !report || !output || !status) {
+  // Enterprise elements
+  const advancedToggle = block.querySelector('#res-advanced-toggle');
+  const advancedPanel = block.querySelector('#res-advanced-panel');
+  const validationOutput = block.querySelector('#res-validation');
+  const previewDiv = block.querySelector('#res-preview');
+
+  if (!input || !output || !status) {
     return;
   }
 
-  const addReportLine = (text, type = 'normal') => {
-    const line = document.createElement('div');
-    if (type === 'ok') {
-      line.style.color = '#28a745';
-      text = '✓ ' + text;
-    } else if (type === 'error') {
-      line.style.color = '#dc3545';
-      text = '✗ ' + text;
-    } else if (type === 'warning') {
-      line.style.color = '#ffc107';
-      text = '⚠ ' + text;
-    }
-    line.textContent = text;
-    report.appendChild(line);
-  };
+  const TOOL_KEY = 'res';
+  let lastValidatedResolutions = null;
+  let lastValidationResult = null;
 
-  const clearReport = () => {
-    report.innerHTML = '';
-  };
-
-  const updateStatus = (message) => {
-    if (status) {
-      status.textContent = message;
-    }
+  const updateStatus = (msg) => {
+    if (status) status.textContent = msg;
   };
 
   const parseResolutions = () => {
-    const lines = input.value
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
+    const text = input.value.trim();
+    if (!text) return { resolutions: [], parseErrors: [], originalLines: [] };
 
+    const lines = text.split('\n');
     const resolutions = [];
     const parseErrors = [];
+    const originalLines = [];
 
     lines.forEach((line, idx) => {
-      const val = parseFloat(line);
+      const trimmed = line.trim();
+      originalLines.push(trimmed);
+
+      if (!trimmed) return; // Skip blank lines
+
+      // Remove commas and extra spaces
+      const cleaned = trimmed.replace(/,/g, '').replace(/\s+/g, ' ').trim();
+      const val = parseFloat(cleaned);
+
       if (isNaN(val)) {
-        parseErrors.push(`Rad ${idx + 1}: "${line}" är inte ett tal`);
+        parseErrors.push({ line: idx + 1, text: trimmed, error: 'Inte ett giltigt tal' });
+      } else if (!isFinite(val)) {
+        parseErrors.push({ line: idx + 1, text: trimmed, error: 'Inte ett ändligt tal' });
+      } else if (val <= 0) {
+        parseErrors.push({ line: idx + 1, text: trimmed, error: 'Måste vara > 0' });
       } else {
         resolutions.push(val);
       }
     });
 
-    return { resolutions, parseErrors };
+    return { resolutions, parseErrors, originalLines };
   };
 
-  const validate = () => {
-    clearReport();
-    output.value = '';
-    updateStatus('');
+  const validateResolutions = (resolutions) => {
+    const issues = [];
+    const warnings = [];
 
-    const { resolutions, parseErrors } = parseResolutions();
+    if (resolutions.length === 0) {
+      issues.push('Listan är tom');
+      return { issues, warnings, valid: false };
+    }
+
+    // Check for descending order
+    const orderIssues = [];
+    for (let i = 0; i < resolutions.length - 1; i++) {
+      if (resolutions[i] <= resolutions[i + 1]) {
+        orderIssues.push(`Position ${i + 1}→${i + 2}: ${resolutions[i]} ≤ ${resolutions[i + 1]}`);
+      }
+    }
+    if (orderIssues.length > 0) {
+      warnings.push('Lista är inte strikt fallande:');
+      orderIssues.forEach((o) => warnings.push(`  ${o}`));
+    }
+
+    // Check for duplicates
+    const seen = new Map();
+    resolutions.forEach((val, idx) => {
+      if (!seen.has(val)) {
+        seen.set(val, []);
+      }
+      seen.get(val).push(idx + 1);
+    });
+
+    const duplicates = Array.from(seen.entries()).filter(([_, positions]) => positions.length > 1);
+    if (duplicates.length > 0) {
+      warnings.push('Dubbletter hittade:');
+      duplicates.forEach(([val, positions]) => {
+        warnings.push(`  ${val} på position: ${positions.join(', ')}`);
+      });
+    }
+
+    // Check for suspicious values
+    resolutions.forEach((val, idx) => {
+      if (val > 10000) {
+        warnings.push(`Position ${idx + 1}: ${val} verkar ovanligt stort`);
+      } else if (val < 0.001) {
+        warnings.push(`Position ${idx + 1}: ${val} verkar ovanligt litet`);
+      }
+    });
+
+    // Check for too similar values
+    for (let i = 0; i < resolutions.length - 1; i++) {
+      const diff = Math.abs(resolutions[i] - resolutions[i + 1]);
+      const pctDiff = (diff / resolutions[i]) * 100;
+      if (pctDiff < 0.1 && pctDiff > 0) {
+        warnings.push(
+          `Position ${i + 1}→${i + 2}: ${resolutions[i]} och ${resolutions[i + 1]} skiljer < 0.1%`,
+        );
+      }
+    }
+
+    const valid = issues.length === 0;
+    return { issues, warnings, valid };
+  };
+
+  const generateValidationReport = (parseErrors, resolutions, validation) => {
+    const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
 
     if (parseErrors.length > 0) {
-      addReportLine('Parse errors:', 'error');
-      parseErrors.forEach((err) => addReportLine(err, 'error'));
-      return;
+      lines.push('Status: [ERROR] Parse-fel');
+      lines.push('');
+      lines.push('Parse-fel:');
+      parseErrors.forEach((e) => {
+        lines.push(`  Rad ${e.line}: ${e.error}`);
+        lines.push(`    "${e.text}"`);
+      });
+      return lines;
     }
 
     if (resolutions.length === 0) {
-      addReportLine('Ingen input.');
-      return;
+      lines.push('Status: [WARN] Ingen data');
+      lines.push('');
+      lines.push('Ingen giltig input hittades.');
+      return lines;
     }
 
-    addReportLine(`Antal: ${resolutions.length}`, 'ok');
+    const hasWarnings = validation.warnings.length > 0;
+    const statusText =
+      validation.valid && !hasWarnings
+        ? '[OK] GILTIG'
+        : hasWarnings
+          ? '[WARN] VARNINGAR'
+          : '[ERROR] OGILTIG';
+    lines.push(`Status: ${statusText}`);
+    lines.push('');
 
-    let allPositive = true;
-    resolutions.forEach((res, idx) => {
-      if (res <= 0) {
-        addReportLine(`Rad ${idx + 1}: ${res} är inte > 0`, 'error');
-        allPositive = false;
-      }
-    });
-    if (allPositive) {
-      addReportLine('Alla värden > 0', 'ok');
-    }
+    lines.push(`Statistik:`);
+    lines.push(`  Antal: ${resolutions.length}`);
+    lines.push(`  Min: ${Math.min(...resolutions)}`);
+    lines.push(`  Max: ${Math.max(...resolutions)}`);
+    lines.push(`  Unika: ${new Set(resolutions).size}`);
+    lines.push('');
 
-    let validOrder = true;
-    for (let i = 0; i < resolutions.length - 1; i++) {
-      if (resolutions[i] <= resolutions[i + 1]) {
-        addReportLine(`Rad ${i + 1}→${i + 2}: ${resolutions[i]} ≤ ${resolutions[i + 1]} (måste vara fallande)`, 'error');
-        validOrder = false;
-      }
-    }
-    if (validOrder) {
-      addReportLine('Strikt fallande ordning', 'ok');
-    }
-
-    const unique = new Set(resolutions);
-    if (unique.size === resolutions.length) {
-      addReportLine('Inga dubbletter', 'ok');
+    if (validation.issues.length === 0 && validation.warnings.length === 0) {
+      lines.push('[OK] Alla värden > 0');
+      lines.push('[OK] Strikt fallande ordning');
+      lines.push('[OK] Inga dubbletter');
+      lines.push('[OK] Inga misstänkta värden');
     } else {
-      addReportLine(`Dubbletter hittade (${resolutions.length} rader, ${unique.size} unika)`, 'error');
-    }
+      if (validation.issues.length > 0) {
+        lines.push('Kritiska problem:');
+        validation.issues.forEach((issue) => lines.push(`  ${issue}`));
+        lines.push('');
+      }
 
-    let tooSimilar = [];
-    for (let i = 0; i < resolutions.length - 1; i++) {
-      const diff = resolutions[i] - resolutions[i + 1];
-      const pctDiff = (diff / resolutions[i]) * 100;
-      if (pctDiff < 0.1) {
-        tooSimilar.push(`Rad ${i + 1}→${i + 2}: ${resolutions[i]} och ${resolutions[i + 1]} skiljer < 0.1%`);
+      if (validation.warnings.length > 0) {
+        lines.push('Varningar:');
+        validation.warnings.forEach((warn) => lines.push(`  ${warn}`));
       }
     }
-    if (tooSimilar.length > 0) {
-      tooSimilar.forEach((warn) => addReportLine(warn, 'warning'));
-    } else {
-      addReportLine('Tillräckliga avstånd mellan värdena', 'ok');
+
+    return lines;
+  };
+
+  const validate = () => {
+    const { resolutions, parseErrors } = parseResolutions();
+    const validation = validateResolutions(resolutions);
+    const report = generateValidationReport(parseErrors, resolutions, validation);
+
+    tryItSetReport(TOOL_KEY, report);
+    lastValidatedResolutions = resolutions;
+    lastValidationResult = validation;
+
+    if (parseErrors.length > 0) {
+      updateStatus('Parse-fel hittade.');
+      tryItLog(TOOL_KEY, 'ERROR', `Parse-fel: ${parseErrors.length} rader`);
+      updatePreview([], parseErrors);
+      return null;
     }
 
-    const isValid = allPositive && validOrder && unique.size === resolutions.length && tooSimilar.length === 0;
-    if (isValid) {
-      addReportLine('STATUS: Giltigt', 'ok');
+    if (resolutions.length === 0) {
+      updateStatus('Ingen data att validera.');
+      tryItLog(TOOL_KEY, 'WARN', 'Ingen data');
+      updatePreview([], []);
+      return null;
+    }
+
+    updatePreview(resolutions, parseErrors);
+
+    if (validation.warnings.length > 0) {
+      updateStatus(`Validering OK med ${validation.warnings.length} varning(ar).`);
+      tryItLog(
+        TOOL_KEY,
+        'WARN',
+        `${resolutions.length} värden, ${validation.warnings.length} varningar`,
+      );
+    } else {
       updateStatus('Validering OK.');
-    } else {
-      addReportLine('STATUS: Fel hittade', 'error');
-      updateStatus('Fel hittade. Se rapport ovan.');
+      tryItLog(TOOL_KEY, 'OK', `${resolutions.length} värden validerade`);
     }
 
     return resolutions;
+  };
+
+  const updatePreview = (resolutions, parseErrors) => {
+    if (!previewDiv) return;
+
+    if (resolutions.length === 0 && parseErrors.length === 0) {
+      previewDiv.innerHTML = '<p style="padding: 1rem; color: #666;">Ingen data att visa</p>';
+      return;
+    }
+
+    let html = '<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">';
+    html += '<thead><tr style="background: #f0f0f0;">';
+    html += '<th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">Index</th>';
+    html +=
+      '<th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">Resolution</th>';
+    html += '<th style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;">Ordning</th>';
+    html += '<th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">Noter</th>';
+    html += '<th style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;">Åtgärd</th>';
+    html += '</tr></thead><tbody>';
+
+    resolutions.forEach((val, idx) => {
+      const notes = [];
+      const isDescending = idx === 0 || val < resolutions[idx - 1];
+
+      // Check for duplicates
+      const dupIdx = resolutions.indexOf(val);
+      if (dupIdx !== idx) {
+        notes.push(`Dubblett av index ${dupIdx}`);
+      }
+
+      // Check suspicious values
+      if (val > 10000) notes.push('Ovanligt stort');
+      if (val < 0.001) notes.push('Ovanligt litet');
+
+      // Check ordering
+      if (idx > 0 && val >= resolutions[idx - 1]) {
+        notes.push('Inte fallande');
+      }
+
+      const rowStyle = notes.length > 0 ? 'background: #fff3cd;' : '';
+      html += `<tr style="${rowStyle}">`;
+      html += `<td style="padding: 0.5rem; border: 1px solid #ddd;">${idx}</td>`;
+      html += `<td style="padding: 0.5rem; text-align: right; border: 1px solid #ddd; font-family: monospace;">${val}</td>`;
+      html += `<td style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;">${isDescending ? '↓' : '✗'}</td>`;
+      html += `<td style="padding: 0.5rem; border: 1px solid #ddd; font-size: 0.8rem;">${notes.join(', ') || '—'}</td>`;
+      html += `<td style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;"><button class="res-send-btn" data-res-send="gridcalc" data-res-value="${val}" type="button">Använd i Gridcalc</button></td>`;
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    previewDiv.innerHTML = html;
+
+    // Add event delegation for send-to-gridcalc buttons
+    previewDiv.querySelectorAll('[data-res-send="gridcalc"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const resValue = parseFloat(btn.dataset.resValue);
+
+        if (isNaN(resValue) || resValue <= 0) {
+          updateStatus('Ogiltigt resolutionsvärde.');
+          tryItLog(TOOL_KEY, 'ERROR', `Ogiltig resolution: ${btn.dataset.resValue}`);
+          return;
+        }
+
+        // Find Gridcalc inputs
+        const gridcalcResolution = document.getElementById('gridcalc-resolution');
+        const gridcalcScale = document.getElementById('gridcalc-scale');
+        const gridcalcFromResBtn = document.querySelector(
+          '[data-gridcalc-action="from-resolution"]',
+        );
+
+        if (!gridcalcResolution || !gridcalcFromResBtn) {
+          updateStatus('Gridcalc-verktyg hittades inte.');
+          tryItLog(TOOL_KEY, 'ERROR', 'Gridcalc element saknas');
+          return;
+        }
+
+        // Set resolution value
+        gridcalcResolution.value = resValue.toFixed(4);
+        if (gridcalcScale) gridcalcScale.value = '';
+
+        // Log in both tools
+        tryItLog(TOOL_KEY, 'INFO', `Skickade resolution ${resValue.toFixed(4)} till Gridcalc`);
+        tryItLog('gridcalc', 'INFO', `Mottog resolution ${resValue.toFixed(4)} från Resolutions`);
+
+        // Trigger from-resolution calculation
+        gridcalcFromResBtn.click();
+
+        // Scroll to Gridcalc section
+        const gridcalcSection = document.getElementById('gridcalc');
+        if (gridcalcSection) {
+          gridcalcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => {
+            gridcalcResolution.focus();
+          }, 500);
+        }
+
+        updateStatus(`Resolution ${resValue.toFixed(4)} skickad till Gridcalc.`);
+      });
+    });
   };
 
   const exportOrigo = () => {
     const { resolutions, parseErrors } = parseResolutions();
 
     if (parseErrors.length > 0) {
-      updateStatus('Parse error. Validera först.');
+      updateStatus('Parse-fel. Validera först.');
       output.value = '';
+      tryItLog(TOOL_KEY, 'ERROR', 'Export blockerad: parse-fel');
       return;
     }
 
     if (resolutions.length === 0) {
-      updateStatus('Ingen input.');
+      updateStatus('Ingen data.');
       output.value = '';
+      tryItLog(TOOL_KEY, 'WARN', 'Export blockerad: ingen data');
       return;
     }
 
-    const json = JSON.stringify(resolutions);
+    const json = JSON.stringify(resolutions, null, 2);
     output.value = json;
-    clearReport();
-    addReportLine('Origo resolutions array:', 'ok');
     updateStatus('Exporterad som Origo JSON.');
+    tryItLog(TOOL_KEY, 'OK', `Origo JSON: ${resolutions.length} värden`);
   };
 
   const exportGwc = () => {
     const { resolutions, parseErrors } = parseResolutions();
 
     if (parseErrors.length > 0) {
-      updateStatus('Parse error. Validera först.');
+      updateStatus('Parse-fel. Validera först.');
       output.value = '';
+      tryItLog(TOOL_KEY, 'ERROR', 'Export blockerad: parse-fel');
       return;
     }
 
     if (resolutions.length === 0) {
-      updateStatus('Ingen input.');
+      updateStatus('Ingen data.');
       output.value = '';
+      tryItLog(TOOL_KEY, 'WARN', 'Export blockerad: ingen data');
       return;
     }
 
     const lines = resolutions.map((res) => `    <resolution>${res}</resolution>`).join('\n');
     const gwcXml = `  <resolutions>\n${lines}\n  </resolutions>`;
     output.value = gwcXml;
-    clearReport();
-    addReportLine('GeoWebCache gridset format:', 'ok');
     updateStatus('Exporterad som GWC XML.');
+    tryItLog(TOOL_KEY, 'OK', `GWC XML: ${resolutions.length} värden`);
+  };
+
+  const fixResolutions = () => {
+    const { resolutions, parseErrors } = parseResolutions();
+
+    if (parseErrors.length > 0) {
+      updateStatus('Kan inte fixa: parse-fel finns.');
+      tryItLog(TOOL_KEY, 'ERROR', 'Fix blockerad: parse-fel');
+      return;
+    }
+
+    if (resolutions.length === 0) {
+      updateStatus('Ingen data att fixa.');
+      tryItLog(TOOL_KEY, 'WARN', 'Fix blockerad: ingen data');
+      return;
+    }
+
+    // Create fixed version: sort descending and remove duplicates
+    const unique = Array.from(new Set(resolutions));
+    const sorted = unique.sort((a, b) => b - a);
+
+    // Update input
+    input.value = sorted.join('\n');
+    updateStatus(
+      `Fixad: sorterad fallande, ${resolutions.length - sorted.length} dubbletter borttagna.`,
+    );
+    tryItLog(TOOL_KEY, 'OK', `Lista fixad: ${resolutions.length} → ${sorted.length} värden`);
+
+    // Re-validate
+    validate();
+  };
+
+  const downloadOrigo = () => {
+    if (!lastValidatedResolutions || lastValidatedResolutions.length === 0) {
+      updateStatus('Validera först.');
+      return;
+    }
+
+    const json = JSON.stringify(lastValidatedResolutions, null, 2);
+    tryItDownload(`resolutions-origo-${Date.now()}.json`, json, 'application/json');
+    updateStatus('Origo JSON nedladdad.');
+    tryItLog(TOOL_KEY, 'OK', 'Origo JSON nedladdad');
+  };
+
+  const downloadGwc = () => {
+    if (!lastValidatedResolutions || lastValidatedResolutions.length === 0) {
+      updateStatus('Validera först.');
+      return;
+    }
+
+    const lines = lastValidatedResolutions
+      .map((res) => `    <resolution>${res}</resolution>`)
+      .join('\n');
+    const gwcXml = `  <resolutions>\n${lines}\n  </resolutions>`;
+    tryItDownload(`resolutions-gwc-${Date.now()}.txt`, gwcXml, 'text/plain');
+    updateStatus('GWC format nedladdat.');
+    tryItLog(TOOL_KEY, 'OK', 'GWC format nedladdat');
+  };
+
+  const downloadReport = () => {
+    if (!validationOutput || !validationOutput.textContent.trim()) {
+      updateStatus('Ingen rapport att ladda ner. Validera först.');
+      return;
+    }
+
+    let content = validationOutput.textContent;
+    content += '\n\n═══ KÖRHISTORIK ═══\n\n';
+    const logEl = document.getElementById('res-runlog');
+    if (logEl && logEl.textContent.trim()) {
+      content += logEl.textContent;
+    }
+
+    tryItDownload(`resolutions-report-${Date.now()}.txt`, content, 'text/plain');
+    updateStatus('Rapport nedladdad.');
+    tryItLog(TOOL_KEY, 'OK', 'Rapport nedladdad');
   };
 
   const clearAll = () => {
     input.value = '';
     output.value = '';
-    clearReport();
+    if (validationOutput) validationOutput.textContent = '';
+    if (previewDiv) previewDiv.innerHTML = '';
     updateStatus('');
+    lastValidatedResolutions = null;
+    lastValidationResult = null;
+    tryItLog(TOOL_KEY, 'INFO', 'Formulär rensat');
   };
+
+  // Advanced mode toggle
+  if (advancedToggle) {
+    advancedToggle.addEventListener('change', () => {
+      const enabled = advancedToggle.checked;
+      tryItShowAdvanced(TOOL_KEY, enabled);
+      tryItLog(TOOL_KEY, 'INFO', `Advanced mode ${enabled ? 'aktiverad' : 'inaktiverad'}`);
+    });
+  }
 
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -1209,11 +1406,22 @@ const initResolutionsTryIt = (block) => {
         exportOrigo();
       } else if (action === 'export-gwc') {
         exportGwc();
+      } else if (action === 'fix') {
+        fixResolutions();
+      } else if (action === 'download-origo') {
+        downloadOrigo();
+      } else if (action === 'download-gwc') {
+        downloadGwc();
+      } else if (action === 'download-report') {
+        downloadReport();
       } else if (action === 'clear') {
         clearAll();
       }
     });
   });
+
+  // Initialize
+  tryItLog(TOOL_KEY, 'INFO', 'Resolutions-verktyg initierat');
 };
 
 const initGridCalcTryIt = (block) => {
@@ -1227,19 +1435,32 @@ const initGridCalcTryIt = (block) => {
   const status = block.querySelector('#gridcalc-status');
   const buttons = block.querySelectorAll('[data-gridcalc-action]');
 
+  // Enterprise elements
+  const advancedToggle = block.querySelector('#gridcalc-advanced-toggle');
+  const advancedPanel = block.querySelector('#gridcalc-advanced-panel');
+  const reportOutput = block.querySelector('#gridcalc-validation');
+  const estimatorOutput = block.querySelector('#gridcalc-estimator-output');
+  const tileKbInput = block.querySelector('#gridcalc-tilekb');
+  const compressionInput = block.querySelector('#gridcalc-compression');
+
   if (!resolution || !scale || !tile || !meta || !bboxwidth || !bboxheight || !output || !status) {
     return;
   }
 
+  const TOOL_KEY = 'gridcalc';
   const PIXEL_SIZE_M = 0.00028;
+  let lastValidationResult = null;
+  let lastCalculationData = null;
+  let lastEstimatorData = null;
 
-  const updateStatus = (message) => {
-    if (status) {
-      status.textContent = message;
-    }
+  const updateStatus = (msg) => {
+    if (status) status.textContent = msg;
   };
 
-  const calculate = () => {
+  const validateInputs = () => {
+    const issues = [];
+    const warnings = [];
+
     const resVal = parseFloat(resolution.value);
     const scaleVal = parseFloat(scale.value);
     const tileVal = parseFloat(tile.value);
@@ -1247,27 +1468,146 @@ const initGridCalcTryIt = (block) => {
     const bboxwVal = parseFloat(bboxwidth.value);
     const bboxhVal = parseFloat(bboxheight.value);
 
-    if (isNaN(resVal) || isNaN(tileVal) || isNaN(metaVal) || isNaN(bboxwVal) || isNaN(bboxhVal)) {
-      updateStatus('Alle värden måste vara tal.');
-      return;
+    // Resolution
+    if (isNaN(resVal) || !isFinite(resVal)) {
+      issues.push('Resolution: Inte ett giltigt tal');
+    } else if (resVal <= 0) {
+      issues.push('Resolution: Måste vara > 0');
+    } else if (resVal > 10000) {
+      warnings.push(`Resolution: ${resVal} verkar ovanligt stort`);
+    } else if (resVal < 0.001) {
+      warnings.push(`Resolution: ${resVal} verkar ovanligt litet`);
     }
 
-    if (resVal <= 0 || tileVal <= 0 || metaVal <= 0 || bboxwVal <= 0 || bboxhVal <= 0) {
-      updateStatus('Alla värden måste vara större än 0.');
-      return;
+    // Scale
+    if (isNaN(scaleVal) || !isFinite(scaleVal)) {
+      issues.push('Scale: Inte ett giltigt tal');
+    } else if (scaleVal <= 0) {
+      issues.push('Scale: Måste vara > 0');
     }
 
+    // Tile size
+    if (isNaN(tileVal) || !isFinite(tileVal)) {
+      issues.push('Tile Size: Inte ett giltigt tal');
+    } else if (tileVal <= 0) {
+      issues.push('Tile Size: Måste vara > 0');
+    } else if (!Number.isInteger(tileVal)) {
+      warnings.push('Tile Size: Bör vara ett heltal');
+    } else if (tileVal < 128 || tileVal > 1024) {
+      warnings.push(`Tile Size: ${tileVal}px utanför vanligt intervall (128-1024)`);
+    }
+
+    // Metatile
+    if (isNaN(metaVal) || !isFinite(metaVal)) {
+      issues.push('Metatile: Inte ett giltigt tal');
+    } else if (metaVal <= 0) {
+      issues.push('Metatile: Måste vara > 0');
+    } else if (!Number.isInteger(metaVal)) {
+      warnings.push('Metatile: Bör vara ett heltal');
+    } else if (metaVal < 1 || metaVal > 16) {
+      warnings.push(`Metatile: ${metaVal} utanför rekommenderat intervall (1-16)`);
+    }
+
+    // BBOX width
+    if (isNaN(bboxwVal) || !isFinite(bboxwVal)) {
+      issues.push('BBOX Bredd: Inte ett giltigt tal');
+    } else if (bboxwVal <= 0) {
+      issues.push('BBOX Bredd: Måste vara > 0');
+    }
+
+    // BBOX height
+    if (isNaN(bboxhVal) || !isFinite(bboxhVal)) {
+      issues.push('BBOX Höjd: Inte ett giltigt tal');
+    } else if (bboxhVal <= 0) {
+      issues.push('BBOX Höjd: Måste vara > 0');
+    }
+
+    // Check resolution/scale consistency
+    if (issues.length === 0) {
+      const expectedScale = resVal / PIXEL_SIZE_M;
+      const diff = Math.abs(scaleVal - expectedScale);
+      const pctDiff = (diff / expectedScale) * 100;
+      if (pctDiff > 1) {
+        warnings.push(`Resolution/Scale inkonsistens: ${pctDiff.toFixed(1)}% skillnad`);
+      }
+    }
+
+    const valid = issues.length === 0;
+    return {
+      issues,
+      warnings,
+      valid,
+      values: { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal },
+    };
+  };
+
+  const generateValidationReport = (validation) => {
+    const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
+
+    if (validation.issues.length > 0) {
+      lines.push('Status: [ERROR] Ogiltiga värden');
+      lines.push('');
+      lines.push('Kritiska problem:');
+      validation.issues.forEach((issue) => lines.push(`  ${issue}`));
+      return lines;
+    }
+
+    const hasWarnings = validation.warnings.length > 0;
+    const statusText = hasWarnings ? '[WARN] VARNINGAR' : '[OK] GILTIG';
+    lines.push(`Status: ${statusText}`);
+    lines.push('');
+
+    const { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal } = validation.values;
+    lines.push('Input-värden:');
+    lines.push(`  Resolution: ${resVal.toFixed(4)} m/px`);
+    lines.push(`  Scale: 1:${scaleVal.toFixed(0)}`);
+    lines.push(`  Tile Size: ${tileVal} px`);
+    lines.push(`  Metatile: ${metaVal}×${metaVal}`);
+    lines.push(`  BBOX: ${bboxwVal.toFixed(0)} × ${bboxhVal.toFixed(0)} m`);
+    lines.push('');
+
+    if (validation.warnings.length === 0) {
+      lines.push('[OK] Alla värden inom normala intervall');
+      lines.push('[OK] Resolution och Scale är konsekventa');
+    } else {
+      lines.push('Varningar:');
+      validation.warnings.forEach((warn) => lines.push(`  ${warn}`));
+    }
+
+    return lines;
+  };
+
+  const calculate = (source = 'manual') => {
+    const validation = validateInputs();
+    const report = generateValidationReport(validation);
+    tryItSetReport(TOOL_KEY, report);
+    lastValidationResult = validation;
+
+    if (!validation.valid) {
+      updateStatus('Valideringsfel - se rapport.');
+      tryItLog(TOOL_KEY, 'ERROR', `Beräkning blockerad: ${validation.issues.length} fel`);
+      output.value = '';
+      if (estimatorOutput) estimatorOutput.textContent = '';
+      return null;
+    }
+
+    const { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal } = validation.values;
+
+    // Calculations
     const tileSpanM = resVal * tileVal;
     const metaSpanM = tileSpanM * metaVal;
-
     const tilesX = Math.ceil(bboxwVal / tileSpanM);
     const tilesY = Math.ceil(bboxhVal / tileSpanM);
-    const approxTiles = tilesX * tilesY;
+    const totalTiles = tilesX * tilesY;
+    const metatilesX = Math.ceil(bboxwVal / metaSpanM);
+    const metatilesY = Math.ceil(bboxhVal / metaSpanM);
+    const totalMetatiles = metatilesX * metatilesY;
 
+    // Seed recommendation
     let seedRec = '';
-    if (approxTiles < 5000) {
+    if (totalTiles < 5000) {
       seedRec = 'Seed hela området på denna zoom.';
-    } else if (approxTiles <= 50000) {
+    } else if (totalTiles <= 50000) {
       seedRec = 'Seed selektivt (prioritera kärnområde).';
     } else {
       seedRec = 'Seed bara vid behov, dela upp bbox och/eller minska zoomintervall.';
@@ -1278,34 +1618,140 @@ const initGridCalcTryIt = (block) => {
       `Scale: 1:${scaleVal.toFixed(0)}`,
       `Tile span (${tileVal}px): ${tileSpanM.toFixed(2)} m`,
       `Meta span (${metaVal}×${metaVal}): ${metaSpanM.toFixed(2)} m`,
-      `Approx tiles for bbox: ${approxTiles.toLocaleString('sv-SE')}`,
+      `Approx tiles for bbox: ${totalTiles.toLocaleString('sv-SE')}`,
       `Rekommendation: ${seedRec}`,
     ].join('\n');
 
     output.value = outText;
-    updateStatus('Beräknad.');
+
+    // Store calculation data
+    lastCalculationData = {
+      inputs: { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal },
+      derived: {
+        tileSpanM,
+        metaSpanM,
+        tilesX,
+        tilesY,
+        totalTiles,
+        metatilesX,
+        metatilesY,
+        totalMetatiles,
+        seedRec,
+      },
+      warnings: validation.warnings,
+    };
+    lastEstimatorData = null;
+
+    const warnText =
+      validation.warnings.length > 0 ? ` (${validation.warnings.length} varningar)` : '';
+    updateStatus(`Beräknad${warnText}.`);
+    tryItLog(
+      TOOL_KEY,
+      validation.warnings.length > 0 ? 'WARN' : 'OK',
+      `Beräkning från ${source}: ${totalTiles.toLocaleString('sv-SE')} tiles${warnText}`,
+    );
+
+    return lastCalculationData;
+  };
+
+  const estimateCache = () => {
+    if (!lastCalculationData || !estimatorOutput) {
+      updateStatus('Beräkna grid först.');
+      tryItLog(TOOL_KEY, 'WARN', 'Cache-estimat blockerat: ingen beräkning');
+      return;
+    }
+
+    const tileKb = parseFloat(tileKbInput?.value || '');
+    const compressionFactor = parseFloat(compressionInput?.value || '');
+
+    if (!Number.isFinite(tileKb) || tileKb <= 0) {
+      updateStatus('Ange en giltig tilestorlek (KB).');
+      tryItLog(TOOL_KEY, 'ERROR', 'Cache-estimat misslyckades: ogiltig tile KB');
+      return;
+    }
+
+    const validCompression =
+      Number.isFinite(compressionFactor) && compressionFactor > 0 ? compressionFactor : 1.0;
+
+    const { tilesX, tilesY, totalTiles, metatilesX, metatilesY, totalMetatiles } =
+      lastCalculationData.derived;
+    const totalKB = totalTiles * tileKb * validCompression;
+    const totalMB = totalKB / 1024;
+    const totalGB = totalMB / 1024;
+
+    const inputs = lastCalculationData.inputs;
+    const lines = [];
+    lines.push('Cache estimator report');
+    lines.push('');
+    lines.push('Inputs:');
+    lines.push(`- Resolution: ${inputs.resVal.toFixed(4)} m/px`);
+    lines.push(`- Tile size: ${inputs.tileVal} px`);
+    lines.push(`- Metatile: ${inputs.metaVal}×${inputs.metaVal}`);
+    lines.push(
+      `- BBOX width/height: ${inputs.bboxwVal.toFixed(0)} / ${inputs.bboxhVal.toFixed(0)} m`,
+    );
+    lines.push('');
+    lines.push('Derived:');
+    lines.push(
+      `- Tiles X/Y: ${tilesX.toLocaleString('sv-SE')} / ${tilesY.toLocaleString('sv-SE')}`,
+    );
+    lines.push(`- Total tiles: ${totalTiles.toLocaleString('sv-SE')}`);
+    lines.push(
+      `- Metatiles X/Y: ${metatilesX.toLocaleString('sv-SE')} / ${metatilesY.toLocaleString('sv-SE')}`,
+    );
+    lines.push(`- Total metatiles (seed requests): ${totalMetatiles.toLocaleString('sv-SE')}`);
+    lines.push('');
+    lines.push('Storage estimate:');
+    lines.push(`- Avg tile size: ${tileKb} KB`);
+    lines.push(`- Compression factor: ${validCompression}`);
+    if (totalGB >= 1) {
+      lines.push(`- Estimated size: ${totalMB.toFixed(2)} MB / ${totalGB.toFixed(2)} GB`);
+    } else {
+      lines.push(`- Estimated size: ${totalMB.toFixed(2)} MB`);
+    }
+    lines.push('');
+    lines.push('Assumptions:');
+    lines.push('- Constant tile size');
+    lines.push('- No deduplication');
+    lines.push('- No empty-tile skipping');
+
+    estimatorOutput.textContent = lines.join('\n');
+
+    lastEstimatorData = {
+      tileKb,
+      compressionFactor: validCompression,
+      totalKB,
+      totalMB,
+      totalGB,
+      estimatedRequests: totalMetatiles,
+    };
+
+    updateStatus('Cache-estimat klart.');
+    tryItLog(TOOL_KEY, 'OK', 'Cache-estimat beräknat');
   };
 
   const fromResolution = () => {
     const resVal = parseFloat(resolution.value);
     if (isNaN(resVal) || resVal <= 0) {
       updateStatus('Resolution måste vara ett tal > 0.');
+      tryItLog(TOOL_KEY, 'ERROR', 'Från Resolution: ogiltig resolution');
       return;
     }
     const scaleVal = resVal / PIXEL_SIZE_M;
     scale.value = scaleVal.toFixed(0);
-    calculate();
+    calculate('resolution');
   };
 
   const fromScale = () => {
     const scaleVal = parseFloat(scale.value);
     if (isNaN(scaleVal) || scaleVal <= 0) {
       updateStatus('Scale måste vara ett tal > 0.');
+      tryItLog(TOOL_KEY, 'ERROR', 'Från Scale: ogiltig scale');
       return;
     }
     const resVal = scaleVal * PIXEL_SIZE_M;
     resolution.value = resVal.toFixed(4);
-    calculate();
+    calculate('scale');
   };
 
   const setPreset = () => {
@@ -1315,22 +1761,30 @@ const initGridCalcTryIt = (block) => {
     meta.value = '4';
     bboxwidth.value = '100000';
     bboxheight.value = '100000';
+    if (tileKbInput) tileKbInput.value = '20';
+    if (compressionInput) compressionInput.value = '1.0';
     output.value = '';
+    if (reportOutput) reportOutput.textContent = '';
+    if (estimatorOutput) estimatorOutput.textContent = '';
     updateStatus('');
-    calculate();
+    tryItLog(TOOL_KEY, 'INFO', 'Preset applicerad (256/4×4)');
+    calculate('preset');
   };
 
   const copyOutput = async () => {
     const text = output.value.trim();
     if (!text) {
       updateStatus('Beräkna först.');
+      tryItLog(TOOL_KEY, 'WARN', 'Kopiera blockerad: ingen data');
       return;
     }
     try {
       await copyText(text);
       updateStatus('Kopierat.');
+      tryItLog(TOOL_KEY, 'OK', 'Resultat kopierat');
     } catch (error) {
       updateStatus('Kunde inte kopiera.');
+      tryItLog(TOOL_KEY, 'ERROR', 'Kopiera misslyckades');
     }
   };
 
@@ -1341,9 +1795,108 @@ const initGridCalcTryIt = (block) => {
     meta.value = '4';
     bboxwidth.value = '100000';
     bboxheight.value = '100000';
+    if (tileKbInput) tileKbInput.value = '20';
+    if (compressionInput) compressionInput.value = '1.0';
     output.value = '';
+    if (reportOutput) reportOutput.textContent = '';
+    if (estimatorOutput) estimatorOutput.textContent = '';
     updateStatus('');
+    lastValidationResult = null;
+    lastCalculationData = null;
+    lastEstimatorData = null;
+    tryItLog(TOOL_KEY, 'INFO', 'Formulär rensat');
   };
+
+  const downloadTxt = () => {
+    if (!lastCalculationData) {
+      updateStatus('Beräkna först.');
+      return;
+    }
+
+    const lines = [];
+    lines.push('═══ GRIDCALC RAPPORT ═══');
+    lines.push('');
+    lines.push('INPUT:');
+    const inp = lastCalculationData.inputs;
+    lines.push(`  Resolution: ${inp.resVal.toFixed(4)} m/px`);
+    lines.push(`  Scale: 1:${inp.scaleVal.toFixed(0)}`);
+    lines.push(`  Tile Size: ${inp.tileVal} px`);
+    lines.push(`  Metatile: ${inp.metaVal}×${inp.metaVal}`);
+    lines.push(`  BBOX: ${inp.bboxwVal.toFixed(0)} × ${inp.bboxhVal.toFixed(0)} m`);
+    lines.push('');
+    lines.push('BERÄKNADE VÄRDEN:');
+    const der = lastCalculationData.derived;
+    lines.push(`  Tile span: ${der.tileSpanM.toFixed(2)} m`);
+    lines.push(`  Metatile span: ${der.metaSpanM.toFixed(2)} m`);
+    lines.push(`  Tiles X: ${der.tilesX.toLocaleString('sv-SE')}`);
+    lines.push(`  Tiles Y: ${der.tilesY.toLocaleString('sv-SE')}`);
+    lines.push(`  Total tiles: ${der.totalTiles.toLocaleString('sv-SE')}`);
+    lines.push(`  Metatiles X: ${der.metatilesX.toLocaleString('sv-SE')}`);
+    lines.push(`  Metatiles Y: ${der.metatilesY.toLocaleString('sv-SE')}`);
+    lines.push(`  Total metatiles: ${der.totalMetatiles.toLocaleString('sv-SE')}`);
+    lines.push(`  Rekommendation: ${der.seedRec}`);
+
+    if (lastCalculationData.warnings.length > 0) {
+      lines.push('');
+      lines.push('VARNINGAR:');
+      lastCalculationData.warnings.forEach((w) => lines.push(`  ${w}`));
+    }
+
+    if (lastEstimatorData) {
+      lines.push('');
+      lines.push('CACHE / SEED ESTIMATOR:');
+      lines.push(`  Avg tile size: ${lastEstimatorData.tileKb} KB`);
+      lines.push(`  Compression factor: ${lastEstimatorData.compressionFactor}`);
+      lines.push(`  Estimated size: ${lastEstimatorData.totalMB.toFixed(2)} MB`);
+      if (lastEstimatorData.totalGB >= 1) {
+        lines.push(`  Estimated size (GB): ${lastEstimatorData.totalGB.toFixed(2)} GB`);
+      }
+      lines.push(
+        `  Estimated requests: ${lastEstimatorData.estimatedRequests.toLocaleString('sv-SE')}`,
+      );
+    }
+
+    if (reportOutput && reportOutput.textContent.trim()) {
+      lines.push('');
+      lines.push('═══ VALIDERINGSRAPPORT ═══');
+      lines.push('');
+      lines.push(reportOutput.textContent);
+    }
+
+    const content = lines.join('\n');
+    tryItDownload(`gridcalc-${Date.now()}.txt`, content, 'text/plain');
+    updateStatus('TXT nedladdat.');
+    tryItLog(TOOL_KEY, 'OK', 'TXT-rapport nedladdad');
+  };
+
+  const downloadJson = () => {
+    if (!lastCalculationData) {
+      updateStatus('Beräkna först.');
+      return;
+    }
+
+    const jsonData = {
+      inputs: lastCalculationData.inputs,
+      derived: lastCalculationData.derived,
+      warnings: lastCalculationData.warnings,
+      estimator: lastEstimatorData,
+      timestamp: new Date().toISOString(),
+    };
+
+    const content = JSON.stringify(jsonData, null, 2);
+    tryItDownload(`gridcalc-${Date.now()}.json`, content, 'application/json');
+    updateStatus('JSON nedladdat.');
+    tryItLog(TOOL_KEY, 'OK', 'JSON nedladdat');
+  };
+
+  // Advanced mode toggle
+  if (advancedToggle) {
+    advancedToggle.addEventListener('change', () => {
+      const enabled = advancedToggle.checked;
+      tryItShowAdvanced(TOOL_KEY, enabled);
+      tryItLog(TOOL_KEY, 'INFO', `Advanced mode ${enabled ? 'aktiverad' : 'inaktiverad'}`);
+    });
+  }
 
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -1356,13 +1909,21 @@ const initGridCalcTryIt = (block) => {
         setPreset();
       } else if (action === 'copy') {
         copyOutput();
+      } else if (action === 'download-txt') {
+        downloadTxt();
+      } else if (action === 'download-json') {
+        downloadJson();
+      } else if (action === 'estimate-cache') {
+        estimateCache();
       } else if (action === 'clear') {
         clearAll();
       }
     });
   });
 
-  calculate();
+  // Initialize
+  tryItLog(TOOL_KEY, 'INFO', 'Gridcalc-verktyg initierat');
+  calculate('initial');
 };
 
 const initBboxTryIt = (block) => {
@@ -1380,14 +1941,51 @@ const initBboxTryIt = (block) => {
   const status = block.querySelector('#bbox-status');
   const buttons = block.querySelectorAll('[data-bbox-action]');
 
-  if (!base || !layer || !format || !width || !height || !minx || !maxx || !miny || !maxy || !output || !urlOutput || !status) {
+  // Enterprise mode elements
+  const advancedToggle = block.querySelector('#bbox-advanced-toggle');
+  const advancedPanel = block.querySelector('#bbox-advanced-panel');
+  const validationOutput = block.querySelector('#bbox-validation');
+  const runLogOutput = block.querySelector('#bbox-runlog');
+  const normalizedOutput = block.querySelector('#bbox-normalized');
+
+  if (
+    !base ||
+    !layer ||
+    !format ||
+    !width ||
+    !height ||
+    !minx ||
+    !maxx ||
+    !miny ||
+    !maxy ||
+    !output ||
+    !urlOutput ||
+    !status
+  ) {
     return;
   }
+
+  // CRS constant for this BBOX tool
+  const BBOX_CRS = 'EPSG:3008';
 
   const presets = {
     'preset-1': { minx: 100000, miny: 6400000, maxx: 200000, maxy: 6500000 },
     'preset-2': { minx: 200000, miny: 6500000, maxx: 350000, maxy: 6650000 },
     'preset-3': { minx: 350000, miny: 6650000, maxx: 500000, maxy: 6800000 },
+  };
+
+  // Run log storage
+  let runLog = [];
+  let hasGenerated = false;
+
+  const addToRunLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString('sv-SE');
+    runLog.push(`[${timestamp}] ${message}`);
+    if (runLog.length > 20) runLog.shift(); // Keep last 20 entries
+    if (runLogOutput) {
+      runLogOutput.textContent = runLog.join('\n');
+      runLogOutput.scrollTop = runLogOutput.scrollHeight;
+    }
   };
 
   const updateStatus = (message) => {
@@ -1396,38 +1994,110 @@ const initBboxTryIt = (block) => {
     }
   };
 
+  const updateValidationReport = (bbox, issues = []) => {
+    if (!validationOutput) return;
+
+    let report = '═══ VALIDATION REPORT ═══\n\n';
+
+    if (bbox) {
+      const width = bbox.maxx - bbox.minx;
+      const height = bbox.maxy - bbox.miny;
+      const area = width * height;
+      const aspectRatio = (width / height).toFixed(3);
+
+      report += `Status: ${issues.length === 0 ? '[OK] VALID' : '[WARN] WARNINGS'}\n\n`;
+      report += `Dimensions:\n`;
+      report += `  Width:  ${width.toLocaleString('sv-SE')} m\n`;
+      report += `  Height: ${height.toLocaleString('sv-SE')} m\n`;
+      report += `  Area:   ${area.toLocaleString('sv-SE')} m²\n`;
+      report += `  Aspect: ${aspectRatio}\n\n`;
+
+      report += `Bounds:\n`;
+      report += `  X: ${bbox.minx.toLocaleString('sv-SE')} → ${bbox.maxx.toLocaleString('sv-SE')}\n`;
+      report += `  Y: ${bbox.miny.toLocaleString('sv-SE')} → ${bbox.maxy.toLocaleString('sv-SE')}\n\n`;
+
+      // Transparent rule messages
+      if (issues.length > 0) {
+        report += `Issues:\n`;
+        issues.forEach((issue, i) => {
+          report += `  ${i + 1}. ${issue}\n`;
+        });
+      } else {
+        report += `[OK] No issues detected\n`;
+        report += `[OK] Coordinates within valid range\n`;
+        report += `[OK] Min < Max for both axes\n`;
+      }
+    } else {
+      report += `Status: [ERROR] INVALID\n\n`;
+      report += `Unable to validate BBOX.\n`;
+      if (issues.length > 0) {
+        report += `\nErrors:\n`;
+        issues.forEach((issue, i) => {
+          report += `  ${i + 1}. ${issue}\n`;
+        });
+      }
+    }
+
+    validationOutput.textContent = report;
+  };
+
+  const updateNormalizedBbox = (bbox) => {
+    if (!normalizedOutput || !bbox) return;
+
+    let normalized = '{\n';
+    normalized += `  "minx": ${bbox.minx},\n`;
+    normalized += `  "miny": ${bbox.miny},\n`;
+    normalized += `  "maxx": ${bbox.maxx},\n`;
+    normalized += `  "maxy": ${bbox.maxy},\n`;
+    normalized += `  "crs": "${BBOX_CRS}",\n`;
+    normalized += `  "width": ${bbox.maxx - bbox.minx},\n`;
+    normalized += `  "height": ${bbox.maxy - bbox.miny}\n`;
+    normalized += '}';
+
+    normalizedOutput.value = normalized;
+  };
+
   const validateBbox = () => {
     const minxVal = parseFloat(minx.value);
     const maxxVal = parseFloat(maxx.value);
     const minyVal = parseFloat(miny.value);
     const maxyVal = parseFloat(maxy.value);
 
+    const issues = [];
+
     if (isNaN(minxVal) || isNaN(maxxVal) || isNaN(minyVal) || isNaN(maxyVal)) {
+      issues.push('Alla koordinater måste vara tal.');
+      updateValidationReport(null, issues);
       updateStatus('Alla koordinater måste vara tal.');
       return null;
     }
 
     if (minxVal >= maxxVal) {
-      updateStatus('Min X måste vara mindre än Max X.');
-      return null;
+      issues.push('Min X måste vara mindre än Max X.');
     }
 
     if (minyVal >= maxyVal) {
-      updateStatus('Min Y måste vara mindre än Max Y.');
-      return null;
+      issues.push('Min Y måste vara mindre än Max Y.');
     }
 
     if (minxVal < 0 || maxxVal > 1500000) {
-      updateStatus('X-värden måste ligga mellan 0 och 1,500,000.');
-      return null;
+      issues.push('X-värden måste ligga mellan 0 och 1,500,000.');
     }
 
     if (minyVal < 5500000 || maxyVal > 8000000) {
-      updateStatus('Y-värden måste ligga mellan 5,500,000 och 8,000,000.');
+      issues.push('Y-värden måste ligga mellan 5,500,000 och 8,000,000.');
+    }
+
+    const bbox = { minx: minxVal, maxx: maxxVal, miny: minyVal, maxy: maxyVal };
+
+    if (issues.length > 0) {
+      updateValidationReport(bbox, issues);
+      updateStatus(issues[0]);
       return null;
     }
 
-    return { minx: minxVal, maxx: maxxVal, miny: minyVal, maxy: maxyVal };
+    updateValidationReport(bbox, []);
+    return bbox;
   };
 
   const generate = () => {
@@ -1435,16 +2105,21 @@ const initBboxTryIt = (block) => {
     if (!bbox) {
       output.value = '';
       urlOutput.value = '';
+      updateNormalizedBbox(null);
+      addToRunLog('[ERROR] Generering misslyckades: Ogiltig BBOX');
       return;
     }
 
     const bboxStr = `${bbox.minx},${bbox.miny},${bbox.maxx},${bbox.maxy}`;
     output.value = bboxStr;
+    hasGenerated = true;
+    updateNormalizedBbox(bbox);
 
     const baseValue = base.value.trim();
     if (!baseValue) {
       updateStatus('Fyll i en bas‑URL för WMS-anropet.');
       urlOutput.value = '';
+      addToRunLog('[WARN] Generering delvis: BBOX skapad, men ingen URL (saknar bas-URL)');
       return;
     }
 
@@ -1460,14 +2135,16 @@ const initBboxTryIt = (block) => {
       params.set('bbox', bboxStr);
       params.set('width', width.value.trim());
       params.set('height', height.value.trim());
-      params.set('srs', 'EPSG:3008');
+      params.set('srs', BBOX_CRS);
 
       url.search = params.toString();
       urlOutput.value = url.toString();
       updateStatus('Klar.');
+      addToRunLog(`[OK] Genererad: ${bboxStr}`);
     } catch (error) {
       updateStatus('Ogiltig bas‑URL.');
       urlOutput.value = '';
+      addToRunLog('[ERROR] Generering misslyckades: Ogiltig bas-URL');
     }
   };
 
@@ -1476,9 +2153,15 @@ const initBboxTryIt = (block) => {
     miny.value = preset.miny;
     maxx.value = preset.maxx;
     maxy.value = preset.maxy;
+    hasGenerated = false;
     output.value = '';
     urlOutput.value = '';
+    updateNormalizedBbox(null);
+    updateValidationReport(null, []);
     updateStatus('');
+    addToRunLog(
+      `[OK] Preset laddad: X[${preset.minx}-${preset.maxx}] Y[${preset.miny}-${preset.maxy}]`,
+    );
   };
 
   const copyBbox = async () => {
@@ -1490,8 +2173,10 @@ const initBboxTryIt = (block) => {
     try {
       await copyText(text);
       updateStatus('BBOX kopierad.');
+      addToRunLog('[OK] BBOX kopierad till clipboard');
     } catch (error) {
       updateStatus('Kunde inte kopiera.');
+      addToRunLog('[ERROR] Kopiering misslyckades');
     }
   };
 
@@ -1504,9 +2189,173 @@ const initBboxTryIt = (block) => {
     try {
       await copyText(text);
       updateStatus('URL kopierad.');
+      addToRunLog('[OK] WMS URL kopierad till clipboard');
     } catch (error) {
       updateStatus('Kunde inte kopiera.');
+      addToRunLog('[ERROR] Kopiering misslyckades');
     }
+  };
+
+  const exportGeoJSON = () => {
+    const bbox = validateBbox();
+    if (!bbox) {
+      updateStatus('Generera en giltig BBOX först.');
+      return;
+    }
+
+    const geojson = {
+      type: 'FeatureCollection',
+      crs: {
+        type: 'name',
+        properties: { name: BBOX_CRS },
+      },
+      features: [
+        {
+          type: 'Feature',
+          properties: {
+            name: 'BBOX Area',
+            minx: bbox.minx,
+            miny: bbox.miny,
+            maxx: bbox.maxx,
+            maxy: bbox.maxy,
+            width: bbox.maxx - bbox.minx,
+            height: bbox.maxy - bbox.miny,
+          },
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [bbox.minx, bbox.miny],
+                [bbox.maxx, bbox.miny],
+                [bbox.maxx, bbox.maxy],
+                [bbox.minx, bbox.maxy],
+                [bbox.minx, bbox.miny],
+              ],
+            ],
+          },
+        },
+      ],
+    };
+
+    const jsonStr = JSON.stringify(geojson, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bbox_${Date.now()}.geojson`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    updateStatus('GeoJSON exporterad.');
+    addToRunLog('[OK] GeoJSON exporterad');
+  };
+
+  const exportTXT = () => {
+    const bbox = validateBbox();
+    if (!bbox) {
+      updateStatus('Generera en giltig BBOX först.');
+      return;
+    }
+
+    const bboxStr = output.value.trim();
+    const urlStr = urlOutput.value.trim();
+    const normalizedStr = normalizedOutput ? normalizedOutput.value : '';
+
+    let txtContent = '═══ BBOX EXPORT ═══\n\n';
+    txtContent += `Generated: ${new Date().toLocaleString('sv-SE')}\n`;
+    txtContent += `CRS: ${BBOX_CRS} (SWEREF 99 13 30)\n\n`;
+
+    txtContent += '─── BBOX String ───\n';
+    txtContent += `${bboxStr}\n\n`;
+
+    if (normalizedStr) {
+      txtContent += '─── Normalized ───\n';
+      txtContent += `${normalizedStr}\n\n`;
+    }
+
+    if (urlStr) {
+      txtContent += '─── WMS GetMap URL ───\n';
+      txtContent += `${urlStr}\n\n`;
+    }
+
+    txtContent += '─── Details ───\n';
+    txtContent += `Layer: ${layer.value}\n`;
+    txtContent += `Format: ${format.value}\n`;
+    txtContent += `Size: ${width.value}x${height.value}px\n`;
+    txtContent += `Width: ${(bbox.maxx - bbox.minx).toLocaleString('sv-SE')} m\n`;
+    txtContent += `Height: ${(bbox.maxy - bbox.miny).toLocaleString('sv-SE')} m\n`;
+
+    const blob = new Blob([txtContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `bbox_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    updateStatus('TXT-fil exporterad.');
+    addToRunLog('[OK] TXT-fil exporterad');
+  };
+
+  const sendToGridcalc = () => {
+    const minxVal = parseFloat(minx.value);
+    const maxxVal = parseFloat(maxx.value);
+    const minyVal = parseFloat(miny.value);
+    const maxyVal = parseFloat(maxy.value);
+
+    if (![minxVal, maxxVal, minyVal, maxyVal].every((val) => Number.isFinite(val))) {
+      updateStatus('Alla koordinater måste vara tal.');
+      updateValidationReport(null, ['Alla koordinater måste vara tal.']);
+      addToRunLog('[ERROR] Skicka till Gridcalc misslyckades: Ogiltiga koordinater');
+      return;
+    }
+
+    const swappedX = minxVal > maxxVal;
+    const swappedY = minyVal > maxyVal;
+    const minxNorm = Math.min(minxVal, maxxVal);
+    const maxxNorm = Math.max(minxVal, maxxVal);
+    const minyNorm = Math.min(minyVal, maxyVal);
+    const maxyNorm = Math.max(minyVal, maxyVal);
+
+    if (swappedX || swappedY) {
+      updateStatus('Min/Max omkastade - använder normaliserade värden.');
+      addToRunLog('[WARN] Min/Max omkastade - använder normaliserade värden');
+      if (!hasGenerated) {
+        addToRunLog('[WARN] Inga fält ändrades (klicka Generera för att normalisera)');
+      }
+    }
+
+    const bboxWidth = Math.abs(maxxNorm - minxNorm);
+    const bboxHeight = Math.abs(maxyNorm - minyNorm);
+
+    const gridcalcWidth = document.getElementById('gridcalc-bboxwidth');
+    const gridcalcHeight = document.getElementById('gridcalc-bboxheight');
+    const gridcalcResolution = document.getElementById('gridcalc-resolution');
+    const gridcalcScale = document.getElementById('gridcalc-scale');
+    const fromResolutionBtn = document.querySelector('[data-gridcalc-action="from-resolution"]');
+    const fromScaleBtn = document.querySelector('[data-gridcalc-action="from-scale"]');
+
+    if (gridcalcWidth) gridcalcWidth.value = Math.round(bboxWidth).toString();
+    if (gridcalcHeight) gridcalcHeight.value = Math.round(bboxHeight).toString();
+
+    addToRunLog('[INFO] Sent bbox width/height to Gridcalc');
+    if (typeof window.tryItLog === 'function') {
+      window.tryItLog('gridcalc', 'INFO', 'Received bbox width/height from BBOX tool');
+    }
+
+    if (gridcalcResolution && gridcalcResolution.value.trim() && fromResolutionBtn) {
+      fromResolutionBtn.click();
+    } else if (gridcalcScale && gridcalcScale.value.trim() && fromScaleBtn) {
+      fromScaleBtn.click();
+    } else {
+      updateStatus('Skickade BBOX-bredd/höjd. Ange resolution eller scale för beräkning.');
+    }
+
+    const gridcalcSection = document.getElementById('gridcalc');
+    if (gridcalcSection) {
+      gridcalcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if (gridcalcWidth) gridcalcWidth.focus();
   };
 
   const clearBbox = () => {
@@ -1514,10 +2363,22 @@ const initBboxTryIt = (block) => {
     miny.value = '6400000';
     maxx.value = '200000';
     maxy.value = '6500000';
+    hasGenerated = false;
     output.value = '';
     urlOutput.value = '';
+    if (normalizedOutput) normalizedOutput.value = '';
+    if (validationOutput) validationOutput.textContent = '';
     updateStatus('');
+    addToRunLog('[OK] Formulär rensat');
   };
+
+  // Advanced mode toggle
+  if (advancedToggle && advancedPanel) {
+    advancedToggle.addEventListener('change', () => {
+      advancedPanel.style.display = advancedToggle.checked ? 'block' : 'none';
+      addToRunLog(`[OK] Advanced mode ${advancedToggle.checked ? 'aktiverad' : 'inaktiverad'}`);
+    });
+  }
 
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -1530,6 +2391,10 @@ const initBboxTryIt = (block) => {
         copyBbox();
       } else if (action === 'copy-url') {
         copyUrl();
+      } else if (action === 'export-geojson') {
+        exportGeoJSON();
+      } else if (action === 'export-txt') {
+        exportTXT();
       } else if (action === 'send-to-urlbuilder') {
         const bboxText = output.value.trim();
         if (!bboxText) {
@@ -1541,16 +2406,23 @@ const initBboxTryIt = (block) => {
         const urlCrs = document.getElementById('urlbuilder-crs');
 
         if (urlBbox) urlBbox.value = bboxText;
-        if (urlCrs) urlCrs.value = 'EPSG:3006';
+        if (urlCrs) urlCrs.value = BBOX_CRS;
 
         updateStatus('Skickade BBOX till URL builder.');
-        const target = document.getElementById('url-builder') || document.getElementById('urlbuilder-base');
+        addToRunLog('[OK] Skickad till URL builder');
+        const target =
+          document.getElementById('url-builder') || document.getElementById('urlbuilder-base');
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (action === 'send-to-gridcalc') {
+        sendToGridcalc();
       } else if (action === 'clear') {
         clearBbox();
       }
     });
   });
+
+  // Initialize run log
+  addToRunLog('[OK] BBOX verktyg initierat');
 };
 
 const initSldPreviewTryIt = (block) => {
@@ -1680,7 +2552,7 @@ const initSldPreviewTryIt = (block) => {
     const fillOpacity = opacity || 1;
 
     let path = '';
-    const r = (size / 2) || 8;
+    const r = size / 2 || 8;
 
     if (wellKnownName === 'square') {
       return `<rect x="${centerX - r}" y="${centerY - r}" width="${r * 2}" height="${r * 2}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
@@ -1784,7 +2656,8 @@ const initSldPreviewTryIt = (block) => {
     if (!symbolizerType) {
       status.textContent = 'Ingen symbolizer hittades.';
       preview.innerHTML = '';
-      summary.textContent = 'Ingen PointSymbolizer, LineSymbolizer eller PolygonSymbolizer hittades.';
+      summary.textContent =
+        'Ingen PointSymbolizer, LineSymbolizer eller PolygonSymbolizer hittades.';
       return;
     }
 
@@ -1852,146 +2725,64 @@ const initSldPreviewTryIt = (block) => {
   });
 };
 
-const initMapSandboxTryIt = (block) => {
-  const bboxWidth = block.querySelector('#ms-bbox-width');
-  const bboxHeight = block.querySelector('#ms-bbox-height');
-  const resolution = block.querySelector('#ms-resolution');
-  const tile = block.querySelector('#ms-tile');
-  const meta = block.querySelector('#ms-meta');
-  const canvas = block.querySelector('#ms-canvas');
-  const status = block.querySelector('#ms-status');
-  const buttons = block.querySelectorAll('[data-ms-action]');
-
-  if (!bboxWidth || !bboxHeight || !resolution || !tile || !meta || !canvas || !status) {
-    return;
-  }
-
-  const ctx = canvas.getContext('2d');
-
-  const updateStatus = (message) => {
-    if (status) {
-      status.textContent = message;
-    }
-  };
-
-  const draw = () => {
-    const bboxW = parseFloat(bboxWidth.value);
-    const bboxH = parseFloat(bboxHeight.value);
-    const resVal = parseFloat(resolution.value);
-    const tileVal = parseFloat(tile.value);
-    const metaVal = parseFloat(meta.value);
-
-    if (
-      isNaN(bboxW) || isNaN(bboxH) || isNaN(resVal) || isNaN(tileVal) || isNaN(metaVal) ||
-      bboxW <= 0 || bboxH <= 0 || resVal <= 0 || tileVal <= 0 || metaVal <= 0
-    ) {
-      updateStatus('Alla värden måste vara tal > 0.');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      return;
-    }
-
-    const tileSpanM = resVal * tileVal;
-    const metaSpanM = tileSpanM * metaVal;
-
-    const numTilesX = Math.ceil(bboxW / tileSpanM);
-    const numTilesY = Math.ceil(bboxH / tileSpanM);
-
-    const padding = 20;
-    const availWidth = canvas.width - 2 * padding;
-    const availHeight = canvas.height - 2 * padding;
-
-    const bboxAspect = bboxW / bboxH;
-    const canvasAspect = availWidth / availHeight;
-
-    let scaledWidth, scaledHeight;
-    if (bboxAspect > canvasAspect) {
-      scaledWidth = availWidth;
-      scaledHeight = availWidth / bboxAspect;
-    } else {
-      scaledHeight = availHeight;
-      scaledWidth = availHeight * bboxAspect;
-    }
-
-    const startX = padding + (availWidth - scaledWidth) / 2;
-    const startY = padding + (availHeight - scaledHeight) / 2;
-
-    const scaleX = scaledWidth / bboxW;
-    const scaleY = scaledHeight / bboxH;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.strokeStyle = '#555555';
-    ctx.lineWidth = 2;
-    for (let i = 0; i <= numTilesX; i++) {
-      const xPixels = (i * metaSpanM) * scaleX;
-      if (xPixels <= scaledWidth) {
-        ctx.beginPath();
-        ctx.moveTo(startX + xPixels, startY);
-        ctx.lineTo(startX + xPixels, startY + scaledHeight);
-        ctx.stroke();
-      }
-    }
-    for (let j = 0; j <= numTilesY; j++) {
-      const yPixels = (j * metaSpanM) * scaleY;
-      if (yPixels <= scaledHeight) {
-        ctx.beginPath();
-        ctx.moveTo(startX, startY + yPixels);
-        ctx.lineTo(startX + scaledWidth, startY + yPixels);
-        ctx.stroke();
-      }
-    }
-
-    ctx.strokeStyle = '#cccccc';
-    ctx.lineWidth = 1;
-    for (let i = 0; i <= Math.ceil(bboxW / tileSpanM); i++) {
-      const xPixels = (i * tileSpanM) * scaleX;
-      if (xPixels <= scaledWidth) {
-        ctx.beginPath();
-        ctx.moveTo(startX + xPixels, startY);
-        ctx.lineTo(startX + xPixels, startY + scaledHeight);
-        ctx.stroke();
-      }
-    }
-    for (let j = 0; j <= Math.ceil(bboxH / tileSpanM); j++) {
-      const yPixels = (j * tileSpanM) * scaleY;
-      if (yPixels <= scaledHeight) {
-        ctx.beginPath();
-        ctx.moveTo(startX, startY + yPixels);
-        ctx.lineTo(startX + scaledWidth, startY + yPixels);
-        ctx.stroke();
-      }
-    }
-
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(startX, startY, scaledWidth, scaledHeight);
-
-    const infoMsg = `BBOX: ${bboxW}×${bboxH}m | Tile: ${tileSpanM.toFixed(0)}m | Meta: ${metaSpanM.toFixed(0)}m | Grid: ${numTilesX}×${numTilesY} tiles`;
-    updateStatus(infoMsg);
-  };
-
-  const clearCanvas = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    updateStatus('');
-  };
-
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const action = button.dataset.msAction;
-      if (action === 'draw') {
-        draw();
-      } else if (action === 'clear') {
-        clearCanvas();
-      }
-    });
-  });
-};
-
 const initTryIt = () => {
   const tryItBlocks = document.querySelectorAll('[data-tryit]');
   if (!tryItBlocks.length) {
     return;
   }
+
+  // ═══════════════════════════════════════════════════════════════
+  // TryIt Enterprise Toolkit
+  // ═══════════════════════════════════════════════════════════════
+  const tryItLogs = {};
+
+  window.tryItLog = (toolKey, level, message) => {
+    if (!tryItLogs[toolKey]) tryItLogs[toolKey] = [];
+    const timestamp = new Date().toLocaleTimeString('sv-SE');
+    const prefix = `[${timestamp}] [${level}]`;
+    tryItLogs[toolKey].push(`${prefix} ${message}`);
+    if (tryItLogs[toolKey].length > 20) tryItLogs[toolKey].shift();
+
+    const logEl = document.getElementById(`${toolKey}-runlog`);
+    if (logEl) {
+      logEl.textContent = tryItLogs[toolKey].join('\n');
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+  };
+
+  window.tryItSetReport = (toolKey, lines) => {
+    const reportEl = document.getElementById(`${toolKey}-validation`);
+    if (reportEl) {
+      reportEl.textContent = lines.join('\n');
+    }
+  };
+
+  window.tryItCopy = async (text) => {
+    try {
+      await copyText(text);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  window.tryItDownload = (filename, content, mime = 'text/plain') => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  window.tryItShowAdvanced = (toolKey, enabled) => {
+    const panel = document.getElementById(`${toolKey}-advanced-panel`);
+    if (panel) {
+      panel.style.display = enabled ? 'block' : 'none';
+    }
+  };
+  // ═══════════════════════════════════════════════════════════════
 
   const updateStatus = (element, message) => {
     if (element) {
@@ -2003,38 +2794,297 @@ const initTryIt = () => {
     const input = block.querySelector('#json-tryit-input');
     const output = block.querySelector('#json-tryit-output');
     const status = block.querySelector('#json-tryit-status');
+    const reportOutput = block.querySelector('#json-validation');
+    const logOutput = block.querySelector('#json-runlog');
+    const metaOutput = block.querySelector('#json-meta');
+    const advancedToggle = block.querySelector('#json-advanced-toggle');
+    const advancedPanel = block.querySelector('#json-advanced-panel');
     const buttons = block.querySelectorAll('[data-json-action]');
 
     if (!input || !output || !status || !buttons.length) {
       return;
     }
 
+    const runLog = [];
+    let lastValidation = null;
+
+    const addToRunLog = (action, level, message = '') => {
+      const ts = new Date().toLocaleTimeString('sv-SE');
+      const msg = message ? `${message}` : '';
+      const line = `[${ts}] [${level}] ${action} ${msg}`.trim();
+      runLog.push(line);
+      if (runLog.length > 20) runLog.shift();
+      if (logOutput) logOutput.textContent = runLog.join('\n');
+    };
+
     const setOutput = (value) => {
       output.textContent = value;
     };
 
+    const setReport = (value) => {
+      if (reportOutput) reportOutput.textContent = value;
+    };
+
+    const setMeta = (value) => {
+      if (metaOutput) metaOutput.textContent = value;
+    };
+
+    const updateStatusText = (msg) => {
+      if (status) status.textContent = msg;
+    };
+
+    const extractBbox = (geometry) => {
+      let minx = Infinity;
+      let miny = Infinity;
+      let maxx = -Infinity;
+      let maxy = -Infinity;
+      let pointCount = 0;
+
+      const processPoint = (coord) => {
+        if (Array.isArray(coord) && coord.length >= 2) {
+          const [x, y] = coord;
+          if (typeof x === 'number' && typeof y === 'number') {
+            minx = Math.min(minx, x);
+            miny = Math.min(miny, y);
+            maxx = Math.max(maxx, x);
+            maxy = Math.max(maxy, y);
+            pointCount++;
+          }
+        }
+      };
+
+      const processCoordinates = (coords, depth) => {
+        if (!Array.isArray(coords)) return;
+        if (depth === 0) {
+          processPoint(coords);
+        } else {
+          coords.forEach((c) => processCoordinates(c, depth - 1));
+        }
+      };
+
+      const walkGeometry = (geom) => {
+        if (!geom || !geom.type) return;
+
+        if (geom.type === 'GeometryCollection' && Array.isArray(geom.geometries)) {
+          geom.geometries.forEach((g) => walkGeometry(g));
+          return;
+        }
+
+        if (!geom.coordinates) return;
+
+        switch (geom.type) {
+          case 'Point':
+            processCoordinates(geom.coordinates, 0);
+            break;
+          case 'MultiPoint':
+          case 'LineString':
+            processCoordinates(geom.coordinates, 1);
+            break;
+          case 'MultiLineString':
+          case 'Polygon':
+            processCoordinates(geom.coordinates, 2);
+            break;
+          case 'MultiPolygon':
+            processCoordinates(geom.coordinates, 3);
+            break;
+          default:
+            break;
+        }
+      };
+
+      walkGeometry(geometry);
+
+      if (pointCount === 0) {
+        return null;
+      }
+
+      return { minx, miny, maxx, maxy, pointCount };
+    };
+
+    const analyzeGeoJson = (obj) => {
+      const result = {
+        isGeoJson: false,
+        type: null,
+        featureCount: 0,
+        geometryTypes: new Set(),
+        bbox: null,
+        warnings: [],
+      };
+
+      if (!obj || typeof obj !== 'object') {
+        return result;
+      }
+
+      const collectGeometryTypes = (geom) => {
+        if (geom && geom.type) {
+          result.geometryTypes.add(geom.type);
+          if (geom.type === 'GeometryCollection' && Array.isArray(geom.geometries)) {
+            geom.geometries.forEach((g) => collectGeometryTypes(g));
+          }
+        }
+      };
+
+      if (obj.type === 'FeatureCollection' && Array.isArray(obj.features)) {
+        result.isGeoJson = true;
+        result.type = 'FeatureCollection';
+        result.featureCount = obj.features.length;
+
+        const allGeometries = [];
+        obj.features.forEach((f) => {
+          if (f.geometry) {
+            collectGeometryTypes(f.geometry);
+            allGeometries.push(f.geometry);
+          }
+        });
+
+        let combinedBbox = null;
+        allGeometries.forEach((geom) => {
+          const bbox = extractBbox(geom);
+          if (bbox) {
+            if (!combinedBbox) {
+              combinedBbox = bbox;
+            } else {
+              combinedBbox.minx = Math.min(combinedBbox.minx, bbox.minx);
+              combinedBbox.miny = Math.min(combinedBbox.miny, bbox.miny);
+              combinedBbox.maxx = Math.max(combinedBbox.maxx, bbox.maxx);
+              combinedBbox.maxy = Math.max(combinedBbox.maxy, bbox.maxy);
+              combinedBbox.pointCount += bbox.pointCount;
+            }
+          }
+        });
+        result.bbox = combinedBbox;
+      } else if (obj.type === 'Feature' && obj.geometry) {
+        result.isGeoJson = true;
+        result.type = 'Feature';
+        result.featureCount = 1;
+        collectGeometryTypes(obj.geometry);
+        result.bbox = extractBbox(obj.geometry);
+      } else if (
+        obj.type &&
+        [
+          'Point',
+          'LineString',
+          'Polygon',
+          'MultiPoint',
+          'MultiLineString',
+          'MultiPolygon',
+          'GeometryCollection',
+        ].includes(obj.type)
+      ) {
+        result.isGeoJson = true;
+        result.type = obj.type;
+        collectGeometryTypes(obj);
+        result.bbox = extractBbox(obj);
+      }
+
+      if (result.bbox) {
+        const { minx, miny, maxx, maxy } = result.bbox;
+        if (Math.abs(miny) > 90 || Math.abs(maxy) > 90) {
+          if (Math.abs(minx) <= 90 && Math.abs(maxx) <= 90) {
+            result.warnings.push('Koordinater kan vara omvända (lat/lon istället för lon/lat).');
+          }
+        }
+      } else if (result.isGeoJson) {
+        result.warnings.push('Inga koordinater hittade.');
+      }
+
+      return result;
+    };
+
+    const generateReport = (parsed, analysis) => {
+      const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
+
+      const rootType = Array.isArray(parsed)
+        ? 'Array'
+        : typeof parsed === 'object'
+          ? 'Object'
+          : typeof parsed;
+      lines.push(`Rottyp: ${rootType}`);
+
+      lines.push(`GeoJSON: ${analysis.isGeoJson ? '[OK] Ja' : 'Nej'}`);
+
+      if (analysis.isGeoJson) {
+        lines.push(`Typ: ${analysis.type}`);
+        if (analysis.featureCount > 0) {
+          lines.push(`Features: ${analysis.featureCount}`);
+        }
+        if (analysis.geometryTypes.size > 0) {
+          lines.push(`Geometrytyper: ${Array.from(analysis.geometryTypes).join(', ')}`);
+        }
+        if (analysis.bbox) {
+          const { minx, miny, maxx, maxy, pointCount } = analysis.bbox;
+          lines.push(
+            `BBOX: [OK] ${minx.toFixed(6)},${miny.toFixed(6)},${maxx.toFixed(6)},${maxy.toFixed(6)}`,
+          );
+          lines.push(`Punkter analyserade: ${pointCount}`);
+        } else {
+          lines.push('BBOX: [WARN] Inga koordinater');
+        }
+        lines.push('CRS: [INFO] GeoJSON standard är EPSG:4326 om inte angivet');
+      }
+
+      if (analysis.warnings.length > 0) {
+        lines.push('');
+        lines.push('Varningar:');
+        analysis.warnings.forEach((w) => lines.push(`  [WARN] ${w}`));
+      }
+
+      return lines.join('\n');
+    };
+
+    const generateMeta = (analysis) => {
+      if (!analysis.bbox) return 'Ingen BBOX tillgänglig.';
+
+      const { minx, miny, maxx, maxy, pointCount } = analysis.bbox;
+      const lines = [
+        `minx: ${minx.toFixed(6)}`,
+        `miny: ${miny.toFixed(6)}`,
+        `maxx: ${maxx.toFixed(6)}`,
+        `maxy: ${maxy.toFixed(6)}`,
+        `punkter: ${pointCount}`,
+      ];
+      return lines.join('\n');
+    };
+
     const validateJson = () => {
       const raw = input.value.trim();
+
       if (!raw) {
-        updateStatus(status, 'Fyll i JSON att validera.');
         setOutput('');
+        setReport('Ingen input.');
+        setMeta('');
+        updateStatusText('Ange JSON att validera.');
+        addToRunLog('VALIDATE', 'WARN', 'Ingen input');
+        lastValidation = null;
         return;
       }
+
       try {
         const parsed = JSON.parse(raw);
+        const analysis = analyzeGeoJson(parsed);
+
         setOutput(JSON.stringify(parsed, null, 2));
-        updateStatus(status, 'JSON är giltig.');
+        setReport(generateReport(parsed, analysis));
+        setMeta(generateMeta(analysis));
+        updateStatusText('JSON är giltig.');
+        addToRunLog('VALIDATE', 'OK', `GeoJSON: ${analysis.isGeoJson ? 'ja' : 'nej'}`);
+
+        lastValidation = { parsed, analysis };
       } catch (error) {
         setOutput('');
-        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+        setReport(`[ERROR] Parse-fel\n\n${error.message}`);
+        setMeta('');
+        updateStatusText('Ogiltig JSON.');
+        addToRunLog('VALIDATE', 'ERROR', 'Parse-fel');
+        lastValidation = null;
       }
     };
 
     const prettifyJson = () => {
       const raw = input.value.trim();
       if (!raw) {
-        updateStatus(status, 'Fyll i JSON att prettify.');
-        setOutput('');
+        updateStatusText('Fyll i JSON att prettify.');
+        addToRunLog('PRETTIFY', 'WARN', 'Ingen input');
         return;
       }
       try {
@@ -2042,18 +3092,20 @@ const initTryIt = () => {
         const pretty = JSON.stringify(parsed, null, 2);
         input.value = pretty;
         setOutput(pretty);
-        updateStatus(status, 'JSON prettify klar.');
+        updateStatusText('JSON prettify klar.');
+        addToRunLog('PRETTIFY', 'OK');
       } catch (error) {
         setOutput('');
-        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+        updateStatusText('Ogiltig JSON.');
+        addToRunLog('PRETTIFY', 'ERROR', 'Parse-fel');
       }
     };
 
     const minifyJson = () => {
       const raw = input.value.trim();
       if (!raw) {
-        updateStatus(status, 'Fyll i JSON att minify.');
-        setOutput('');
+        updateStatusText('Fyll i JSON att minify.');
+        addToRunLog('MINIFY', 'WARN', 'Ingen input');
         return;
       }
       try {
@@ -2061,31 +3113,188 @@ const initTryIt = () => {
         const minified = JSON.stringify(parsed);
         input.value = minified;
         setOutput(minified);
-        updateStatus(status, 'JSON minify klar.');
+        updateStatusText('JSON minify klar.');
+        addToRunLog('MINIFY', 'OK');
       } catch (error) {
         setOutput('');
-        updateStatus(status, `Ogiltig JSON: ${error.message}`);
+        updateStatusText('Ogiltig JSON.');
+        addToRunLog('MINIFY', 'ERROR', 'Parse-fel');
       }
     };
 
     const copyJson = async () => {
       const text = output.textContent || input.value;
       if (!text.trim()) {
-        updateStatus(status, 'Inget att kopiera.');
+        updateStatusText('Inget att kopiera.');
+        addToRunLog('COPY', 'WARN', 'Tomt innehåll');
         return;
       }
       try {
         await copyText(text);
-        updateStatus(status, 'Kopierat till urklipp.');
+        updateStatusText('Kopierat till urklipp.');
+        addToRunLog('COPY', 'OK');
       } catch (error) {
-        updateStatus(status, 'Kunde inte kopiera.');
+        updateStatusText('Kunde inte kopiera.');
+        addToRunLog('COPY', 'ERROR');
       }
     };
 
     const clearJson = () => {
       input.value = '';
       setOutput('');
-      updateStatus(status, '');
+      setReport('');
+      setMeta('');
+      updateStatusText('');
+      lastValidation = null;
+      runLog.length = 0;
+      if (logOutput) logOutput.textContent = '';
+      addToRunLog('CLEAR', 'OK');
+    };
+
+    const exportJson = () => {
+      if (!lastValidation) {
+        addToRunLog('EXPORT-JSON', 'WARN', 'Ingen validerad data');
+        return;
+      }
+
+      const json = JSON.stringify(lastValidation.parsed, null, 2);
+      if (window.tryItDownload) {
+        window.tryItDownload('data.json', json, 'application/json');
+      } else {
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      addToRunLog('EXPORT-JSON', 'OK', 'data.json');
+    };
+
+    const exportBboxTxt = () => {
+      if (!lastValidation || !lastValidation.analysis.bbox) {
+        addToRunLog('EXPORT-BBOX-TXT', 'WARN', 'Ingen BBOX');
+        return;
+      }
+
+      const { minx, miny, maxx, maxy } = lastValidation.analysis.bbox;
+      const txt = `${minx},${miny},${maxx},${maxy}`;
+      if (window.tryItDownload) {
+        window.tryItDownload('bbox.txt', txt, 'text/plain');
+      } else {
+        const blob = new Blob([txt], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bbox.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      addToRunLog('EXPORT-BBOX-TXT', 'OK', 'bbox.txt');
+    };
+
+    const exportBboxGeoJson = () => {
+      if (!lastValidation || !lastValidation.analysis.bbox) {
+        addToRunLog('EXPORT-BBOX-GEOJSON', 'WARN', 'Ingen BBOX');
+        return;
+      }
+
+      const { minx, miny, maxx, maxy } = lastValidation.analysis.bbox;
+      const polygon = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: { name: 'BBOX' },
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [minx, miny],
+                  [maxx, miny],
+                  [maxx, maxy],
+                  [minx, maxy],
+                  [minx, miny],
+                ],
+              ],
+            },
+          },
+        ],
+      };
+
+      const json = JSON.stringify(polygon, null, 2);
+      if (window.tryItDownload) {
+        window.tryItDownload('bbox.geojson', json, 'application/geo+json');
+      } else {
+        const blob = new Blob([json], { type: 'application/geo+json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bbox.geojson';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      addToRunLog('EXPORT-BBOX-GEOJSON', 'OK', 'bbox.geojson');
+    };
+
+    const sendToBbox = () => {
+      if (!lastValidation || !lastValidation.analysis.bbox) {
+        addToRunLog('SEND-TO-BBOX', 'WARN', 'Ingen BBOX');
+        return;
+      }
+
+      const { minx, miny, maxx, maxy } = lastValidation.analysis.bbox;
+      const minxInput = document.querySelector('#bbox-minx');
+      const minyInput = document.querySelector('#bbox-miny');
+      const maxxInput = document.querySelector('#bbox-maxx');
+      const maxyInput = document.querySelector('#bbox-maxy');
+
+      if (minxInput && minyInput && maxxInput && maxyInput) {
+        minxInput.value = minx.toString();
+        minyInput.value = miny.toString();
+        maxxInput.value = maxx.toString();
+        maxyInput.value = maxy.toString();
+
+        const bboxSection = document.querySelector('#bbox');
+        if (bboxSection) {
+          bboxSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => minxInput.focus(), 500);
+        }
+
+        addToRunLog('SEND-TO-BBOX', 'OK');
+      } else {
+        addToRunLog('SEND-TO-BBOX', 'ERROR', 'BBOX-fält saknas');
+      }
+    };
+
+    const sendToUrlBuilder = () => {
+      if (!lastValidation || !lastValidation.analysis.bbox) {
+        addToRunLog('SEND-TO-URLBUILDER', 'WARN', 'Ingen BBOX');
+        return;
+      }
+
+      const { minx, miny, maxx, maxy } = lastValidation.analysis.bbox;
+      const bboxInput = document.querySelector('#urlbuilder-bbox');
+      const crsInput = document.querySelector('#urlbuilder-crs');
+
+      if (bboxInput) {
+        bboxInput.value = `${minx},${miny},${maxx},${maxy}`;
+
+        if (crsInput && !crsInput.value.trim() && lastValidation.analysis.isGeoJson) {
+          crsInput.value = 'EPSG:4326';
+        }
+
+        const urlBuilderSection = document.querySelector('#urlbuilder');
+        if (urlBuilderSection) {
+          urlBuilderSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => bboxInput.focus(), 500);
+        }
+
+        addToRunLog('SEND-TO-URLBUILDER', 'OK');
+      } else {
+        addToRunLog('SEND-TO-URLBUILDER', 'ERROR', 'URL builder-fält saknas');
+      }
     };
 
     buttons.forEach((button) => {
@@ -2107,17 +3316,316 @@ const initTryIt = () => {
           case 'clear':
             clearJson();
             break;
+          case 'export-json':
+            exportJson();
+            break;
+          case 'export-bbox-txt':
+            exportBboxTxt();
+            break;
+          case 'export-bbox-geojson':
+            exportBboxGeoJson();
+            break;
+          case 'send-to-bbox':
+            sendToBbox();
+            break;
+          case 'send-to-urlbuilder':
+            sendToUrlBuilder();
+            break;
           default:
             break;
         }
       });
     });
+
+    addToRunLog('INFO', 'JSON/GeoJSON initierat');
+  };
+
+  const initMapSandbox = (block) => {
+    const urlInput = block.querySelector('#mapsandbox-url');
+    const imgEl = block.querySelector('#mapsandbox-img');
+    const fallbackEl = block.querySelector('#mapsandbox-fallback');
+    const statusEl = block.querySelector('#mapsandbox-status');
+    const paramsOutput = block.querySelector('#mapsandbox-params');
+    const reportOutput = block.querySelector('#mapsandbox-validation');
+    const logOutput = block.querySelector('#mapsandbox-runlog');
+    const advancedToggle = block.querySelector('#mapsandbox-advanced-toggle');
+    const advancedPanel = block.querySelector('#mapsandbox-advanced-panel');
+    const buttons = block.querySelectorAll('[data-mapsandbox-action]');
+
+    if (!urlInput || !imgEl || !statusEl) {
+      return;
+    }
+
+    const runLog = [];
+
+    const addToRunLog = (level, message) => {
+      const ts = new Date().toLocaleTimeString('sv-SE');
+      runLog.push(`[${ts}] [${level}] ${message}`);
+      if (runLog.length > 20) runLog.shift();
+      if (logOutput) logOutput.textContent = runLog.join('\n');
+    };
+
+    const setStatus = (message) => {
+      statusEl.textContent = message;
+    };
+
+    const setParams = (text) => {
+      if (paramsOutput) paramsOutput.textContent = text;
+    };
+
+    const setReport = (lines) => {
+      if (reportOutput) reportOutput.textContent = lines.join('\n');
+    };
+
+    const showFallback = (show) => {
+      if (!fallbackEl) return;
+      fallbackEl.style.display = show ? 'block' : 'none';
+      imgEl.style.display = show ? 'none' : 'block';
+    };
+
+    const parseUrlParams = (urlString) => {
+      try {
+        const url = new URL(urlString, window.location.href);
+        const params = new URLSearchParams(url.search);
+        const sorted = Array.from(params.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+        return { url, params, sorted, valid: true };
+      } catch {
+        return { url: null, params: null, sorted: [], valid: false };
+      }
+    };
+
+    const getParam = (params, key) => {
+      for (const [k, v] of params.entries()) {
+        if (k.toLowerCase() === key.toLowerCase()) return v;
+      }
+      return null;
+    };
+
+    const validateUrl = (urlString) => {
+      const issues = [];
+      const warnings = [];
+
+      if (!urlString || !urlString.trim()) {
+        issues.push('URL saknas');
+        return { valid: false, issues, warnings, parsed: null };
+      }
+
+      const parsed = parseUrlParams(urlString);
+      if (!parsed.valid) {
+        issues.push('Ogiltigt URL-format');
+        return { valid: false, issues, warnings, parsed: null };
+      }
+
+      const { url, params } = parsed;
+      if (!/^https?:$/i.test(url.protocol)) {
+        issues.push('Protokoll måste vara http eller https');
+      }
+
+      const service = getParam(params, 'SERVICE');
+      const request = getParam(params, 'REQUEST');
+      const bbox = getParam(params, 'BBOX');
+      const crs = getParam(params, 'CRS') || getParam(params, 'SRS');
+      const format = getParam(params, 'FORMAT');
+
+      if (!service || service.toUpperCase() !== 'WMS') {
+        issues.push('SERVICE=WMS saknas eller är felaktig');
+      }
+
+      if (!request || request.toUpperCase() !== 'GETMAP') {
+        issues.push('REQUEST=GetMap saknas eller är felaktig');
+      }
+
+      if (!bbox) {
+        issues.push('BBOX saknas');
+      }
+
+      if (!crs) {
+        issues.push('CRS eller SRS saknas');
+      }
+
+      if (!format) {
+        warnings.push('FORMAT saknas');
+      }
+
+      return { valid: issues.length === 0, issues, warnings, parsed };
+    };
+
+    const generateReport = (validation) => {
+      const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
+
+      if (!validation.valid) {
+        lines.push('Status: [ERROR] OGILTIG');
+        lines.push('');
+        lines.push('Fel:');
+        validation.issues.forEach((issue) => lines.push(`  [FAIL] ${issue}`));
+        if (validation.warnings.length > 0) {
+          lines.push('');
+          lines.push('Varningar:');
+          validation.warnings.forEach((warn) => lines.push(`  [WARN] ${warn}`));
+        }
+        return lines;
+      }
+
+      const statusText =
+        validation.warnings.length > 0 ? '[WARN] GILTIG MED VARNINGAR' : '[OK] GILTIG';
+      lines.push(`Status: ${statusText}`);
+      lines.push('');
+
+      if (validation.parsed && validation.parsed.url && validation.parsed.params) {
+        const { url, params } = validation.parsed;
+        lines.push('Kontroller:');
+        lines.push(`  [PASS] Protokoll: ${url.protocol}`);
+        lines.push(`  [PASS] Värd: ${url.hostname}`);
+        lines.push(`  [PASS] Sökväg: ${url.pathname}`);
+        lines.push(`  [PASS] SERVICE: ${getParam(params, 'SERVICE') || 'saknas'}`);
+        lines.push(`  [PASS] REQUEST: ${getParam(params, 'REQUEST') || 'saknas'}`);
+        lines.push(
+          `  ${getParam(params, 'BBOX') ? '[PASS]' : '[FAIL]'} BBOX: ${getParam(params, 'BBOX') || 'saknas'}`,
+        );
+        lines.push(
+          `  ${getParam(params, 'CRS') || getParam(params, 'SRS') ? '[PASS]' : '[FAIL]'} CRS/SRS: ${getParam(params, 'CRS') || getParam(params, 'SRS') || 'saknas'}`,
+        );
+        lines.push(
+          `  ${getParam(params, 'FORMAT') ? '[PASS]' : '[WARN]'} FORMAT: ${getParam(params, 'FORMAT') || 'saknas'}`,
+        );
+      }
+
+      if (validation.warnings.length > 0) {
+        lines.push('');
+        lines.push('Varningar:');
+        validation.warnings.forEach((warn) => lines.push(`  [WARN] ${warn}`));
+      }
+
+      return lines;
+    };
+
+    const generateParamsText = (parsed) => {
+      if (!parsed || !parsed.sorted || parsed.sorted.length === 0) {
+        return 'Inga parametrar hittades.';
+      }
+      const lines = ['═══ PARSED PARAMS ═══', ''];
+      parsed.sorted.forEach(([key, value]) => lines.push(`${key} = ${value}`));
+      return lines.join('\n');
+    };
+
+    const preview = () => {
+      const urlString = urlInput.value.trim();
+      const validation = validateUrl(urlString);
+      setReport(generateReport(validation));
+      setParams(
+        validation.parsed ? generateParamsText(validation.parsed) : 'Kunde inte tolka URL.',
+      );
+
+      if (!validation.valid) {
+        setStatus('Valideringsfel - se rapport.');
+        showFallback(false);
+        imgEl.src = '';
+        addToRunLog('ERROR', `Validering misslyckades: ${validation.issues.length} fel`);
+        return;
+      }
+
+      try {
+        const previewUrl = new URL(urlString, window.location.href);
+        previewUrl.searchParams.set('_ts', Date.now().toString());
+        imgEl.src = previewUrl.toString();
+        setStatus('Laddar förhandsvisning...');
+        showFallback(false);
+        addToRunLog('INFO', 'Laddar preview');
+        if (validation.warnings.length > 0) {
+          addToRunLog('WARN', `Validering med ${validation.warnings.length} varning(ar)`);
+        }
+      } catch {
+        setStatus('Ogiltig URL.');
+        showFallback(false);
+        imgEl.src = '';
+        addToRunLog('ERROR', 'Ogiltig URL');
+      }
+    };
+
+    const useUrlBuilder = () => {
+      const source = document.getElementById('urlbuilder-output');
+      if (!source) {
+        setStatus('URL builder hittades inte.');
+        addToRunLog('ERROR', 'URL builder saknas');
+        return;
+      }
+      const url = source.value.trim();
+      if (!url) {
+        setStatus('Ingen URL i URL builder.');
+        addToRunLog('WARN', 'URL builder output är tom');
+        return;
+      }
+      urlInput.value = url;
+      setStatus('URL från URL builder laddad.');
+      addToRunLog('OK', 'URL från URL builder laddad');
+    };
+
+    const useBboxUrl = () => {
+      const source = document.getElementById('bbox-url-output');
+      if (!source) {
+        setStatus('BBOX-verktyg hittades inte.');
+        addToRunLog('ERROR', 'BBOX URL saknas');
+        return;
+      }
+      const url = source.value.trim();
+      if (!url) {
+        setStatus('Ingen URL i BBOX-verktyget.');
+        addToRunLog('WARN', 'BBOX URL är tom');
+        return;
+      }
+      urlInput.value = url;
+      setStatus('URL från BBOX laddad.');
+      addToRunLog('OK', 'URL från BBOX laddad');
+    };
+
+    const clear = () => {
+      urlInput.value = '';
+      imgEl.src = '';
+      setStatus('');
+      setParams('');
+      setReport([]);
+      showFallback(false);
+      addToRunLog('INFO', 'Formulär rensat');
+    };
+
+    imgEl.addEventListener('load', () => {
+      setStatus('Preview loaded.');
+      addToRunLog('OK', 'Preview laddad');
+      showFallback(false);
+    });
+
+    imgEl.addEventListener('error', () => {
+      setStatus('Could not load preview. Likely CORS or network restrictions.');
+      addToRunLog('ERROR', 'Preview misslyckades (CORS/nätverk)');
+      showFallback(true);
+    });
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.mapsandboxAction;
+        if (action === 'preview') {
+          preview();
+        } else if (action === 'clear') {
+          clear();
+        } else if (action === 'use-urlbuilder') {
+          useUrlBuilder();
+        } else if (action === 'use-bbox-url') {
+          useBboxUrl();
+        }
+      });
+    });
+
+    addToRunLog('INFO', 'Map sandbox initierat');
   };
 
   const initSldTryIt = (block) => {
     const input = block.querySelector('#sld-tryit-input');
     const output = block.querySelector('#sld-tryit-output');
     const status = block.querySelector('#sld-tryit-status');
+    const report = block.querySelector('#sld-validation');
+    const log = block.querySelector('#sld-runlog');
+    const normalized = block.querySelector('#sld-normalized');
+    const lintOutput = block.querySelector('#sld-lint');
     const buttons = block.querySelectorAll('[data-sld-action]');
 
     if (!input || !output || !status || !buttons.length) {
@@ -2152,63 +3660,808 @@ const initTryIt = () => {
   </se:NamedLayer>
 </se:StyledLayerDescriptor>`;
 
+    let runLog = [];
+    let lastNormalized = null;
+    let lastValidation = null;
+    let lastContent = '';
+    let lastLintReport = '';
+
     const setOutput = (value) => {
-      output.textContent = value;
+      output.textContent = value || '';
+    };
+
+    const updateStatusText = (message) => {
+      status.textContent = message || '';
+    };
+
+    const addToRunLog = (action, result, detail = '') => {
+      if (!log) return;
+      const timestamp = new Date().toLocaleTimeString('sv-SE');
+      const line = `[${timestamp}] ${action} ${result}${detail ? ` - ${detail}` : ''}`;
+      runLog.push(line);
+      if (runLog.length > 20) runLog.shift();
+      log.textContent = runLog.join('\n');
+      log.scrollTop = log.scrollHeight;
+    };
+
+    const setReport = (lines) => {
+      if (!report) return;
+      report.textContent = lines.join('\n');
+    };
+
+    const setNormalized = (obj) => {
+      if (!normalized) return;
+      normalized.textContent = obj ? JSON.stringify(obj, null, 2) : '';
+    };
+
+    const setLint = (text) => {
+      if (!lintOutput) return;
+      lintOutput.textContent = text;
+      lastLintReport = text;
+    };
+
+    const formatXml = (xml) => {
+      const reg = /(>)(<)(\/*)/g;
+      let formatted = '';
+      let pad = 0;
+      xml
+        .replace(reg, '$1\n$2$3')
+        .split('\n')
+        .forEach((node) => {
+          let indent = 0;
+          if (node.match(/^<\/\w/)) {
+            if (pad > 0) pad -= 1;
+          } else if (node.match(/^<\w/)) {
+            indent = 1;
+          }
+          formatted += '  '.repeat(pad) + node + '\n';
+          pad += indent;
+        });
+      return formatted.trim();
+    };
+
+    const minifyXml = (xml) => xml.replace(/>\s+</g, '><').trim();
+
+    const parseSld = (raw) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(raw, 'application/xml');
+      const parserError = doc.getElementsByTagName('parsererror')[0];
+      if (parserError) {
+        const msg = (parserError.textContent || 'XML-fel').split('\n')[0].trim();
+        return { doc: null, parserError: true, errorText: msg };
+      }
+      return { doc, parserError: false, errorText: '' };
+    };
+
+    const findAll = (doc, localName) => {
+      const nodes = Array.from(doc.getElementsByTagName('*'));
+      return nodes.filter((n) => n.localName === localName);
+    };
+
+    const getNames = (elements) => {
+      const names = [];
+      elements.forEach((el) => {
+        const nameNode = Array.from(el.getElementsByTagName('*')).find(
+          (n) => n.localName === 'Name',
+        );
+        if (nameNode && nameNode.textContent) names.push(nameNode.textContent.trim());
+      });
+      return names;
+    };
+
+    const analyzeSld = (raw) => {
+      const errors = [];
+      const warnings = [];
+      const reportLines = [];
+
+      if (!raw.trim()) {
+        errors.push('Inget innehåll att validera');
+        reportLines.push('Status: Invalid');
+        reportLines.push('FAIL: Inget innehåll');
+        return { status: 'Invalid', errors, warnings, reportLines, normalized: null };
+      }
+
+      const parsed = parseSld(raw);
+      if (parsed.parserError) {
+        errors.push(parsed.errorText || 'XML parsererror');
+        reportLines.push('Status: Invalid');
+        reportLines.push(`FAIL: Parsererror: ${parsed.errorText || 'Okänt fel'}`);
+        return { status: 'Invalid', errors, warnings, reportLines, normalized: null };
+      }
+
+      const doc = parsed.doc;
+      const root = doc.documentElement;
+      const sldNodes = findAll(doc, 'StyledLayerDescriptor');
+      if (sldNodes.length === 0) {
+        errors.push('StyledLayerDescriptor saknas');
+        reportLines.push('Status: Invalid');
+        reportLines.push('FAIL: StyledLayerDescriptor saknas');
+        return { status: 'Invalid', errors, warnings, reportLines, normalized: null };
+      }
+
+      const version = root?.getAttribute('version') || '';
+      const ns = root?.namespaceURI || '';
+      const isSE = ns.includes('opengis.net/se') || version.startsWith('1.1');
+      const variant = isSE
+        ? 'SE 1.1'
+        : ns.includes('opengis.net/sld') || version.startsWith('1.0')
+          ? 'SLD 1.0'
+          : 'Okänd';
+
+      const namedLayers = findAll(doc, 'NamedLayer');
+      const userLayers = findAll(doc, 'UserLayer');
+      const rules = findAll(doc, 'Rule');
+      const symbolizers = Array.from(doc.getElementsByTagName('*'))
+        .filter((n) => n.localName && n.localName.endsWith('Symbolizer'))
+        .map((n) => n.localName);
+      const symbolizerList = Array.from(new Set(symbolizers));
+
+      const expectedNs = isSE ? ['se', 'ogc', 'xlink', 'xsi'] : ['sld', 'ogc', 'xlink', 'xsi'];
+      const present = [];
+      const missing = [];
+      expectedNs.forEach((prefix) => {
+        const attr =
+          root?.getAttribute(prefix === 'sld' || prefix === 'se' ? 'xmlns' : `xmlns:${prefix}`) ||
+          root?.getAttribute(`xmlns:${prefix}`);
+        if (attr) {
+          present.push(prefix);
+        } else {
+          missing.push(prefix);
+        }
+      });
+
+      if (missing.length > 0) warnings.push(`Namespaces saknas: ${missing.join(', ')}`);
+      if (namedLayers.length === 0 && userLayers.length === 0)
+        warnings.push('Inga NamedLayer/UserLayer hittades');
+      if (rules.length === 0) warnings.push('Inga Rule hittades');
+      if (symbolizerList.length === 0) warnings.push('Inga Symbolizer hittades');
+      if (variant === 'Okänd') warnings.push('Okänd SLD-variant');
+
+      reportLines.push(
+        `Status: ${errors.length > 0 ? 'Invalid' : warnings.length > 0 ? 'Warnings' : 'Valid'}`,
+      );
+      reportLines.push(`PASS: StyledLayerDescriptor hittad (${sldNodes.length})`);
+      reportLines.push(`${variant === 'Okänd' ? 'WARN' : 'PASS'}: Variant ${variant}`);
+      reportLines.push(`${version ? 'PASS' : 'WARN'}: version-attribut ${version || 'saknas'}`);
+      reportLines.push(
+        `${missing.length ? 'WARN' : 'PASS'}: namespaces ${missing.length ? 'saknas ' + missing.join(', ') : 'ok'}`,
+      );
+      reportLines.push(`PASS: NamedLayer ${namedLayers.length} / UserLayer ${userLayers.length}`);
+      reportLines.push(`${rules.length ? 'PASS' : 'WARN'}: Rule ${rules.length}`);
+      reportLines.push(
+        `${symbolizerList.length ? 'PASS' : 'WARN'}: Symbolizers ${symbolizerList.join(', ') || 'saknas'}`,
+      );
+
+      const normalizedObj = {
+        variant,
+        version,
+        namedLayers: getNames(namedLayers),
+        userLayers: getNames(userLayers),
+        rulesCount: rules.length,
+        symbolizers: symbolizerList,
+        namespaces: { present, missing },
+        warnings,
+        errors,
+      };
+
+      return {
+        status: errors.length > 0 ? 'Invalid' : warnings.length > 0 ? 'Warnings' : 'Valid',
+        errors,
+        warnings,
+        reportLines,
+        normalized: normalizedObj,
+      };
+    };
+
+    const lintSld = (raw) => {
+      const findings = [];
+
+      if (!raw.trim()) {
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD000',
+          message: 'Ingen SLD-kod att linta',
+          hint: 'Klistra in SLD-kod först',
+        });
+        return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
+      }
+
+      const parsed = parseSld(raw);
+      if (parsed.parserError) {
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD001',
+          message: 'XML parsfel',
+          hint: parsed.errorText || 'Kontrollera XML-syntax och namespaces',
+        });
+        return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
+      }
+
+      const doc = parsed.doc;
+      const root = doc.documentElement;
+
+      // A) Structure checks
+      const sldNodes = findAll(doc, 'StyledLayerDescriptor');
+      if (sldNodes.length === 0) {
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD002',
+          message: 'StyledLayerDescriptor saknas',
+          hint: 'Rotelementet måste vara StyledLayerDescriptor',
+        });
+        return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
+      }
+
+      const namedLayers = findAll(doc, 'NamedLayer');
+      const userLayers = findAll(doc, 'UserLayer');
+
+      if (namedLayers.length === 0 && userLayers.length === 0) {
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD003',
+          message: 'Varken NamedLayer eller UserLayer hittades',
+          hint: 'SLD måste innehålla minst ett NamedLayer eller UserLayer',
+        });
+      }
+
+      if (namedLayers.length > 0 && userLayers.length > 0) {
+        findings.push({
+          level: 'INFO',
+          code: 'SLD004',
+          message: 'Både NamedLayer och UserLayer finns',
+          hint: 'Detta är ovanligt men tillåtet',
+        });
+      }
+
+      const userStyles = findAll(doc, 'UserStyle');
+      if (userStyles.length === 0) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD005',
+          message: 'Ingen UserStyle hittades',
+          hint: 'Lägg till UserStyle för att definiera styling',
+        });
+      }
+
+      const rules = findAll(doc, 'Rule');
+      if (rules.length === 0) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD006',
+          message: 'Inga Rules hittades',
+          hint: 'Lägg till minst en Rule för att rendera features',
+        });
+      }
+
+      // B) Namespace / version checks
+      const version = root?.getAttribute('version');
+      if (!version) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD010',
+          message: 'version-attribut saknas',
+          hint: 'Lägg till version="1.1.0" eller "1.0.0" på rotelementet',
+        });
+      }
+
+      const ns = root?.namespaceURI || '';
+      const isSE = ns.includes('opengis.net/se') || (version && version.startsWith('1.1'));
+
+      const hasOgcNs = root?.getAttribute('xmlns:ogc') || root?.lookupNamespaceURI('ogc');
+      const filters = findAll(doc, 'Filter');
+
+      if (isSE && filters.length > 0 && !hasOgcNs) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD011',
+          message: 'SE-format med Filter men ogc-namespace saknas',
+          hint: 'Lägg till xmlns:ogc="http://www.opengis.net/ogc"',
+        });
+      }
+
+      const schemaLocation = root?.getAttribute('xsi:schemaLocation');
+      if (!schemaLocation) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD012',
+          message: 'schemaLocation saknas',
+          hint: 'Lägg till xsi:schemaLocation för validering',
+        });
+      }
+
+      // C) Scale sanity checks
+      let allRulesHaveNoScale = true;
+      rules.forEach((rule, idx) => {
+        const minScales = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'MinScaleDenominator',
+        );
+        const maxScales = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'MaxScaleDenominator',
+        );
+
+        if (minScales.length > 0 || maxScales.length > 0) {
+          allRulesHaveNoScale = false;
+        }
+
+        if (minScales.length > 0 && maxScales.length > 0) {
+          const minVal = parseFloat(minScales[0].textContent);
+          const maxVal = parseFloat(maxScales[0].textContent);
+
+          if (!isNaN(minVal) && !isNaN(maxVal) && minVal > maxVal) {
+            findings.push({
+              level: 'WARN',
+              code: 'SLD020',
+              message: `Rule ${idx + 1}: MinScaleDenominator > MaxScaleDenominator`,
+              hint: `Min (${minVal}) ska vara mindre än Max (${maxVal})`,
+              path: `Rule[${idx}]`,
+            });
+          }
+
+          if (!isNaN(minVal) && minVal < 1) {
+            findings.push({
+              level: 'INFO',
+              code: 'SLD021',
+              message: `Rule ${idx + 1}: Extremt liten MinScaleDenominator`,
+              hint: `Värde ${minVal} är ovanligt, kontrollera om avsiktligt`,
+              path: `Rule[${idx}]`,
+            });
+          }
+
+          if (!isNaN(maxVal) && maxVal > 1000000000) {
+            findings.push({
+              level: 'INFO',
+              code: 'SLD022',
+              message: `Rule ${idx + 1}: Extremt stor MaxScaleDenominator`,
+              hint: `Värde ${maxVal} är ovanligt, kontrollera om avsiktligt`,
+              path: `Rule[${idx}]`,
+            });
+          }
+        }
+      });
+
+      if (allRulesHaveNoScale && rules.length > 0) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD023',
+          message: 'Inga Rules har scale-gating',
+          hint: 'Överväg MinScaleDenominator/MaxScaleDenominator för bättre prestanda',
+        });
+      }
+
+      // D) Symbolizer and common mistakes
+      const polygonSymbolizers = findAll(doc, 'PolygonSymbolizer');
+      polygonSymbolizers.forEach((ps, idx) => {
+        const fills = Array.from(ps.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Fill',
+        );
+        const strokes = Array.from(ps.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Stroke',
+        );
+
+        if (fills.length === 0 && strokes.length === 0) {
+          findings.push({
+            level: 'WARN',
+            code: 'SLD030',
+            message: `PolygonSymbolizer ${idx + 1}: Varken Fill eller Stroke`,
+            hint: 'Polygonen blir osynlig utan Fill eller Stroke',
+            path: `PolygonSymbolizer[${idx}]`,
+          });
+        }
+      });
+
+      const lineSymbolizers = findAll(doc, 'LineSymbolizer');
+      lineSymbolizers.forEach((ls, idx) => {
+        const strokes = Array.from(ls.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Stroke',
+        );
+        if (strokes.length > 0) {
+          const strokeWidths = Array.from(strokes[0].getElementsByTagName('*')).filter(
+            (n) => n.localName === 'SvgParameter' && n.getAttribute('name') === 'stroke-width',
+          );
+          if (strokeWidths.length === 0) {
+            findings.push({
+              level: 'WARN',
+              code: 'SLD031',
+              message: `LineSymbolizer ${idx + 1}: stroke-width saknas`,
+              hint: 'Linjebredd blir default (ofta 1px), specificera för tydlighet',
+              path: `LineSymbolizer[${idx}]`,
+            });
+          }
+        }
+      });
+
+      const textSymbolizers = findAll(doc, 'TextSymbolizer');
+      textSymbolizers.forEach((ts, idx) => {
+        const labels = Array.from(ts.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Label',
+        );
+        if (labels.length === 0 || !labels[0].textContent.trim()) {
+          findings.push({
+            level: 'WARN',
+            code: 'SLD032',
+            message: `TextSymbolizer ${idx + 1}: Label saknas eller tom`,
+            hint: 'Lägg till Label med PropertyName eller Literal',
+            path: `TextSymbolizer[${idx}]`,
+          });
+        }
+      });
+
+      filters.forEach((filter, idx) => {
+        const propNames = Array.from(filter.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'PropertyName',
+        );
+        if (propNames.length === 0 || !propNames.some((p) => p.textContent.trim())) {
+          findings.push({
+            level: 'WARN',
+            code: 'SLD033',
+            message: `Filter ${idx + 1}: PropertyName saknas eller tom`,
+            hint: 'Filter behöver PropertyName för att fungera',
+            path: `Filter[${idx}]`,
+          });
+        }
+      });
+
+      // Check for multiple rules without filters (last-rule-wins)
+      const rulesWithoutFilter = rules.filter((rule) => {
+        const ruleFilters = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Filter',
+        );
+        const elseFilters = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'ElseFilter',
+        );
+        return ruleFilters.length === 0 && elseFilters.length === 0;
+      });
+
+      if (rulesWithoutFilter.length > 1) {
+        findings.push({
+          level: 'WARN',
+          code: 'SLD034',
+          message: `${rulesWithoutFilter.length} Rules utan Filter eller ElseFilter`,
+          hint: 'Kan orsaka last-rule-wins problem, lägg till Filter för specifika villkor',
+        });
+      }
+
+      // E) Color / opacity checks
+      const svgParams = findAll(doc, 'SvgParameter');
+      svgParams.forEach((param) => {
+        const name = param.getAttribute('name');
+        const value = param.textContent.trim();
+
+        if ((name === 'fill-opacity' || name === 'stroke-opacity') && value) {
+          const numVal = parseFloat(value);
+          if (!isNaN(numVal) && (numVal < 0 || numVal > 1)) {
+            findings.push({
+              level: 'WARN',
+              code: 'SLD040',
+              message: `${name} utanför [0..1]: ${value}`,
+              hint: 'Opacity ska vara mellan 0 och 1',
+            });
+          }
+        }
+
+        if (name === 'stroke-width' && value) {
+          const numVal = parseFloat(value);
+          if (!isNaN(numVal) && numVal <= 0) {
+            findings.push({
+              level: 'WARN',
+              code: 'SLD041',
+              message: `stroke-width <= 0: ${value}`,
+              hint: 'Linjebredd måste vara > 0',
+            });
+          }
+        }
+      });
+
+      // Count by level
+      let errorCount = 0;
+      let warnCount = 0;
+      let infoCount = 0;
+      findings.forEach((f) => {
+        if (f.level === 'ERROR') errorCount++;
+        else if (f.level === 'WARN') warnCount++;
+        else if (f.level === 'INFO') infoCount++;
+      });
+
+      return { findings, errorCount, warnCount, infoCount };
+    };
+
+    const generateLintReport = (lintResult) => {
+      const lines = [];
+      lines.push('═══ SLD LINT RAPPORT ═══');
+      lines.push('');
+
+      const { findings, errorCount, warnCount, infoCount } = lintResult;
+
+      if (findings.length === 0) {
+        lines.push('Status: [OK] Inga problem hittade');
+        return lines.join('\n');
+      }
+
+      lines.push(`Status: ${errorCount > 0 ? '[ERROR]' : warnCount > 0 ? '[WARN]' : '[INFO]'}`);
+      lines.push(
+        `Totalt: ${findings.length} findings (${errorCount} errors, ${warnCount} warnings, ${infoCount} info)`,
+      );
+      lines.push('');
+
+      // Group by level
+      const errors = findings.filter((f) => f.level === 'ERROR');
+      const warnings = findings.filter((f) => f.level === 'WARN');
+      const infos = findings.filter((f) => f.level === 'INFO');
+
+      if (errors.length > 0) {
+        lines.push('ERRORS:');
+        errors.forEach((f) => {
+          lines.push(`  [ERROR] ${f.code}: ${f.message}`);
+          if (f.hint) lines.push(`    Hint: ${f.hint}`);
+          if (f.path) lines.push(`    Path: ${f.path}`);
+        });
+        lines.push('');
+      }
+
+      if (warnings.length > 0) {
+        lines.push('WARNINGS:');
+        warnings.forEach((f) => {
+          lines.push(`  [WARN] ${f.code}: ${f.message}`);
+          if (f.hint) lines.push(`    Hint: ${f.hint}`);
+          if (f.path) lines.push(`    Path: ${f.path}`);
+        });
+        lines.push('');
+      }
+
+      if (infos.length > 0) {
+        lines.push('INFO:');
+        infos.forEach((f) => {
+          lines.push(`  [INFO] ${f.code}: ${f.message}`);
+          if (f.hint) lines.push(`    Hint: ${f.hint}`);
+          if (f.path) lines.push(`    Path: ${f.path}`);
+        });
+      }
+
+      return lines.join('\n');
+    };
+
+    const runLint = () => {
+      const raw = input.value.trim();
+
+      if (!raw) {
+        setLint('Ingen SLD-kod att linta.');
+        updateStatusText('Ange SLD-kod först.');
+        addToRunLog('LINT', 'WARN', 'Ingen kod');
+        return;
+      }
+
+      const lintResult = lintSld(raw);
+      const report = generateLintReport(lintResult);
+      setLint(report);
+
+      const { errorCount, warnCount, infoCount } = lintResult;
+
+      if (errorCount > 0) {
+        updateStatusText(`Lint: ${errorCount} fel, ${warnCount} varningar`);
+        addToRunLog(
+          'LINT',
+          'ERROR',
+          `${errorCount} fel, ${warnCount} varningar, ${infoCount} info`,
+        );
+      } else if (warnCount > 0) {
+        updateStatusText(`Lint: ${warnCount} varningar`);
+        addToRunLog('LINT', 'WARN', `${warnCount} varningar, ${infoCount} info`);
+      } else if (infoCount > 0) {
+        updateStatusText(`Lint: ${infoCount} info`);
+        addToRunLog('LINT', 'INFO', `${infoCount} info`);
+      } else {
+        updateStatusText('Lint: Inga problem hittade.');
+        addToRunLog('LINT', 'OK', 'Inga problem');
+      }
+    };
+
+    const exportLintTxt = () => {
+      if (!lastLintReport || !lastLintReport.trim()) {
+        updateStatusText('Kör Lint först.');
+        addToRunLog('EXPORT', 'WARN', 'Ingen lint-rapport att exportera');
+        return;
+      }
+
+      let content = lastLintReport;
+      content += '\n\n═══ METADATA ═══\n';
+      content += `Tidpunkt: ${new Date().toLocaleString('sv-SE')}\n`;
+      content += `SLD längd: ${input.value.length} tecken\n`;
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sld-lint-report.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      updateStatusText('Lint-rapport exporterad.');
+      addToRunLog('EXPORT', 'OK', 'Lint TXT');
+    };
+
+    const copyLintReport = async () => {
+      if (!lastLintReport || !lastLintReport.trim()) {
+        updateStatusText('Kör Lint först.');
+        addToRunLog('COPY', 'WARN', 'Ingen lint-rapport att kopiera');
+        return;
+      }
+
+      try {
+        await copyText(lastLintReport);
+        updateStatusText('Lint-rapport kopierad.');
+        addToRunLog('COPY', 'OK', 'Lint-rapport');
+      } catch (error) {
+        updateStatusText('Kunde inte kopiera.');
+        addToRunLog('COPY', 'ERROR', 'Kopiering misslyckades');
+      }
+    };
+
+    const updateFromAnalysis = (analysis) => {
+      lastValidation = analysis;
+      setReport(analysis.reportLines);
+      setNormalized(analysis.normalized);
     };
 
     const checkSld = () => {
       const raw = input.value.trim();
-      if (!raw) {
-        updateStatus(status, 'Fyll i SLD att kontrollera.');
-        setOutput('');
-        return;
-      }
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(raw, 'application/xml');
-      const errors = doc.querySelector('parsererror');
-      if (errors) {
-        updateStatus(status, 'XML-fel hittades. Kontrollera namespaces och syntax.');
-        setOutput(errors.textContent || 'XML-fel hittades.');
+      const analysis = analyzeSld(raw);
+      updateFromAnalysis(analysis);
+
+      if (analysis.status === 'Invalid') {
+        updateStatusText('Ogiltig SLD. Se valideringsrapport.');
+        setOutput(analysis.errors[0] || 'Ogiltig SLD.');
+        addToRunLog('CHECK', 'FAIL', analysis.errors[0] || 'Ogiltig SLD');
         return;
       }
 
-      const isSld =
-        doc.querySelector('StyledLayerDescriptor') || doc.querySelector('se\\:StyledLayerDescriptor');
-      if (!isSld) {
-        updateStatus(status, 'Ingen StyledLayerDescriptor hittades.');
-        setOutput('Tips: kontrollera att SLD/SE är korrekt och innehåller StyledLayerDescriptor.');
+      if (analysis.status === 'Warnings') {
+        updateStatusText('SLD validerad med varningar.');
+        setOutput('SLD är välformad men har varningar.');
+        addToRunLog('CHECK', 'WARN', `${analysis.warnings.length} varning(ar)`);
         return;
       }
 
-      updateStatus(status, 'SLD ser giltig ut.');
+      updateStatusText('SLD ser giltig ut.');
       setOutput('XML är välformad och innehåller StyledLayerDescriptor.');
+      addToRunLog('CHECK', 'OK');
     };
 
     const loadTemplate = () => {
       input.value = template;
+      lastContent = template;
       setOutput('');
-      updateStatus(status, 'Mall laddad.');
+      updateStatusText('Mall laddad.');
+      addToRunLog('TEMPLATE', 'OK');
+    };
+
+    const prettify = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatusText('Inget att formatera.');
+        addToRunLog('FORMAT', 'FAIL', 'Tomt innehåll');
+        return;
+      }
+      try {
+        const formatted = formatXml(raw);
+        input.value = formatted;
+        lastContent = formatted;
+        updateStatusText('Formaterad.');
+        addToRunLog('FORMAT', 'OK');
+      } catch {
+        updateStatusText('Kunde inte formatera.');
+        addToRunLog('FORMAT', 'FAIL');
+      }
+    };
+
+    const minify = () => {
+      const raw = input.value.trim();
+      if (!raw) {
+        updateStatusText('Inget att minifiera.');
+        addToRunLog('MINIFY', 'FAIL', 'Tomt innehåll');
+        return;
+      }
+      const minified = minifyXml(raw);
+      input.value = minified;
+      lastContent = minified;
+      updateStatusText('Minifierad.');
+      addToRunLog('MINIFY', 'OK');
     };
 
     const copySld = async () => {
-      const text = input.value;
-      if (!text.trim()) {
-        updateStatus(status, 'Inget att kopiera.');
+      const text = input.value.trim();
+      if (!text) {
+        updateStatusText('Inget att kopiera.');
+        addToRunLog('COPY', 'FAIL', 'Tomt innehåll');
         return;
       }
       try {
         await copyText(text);
-        updateStatus(status, 'Kopierat till urklipp.');
+        updateStatusText('Kopierat till urklipp.');
+        addToRunLog('COPY', 'OK');
       } catch (error) {
-        updateStatus(status, 'Kunde inte kopiera.');
+        updateStatusText('Kunde inte kopiera.');
+        addToRunLog('COPY', 'FAIL');
       }
+    };
+
+    const exportSld = () => {
+      const text = input.value.trim() || lastContent;
+      if (!text) {
+        updateStatusText('Inget att exportera.');
+        addToRunLog('EXPORT', 'FAIL', 'Tomt innehåll');
+        return;
+      }
+      const blob = new Blob([text], { type: 'application/xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sld-export.sld';
+      a.click();
+      URL.revokeObjectURL(url);
+      updateStatusText('SLD exporterad.');
+      addToRunLog('EXPORT', 'OK', 'SLD');
+    };
+
+    const exportTxt = () => {
+      const analysis = lastValidation || analyzeSld(input.value.trim());
+      updateFromAnalysis(analysis);
+
+      let content = '═══ SLD EXPORT ───\n\n';
+      content += `Tidpunkt: ${new Date().toLocaleString('sv-SE')}\n\n`;
+      content += '─── Metadata ───\n';
+      if (analysis.normalized) {
+        const n = analysis.normalized;
+        content += `Variant: ${n.variant}\n`;
+        content += `Version: ${n.version || 'saknas'}\n`;
+        content += `NamedLayer: ${n.namedLayers.length}\n`;
+        content += `UserLayer: ${n.userLayers.length}\n`;
+        content += `Rules: ${n.rulesCount}\n`;
+        content += `Symbolizers: ${n.symbolizers.join(', ') || 'saknas'}\n`;
+      }
+      content += '\n─── Validering ───\n';
+      content += `${analysis.reportLines.join('\n')}\n\n`;
+      content += '─── Tips ───\n';
+      content += 'Kontrollera CRS och schemaLocation före import i GeoServer.\n';
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sld-export.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      updateStatusText('TXT exporterad.');
+      addToRunLog('EXPORT', 'OK', 'TXT');
     };
 
     const clearSld = () => {
       input.value = '';
       setOutput('');
-      updateStatus(status, '');
+      setReport([]);
+      setNormalized(null);
+      setLint('');
+      updateStatusText('');
+      lastContent = '';
+      lastValidation = null;
+      addToRunLog('CLEAR', 'OK');
     };
+
+    const suggestFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('SUGGEST-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    const applyFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('APPLY-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    const resetFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('RESET-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    // Advanced panel now uses native <details> in the HTML; no toggle handler required.
 
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -2220,8 +4473,38 @@ const initTryIt = () => {
           case 'template':
             loadTemplate();
             break;
+          case 'prettify':
+            prettify();
+            break;
+          case 'minify':
+            minify();
+            break;
+          case 'lint':
+            runLint();
+            break;
           case 'copy':
             copySld();
+            break;
+          case 'export-sld':
+            exportSld();
+            break;
+          case 'export-txt':
+            exportTxt();
+            break;
+          case 'export-lint-txt':
+            exportLintTxt();
+            break;
+          case 'copy-lint':
+            copyLintReport();
+            break;
+          case 'suggest-fixes':
+            suggestFixes();
+            break;
+          case 'apply-fixes':
+            applyFixes();
+            break;
+          case 'reset-fixes':
+            resetFixes();
             break;
           case 'clear':
             clearSld();
@@ -2244,20 +4527,203 @@ const initTryIt = () => {
     const status = block.querySelector('#urlbuilder-status');
     const buttons = block.querySelectorAll('[data-url-action]');
 
+    // Enterprise elements
+    const advancedToggle = block.querySelector('#urlbuilder-advanced-toggle');
+    const advancedPanel = block.querySelector('#urlbuilder-advanced-panel');
+    const reportOutput = block.querySelector('#urlbuilder-validation');
+    const logOutput = block.querySelector('#urlbuilder-runlog');
+    const explainOutput = block.querySelector('#urlbuilder-explain');
+
     if (!base || !service || !layer || !format || !crs || !bbox || !output || !status) {
       return;
     }
 
-    const buildQuery = (serviceValue) => {
+    const TOOL_KEY = 'urlbuilder';
+    const updateStatus = (msg) => {
+      if (status) status.textContent = msg;
+    };
+    let runLog = [];
+
+    const addToRunLog = (level, message) => {
+      if (!logOutput) return;
+      const timestamp = new Date().toLocaleTimeString('sv-SE');
+      runLog.push(`[${timestamp}] [${level}] ${message}`);
+      if (runLog.length > 20) runLog.shift();
+      logOutput.textContent = runLog.join('\n');
+      logOutput.scrollTop = logOutput.scrollHeight;
+    };
+
+    const setReport = (lines) => {
+      if (!reportOutput) return;
+      reportOutput.textContent = lines.join('\n');
+    };
+
+    const validateInputs = () => {
+      const errors = [];
+      const warnings = [];
+      const baseVal = base.value.trim();
+      const layerVal = layer.value.trim();
+      const crsVal = crs.value.trim();
+      const bboxVal = bbox.value.trim();
+      const formatVal = format.value.trim();
+      const serviceVal = service.value.toUpperCase();
+
+      // Base URL
+      if (!baseVal) {
+        errors.push('Bas-URL är obligatorisk');
+      } else {
+        try {
+          const parsed = new URL(baseVal, window.location.href);
+          if (!/^https?:$/i.test(parsed.protocol)) {
+            errors.push('Bas-URL måste vara http:// eller https://');
+          }
+        } catch {
+          errors.push('Bas-URL måste vara en giltig URL');
+        }
+      }
+
+      // Service
+      if (!['WMS', 'WFS'].includes(serviceVal)) {
+        errors.push('Tjänst måste vara WMS eller WFS');
+      }
+
+      // Layer
+      if (!layerVal) {
+        errors.push('Layer är obligatoriskt');
+      }
+
+      // Format (warning)
+      if (!formatVal) {
+        warnings.push('Format saknas');
+      } else if (!/^[\w-]+\/[\w-+.]+$/i.test(formatVal)) {
+        warnings.push('Format bör följa mönstret type/subtype (t.ex. image/png)');
+      }
+
+      // CRS (warning)
+      if (!crsVal) {
+        warnings.push('CRS saknas');
+      } else if (!/^EPSG:\d+$/i.test(crsVal)) {
+        warnings.push('CRS bör följa mönstret EPSG:XXXX (t.ex. EPSG:3006)');
+      }
+
+      let normalizedBbox = '';
+      let bboxParts = null;
+
+      if (serviceVal === 'WMS') {
+        if (!bboxVal) {
+          errors.push('BBOX är obligatoriskt för WMS');
+        } else {
+          const parts = bboxVal
+            .split(/[\s,]+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+          if (parts.length !== 4) {
+            errors.push(
+              'BBOX måste innehålla exakt 4 värden separerade med komma eller mellanslag',
+            );
+          } else {
+            const nums = parts.map((p) => Number(p));
+            if (nums.some((n) => !Number.isFinite(n))) {
+              errors.push('BBOX-värden måste vara giltiga tal');
+            } else {
+              const [minx, miny, maxx, maxy] = nums;
+              const minxNorm = Math.min(minx, maxx);
+              const maxxNorm = Math.max(minx, maxx);
+              const minyNorm = Math.min(miny, maxy);
+              const maxyNorm = Math.max(miny, maxy);
+              if (minx > maxx || miny > maxy) {
+                warnings.push('BBOX min/max är omkastade - normaliserar vid generering');
+              }
+              bboxParts = { minx, miny, maxx, maxy };
+              normalizedBbox = `${minxNorm},${minyNorm},${maxxNorm},${maxyNorm}`;
+            }
+          }
+        }
+      }
+
+      return { errors, warnings, normalizedBbox, bboxParts };
+    };
+
+    const generateValidationReport = ({ errors, warnings }) => {
+      const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
+
+      if (errors.length === 0 && warnings.length === 0) {
+        lines.push('Status: [OK] Inga problem upptäckta');
+      } else if (errors.length > 0) {
+        lines.push(`Status: [ERROR] ${errors.length} fel`);
+      } else {
+        lines.push(`Status: [WARN] ${warnings.length} varning(ar)`);
+      }
+
+      if (errors.length > 0) {
+        lines.push('');
+        lines.push('Fel:');
+        errors.forEach((issue, i) => lines.push(`  ${i + 1}. ${issue}`));
+      }
+
+      if (warnings.length > 0) {
+        lines.push('');
+        lines.push('Varningar:');
+        warnings.forEach((issue, i) => lines.push(`  ${i + 1}. ${issue}`));
+      }
+
+      return lines;
+    };
+
+    const explainRequest = (params, serviceVal) => {
+      const lines = ['═══ EXPLAIN REQUEST ═══', ''];
+      const isWfs = serviceVal === 'WFS';
+
+      const addLine = (key, value, description) => {
+        lines.push(`${key}=${value} - ${description}`);
+      };
+
+      addLine('SERVICE', params.get('service') || serviceVal, 'Protocol family');
+      addLine('VERSION', params.get('version') || '', isWfs ? 'WFS version' : 'WMS version');
+      addLine(
+        'REQUEST',
+        params.get('request') || '',
+        isWfs ? 'Operation (GetFeature)' : 'Operation (GetMap)',
+      );
+
+      if (isWfs) {
+        addLine('TYPENAMES', params.get('typenames') || '', 'Target layer(s)');
+        addLine('OUTPUTFORMAT', params.get('outputFormat') || '', 'Output format');
+      } else {
+        addLine('LAYERS', params.get('layers') || '', 'Target layer(s)');
+        addLine('FORMAT', params.get('format') || '', 'Output format');
+        const crsParam = params.get('srs') ? 'SRS' : 'CRS';
+        addLine(
+          crsParam,
+          params.get('srs') || params.get('crs') || '',
+          'Coordinate reference system',
+        );
+        addLine('BBOX', params.get('bbox') || '', 'Extent (minX,minY,maxX,maxY)');
+        addLine('WIDTH', params.get('width') || '', 'Map width in pixels');
+        addLine('HEIGHT', params.get('height') || '', 'Map height in pixels');
+      }
+
+      const version = params.get('version');
+      const crsValue = params.get('crs') || params.get('srs') || '';
+      if (version === '1.3.0' && crsValue.toUpperCase() === 'EPSG:4326') {
+        lines.push('');
+        lines.push('Note: WMS 1.3.0 with EPSG:4326 uses latitude/longitude axis order.');
+      }
+
+      return lines;
+    };
+
+    const buildQuery = (serviceValue, options = {}) => {
       const params = new URLSearchParams();
       const isWfs = serviceValue.toUpperCase() === 'WFS';
+      const bboxValue = options.bboxValue || bbox.value.trim();
       params.set('service', serviceValue.toUpperCase());
       params.set('version', isWfs ? '2.0.0' : '1.1.1');
       params.set('request', isWfs ? 'GetFeature' : 'GetMap');
       params.set(isWfs ? 'typenames' : 'layers', layer.value.trim());
       params.set(isWfs ? 'outputFormat' : 'format', format.value.trim());
       if (!isWfs) {
-        params.set('bbox', bbox.value.trim());
+        params.set('bbox', bboxValue);
         params.set('srs', crs.value.trim());
         params.set('width', '256');
         params.set('height', '256');
@@ -2265,7 +4731,7 @@ const initTryIt = () => {
       return params;
     };
 
-     const quicks = block.querySelectorAll('[data-url-quick]');
+    const quicks = block.querySelectorAll('[data-url-quick]');
     quicks.forEach((btn) => {
       btn.addEventListener('click', () => {
         const action = btn.dataset.urlQuick;
@@ -2277,7 +4743,6 @@ const initTryIt = () => {
         if (action === 'cap-wms') {
           setBaseIfEmpty();
           service.value = 'WMS';
-
           layer.value = '';
           format.value = '';
           crs.value = '';
@@ -2290,10 +4755,11 @@ const initTryIt = () => {
               request: 'GetCapabilities',
             }).toString();
             output.value = url.toString();
-            updateStatus(status, 'Template: WMS GetCapabilities.');
+            updateStatus('Template: WMS GetCapabilities.');
+            addToRunLog('INFO', 'Laddade mall: WMS GetCapabilities');
           } catch {
             output.value = '';
-            updateStatus(status, 'Ogiltig bas-URL.');
+            updateStatus('Ogiltig bas-URL.');
           }
           return;
         }
@@ -2301,7 +4767,6 @@ const initTryIt = () => {
         if (action === 'cap-wfs') {
           setBaseIfEmpty();
           service.value = 'WFS';
-
           layer.value = '';
           format.value = '';
           crs.value = '';
@@ -2314,10 +4779,11 @@ const initTryIt = () => {
               request: 'GetCapabilities',
             }).toString();
             output.value = url.toString();
-            updateStatus(status, 'Template: WFS GetCapabilities.');
+            updateStatus('Template: WFS GetCapabilities.');
+            addToRunLog('INFO', 'Laddade mall: WFS GetCapabilities');
           } catch {
             output.value = '';
-            updateStatus(status, 'Ogiltig bas-URL.');
+            updateStatus('Ogiltig bas-URL.');
           }
           return;
         }
@@ -2325,10 +4791,10 @@ const initTryIt = () => {
         if (action === 'getmap-demo') {
           setBaseIfEmpty();
           service.value = 'WMS';
-          layer.value = layer.value.trim() || 'workspace:layer';
-          format.value = format.value.trim() || 'image/png';
-          crs.value = crs.value.trim() || 'EPSG:3006';
-          bbox.value = bbox.value.trim() || '200000,6100000,900000,7700000';
+          if (!layer.value.trim()) layer.value = 'workspace:layer';
+          if (!format.value.trim()) format.value = 'image/png';
+          if (!crs.value.trim()) crs.value = 'EPSG:3006';
+          if (!bbox.value.trim()) bbox.value = '200000,6100000,900000,7700000';
           try {
             const url = new URL(base.value.trim(), window.location.href);
             url.search = new URLSearchParams({
@@ -2343,10 +4809,11 @@ const initTryIt = () => {
               height: '256',
             }).toString();
             output.value = url.toString();
-            updateStatus(status, 'Template: WMS GetMap (demo).');
+            updateStatus('Template: WMS GetMap (demo).');
+            addToRunLog('INFO', 'Laddade mall: WMS GetMap demo');
           } catch {
             output.value = '';
-            updateStatus(status, 'Ogiltig bas-URL.');
+            updateStatus('Ogiltig bas-URL.');
           }
           return;
         }
@@ -2358,42 +4825,146 @@ const initTryIt = () => {
           crs.value = '';
           bbox.value = '';
           output.value = '';
-          updateStatus(status, 'Rensat.');
+          setReport([]);
+          if (explainOutput) explainOutput.textContent = '';
+          updateStatus('Rensat.');
+          addToRunLog('INFO', 'Formulär rensat');
         }
       });
     });
 
     const generate = () => {
-      const baseValue = base.value.trim();
-      if (!baseValue) {
-        updateStatus(status, 'Fyll i en bas‑URL.');
+      const validation = validateInputs();
+      const report = generateValidationReport(validation);
+      setReport(report);
+
+      if (validation.errors.length > 0) {
+        updateStatus('Validering misslyckades. Se valideringsrapporten.');
+        addToRunLog('ERROR', `Validering misslyckades: ${validation.errors.length} fel`);
         output.value = '';
-        return;
+        if (explainOutput) explainOutput.textContent = '';
+        return false;
       }
 
+      if (validation.warnings.length > 0) {
+        addToRunLog('WARN', `Validering med ${validation.warnings.length} varning(ar)`);
+      }
+
+      const baseValue = base.value.trim();
       try {
         const url = new URL(baseValue, window.location.href);
-        url.search = buildQuery(service.value).toString();
+        const params = buildQuery(service.value, {
+          bboxValue: validation.normalizedBbox || bbox.value.trim(),
+        });
+        url.search = params.toString();
         output.value = url.toString();
-        updateStatus(status, 'URL genererad.');
+        updateStatus('URL genererad.');
+        addToRunLog('OK', `URL genererad för ${service.value}`);
+
+        if (explainOutput) {
+          const explanation = explainRequest(params, service.value.toUpperCase());
+          explainOutput.textContent = explanation.join('\n');
+        }
+        return true;
       } catch (error) {
-        updateStatus(status, 'Ogiltig bas‑URL.');
+        updateStatus('Ogiltig bas‑URL.');
         output.value = '';
+        addToRunLog('ERROR', 'Kunde inte generera URL: ogiltig bas-URL');
+        return false;
       }
     };
 
     const copyUrl = async () => {
       const text = output.value.trim();
       if (!text) {
-        updateStatus(status, 'Generera en URL först.');
+        updateStatus('Generera en URL först.');
         return;
       }
-      try {
-        await copyText(text);
-        updateStatus(status, 'URL kopierad.');
-      } catch (error) {
-        updateStatus(status, 'Kunde inte kopiera.');
+      const success = await tryItCopy(text);
+      if (success) {
+        updateStatus('URL kopierad.');
+        addToRunLog('OK', 'URL kopierad till clipboard');
+      } else {
+        updateStatus('Kunde inte kopiera.');
+        addToRunLog('ERROR', 'Kopiering misslyckades');
       }
+    };
+
+    const copyCurl = async () => {
+      const url = output.value.trim();
+      if (!url) {
+        updateStatus('Generera en URL först.');
+        return;
+      }
+      const curl = `curl -L "${url}"`;
+      const success = await tryItCopy(curl);
+      if (success) {
+        updateStatus('curl-kommando kopierat.');
+        addToRunLog('OK', 'curl-kommando kopierat');
+      } else {
+        updateStatus('Kunde inte kopiera.');
+        addToRunLog('ERROR', 'Kopiering misslyckades');
+      }
+    };
+
+    const downloadCurl = () => {
+      const url = output.value.trim();
+      if (!url) {
+        updateStatus('Generera en URL först.');
+        return;
+      }
+      const curl = `curl -L "${url}"`;
+      tryItDownload('request.curl.txt', curl, 'text/plain');
+      updateStatus('curl-kommando nedladdat.');
+      addToRunLog('OK', 'curl-kommando nedladdat');
+    };
+
+    const fixBbox = () => {
+      const validation = validateInputs();
+      const report = generateValidationReport(validation);
+      setReport(report);
+
+      if (validation.errors.length > 0) {
+        updateStatus('Validering misslyckades. Se valideringsrapporten.');
+        addToRunLog('ERROR', `Fixa BBOX misslyckades: ${validation.errors.length} fel`);
+        return;
+      }
+
+      if (validation.normalizedBbox) {
+        bbox.value = validation.normalizedBbox;
+        updateStatus('BBOX normaliserad.');
+        addToRunLog('OK', 'BBOX normaliserad');
+      } else {
+        updateStatus('BBOX behöver inte normaliseras.');
+        addToRunLog('INFO', 'BBOX redan normaliserad');
+      }
+    };
+
+    const exportTXT = () => {
+      const url = output.value.trim();
+      if (!url) {
+        updateStatus('Generera en URL först.');
+        return;
+      }
+
+      let content = '═══ URL BUILDER EXPORT ═══\n\n';
+      content += `Tidpunkt: ${new Date().toLocaleString('sv-SE')}\n\n`;
+      content += '─── URL ───\n';
+      content += `${url}\n\n`;
+
+      if (reportOutput && reportOutput.textContent.trim()) {
+        content += '─── Valideringsrapport ───\n';
+        content += `${reportOutput.textContent}\n\n`;
+      }
+
+      if (explainOutput && explainOutput.textContent.trim()) {
+        content += '─── Explain request ───\n';
+        content += `${explainOutput.textContent}\n\n`;
+      }
+
+      tryItDownload('urlbuilder.txt', content, 'text/plain');
+      updateStatus('TXT-fil exporterad.');
+      addToRunLog('OK', 'TXT-fil exporterad');
     };
 
     buttons.forEach((button) => {
@@ -2403,55 +4974,110 @@ const initTryIt = () => {
           generate();
         } else if (action === 'copy') {
           copyUrl();
+        } else if (action === 'copy-curl') {
+          copyCurl();
+        } else if (action === 'download-curl') {
+          downloadCurl();
+        } else if (action === 'export-txt') {
+          exportTXT();
+        } else if (action === 'fix-bbox') {
+          fixBbox();
         } else if (action === 'open') {
-          const url = output.value.trim();
-          if (!url) {
-            updateStatus('Generera en URL först.');
+          const validation = validateInputs();
+          const report = generateValidationReport(validation);
+          setReport(report);
+          if (validation.errors.length > 0) {
+            updateStatus('Validering misslyckades. Se valideringsrapporten.');
+            addToRunLog('ERROR', `Öppna blockerat: ${validation.errors.length} fel`);
             return;
           }
+
+          if (!output.value.trim()) {
+            const generated = generate();
+            if (!generated) return;
+          }
+
+          const url = output.value.trim();
           window.open(url, '_blank', 'noopener,noreferrer');
           updateStatus('Öppnade URL i ny flik.');
+          addToRunLog('INFO', 'Öppnade URL i ny flik');
         } else if (action === 'test') {
-            try {
-              const generated = output.value.trim();
-              if (!generated) {
-                updateStatus(status, 'Generera en URL först.');
-                return;
-              }
-
-              const url = new URL(generated, window.location.href);
-
-              if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
-                updateStatus(status, 'Det här pekar på localhost. Starta GeoServer lokalt eller byt bas-URL för att testa.');
-                return;
-              }
-
-              updateStatus(status, 'Testar…');
-
-              const t0 = performance.now();
-
-              let res;
-              try {
-                res = await fetch(url.toString(), { method: 'HEAD' });
-              } catch {
-                res = await fetch(url.toString(), { method: 'GET' });
-              }
-
-              const ms = Math.round(performance.now() - t0);
-              const ct = res.headers.get('content-type') || 'okänt';
-              updateStatus(status, `Svar: ${res.status} ${res.statusText} • ${ms} ms • ${ct}`);
-            } catch (error) {
-              updateStatus(status, 'Kunde inte testa URL (CORS/nätverk). Prova “Öppna” eller byt bas-URL.');
+          try {
+            if (window.location.protocol === 'file:') {
+              updateStatus('Kör via http.server för att testa URL (file:// blockeras).');
+              addToRunLog('WARN', 'Test blockerat: file:// används');
+              return;
             }
+
+            const validation = validateInputs();
+            const report = generateValidationReport(validation);
+            setReport(report);
+            if (validation.errors.length > 0) {
+              updateStatus('Validering misslyckades. Se valideringsrapporten.');
+              addToRunLog('ERROR', `Test blockerat: ${validation.errors.length} fel`);
+              return;
+            }
+
+            if (!output.value.trim()) {
+              const generated = generate();
+              if (!generated) return;
+            }
+
+            const url = new URL(output.value.trim(), window.location.href);
+
+            if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+              updateStatus(
+                'Det här pekar på localhost. Starta GeoServer lokalt eller byt bas-URL för att testa.',
+              );
+              addToRunLog('WARN', 'Test blockerat: localhost-URL');
+              return;
+            }
+
+            updateStatus('Testar…');
+            addToRunLog('INFO', 'Testar URL');
+
+            const t0 = performance.now();
+            let res;
+            try {
+              res = await fetch(url.toString(), { method: 'GET' });
+            } catch (error) {
+              updateStatus('CORS blocked; open in new tab or test from server environment.');
+              addToRunLog('ERROR', 'CORS-blockerat test');
+              return;
+            }
+
+            const ms = Math.round(performance.now() - t0);
+            const ct = res.headers.get('content-type') || 'okänt';
+            const msg = `Svar: ${res.status} ${res.statusText} • ${ms} ms • ${ct}`;
+            updateStatus(msg);
+            addToRunLog('OK', `Test slutförd: ${res.status} (${ms}ms)`);
+          } catch (error) {
+            updateStatus('CORS blocked; open in new tab or test from server environment.');
+            addToRunLog('ERROR', 'Test misslyckades: CORS/nätverksfel');
           }
+        }
       });
     });
+
+    // Advanced mode toggle
+    if (advancedToggle) {
+      advancedToggle.addEventListener('change', () => {
+        const enabled = advancedToggle.checked;
+        tryItShowAdvanced(TOOL_KEY, enabled);
+        addToRunLog('INFO', `Advanced mode ${enabled ? 'aktiverad' : 'inaktiverad'}`);
+      });
+    }
+
+    // Initialize
+    addToRunLog('INFO', 'URL-builder initierat');
   };
 
   tryItBlocks.forEach((block) => {
     const type = block.dataset.tryit;
     if (type === 'json') {
       initJsonTryIt(block);
+    } else if (type === 'mapsandbox') {
+      initMapSandbox(block);
     } else if (type === 'sld') {
       initSldTryIt(block);
     } else if (type === 'sldpreview') {
@@ -2464,8 +5090,6 @@ const initTryIt = () => {
       initResolutionsTryIt(block);
     } else if (type === 'gridcalc') {
       initGridCalcTryIt(block);
-    } else if (type === 'mapsandbox') {
-      initMapSandboxTryIt(block);
     }
   });
 };
@@ -2715,6 +5339,34 @@ const initGridsetExplorer = () => {
   if (!container || typeof ol === 'undefined') return;
 
   const EPSG3006 = 'EPSG:3006';
+  const TILE_SIZE = 256;
+
+  const reportEl = document.getElementById('gridset-validation');
+  const logEl = document.getElementById('gridset-runlog');
+  const outputEl = document.getElementById('gridset-output');
+
+  let gridsetRunLog = [];
+  let lastGridsetData = null;
+  let workflowInitialized = false;
+
+  const addToGridsetLog = (level, message) => {
+    if (!logEl) return;
+    const timestamp = new Date().toLocaleTimeString('sv-SE');
+    gridsetRunLog.push(`[${timestamp}] [${level}] ${message}`);
+    if (gridsetRunLog.length > 20) gridsetRunLog.shift();
+    logEl.textContent = gridsetRunLog.join('\n');
+    logEl.scrollTop = logEl.scrollHeight;
+  };
+
+  const setReport = (lines) => {
+    if (!reportEl) return;
+    reportEl.textContent = lines.join('\n');
+  };
+
+  const setOutput = (text) => {
+    if (!outputEl) return;
+    outputEl.textContent = text;
+  };
 
   const extents = {
     sverige: {
@@ -2734,7 +5386,9 @@ const initGridsetExplorer = () => {
 
   const hasProj4 = typeof proj4 !== 'undefined';
   const canRegister =
-    ol?.proj?.proj4 && typeof ol.proj.proj4.register === 'function' && typeof proj4?.defs === 'function';
+    ol?.proj?.proj4 &&
+    typeof ol.proj.proj4.register === 'function' &&
+    typeof proj4?.defs === 'function';
 
   if (!hasProj4 || !canRegister) {
     setUiStatus('Kunde inte initiera EPSG:3006 (proj4/OpenLayers saknas).');
@@ -2768,6 +5422,14 @@ const initGridsetExplorer = () => {
     return;
   }
 
+  // Ensure map container has dimensions before initializing
+  const targetRect = mapTarget.getBoundingClientRect();
+  if (targetRect.width === 0 || targetRect.height === 0) {
+    console.warn('Map container has zero dimensions, skipping map initialization');
+    setUiStatus('Väntar på att karta-containern ska bli synlig...');
+    return;
+  }
+
   const vectorSource = new ol.source.Vector();
 
   const vectorLayer = new ol.layer.Vector({
@@ -2789,10 +5451,7 @@ const initGridsetExplorer = () => {
 
   const map = new ol.Map({
     target: 'gridset-map',
-    layers: [
-      new ol.layer.Tile({ source: new ol.source.OSM() }),
-      vectorLayer,
-    ],
+    layers: [new ol.layer.Tile({ source: new ol.source.OSM() }), vectorLayer],
     view,
   });
 
@@ -2814,10 +5473,8 @@ const initGridsetExplorer = () => {
 
     const width = maxx - minx;
     const height = maxy - miny;
-    const tileSize = 256;
-
-    const tilesX = Math.ceil(width / (resolution * tileSize));
-    const tilesY = Math.ceil(height / (resolution * tileSize));
+    const tilesX = Math.ceil(width / (resolution * TILE_SIZE));
+    const tilesY = Math.ceil(height / (resolution * TILE_SIZE));
     const totalTiles = tilesX * tilesY;
 
     const elExtent = document.getElementById('gridset-info-extent');
@@ -2825,51 +5482,77 @@ const initGridsetExplorer = () => {
     const elZoom = document.getElementById('gridset-info-zoom');
     const elTiles = document.getElementById('gridset-info-tiles');
 
-    const initGridsetWorkflow = () => {
-      const copyBtn = document.querySelector('[data-gridset-action="copy-bbox"]');
-      const sendBtn = document.querySelector('[data-gridset-action="send-to-urlbuilder"]');
-      const bboxEl = document.getElementById('gridset-info-bbox');
+    const reportLines = [];
+    const issues = [];
 
-      const getBbox = () => (bboxEl?.textContent || '').trim();
+    reportLines.push('═══ GRIDSET VALIDERING ═══');
+    reportLines.push('');
+    reportLines.push(`CRS: ${EPSG3006}`);
+    reportLines.push(`Tile size: ${TILE_SIZE}px`);
+    reportLines.push(`Extent: ${extent.name}`);
+    reportLines.push(`Bounds: ${minx}, ${miny}, ${maxx}, ${maxy}`);
+    reportLines.push(
+      `Width/Height: ${width.toLocaleString('sv-SE')} m / ${height.toLocaleString('sv-SE')} m`,
+    );
+    reportLines.push(`Zoom: ${typeof zoom === 'number' ? zoom.toFixed(2) : '—'}`);
+    reportLines.push(`Resolution: ${resolution.toFixed(4)} m/px`);
+    reportLines.push(`Tiles: ${tilesX} × ${tilesY} = ${totalTiles}`);
+    reportLines.push('');
+    reportLines.push('Kontroller:');
 
-      if (copyBtn) {
-        copyBtn.addEventListener('click', async () => {
-        const bbox = getBbox();
-        if (!bbox || bbox === '—') return;
+    if (![minx, miny, maxx, maxy].every((val) => Number.isFinite(val))) {
+      issues.push('[ERROR] BBOX måste innehålla 4 giltiga tal');
+    } else {
+      reportLines.push('[OK] BBOX har 4 giltiga tal');
+    }
 
-        const original = copyBtn.textContent;
+    if (minx >= maxx || miny >= maxy) {
+      issues.push('[ERROR] Min måste vara mindre än Max för X/Y');
+    } else {
+      reportLines.push('[OK] Min/Max är korrekta för X/Y');
+    }
 
-        try {
-          await navigator.clipboard.writeText(bbox);
-          copyBtn.textContent = 'Kopierat!';
-        } catch {
-          copyBtn.textContent = 'Kunde inte kopiera';
-        }
+    if (width <= 0 || height <= 0) {
+      issues.push('[ERROR] BBOX-bredd/höjd måste vara > 0');
+    } else {
+      reportLines.push('[OK] BBOX-bredd/höjd är > 0');
+    }
 
-        window.setTimeout(() => {
-          copyBtn.textContent = original;
-        }, 1200);
-      });
-      }
+    if (!Number.isFinite(resolution) || resolution <= 0) {
+      issues.push('[ERROR] Resolution måste vara > 0');
+    } else {
+      reportLines.push('[OK] Resolution > 0');
+    }
 
-      if (sendBtn) {
-        sendBtn.addEventListener('click', () => {
-          const bbox = getBbox();
-          if (!bbox || bbox === '—') return;
+    if (!Number.isFinite(tilesX) || !Number.isFinite(tilesY) || tilesX <= 0 || tilesY <= 0) {
+      issues.push('[ERROR] Tiles X/Y måste vara positiva heltal');
+    } else {
+      reportLines.push('[OK] Tiles X/Y är positiva heltal');
+    }
 
-          const urlBbox = document.getElementById('urlbuilder-bbox');
-          const urlCrs = document.getElementById('urlbuilder-crs');
+    if (issues.length > 0) {
+      reportLines.push('');
+      reportLines.push(`Status: [ERROR] ${issues.length} problem`);
+      reportLines.push(...issues);
+    } else {
+      reportLines.push('');
+      reportLines.push('Status: [OK] Inga problem upptäckta');
+    }
 
-          if (urlBbox) urlBbox.value = bbox;
-          if (urlCrs) urlCrs.value = 'EPSG:3006';
+    setReport(reportLines);
 
-          const target = document.getElementById('urlbuilder');
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      }
+    lastGridsetData = {
+      extentKey,
+      extentName: extent.name,
+      bounds: { minx, miny, maxx, maxy },
+      width,
+      height,
+      zoom,
+      resolution,
+      tilesX,
+      tilesY,
+      totalTiles,
     };
-
-    initGridsetWorkflow();
 
     if (elExtent) elExtent.textContent = extent.name;
     if (elBbox) elBbox.textContent = `minx: ${minx}, miny: ${miny}\nmaxx: ${maxx}, maxy: ${maxy}`;
@@ -2895,6 +5578,197 @@ const initGridsetExplorer = () => {
 
   let activeExtentKey = 'skaraborg';
 
+  const initGridsetWorkflow = () => {
+    if (workflowInitialized) return;
+    workflowInitialized = true;
+
+    const copyBtn = document.querySelector('[data-gridset-action="copy-bbox"]');
+    const sendBtn = document.querySelector('[data-gridset-action="send-to-urlbuilder"]');
+    const exportGeoBtn = document.querySelector('[data-gridset-action="export-geojson"]');
+    const exportTxtBtn = document.querySelector('[data-gridset-action="export-txt"]');
+    const copyGridsetBtn = document.querySelector('[data-gridset-action="copy-gridset"]');
+    const sendToGridcalcBtn = document.querySelector('[data-gridset-action="send-to-gridcalc"]');
+    const bboxEl = document.getElementById('gridset-info-bbox');
+
+    const getBbox = () => (bboxEl?.textContent || '').trim();
+    const getBboxForUrlBuilder = () => {
+      const extent = extents[activeExtentKey];
+      if (!extent || !Array.isArray(extent.bounds) || extent.bounds.length !== 4) return '';
+      const [minx, miny, maxx, maxy] = extent.bounds;
+      return `${minx},${miny},${maxx},${maxy}`;
+    };
+
+    const ensureData = () => {
+      if (!lastGridsetData) {
+        addToGridsetLog('WARN', 'Ingen data att använda ännu.');
+        return false;
+      }
+      return true;
+    };
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const bbox = getBbox();
+        if (!bbox || bbox === '—') return;
+
+        const original = copyBtn.textContent;
+
+        try {
+          await navigator.clipboard.writeText(bbox);
+          copyBtn.textContent = 'Kopierat!';
+          addToGridsetLog('OK', 'BBOX kopierad');
+        } catch {
+          copyBtn.textContent = 'Kunde inte kopiera';
+          addToGridsetLog('ERROR', 'Kopiering misslyckades');
+        }
+
+        window.setTimeout(() => {
+          copyBtn.textContent = original;
+        }, 1200);
+      });
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const bbox = getBboxForUrlBuilder();
+        if (!bbox) return;
+
+        const urlBbox = document.getElementById('urlbuilder-bbox');
+        const urlCrs = document.getElementById('urlbuilder-crs');
+
+        if (urlBbox) urlBbox.value = bbox;
+        if (urlCrs) urlCrs.value = 'EPSG:3006';
+
+        addToGridsetLog('OK', 'Skickad till URL builder');
+        const target = document.getElementById('urlbuilder');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    if (exportGeoBtn) {
+      exportGeoBtn.addEventListener('click', () => {
+        if (!ensureData()) return;
+        const { bounds } = lastGridsetData;
+        const geojson = {
+          type: 'FeatureCollection',
+          crs: { type: 'name', properties: { name: EPSG3006 } },
+          features: [
+            {
+              type: 'Feature',
+              properties: { extentName: lastGridsetData.extentName },
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  [
+                    [bounds.minx, bounds.miny],
+                    [bounds.maxx, bounds.miny],
+                    [bounds.maxx, bounds.maxy],
+                    [bounds.minx, bounds.maxy],
+                    [bounds.minx, bounds.miny],
+                  ],
+                ],
+              },
+            },
+          ],
+        };
+
+        try {
+          const blob = new Blob([JSON.stringify(geojson, null, 2)], {
+            type: 'application/geo+json',
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'gridset-extent.geojson';
+          a.click();
+          URL.revokeObjectURL(url);
+          addToGridsetLog('OK', 'GeoJSON exporterad');
+        } catch {
+          addToGridsetLog('ERROR', 'GeoJSON-export misslyckades');
+        }
+      });
+    }
+
+    if (exportTxtBtn) {
+      exportTxtBtn.addEventListener('click', () => {
+        if (!ensureData()) return;
+        const d = lastGridsetData;
+        const txt = [
+          '═══ GRIDSET EXTENT REPORT ═══',
+          '',
+          `Extent: ${d.extentName}`,
+          `CRS: ${EPSG3006}`,
+          `BBOX: ${d.bounds.minx},${d.bounds.miny},${d.bounds.maxx},${d.bounds.maxy}`,
+          `Zoom: ${typeof d.zoom === 'number' ? d.zoom.toFixed(2) : '—'}`,
+          `Resolution: ${d.resolution.toFixed(4)} m/px`,
+          `Tiles: ${d.tilesX} × ${d.tilesY} = ${d.totalTiles}`,
+          `Timestamp: ${new Date().toLocaleString('sv-SE')}`,
+        ].join('\n');
+
+        try {
+          const blob = new Blob([txt], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'gridset-extent.txt';
+          a.click();
+          URL.revokeObjectURL(url);
+          addToGridsetLog('OK', 'TXT exporterad');
+        } catch {
+          addToGridsetLog('ERROR', 'TXT-export misslyckades');
+        }
+      });
+    }
+
+    if (copyGridsetBtn) {
+      copyGridsetBtn.addEventListener('click', async () => {
+        if (!ensureData()) return;
+        const d = lastGridsetData;
+        const snippet = {
+          example: true,
+          extentName: d.extentName,
+          crs: EPSG3006,
+          bbox: [d.bounds.minx, d.bounds.miny, d.bounds.maxx, d.bounds.maxy],
+          tileSize: TILE_SIZE,
+        };
+        const snippetText = JSON.stringify(snippet, null, 2);
+        setOutput(snippetText);
+
+        try {
+          if (typeof window.tryItCopy === 'function') {
+            await window.tryItCopy(snippetText);
+          } else if (typeof copyText === 'function') {
+            await copyText(snippetText);
+          }
+          addToGridsetLog('OK', 'Gridset-snippet kopierat');
+        } catch {
+          addToGridsetLog('ERROR', 'Kunde inte kopiera gridset-snippet');
+        }
+      });
+    }
+
+    if (sendToGridcalcBtn) {
+      sendToGridcalcBtn.addEventListener('click', () => {
+        if (!ensureData()) return;
+        const d = lastGridsetData;
+        const gridcalcWidth = document.getElementById('gridcalc-bboxwidth');
+        const gridcalcHeight = document.getElementById('gridcalc-bboxheight');
+
+        if (gridcalcWidth) gridcalcWidth.value = Math.round(d.width).toString();
+        if (gridcalcHeight) gridcalcHeight.value = Math.round(d.height).toString();
+
+        addToGridsetLog('INFO', 'Skickade BBOX-bredd/höjd till Gridcalc');
+        if (typeof window.tryItLog === 'function') {
+          window.tryItLog('gridcalc', 'INFO', 'Received bbox width/height from Gridset Explorer');
+        }
+
+        const gridcalcSection = document.getElementById('gridcalc');
+        if (gridcalcSection) gridcalcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (gridcalcWidth) gridcalcWidth.focus();
+      });
+    }
+  };
+
   const applyExtent = (extentKey) => {
     const extent = extents[extentKey];
     if (!extent) return;
@@ -2909,6 +5783,7 @@ const initGridsetExplorer = () => {
     if (typeof z === 'number' && z < 2) view.setZoom(2);
 
     updateInfo(extentKey);
+    addToGridsetLog('INFO', `Extent ändrad: ${extent.name}`);
   };
 
   container.querySelectorAll('[data-extent-action]').forEach((button) => {
@@ -2918,6 +5793,9 @@ const initGridsetExplorer = () => {
   view.on('change:resolution', () => updateInfo(activeExtentKey));
   view.on('change:center', () => updateInfo(activeExtentKey));
 
+  initGridsetWorkflow();
+  addToGridsetLog('INFO', 'Gridset Explorer initierat');
+
   applyExtent('skaraborg');
 };
 
@@ -2926,7 +5804,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initOfflineNotice();
   initSearch();
-  initPageMeta(); 
+  initPageMeta();
   initCodeCopy();
   initTryIt();
   initWizard();

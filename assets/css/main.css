@@ -354,6 +354,139 @@ a {
   margin-top: 0.8rem;
 }
 
+/* Tryit Advanced Panels (Details) */
+.tryit-advanced {
+  margin-top: 1.5rem;
+  border: none;
+  padding: 0;
+}
+
+.tryit-advanced > summary {
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+}
+
+.tryit-advanced > summary::-webkit-details-marker {
+  color: var(--primary);
+}
+
+.tryit-advanced-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+/* Validation and Log Details */
+.tryit-details {
+  margin-top: 1rem;
+  border: none;
+  padding: 0;
+}
+
+.tryit-details > summary {
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
+}
+
+.tryit-details > summary::-webkit-details-marker {
+  color: var(--primary);
+}
+
+.tryit-details[open] > summary {
+  margin-bottom: 0.75rem;
+}
+
+.tryit-details > pre {
+  margin: 0;
+}
+
+/* Scroll margin for anchor targets */
+.doc-content h2[id],
+.doc-content h3[id],
+.doc-content section[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* SLD Quick Fixes */
+.sld-fix-item {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.sld-fix-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin: 0;
+}
+
+.sld-fix-checkbox {
+  margin-top: 0.25rem;
+  width: auto;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sld-fix-title {
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sld-fix-risk {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.sld-fix-risk-low {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.sld-fix-risk-medium {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.sld-fix-description {
+  margin-top: 0.5rem;
+  padding-left: 1.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Fix tryit-output readability in doc-content */
+.doc-content pre.tryit-output,
+.doc-content .tryit-output {
+  background: #f8fafc !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border);
+}
+
 .tryit-pill {
   border: 1px solid var(--border);
   background: #fff;
@@ -361,7 +494,10 @@ a {
   padding: 0.35rem 0.65rem;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
 }
 
 .tryit-pill.secondary {
@@ -576,7 +712,8 @@ a {
 }
 
 .gridset-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
   font-size: 0.85rem;
   margin: 0.5rem 0;
@@ -807,12 +944,132 @@ a {
   margin-top: 1.8rem;
 }
 
+.doc-content h2[id],
+.doc-content h3[id] {
+  scroll-margin-top: 96px;
+}
+
 .doc-content pre {
   background: #0f172a;
   color: #e2e8f0;
   padding: 2.4rem 1.2rem 1rem;
   border-radius: 12px;
   overflow-x: auto;
+}
+
+/* Override for try-it tool outputs to ensure proper contrast */
+.doc-content pre.tryit-output,
+.doc-content .tryit pre {
+  background: #f8fafc;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px;
+  line-height: 1.4;
+}
+
+/* Resolutions send-to-gridcalc buttons */
+.res-send-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  background: #007bff;
+  color: white;
+  border: 1px solid #0056b3;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.res-send-btn:hover {
+  background: #0056b3;
+  border-color: #004085;
+}
+
+.res-send-btn:focus-visible {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+.res-send-btn:active {
+  background: #004085;
+  transform: translateY(1px);
+}
+
+.bbox-gridcalc-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
+
+.tryit-panel {
+  color: var(--text);
+}
+
+.tryit-panel-title {
+  color: var(--text);
+}
+
+.tryit-kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.tryit-log {
+  color: var(--text);
+  background: #f8fafc;
+}
+
+.tryit-panel .tryit-output,
+.tryit-panel pre,
+.tryit-output.tryit-mono {
+  color: var(--text);
+}
+
+/* Map sandbox preview */
+.mapsandbox-preview-container {
+  position: relative;
+  min-height: 320px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mapsandbox-preview-img {
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+.mapsandbox-fallback {
+  padding: 1.5rem;
+  text-align: left;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.mapsandbox-fallback strong {
+  color: #dc3545;
+}
+
+.mapsandbox-fallback ul {
+  margin: 0.5rem 0 0 1.1rem;
+  line-height: 1.5;
+}
+
+.mapsandbox-fallback code {
+  background: #ffffff;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .doc-content table {
@@ -916,7 +1173,7 @@ a {
 
 .troubleshooting-symptoms .symptom-row:hover .symptom-title {
   text-decoration: underline;
-  text-decoration-color: rgba(0,0,0,0.15);
+  text-decoration-color: rgba(0, 0, 0, 0.15);
 }
 
 .troubleshooting-symptoms .symptom-chip:hover {
@@ -954,7 +1211,7 @@ a {
 
 @media (max-width: 820px) {
   .troubleshooting-symptoms .symptom-col--mid::before {
-    content: "Orsak";
+    content: 'Orsak';
     display: block;
     font-size: 0.65rem;
     text-transform: uppercase;
@@ -963,7 +1220,7 @@ a {
   }
 
   .troubleshooting-symptoms .symptom-col--right::before {
-    content: "Nästa steg";
+    content: 'Nästa steg';
     display: block;
     font-size: 0.65rem;
     text-transform: uppercase;
@@ -1046,10 +1303,26 @@ a {
   flex: 0 0 auto;
 }
 
-.troubleshooting-symptoms .tag-frontend { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
-.troubleshooting-symptoms .tag-gwc      { background: #f0fdf4; color: #166534; border-color: #86efac; }
-.troubleshooting-symptoms .tag-gs       { background: #fff7ed; color: #7c2d12; border-color: #fdba74; }
-.troubleshooting-symptoms .tag-data     { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+.troubleshooting-symptoms .tag-frontend {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #7dd3fc;
+}
+.troubleshooting-symptoms .tag-gwc {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #86efac;
+}
+.troubleshooting-symptoms .tag-gs {
+  background: #fff7ed;
+  color: #7c2d12;
+  border-color: #fdba74;
+}
+.troubleshooting-symptoms .tag-data {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border-color: #d8b4fe;
+}
 
 .troubleshooting-symptoms .symptom-actions {
   display: flex;
@@ -1258,13 +1531,13 @@ a {
 }
 
 .troubleshooting-page .ts-accordion > summary::after {
-  content: "▾";
+  content: '▾';
   float: right;
   opacity: 0.7;
 }
 
 .troubleshooting-page .ts-accordion[open] > summary::after {
-  content: "▴";
+  content: '▴';
 }
 
 .troubleshooting-page .ts-bullets {
@@ -1545,7 +1818,9 @@ a {
   border-radius: 16px;
   overflow: hidden;
   margin: 1.5rem 0;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 4px 16px rgba(15, 23, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -1657,24 +1932,56 @@ a {
   display: none !important;
 }
 
-.code-block pre code .tok-key { color: #9cdcfe; }
-.code-block pre code .tok-string { color: #ce9178; }
-.code-block pre code .tok-number { color: #b5cea8; }
-.code-block pre code .tok-boolean { color: #569cd6; }
-.code-block pre code .tok-null { color: #c586c0; }
-.code-block pre code .tok-punct { color: #d4d4d4; opacity: 0.9; }
+.code-block pre code .tok-key {
+  color: #9cdcfe;
+}
+.code-block pre code .tok-string {
+  color: #ce9178;
+}
+.code-block pre code .tok-number {
+  color: #b5cea8;
+}
+.code-block pre code .tok-boolean {
+  color: #569cd6;
+}
+.code-block pre code .tok-null {
+  color: #c586c0;
+}
+.code-block pre code .tok-punct {
+  color: #d4d4d4;
+  opacity: 0.9;
+}
 
-.code-block pre code .tok-tag { color: #4ec9b0; }
-.code-block pre code .tok-attr { color: #9cdcfe; }
-.code-block pre code .tok-value { color: #ce9178; }
-.code-block pre code .tok-comment { color: #6a9955; }
+.code-block pre code .tok-tag {
+  color: #4ec9b0;
+}
+.code-block pre code .tok-attr {
+  color: #9cdcfe;
+}
+.code-block pre code .tok-value {
+  color: #ce9178;
+}
+.code-block pre code .tok-comment {
+  color: #6a9955;
+}
 
-.code-block pre code .tok-keyword { color: #c586c0; }
-.code-block pre code .tok-operator { color: #d4d4d4; opacity: 0.9; }
+.code-block pre code .tok-keyword {
+  color: #c586c0;
+}
+.code-block pre code .tok-operator {
+  color: #d4d4d4;
+  opacity: 0.9;
+}
 
-.code-block pre code .tok-prompt { color: #4fc1ff; }
-.code-block pre code .tok-flag { color: #dcdcaa; }
-.code-block pre code .tok-path { color: #b5cea8; }
+.code-block pre code .tok-prompt {
+  color: #4fc1ff;
+}
+.code-block pre code .tok-flag {
+  color: #dcdcaa;
+}
+.code-block pre code .tok-path {
+  color: #b5cea8;
+}
 
 @media (max-width: 768px) {
   .doc-content .code-block {
@@ -1982,7 +2289,9 @@ table tbody tr:hover {
 
 @media (max-width: 900px) {
   .sidenav {
-    transition: transform 180ms ease, box-shadow 180ms ease;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
     transform: translateX(-101%);
     box-shadow: none;
   }
@@ -1990,7 +2299,7 @@ table tbody tr:hover {
   body.nav-open .sidenav,
   .sidenav.open {
     transform: translateX(0);
-    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.20);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.2);
   }
 
   .nav-backdrop {

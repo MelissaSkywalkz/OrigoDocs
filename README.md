@@ -16,6 +16,7 @@ En statisk docs-site med praktiska exempel, felsökning och “Try it”-verktyg
 ---
 
 ## 🎯 Syfte
+
 OrigoDocs är till för utvecklare, GIS-ingenjörer och tekniska förvaltare som jobbar med **Origo Map**.  
 Fokus ligger på:
 
@@ -31,6 +32,7 @@ Detta är inte en teoretisk manual utan en **arbetsyta**.
 ## 🧭 Innehål & sidor
 
 **Huvuddokumentation:**
+
 - **Origo guide** – grundläggande konfiguration, lager, WMS/WFS/WMTS
 - **JSON 101** – Origo JSON-format med valideringsverktyg
 - **Layermanager** – så fungerar lag-hiearkier
@@ -43,6 +45,7 @@ Detta är inte en teoretisk manual utan en **arbetsyta**.
 - **Origo-recept** – copy/paste-exempel
 
 **Try it-lab verktyg:**
+
 - JSON-validering & builder
 - BBOX/Extent explorer (EPSG:3008, EPSG:3006)
 - Resolutions & Gridcalc
@@ -57,17 +60,20 @@ Detta är inte en teoretisk manual utan en **arbetsyta**.
 OrigoDocs är en statisk HTML-site och kräver ingen backend.
 
 **Live Server (VS Code):**
+
 ```
 Högerklicka på index.html → Open with Live Server
 ```
 
 **Python HTTP Server:**
+
 ```bash
 python -m http.server 8000
 Öppna: http://localhost:8000
 ```
 
 **Kodformatering (Prettier):**
+
 ```bash
 npm install
 npm run format
@@ -81,6 +87,7 @@ Sajten publiceras automatiskt från `main`-branch till:
 👉 https://melissaskywalkz.github.io/OrigoDocs/
 
 **Lokala ändringar verifieras via:**
+
 1. Lokal server (se ovan)
 2. Kolla mobile-viewport (~560px)
 3. Verifiera interna länkar & navigering
