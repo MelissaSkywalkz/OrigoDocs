@@ -77,6 +77,47 @@ const mapSandboxTool = (() => {
     }
   }
 
+  function buildTechReport({
+    status,
+    contentType,
+    durationMs,
+    corsLikely,
+    timedOut,
+    decodeError,
+    fetchError,
+  }) {
+    const report = createValidationReport(true);
+
+    if (timedOut) {
+      addReportError(report, 'mapsandbox.timeout', 'Tidsgräns överskreds');
+    }
+
+    if (corsLikely) {
+      addReportWarning(report, 'mapsandbox.corsLikely', 'CORS-blockering trolig');
+    }
+
+    if (decodeError) {
+      addReportError(report, 'mapsandbox.decodeError', 'Bild kunde inte avkodas');
+    }
+
+    if (fetchError && !timedOut) {
+      addReportWarning(report, 'mapsandbox.fetchError', 'Kunde inte hämta resurs');
+    }
+
+    if (status && (status < 200 || status >= 300)) {
+      addReportWarning(report, 'mapsandbox.httpStatus', `HTTP-status ${status}`);
+    }
+
+    report.meta.httpStatus = status ?? 'okänt';
+    report.meta.contentType = contentType || 'okänt';
+    report.meta.durationMs = Number.isFinite(durationMs) ? Math.round(durationMs) : 'okänt';
+    report.meta.corsLikely = corsLikely ? 'ja' : 'nej';
+    report.meta.timeout = timedOut ? 'ja' : 'nej';
+    report.meta.decodeError = decodeError ? 'ja' : 'nej';
+
+    return report;
+  }
+
   function actionPreview() {
     const urlString = elements.urlInput?.value.trim();
 
@@ -104,6 +145,15 @@ const mapSandboxTool = (() => {
       return;
     }
 
+    if (!['http:', 'https:'].includes(parseResult.url.protocol.toLowerCase())) {
+      updateStatus('Endast http/https tillåts');
+      const report = createValidationReport(false);
+      addReportError(report, 'URL_INVALID_PROTOCOL', 'Endast http/https tillåts');
+      appState.setReport(TOOL_KEY, report);
+      updateUI();
+      return;
+    }
+
     state.lastUrl = urlString;
 
     // Display parsed parameters
@@ -120,21 +170,65 @@ const mapSandboxTool = (() => {
       elements.previewImg.onload = () => {
         if (elements.fallback) elements.fallback.style.display = 'none';
         elements.previewImg.style.display = 'block';
-        updateStatus('Förhandsvisning laddad');
-        appState.addLog(TOOL_KEY, 'OK', 'Bild laddad');
+        if (elements.previewImg.decode) {
+          elements.previewImg
+            .decode()
+            .then(() => {
+              updateStatus('Förhandsvisning laddad');
+              appState.addLog(TOOL_KEY, 'OK', 'Bild laddad');
+            })
+            .catch(() => {
+              updateStatus('Bild kunde inte avkodas');
+              const report = buildTechReport({ decodeError: true });
+              appState.setReport(TOOL_KEY, report);
+              appState.addLog(TOOL_KEY, 'ERROR', 'Bild kunde inte avkodas');
+              updateUI();
+            });
+        } else {
+          updateStatus('Förhandsvisning laddad');
+          appState.addLog(TOOL_KEY, 'OK', 'Bild laddad');
+        }
       };
 
       elements.previewImg.onerror = () => {
         if (elements.fallback) elements.fallback.style.display = 'block';
         elements.previewImg.style.display = 'none';
-        updateStatus('Kunde inte ladda bild (CORS/server-fel)');
+        updateStatus('Kunde inte ladda bild');
+        const report = buildTechReport({ corsLikely: true, fetchError: true });
+        appState.setReport(TOOL_KEY, report);
         appState.addLog(TOOL_KEY, 'ERROR', 'Bildladdning misslyckades');
+        updateUI();
       };
     }
 
-    const validationReport = createValidationReport(true);
-    validationReport.meta.parameters = parseResult.params;
-    appState.setReport(TOOL_KEY, validationReport);
+    const safeUrl = safeUrlForLog(urlString);
+    appState.addLog(TOOL_KEY, 'INFO', `Förhandsgranskar: ${safeUrl}`);
+
+    const t0 = performance.now();
+    fetchWithTimeout(urlString, 8000, { method: 'GET' }).then((result) => {
+      const durationMs = performance.now() - t0;
+
+      if (!result.ok) {
+        const corsLikely = result.error && result.error.name === 'TypeError' && !result.timedOut;
+        const report = buildTechReport({
+          durationMs,
+          corsLikely,
+          timedOut: result.timedOut,
+          fetchError: result.error,
+        });
+        appState.setReport(TOOL_KEY, report);
+        updateStatus(result.timedOut ? 'Förfrågan tog för lång tid' : 'Kunde inte hämta data');
+        updateUI();
+        return;
+      }
+
+      const status = result.response.status;
+      const contentType = result.response.headers.get('content-type') || '';
+      const report = buildTechReport({ status, contentType, durationMs });
+      report.meta.parameters = parseResult.params;
+      appState.setReport(TOOL_KEY, report);
+      updateUI();
+    });
     updateUI();
   }
 

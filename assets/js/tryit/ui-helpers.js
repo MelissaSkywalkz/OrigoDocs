@@ -296,6 +296,47 @@ function normalizeNewlines(content) {
 }
 
 /**
+ * Fetch with timeout support
+ * @param {string} url
+ * @param {number} ms
+ * @param {RequestInit} options
+ * @returns {Promise<{ok: boolean, response: Response|null, error: Error|null, timedOut: boolean}>}
+ */
+async function fetchWithTimeout(url, ms = 8000, options = {}) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), ms);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    return { ok: true, response, error: null, timedOut: false };
+  } catch (error) {
+    const timedOut = error?.name === 'AbortError';
+    return { ok: false, response: null, error, timedOut };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+/**
+ * Strip credentials from URL before logging
+ * @param {string} urlString
+ * @returns {string}
+ */
+function safeUrlForLog(urlString) {
+  try {
+    const url = new URL(urlString, window.location.href);
+    url.username = '';
+    url.password = '';
+    return url.toString();
+  } catch {
+    return urlString;
+  }
+}
+
+/**
  * Copy text to clipboard with graceful error handling
  * @param {string} text
  * @returns {Promise<{ok: boolean, message: string}>}
