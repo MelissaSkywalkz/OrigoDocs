@@ -76,6 +76,7 @@ const ERROR_CODE_LABELS = {
   GRIDCALC_INVALID_NUMBER: 'Värde måste vara tal',
   GRIDCALC_VALUE_TOO_SMALL: 'Värde för litet',
   GRIDCALC_VALUE_TOO_LARGE: 'Värde för stort',
+  GRIDCALC_PIXEL_SIZE_ASSUMPTION: 'Antagande om pixelstorlek',
 
   // SLD Tool
   SLD_PARSE_ERROR: 'XML-parsefel',

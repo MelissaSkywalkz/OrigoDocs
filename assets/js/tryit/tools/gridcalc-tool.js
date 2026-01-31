@@ -5,7 +5,12 @@
 
 const gridcalcTool = (() => {
   const TOOL_KEY = 'gridcalc';
+  // Pixel size assumption: 0.28 mm (OGC standard)
+  // Resolution (m/px) = ScaleDenominator * pixelSizeMeters
+  // ScaleDenominator = Resolution / pixelSizeMeters
   const PIXEL_SIZE_M = 0.00028;
+  const RESOLUTION_DECIMALS = 4;
+  const SCALE_DECIMALS = 0;
 
   let elements = {
     resolution: null,
@@ -165,6 +170,8 @@ const gridcalcTool = (() => {
     report.meta.tileSpanM = tileSpanM.toFixed(2);
     report.meta.metaSpanM = metaSpanM.toFixed(2);
     report.meta.seedRecommendation = seedRec;
+    report.meta.pixelSizeMeters = PIXEL_SIZE_M;
+    report.meta.rounding = `Resolution: ${RESOLUTION_DECIMALS} decimals, Scale: ${SCALE_DECIMALS} decimals`;
 
     appState.setReport(TOOL_KEY, report);
     updateUI();
@@ -180,7 +187,17 @@ const gridcalcTool = (() => {
       updateUI();
       return;
     }
-    if (elements.scale) elements.scale.value = (res / PIXEL_SIZE_M).toFixed(0);
+    const scale = res / PIXEL_SIZE_M;
+    if (elements.scale) elements.scale.value = scale.toFixed(SCALE_DECIMALS);
+    const report = createValidationReport(true);
+    addReportWarning(
+      report,
+      'GRIDCALC_PIXEL_SIZE_ASSUMPTION',
+      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)'
+    );
+    report.meta.rounding = `Skala avrundad till ${SCALE_DECIMALS} decimaler`;
+    report.meta.pixelSizeMeters = PIXEL_SIZE_M;
+    appState.setReport(TOOL_KEY, report);
     calculate('resolution');
   }
 
@@ -194,7 +211,17 @@ const gridcalcTool = (() => {
       updateUI();
       return;
     }
-    if (elements.resolution) elements.resolution.value = (scale * PIXEL_SIZE_M).toFixed(4);
+    const resolution = scale * PIXEL_SIZE_M;
+    if (elements.resolution) elements.resolution.value = resolution.toFixed(RESOLUTION_DECIMALS);
+    const report = createValidationReport(true);
+    addReportWarning(
+      report,
+      'GRIDCALC_PIXEL_SIZE_ASSUMPTION',
+      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)'
+    );
+    report.meta.rounding = `Resolution avrundad till ${RESOLUTION_DECIMALS} decimaler`;
+    report.meta.pixelSizeMeters = PIXEL_SIZE_M;
+    appState.setReport(TOOL_KEY, report);
     calculate('scale');
   }
 
