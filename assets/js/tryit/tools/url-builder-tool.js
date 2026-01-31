@@ -22,6 +22,8 @@ const urlBuilderTool = (() => {
     reportEl: null,
     logEl: null,
     explainEl: null,
+    curlMultiline: null,
+    curlSilent: null,
   };
 
   let state = {
@@ -47,6 +49,8 @@ const urlBuilderTool = (() => {
     elements.reportEl = block.querySelector('#urlbuilder-validation');
     elements.logEl = block.querySelector('#urlbuilder-runlog');
     elements.explainEl = block.querySelector('#urlbuilder-explain');
+    elements.curlMultiline = block.querySelector('#urlbuilder-curl-multiline');
+    elements.curlSilent = block.querySelector('#urlbuilder-curl-silent');
 
     if (!elements.base || !elements.output || !elements.status) {
       console.error('URL Builder Tool: Missing required DOM elements');
@@ -275,6 +279,35 @@ const urlBuilderTool = (() => {
     });
 
     return explanation;
+  }
+
+  function shellQuote(value) {
+    const str = String(value ?? '');
+    if (str === '') return "''";
+    return `'${str.replace(/'/g, `'"'"'`)}'`;
+  }
+
+  function buildCurlCommand(url, options = {}) {
+    const { silent = false, multiline = false, acceptHeader = '' } = options;
+    const parts = ['curl', '-L'];
+    if (silent) parts.push('-sS');
+
+    if (acceptHeader) {
+      parts.push('-H', shellQuote(`Accept: ${acceptHeader}`));
+    }
+
+    parts.push(shellQuote(url));
+
+    if (!multiline) {
+      return parts.join(' ');
+    }
+
+    const formatted = ['curl', '-L', ...(silent ? ['-sS'] : [])]
+      .concat(acceptHeader ? ['-H', shellQuote(`Accept: ${acceptHeader}`)] : [])
+      .concat([shellQuote(url)])
+      .map((part, idx) => (idx === 0 ? part : `  ${part}`));
+
+    return formatted.join(' \\\n');
   }
 
   function validateInputs() {
@@ -522,7 +555,12 @@ const urlBuilderTool = (() => {
       return;
     }
 
-    const curl = `curl "${url}"`;
+    const acceptHeader = normalizeText(elements.format?.value || '');
+    const curl = buildCurlCommand(url.trim(), {
+      silent: Boolean(elements.curlSilent?.checked),
+      multiline: Boolean(elements.curlMultiline?.checked),
+      acceptHeader,
+    });
     const result = await copyToClipboard(curl);
     if (result.ok) {
       updateStatus(result.message);
@@ -542,7 +580,13 @@ const urlBuilderTool = (() => {
       return;
     }
 
-    const curl = `#!/bin/bash\n# Generated curl request\ncurl "${url}"\n`;
+    const acceptHeader = normalizeText(elements.format?.value || '');
+    const curlCommand = buildCurlCommand(url.trim(), {
+      silent: Boolean(elements.curlSilent?.checked),
+      multiline: Boolean(elements.curlMultiline?.checked),
+      acceptHeader,
+    });
+    const curl = `#!/bin/bash\n# Generated curl request\n${curlCommand}\n`;
     const filename = `urlbuilder-${formatTimestamp()}.sh`;
     const result = exportFile({ filename, mime: 'text/plain', content: curl });
     updateStatus(result.message);
