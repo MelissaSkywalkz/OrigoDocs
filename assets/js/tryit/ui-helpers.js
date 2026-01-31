@@ -47,6 +47,11 @@ const ERROR_CODE_LABELS = {
   URL_MISSING_FORMAT: 'Format saknas',
   URL_INVALID_BBOX: 'BBOX-format ogiltigt',
   URL_MISSING_PARAM: 'Parameter saknas',
+  'wms.missingParam': 'Obligatorisk parameter saknas',
+  'wms.invalidService': 'SERVICE måste vara WMS',
+  'wms.invalidRequest': 'REQUEST måste vara GetMap',
+  'wms.invalidBbox': 'BBOX måste innehålla 4 tal',
+  'wms.invalidSize': 'WIDTH/HEIGHT måste vara > 0',
 
   // BBOX Tool
   BBOX_EMPTY_INPUT: 'Ingen input',

@@ -77,6 +77,84 @@ const mapSandboxTool = (() => {
     }
   }
 
+  function normalizeParams(params) {
+    const normalized = {};
+    Object.entries(params || {}).forEach(([key, value]) => {
+      normalized[key.toUpperCase()] = value;
+    });
+    return normalized;
+  }
+
+  function validateWmsGetMapParams(params) {
+    const report = createValidationReport(true);
+
+    const service = params.SERVICE || '';
+    const request = params.REQUEST || '';
+    const layers = params.LAYERS || '';
+    const crs = params.CRS || params.SRS || '';
+    const bbox = params.BBOX || '';
+    const width = params.WIDTH || '';
+    const height = params.HEIGHT || '';
+    const format = params.FORMAT || '';
+
+    if (!service) {
+      addReportError(report, 'wms.missingParam', 'SERVICE saknas', 'SERVICE');
+    } else if (service.toUpperCase() !== 'WMS') {
+      addReportError(report, 'wms.invalidService', 'SERVICE måste vara WMS', 'SERVICE');
+    }
+
+    if (!request) {
+      addReportError(report, 'wms.missingParam', 'REQUEST saknas', 'REQUEST');
+    } else if (request.toUpperCase() !== 'GETMAP') {
+      addReportError(report, 'wms.invalidRequest', 'REQUEST måste vara GetMap', 'REQUEST');
+    }
+
+    if (!layers) {
+      addReportError(report, 'wms.missingParam', 'LAYERS saknas', 'LAYERS');
+    }
+
+    if (!crs) {
+      addReportError(report, 'wms.missingParam', 'CRS/SRS saknas', 'CRS/SRS');
+    }
+
+    if (!bbox) {
+      addReportError(report, 'wms.missingParam', 'BBOX saknas', 'BBOX');
+    } else {
+      const parts = bbox.split(',').map((v) => Number(v.trim()));
+      if (parts.length !== 4 || parts.some((n) => Number.isNaN(n))) {
+        addReportError(report, 'wms.invalidBbox', 'BBOX måste innehålla 4 tal', 'BBOX');
+      }
+    }
+
+    if (!width) {
+      addReportError(report, 'wms.missingParam', 'WIDTH saknas', 'WIDTH');
+    } else if (!Number.isFinite(Number(width)) || Number(width) <= 0) {
+      addReportError(report, 'wms.invalidSize', 'WIDTH måste vara > 0', 'WIDTH');
+    }
+
+    if (!height) {
+      addReportError(report, 'wms.missingParam', 'HEIGHT saknas', 'HEIGHT');
+    } else if (!Number.isFinite(Number(height)) || Number(height) <= 0) {
+      addReportError(report, 'wms.invalidSize', 'HEIGHT måste vara > 0', 'HEIGHT');
+    }
+
+    if (!format) {
+      addReportError(report, 'wms.missingParam', 'FORMAT saknas', 'FORMAT');
+    }
+
+    return report;
+  }
+
+  function mergeReports(baseReport, techReport) {
+    const report = createValidationReport(baseReport.ok && techReport.ok);
+    report.errors = [...baseReport.errors, ...techReport.errors];
+    report.warnings = [...baseReport.warnings, ...techReport.warnings];
+    report.fixesApplied = [...baseReport.fixesApplied, ...techReport.fixesApplied];
+    report.meta = { ...baseReport.meta, ...techReport.meta };
+    if (report.errors.length > 0) report.ok = false;
+    return report;
+  }
+
   function buildTechReport({
     status,
     contentType,
@@ -156,9 +234,17 @@ const mapSandboxTool = (() => {
 
     state.lastUrl = urlString;
 
+    const normalizedParams = normalizeParams(parseResult.params);
+    const wmsReport = validateWmsGetMapParams(normalizedParams);
+    wmsReport.meta.parameters = normalizedParams;
+    appState.setReport(TOOL_KEY, wmsReport);
+    if (!wmsReport.ok) {
+      updateStatus('WMS-parametrar saknas eller är ogiltiga');
+    }
+
     // Display parsed parameters
     if (elements.paramsEl) {
-      const paramsText = Object.entries(parseResult.params)
+      const paramsText = Object.entries(normalizedParams)
         .map(([k, v]) => `${k}: ${v}`)
         .join('\n');
       elements.paramsEl.textContent = paramsText;
@@ -210,13 +296,13 @@ const mapSandboxTool = (() => {
 
       if (!result.ok) {
         const corsLikely = result.error && result.error.name === 'TypeError' && !result.timedOut;
-        const report = buildTechReport({
+        const techReport = buildTechReport({
           durationMs,
           corsLikely,
           timedOut: result.timedOut,
           fetchError: result.error,
         });
-        appState.setReport(TOOL_KEY, report);
+        appState.setReport(TOOL_KEY, mergeReports(wmsReport, techReport));
         updateStatus(result.timedOut ? 'Förfrågan tog för lång tid' : 'Kunde inte hämta data');
         updateUI();
         return;
@@ -224,9 +310,8 @@ const mapSandboxTool = (() => {
 
       const status = result.response.status;
       const contentType = result.response.headers.get('content-type') || '';
-      const report = buildTechReport({ status, contentType, durationMs });
-      report.meta.parameters = parseResult.params;
-      appState.setReport(TOOL_KEY, report);
+      const techReport = buildTechReport({ status, contentType, durationMs });
+      appState.setReport(TOOL_KEY, mergeReports(wmsReport, techReport));
       updateUI();
     });
     updateUI();
