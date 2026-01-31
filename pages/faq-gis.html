@@ -106,7 +106,9 @@
           <summary class="faq-question">Lagret syns men hamnar “fel” på kartan</summary>
           <div class="faq-answer">
             <ul>
-              <li>CRS mismatch: säkerställ att Origo och tjänsten använder samma EPSG (t.ex. 3006).</li>
+              <li>
+                CRS mismatch: säkerställ att Origo och tjänsten använder samma EPSG (t.ex. 3006).
+              </li>
               <li>Fel axis order (WMS 1.3.0 kan byta ordning för vissa CRS).</li>
               <li>Data är publicerad i ett annat CRS än du tror.</li>
             </ul>
@@ -118,7 +120,10 @@
           <div class="faq-answer">
             <ul>
               <li><strong>WMS</strong>: bilder (snabbt, bra för visning).</li>
-              <li><strong>WFS</strong>: geometrier/attribut (bra för klick/urval/analys, kan bli tungt).</li>
+              <li>
+                <strong>WFS</strong>: geometrier/attribut (bra för klick/urval/analys, kan bli
+                tungt).
+              </li>
               <li>För stora datamängder: överväg generalisering, bounding box-filter, paging.</li>
             </ul>
           </div>
@@ -160,14 +165,14 @@
               autentisering och rättigheter.
             </p>
           </div>
-        </details> 
+        </details>
 
         <details class="faq-item">
           <summary class="faq-question">Hur vet jag om det är CORS-problem?</summary>
           <div class="faq-answer">
             <p>
-              Öppna DevTools (F12) och gå till Console-fliken. Leta efter felmeddelanden som
-              nämner CORS eller “Access-Control-Allow-Origin”.
+              Öppna DevTools (F12) och gå till Console-fliken. Leta efter felmeddelanden som nämner
+              CORS eller “Access-Control-Allow-Origin”.
             </p>
             <pre><code>Access to XMLHttpRequest at 'https://server/geoserver/...' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.</code></pre>
             <p>

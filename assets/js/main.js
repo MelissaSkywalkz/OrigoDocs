@@ -16,7 +16,8 @@ const OFFLINE_SEARCH_INDEX = [
     id: 'origo-guide',
     title: 'Origo – guide',
     url: 'pages/origo-guide.html',
-    content: 'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
+    content:
+      'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
   },
   {
     id: 'layermanager',
@@ -40,7 +41,8 @@ const OFFLINE_SEARCH_INDEX = [
     id: 'geowebcache',
     title: 'GeoWebCache',
     url: 'pages/geowebcache.html',
-    content: 'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
+    content:
+      'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
   },
   {
     id: 'origo-server',
@@ -446,7 +448,9 @@ const initSearch = () => {
     const isCmdK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
     const activeTag = document.activeElement?.tagName?.toLowerCase();
     const isTyping =
-      activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
+      activeTag === 'input' ||
+      activeTag === 'textarea' ||
+      document.activeElement?.isContentEditable;
 
     if ((isCmdK || (event.key === '/' && !isTyping)) && document.activeElement !== input) {
       event.preventDefault();
@@ -489,38 +493,35 @@ const initPageMeta = () => {
   meta.appendChild(crumbs);
 
   const renderLastUpdated = async () => {
-  let dateStr = null;
+    let dateStr = null;
 
-  try {
-    const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
-    const lastMod = res.headers.get('last-modified');
-    if (lastMod) {
-      const d = new Date(lastMod);
-      dateStr = new Intl.DateTimeFormat('sv-SE', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(d);
+    try {
+      const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
+      const lastMod = res.headers.get('last-modified');
+      if (lastMod) {
+        const d = new Date(lastMod);
+        dateStr = new Intl.DateTimeFormat('sv-SE', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(d);
+      }
+    } catch {}
+
+    if (!dateStr) {
+      const manual = document.querySelector('meta[name="last-updated"]')?.getAttribute('content');
+      if (manual) dateStr = manual;
     }
-  } catch {
-  }
 
-  if (!dateStr) {
-    const manual = document
-      .querySelector('meta[name="last-updated"]')
-      ?.getAttribute('content');
-    if (manual) dateStr = manual;
-  }
+    if (dateStr) {
+      const updated = document.createElement('span');
+      updated.className = 'last-updated';
+      updated.textContent = `Uppdaterad: ${dateStr}`;
+      meta.appendChild(updated);
+    }
+  };
 
-  if (dateStr) {
-    const updated = document.createElement('span');
-    updated.className = 'last-updated';
-    updated.textContent = `Uppdaterad: ${dateStr}`;
-    meta.appendChild(updated);
-  }
-};
-
-renderLastUpdated();
+  renderLastUpdated();
 
   header.insertAdjacentElement('afterend', meta);
 };
@@ -646,7 +647,12 @@ const detectLangFromClasses = (codeEl) => {
   if (cls.includes('language-xml') || cls.includes('language-sld')) return 'xml';
   if (cls.includes('language-css')) return 'css';
   if (cls.includes('language-js') || cls.includes('language-javascript')) return 'js';
-  if (cls.includes('language-bash') || cls.includes('language-shell') || cls.includes('language-cli')) return 'cli';
+  if (
+    cls.includes('language-bash') ||
+    cls.includes('language-shell') ||
+    cls.includes('language-cli')
+  )
+    return 'cli';
   return '';
 };
 
@@ -664,7 +670,7 @@ const highlightJSON = (text) => {
   s = s.replace(/"(\\.|[^"\\])*"/g, (m) => `<span class="tok-string">${m}</span>`);
   s = s.replace(
     /<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g,
-    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`
+    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`,
   );
   s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
   s = s.replace(/\btrue\b|\bfalse\b/g, (m) => `<span class="tok-boolean">${m}</span>`);
@@ -680,7 +686,7 @@ const highlightXML = (text) => {
     const attrsHL = attrs.replace(
       /([A-Za-z0-9:_-]+)(=)(&quot;[^&]*?&quot;)/g,
       (m, a, eq, v) =>
-        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`
+        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
     );
     return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
   });
@@ -706,10 +712,13 @@ const highlightJS = (text) => {
   let s = escapeHTML(text);
   s = s.replace(/\/\/[^\n]*/g, (m) => `<span class="tok-comment">${m}</span>`);
   s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="tok-comment">${m}</span>`);
-  s = s.replace(/"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g, (m) => `<span class="tok-string">${m}</span>`);
+  s = s.replace(
+    /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g,
+    (m) => `<span class="tok-string">${m}</span>`,
+  );
   s = s.replace(
     /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|import|export|from|try|catch|finally|throw|await|async)\b/g,
-    `<span class="tok-keyword">$1</span>`
+    `<span class="tok-keyword">$1</span>`,
   );
   s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
   s = s.replace(/[{}()[\],.;:+\-*/=<>!&|?]/g, (m) => `<span class="tok-operator">${m}</span>`);
@@ -718,9 +727,18 @@ const highlightJS = (text) => {
 
 const highlightCLI = (text) => {
   let s = escapeHTML(text);
-  s = s.replace(/(^|\n)\s*([$>])\s?/g, (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `);
-  s = s.replace(/(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g, (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`);
-  s = s.replace(/(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g, (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`);
+  s = s.replace(
+    /(^|\n)\s*([$>])\s?/g,
+    (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `,
+  );
+  s = s.replace(
+    /(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g,
+    (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`,
+  );
+  s = s.replace(
+    /(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g,
+    (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`,
+  );
   return s;
 };
 
@@ -821,7 +839,7 @@ const initCodeCopy = () => {
     });
 
     wrapper.appendChild(button);
-    
+
     const troubleshootButton = document.createElement('button');
     const troubleshootPanel = document.createElement('div');
     const troubleshootId = `code-troubleshoot-${codeIndex}`;
@@ -925,7 +943,7 @@ const initResolutionsTryIt = (block) => {
   const output = block.querySelector('#res-output');
   const status = block.querySelector('#res-status');
   const buttons = block.querySelectorAll('[data-res-action]');
-  
+
   // Enterprise elements
   const advancedToggle = block.querySelector('#res-advanced-toggle');
   const advancedPanel = block.querySelector('#res-advanced-panel');
@@ -940,7 +958,9 @@ const initResolutionsTryIt = (block) => {
   let lastValidatedResolutions = null;
   let lastValidationResult = null;
 
-  const updateStatus = (msg) => { if (status) status.textContent = msg; };
+  const updateStatus = (msg) => {
+    if (status) status.textContent = msg;
+  };
 
   const parseResolutions = () => {
     const text = input.value.trim();
@@ -954,13 +974,13 @@ const initResolutionsTryIt = (block) => {
     lines.forEach((line, idx) => {
       const trimmed = line.trim();
       originalLines.push(trimmed);
-      
+
       if (!trimmed) return; // Skip blank lines
-      
+
       // Remove commas and extra spaces
       const cleaned = trimmed.replace(/,/g, '').replace(/\s+/g, ' ').trim();
       const val = parseFloat(cleaned);
-      
+
       if (isNaN(val)) {
         parseErrors.push({ line: idx + 1, text: trimmed, error: 'Inte ett giltigt tal' });
       } else if (!isFinite(val)) {
@@ -993,7 +1013,7 @@ const initResolutionsTryIt = (block) => {
     }
     if (orderIssues.length > 0) {
       warnings.push('Lista är inte strikt fallande:');
-      orderIssues.forEach(o => warnings.push(`  ${o}`));
+      orderIssues.forEach((o) => warnings.push(`  ${o}`));
     }
 
     // Check for duplicates
@@ -1004,7 +1024,7 @@ const initResolutionsTryIt = (block) => {
       }
       seen.get(val).push(idx + 1);
     });
-    
+
     const duplicates = Array.from(seen.entries()).filter(([_, positions]) => positions.length > 1);
     if (duplicates.length > 0) {
       warnings.push('Dubbletter hittade:');
@@ -1027,7 +1047,9 @@ const initResolutionsTryIt = (block) => {
       const diff = Math.abs(resolutions[i] - resolutions[i + 1]);
       const pctDiff = (diff / resolutions[i]) * 100;
       if (pctDiff < 0.1 && pctDiff > 0) {
-        warnings.push(`Position ${i + 1}→${i + 2}: ${resolutions[i]} och ${resolutions[i + 1]} skiljer < 0.1%`);
+        warnings.push(
+          `Position ${i + 1}→${i + 2}: ${resolutions[i]} och ${resolutions[i + 1]} skiljer < 0.1%`,
+        );
       }
     }
 
@@ -1042,7 +1064,7 @@ const initResolutionsTryIt = (block) => {
       lines.push('Status: [ERROR] Parse-fel');
       lines.push('');
       lines.push('Parse-fel:');
-      parseErrors.forEach(e => {
+      parseErrors.forEach((e) => {
         lines.push(`  Rad ${e.line}: ${e.error}`);
         lines.push(`    "${e.text}"`);
       });
@@ -1057,10 +1079,15 @@ const initResolutionsTryIt = (block) => {
     }
 
     const hasWarnings = validation.warnings.length > 0;
-    const statusText = validation.valid && !hasWarnings ? '[OK] GILTIG' : hasWarnings ? '[WARN] VARNINGAR' : '[ERROR] OGILTIG';
+    const statusText =
+      validation.valid && !hasWarnings
+        ? '[OK] GILTIG'
+        : hasWarnings
+          ? '[WARN] VARNINGAR'
+          : '[ERROR] OGILTIG';
     lines.push(`Status: ${statusText}`);
     lines.push('');
-    
+
     lines.push(`Statistik:`);
     lines.push(`  Antal: ${resolutions.length}`);
     lines.push(`  Min: ${Math.min(...resolutions)}`);
@@ -1076,13 +1103,13 @@ const initResolutionsTryIt = (block) => {
     } else {
       if (validation.issues.length > 0) {
         lines.push('Kritiska problem:');
-        validation.issues.forEach(issue => lines.push(`  ${issue}`));
+        validation.issues.forEach((issue) => lines.push(`  ${issue}`));
         lines.push('');
       }
-      
+
       if (validation.warnings.length > 0) {
         lines.push('Varningar:');
-        validation.warnings.forEach(warn => lines.push(`  ${warn}`));
+        validation.warnings.forEach((warn) => lines.push(`  ${warn}`));
       }
     }
 
@@ -1093,7 +1120,7 @@ const initResolutionsTryIt = (block) => {
     const { resolutions, parseErrors } = parseResolutions();
     const validation = validateResolutions(resolutions);
     const report = generateValidationReport(parseErrors, resolutions, validation);
-    
+
     tryItSetReport(TOOL_KEY, report);
     lastValidatedResolutions = resolutions;
     lastValidationResult = validation;
@@ -1116,7 +1143,11 @@ const initResolutionsTryIt = (block) => {
 
     if (validation.warnings.length > 0) {
       updateStatus(`Validering OK med ${validation.warnings.length} varning(ar).`);
-      tryItLog(TOOL_KEY, 'WARN', `${resolutions.length} värden, ${validation.warnings.length} varningar`);
+      tryItLog(
+        TOOL_KEY,
+        'WARN',
+        `${resolutions.length} värden, ${validation.warnings.length} varningar`,
+      );
     } else {
       updateStatus('Validering OK.');
       tryItLog(TOOL_KEY, 'OK', `${resolutions.length} värden validerade`);
@@ -1136,7 +1167,8 @@ const initResolutionsTryIt = (block) => {
     let html = '<table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">';
     html += '<thead><tr style="background: #f0f0f0;">';
     html += '<th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">Index</th>';
-    html += '<th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">Resolution</th>';
+    html +=
+      '<th style="padding: 0.5rem; text-align: right; border: 1px solid #ddd;">Resolution</th>';
     html += '<th style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;">Ordning</th>';
     html += '<th style="padding: 0.5rem; text-align: left; border: 1px solid #ddd;">Noter</th>';
     html += '<th style="padding: 0.5rem; text-align: center; border: 1px solid #ddd;">Åtgärd</th>';
@@ -1145,17 +1177,17 @@ const initResolutionsTryIt = (block) => {
     resolutions.forEach((val, idx) => {
       const notes = [];
       const isDescending = idx === 0 || val < resolutions[idx - 1];
-      
+
       // Check for duplicates
       const dupIdx = resolutions.indexOf(val);
       if (dupIdx !== idx) {
         notes.push(`Dubblett av index ${dupIdx}`);
       }
-      
+
       // Check suspicious values
       if (val > 10000) notes.push('Ovanligt stort');
       if (val < 0.001) notes.push('Ovanligt litet');
-      
+
       // Check ordering
       if (idx > 0 && val >= resolutions[idx - 1]) {
         notes.push('Inte fallande');
@@ -1175,10 +1207,10 @@ const initResolutionsTryIt = (block) => {
     previewDiv.innerHTML = html;
 
     // Add event delegation for send-to-gridcalc buttons
-    previewDiv.querySelectorAll('[data-res-send="gridcalc"]').forEach(btn => {
+    previewDiv.querySelectorAll('[data-res-send="gridcalc"]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const resValue = parseFloat(btn.dataset.resValue);
-        
+
         if (isNaN(resValue) || resValue <= 0) {
           updateStatus('Ogiltigt resolutionsvärde.');
           tryItLog(TOOL_KEY, 'ERROR', `Ogiltig resolution: ${btn.dataset.resValue}`);
@@ -1188,8 +1220,10 @@ const initResolutionsTryIt = (block) => {
         // Find Gridcalc inputs
         const gridcalcResolution = document.getElementById('gridcalc-resolution');
         const gridcalcScale = document.getElementById('gridcalc-scale');
-        const gridcalcFromResBtn = document.querySelector('[data-gridcalc-action="from-resolution"]');
-        
+        const gridcalcFromResBtn = document.querySelector(
+          '[data-gridcalc-action="from-resolution"]',
+        );
+
         if (!gridcalcResolution || !gridcalcFromResBtn) {
           updateStatus('Gridcalc-verktyg hittades inte.');
           tryItLog(TOOL_KEY, 'ERROR', 'Gridcalc element saknas');
@@ -1289,7 +1323,9 @@ const initResolutionsTryIt = (block) => {
 
     // Update input
     input.value = sorted.join('\n');
-    updateStatus(`Fixad: sorterad fallande, ${resolutions.length - sorted.length} dubbletter borttagna.`);
+    updateStatus(
+      `Fixad: sorterad fallande, ${resolutions.length - sorted.length} dubbletter borttagna.`,
+    );
     tryItLog(TOOL_KEY, 'OK', `Lista fixad: ${resolutions.length} → ${sorted.length} värden`);
 
     // Re-validate
@@ -1314,7 +1350,9 @@ const initResolutionsTryIt = (block) => {
       return;
     }
 
-    const lines = lastValidatedResolutions.map((res) => `    <resolution>${res}</resolution>`).join('\n');
+    const lines = lastValidatedResolutions
+      .map((res) => `    <resolution>${res}</resolution>`)
+      .join('\n');
     const gwcXml = `  <resolutions>\n${lines}\n  </resolutions>`;
     tryItDownload(`resolutions-gwc-${Date.now()}.txt`, gwcXml, 'text/plain');
     updateStatus('GWC format nedladdat.');
@@ -1396,11 +1434,11 @@ const initGridCalcTryIt = (block) => {
   const output = block.querySelector('#gridcalc-output');
   const status = block.querySelector('#gridcalc-status');
   const buttons = block.querySelectorAll('[data-gridcalc-action]');
-  
+
   // Enterprise elements
   const advancedToggle = block.querySelector('#gridcalc-advanced-toggle');
   const advancedPanel = block.querySelector('#gridcalc-advanced-panel');
-  const reportOutput = block.querySelector('#gridcalc-report');
+  const reportOutput = block.querySelector('#gridcalc-validation');
   const estimatorOutput = block.querySelector('#gridcalc-estimator-output');
   const tileKbInput = block.querySelector('#gridcalc-tilekb');
   const compressionInput = block.querySelector('#gridcalc-compression');
@@ -1415,7 +1453,9 @@ const initGridCalcTryIt = (block) => {
   let lastCalculationData = null;
   let lastEstimatorData = null;
 
-  const updateStatus = (msg) => { if (status) status.textContent = msg; };
+  const updateStatus = (msg) => {
+    if (status) status.textContent = msg;
+  };
 
   const validateInputs = () => {
     const issues = [];
@@ -1493,7 +1533,12 @@ const initGridCalcTryIt = (block) => {
     }
 
     const valid = issues.length === 0;
-    return { issues, warnings, valid, values: { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal } };
+    return {
+      issues,
+      warnings,
+      valid,
+      values: { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal },
+    };
   };
 
   const generateValidationReport = (validation) => {
@@ -1503,7 +1548,7 @@ const initGridCalcTryIt = (block) => {
       lines.push('Status: [ERROR] Ogiltiga värden');
       lines.push('');
       lines.push('Kritiska problem:');
-      validation.issues.forEach(issue => lines.push(`  ${issue}`));
+      validation.issues.forEach((issue) => lines.push(`  ${issue}`));
       return lines;
     }
 
@@ -1526,7 +1571,7 @@ const initGridCalcTryIt = (block) => {
       lines.push('[OK] Resolution och Scale är konsekventa');
     } else {
       lines.push('Varningar:');
-      validation.warnings.forEach(warn => lines.push(`  ${warn}`));
+      validation.warnings.forEach((warn) => lines.push(`  ${warn}`));
     }
 
     return lines;
@@ -1582,14 +1627,29 @@ const initGridCalcTryIt = (block) => {
     // Store calculation data
     lastCalculationData = {
       inputs: { resVal, scaleVal, tileVal, metaVal, bboxwVal, bboxhVal },
-      derived: { tileSpanM, metaSpanM, tilesX, tilesY, totalTiles, metatilesX, metatilesY, totalMetatiles, seedRec },
-      warnings: validation.warnings
+      derived: {
+        tileSpanM,
+        metaSpanM,
+        tilesX,
+        tilesY,
+        totalTiles,
+        metatilesX,
+        metatilesY,
+        totalMetatiles,
+        seedRec,
+      },
+      warnings: validation.warnings,
     };
     lastEstimatorData = null;
 
-    const warnText = validation.warnings.length > 0 ? ` (${validation.warnings.length} varningar)` : '';
+    const warnText =
+      validation.warnings.length > 0 ? ` (${validation.warnings.length} varningar)` : '';
     updateStatus(`Beräknad${warnText}.`);
-    tryItLog(TOOL_KEY, validation.warnings.length > 0 ? 'WARN' : 'OK', `Beräkning från ${source}: ${totalTiles.toLocaleString('sv-SE')} tiles${warnText}`);
+    tryItLog(
+      TOOL_KEY,
+      validation.warnings.length > 0 ? 'WARN' : 'OK',
+      `Beräkning från ${source}: ${totalTiles.toLocaleString('sv-SE')} tiles${warnText}`,
+    );
 
     return lastCalculationData;
   };
@@ -1610,9 +1670,11 @@ const initGridCalcTryIt = (block) => {
       return;
     }
 
-    const validCompression = Number.isFinite(compressionFactor) && compressionFactor > 0 ? compressionFactor : 1.0;
+    const validCompression =
+      Number.isFinite(compressionFactor) && compressionFactor > 0 ? compressionFactor : 1.0;
 
-    const { tilesX, tilesY, totalTiles, metatilesX, metatilesY, totalMetatiles } = lastCalculationData.derived;
+    const { tilesX, tilesY, totalTiles, metatilesX, metatilesY, totalMetatiles } =
+      lastCalculationData.derived;
     const totalKB = totalTiles * tileKb * validCompression;
     const totalMB = totalKB / 1024;
     const totalGB = totalMB / 1024;
@@ -1625,12 +1687,18 @@ const initGridCalcTryIt = (block) => {
     lines.push(`- Resolution: ${inputs.resVal.toFixed(4)} m/px`);
     lines.push(`- Tile size: ${inputs.tileVal} px`);
     lines.push(`- Metatile: ${inputs.metaVal}×${inputs.metaVal}`);
-    lines.push(`- BBOX width/height: ${inputs.bboxwVal.toFixed(0)} / ${inputs.bboxhVal.toFixed(0)} m`);
+    lines.push(
+      `- BBOX width/height: ${inputs.bboxwVal.toFixed(0)} / ${inputs.bboxhVal.toFixed(0)} m`,
+    );
     lines.push('');
     lines.push('Derived:');
-    lines.push(`- Tiles X/Y: ${tilesX.toLocaleString('sv-SE')} / ${tilesY.toLocaleString('sv-SE')}`);
+    lines.push(
+      `- Tiles X/Y: ${tilesX.toLocaleString('sv-SE')} / ${tilesY.toLocaleString('sv-SE')}`,
+    );
     lines.push(`- Total tiles: ${totalTiles.toLocaleString('sv-SE')}`);
-    lines.push(`- Metatiles X/Y: ${metatilesX.toLocaleString('sv-SE')} / ${metatilesY.toLocaleString('sv-SE')}`);
+    lines.push(
+      `- Metatiles X/Y: ${metatilesX.toLocaleString('sv-SE')} / ${metatilesY.toLocaleString('sv-SE')}`,
+    );
     lines.push(`- Total metatiles (seed requests): ${totalMetatiles.toLocaleString('sv-SE')}`);
     lines.push('');
     lines.push('Storage estimate:');
@@ -1771,7 +1839,7 @@ const initGridCalcTryIt = (block) => {
     if (lastCalculationData.warnings.length > 0) {
       lines.push('');
       lines.push('VARNINGAR:');
-      lastCalculationData.warnings.forEach(w => lines.push(`  ${w}`));
+      lastCalculationData.warnings.forEach((w) => lines.push(`  ${w}`));
     }
 
     if (lastEstimatorData) {
@@ -1783,7 +1851,9 @@ const initGridCalcTryIt = (block) => {
       if (lastEstimatorData.totalGB >= 1) {
         lines.push(`  Estimated size (GB): ${lastEstimatorData.totalGB.toFixed(2)} GB`);
       }
-      lines.push(`  Estimated requests: ${lastEstimatorData.estimatedRequests.toLocaleString('sv-SE')}`);
+      lines.push(
+        `  Estimated requests: ${lastEstimatorData.estimatedRequests.toLocaleString('sv-SE')}`,
+      );
     }
 
     if (reportOutput && reportOutput.textContent.trim()) {
@@ -1810,7 +1880,7 @@ const initGridCalcTryIt = (block) => {
       derived: lastCalculationData.derived,
       warnings: lastCalculationData.warnings,
       estimator: lastEstimatorData,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     const content = JSON.stringify(jsonData, null, 2);
@@ -1870,7 +1940,7 @@ const initBboxTryIt = (block) => {
   const urlOutput = block.querySelector('#bbox-url-output');
   const status = block.querySelector('#bbox-status');
   const buttons = block.querySelectorAll('[data-bbox-action]');
-  
+
   // Enterprise mode elements
   const advancedToggle = block.querySelector('#bbox-advanced-toggle');
   const advancedPanel = block.querySelector('#bbox-advanced-panel');
@@ -1878,7 +1948,20 @@ const initBboxTryIt = (block) => {
   const runLogOutput = block.querySelector('#bbox-runlog');
   const normalizedOutput = block.querySelector('#bbox-normalized');
 
-  if (!base || !layer || !format || !width || !height || !minx || !maxx || !miny || !maxy || !output || !urlOutput || !status) {
+  if (
+    !base ||
+    !layer ||
+    !format ||
+    !width ||
+    !height ||
+    !minx ||
+    !maxx ||
+    !miny ||
+    !maxy ||
+    !output ||
+    !urlOutput ||
+    !status
+  ) {
     return;
   }
 
@@ -1913,26 +1996,26 @@ const initBboxTryIt = (block) => {
 
   const updateValidationReport = (bbox, issues = []) => {
     if (!validationOutput) return;
-    
+
     let report = '═══ VALIDATION REPORT ═══\n\n';
-    
+
     if (bbox) {
       const width = bbox.maxx - bbox.minx;
       const height = bbox.maxy - bbox.miny;
       const area = width * height;
       const aspectRatio = (width / height).toFixed(3);
-      
+
       report += `Status: ${issues.length === 0 ? '[OK] VALID' : '[WARN] WARNINGS'}\n\n`;
       report += `Dimensions:\n`;
       report += `  Width:  ${width.toLocaleString('sv-SE')} m\n`;
       report += `  Height: ${height.toLocaleString('sv-SE')} m\n`;
       report += `  Area:   ${area.toLocaleString('sv-SE')} m²\n`;
       report += `  Aspect: ${aspectRatio}\n\n`;
-      
+
       report += `Bounds:\n`;
       report += `  X: ${bbox.minx.toLocaleString('sv-SE')} → ${bbox.maxx.toLocaleString('sv-SE')}\n`;
       report += `  Y: ${bbox.miny.toLocaleString('sv-SE')} → ${bbox.maxy.toLocaleString('sv-SE')}\n\n`;
-      
+
       // Transparent rule messages
       if (issues.length > 0) {
         report += `Issues:\n`;
@@ -1954,13 +2037,13 @@ const initBboxTryIt = (block) => {
         });
       }
     }
-    
+
     validationOutput.textContent = report;
   };
 
   const updateNormalizedBbox = (bbox) => {
     if (!normalizedOutput || !bbox) return;
-    
+
     let normalized = '{\n';
     normalized += `  "minx": ${bbox.minx},\n`;
     normalized += `  "miny": ${bbox.miny},\n`;
@@ -1970,7 +2053,7 @@ const initBboxTryIt = (block) => {
     normalized += `  "width": ${bbox.maxx - bbox.minx},\n`;
     normalized += `  "height": ${bbox.maxy - bbox.miny}\n`;
     normalized += '}';
-    
+
     normalizedOutput.value = normalized;
   };
 
@@ -1979,7 +2062,7 @@ const initBboxTryIt = (block) => {
     const maxxVal = parseFloat(maxx.value);
     const minyVal = parseFloat(miny.value);
     const maxyVal = parseFloat(maxy.value);
-    
+
     const issues = [];
 
     if (isNaN(minxVal) || isNaN(maxxVal) || isNaN(minyVal) || isNaN(maxyVal)) {
@@ -2076,7 +2159,9 @@ const initBboxTryIt = (block) => {
     updateNormalizedBbox(null);
     updateValidationReport(null, []);
     updateStatus('');
-    addToRunLog(`[OK] Preset laddad: X[${preset.minx}-${preset.maxx}] Y[${preset.miny}-${preset.maxy}]`);
+    addToRunLog(
+      `[OK] Preset laddad: X[${preset.minx}-${preset.maxx}] Y[${preset.miny}-${preset.maxy}]`,
+    );
   };
 
   const copyBbox = async () => {
@@ -2122,7 +2207,7 @@ const initBboxTryIt = (block) => {
       type: 'FeatureCollection',
       crs: {
         type: 'name',
-        properties: { name: BBOX_CRS }
+        properties: { name: BBOX_CRS },
       },
       features: [
         {
@@ -2134,20 +2219,22 @@ const initBboxTryIt = (block) => {
             maxx: bbox.maxx,
             maxy: bbox.maxy,
             width: bbox.maxx - bbox.minx,
-            height: bbox.maxy - bbox.miny
+            height: bbox.maxy - bbox.miny,
           },
           geometry: {
             type: 'Polygon',
-            coordinates: [[
-              [bbox.minx, bbox.miny],
-              [bbox.maxx, bbox.miny],
-              [bbox.maxx, bbox.maxy],
-              [bbox.minx, bbox.maxy],
-              [bbox.minx, bbox.miny]
-            ]]
-          }
-        }
-      ]
+            coordinates: [
+              [
+                [bbox.minx, bbox.miny],
+                [bbox.maxx, bbox.miny],
+                [bbox.maxx, bbox.maxy],
+                [bbox.minx, bbox.maxy],
+                [bbox.minx, bbox.miny],
+              ],
+            ],
+          },
+        },
+      ],
     };
 
     const jsonStr = JSON.stringify(geojson, null, 2);
@@ -2158,7 +2245,7 @@ const initBboxTryIt = (block) => {
     a.download = `bbox_${Date.now()}.geojson`;
     a.click();
     URL.revokeObjectURL(url);
-    
+
     updateStatus('GeoJSON exporterad.');
     addToRunLog('[OK] GeoJSON exporterad');
   };
@@ -2173,24 +2260,24 @@ const initBboxTryIt = (block) => {
     const bboxStr = output.value.trim();
     const urlStr = urlOutput.value.trim();
     const normalizedStr = normalizedOutput ? normalizedOutput.value : '';
-    
+
     let txtContent = '═══ BBOX EXPORT ═══\n\n';
     txtContent += `Generated: ${new Date().toLocaleString('sv-SE')}\n`;
     txtContent += `CRS: ${BBOX_CRS} (SWEREF 99 13 30)\n\n`;
-    
+
     txtContent += '─── BBOX String ───\n';
     txtContent += `${bboxStr}\n\n`;
-    
+
     if (normalizedStr) {
       txtContent += '─── Normalized ───\n';
       txtContent += `${normalizedStr}\n\n`;
     }
-    
+
     if (urlStr) {
       txtContent += '─── WMS GetMap URL ───\n';
       txtContent += `${urlStr}\n\n`;
     }
-    
+
     txtContent += '─── Details ───\n';
     txtContent += `Layer: ${layer.value}\n`;
     txtContent += `Format: ${format.value}\n`;
@@ -2205,7 +2292,7 @@ const initBboxTryIt = (block) => {
     a.download = `bbox_${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
-    
+
     updateStatus('TXT-fil exporterad.');
     addToRunLog('[OK] TXT-fil exporterad');
   };
@@ -2323,7 +2410,8 @@ const initBboxTryIt = (block) => {
 
         updateStatus('Skickade BBOX till URL builder.');
         addToRunLog('[OK] Skickad till URL builder');
-        const target = document.getElementById('url-builder') || document.getElementById('urlbuilder-base');
+        const target =
+          document.getElementById('url-builder') || document.getElementById('urlbuilder-base');
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (action === 'send-to-gridcalc') {
         sendToGridcalc();
@@ -2336,7 +2424,6 @@ const initBboxTryIt = (block) => {
   // Initialize run log
   addToRunLog('[OK] BBOX verktyg initierat');
 };
-
 
 const initSldPreviewTryIt = (block) => {
   const input = block.querySelector('#sldp-input');
@@ -2465,7 +2552,7 @@ const initSldPreviewTryIt = (block) => {
     const fillOpacity = opacity || 1;
 
     let path = '';
-    const r = (size / 2) || 8;
+    const r = size / 2 || 8;
 
     if (wellKnownName === 'square') {
       return `<rect x="${centerX - r}" y="${centerY - r}" width="${r * 2}" height="${r * 2}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${fillOpacity}"/>`;
@@ -2569,7 +2656,8 @@ const initSldPreviewTryIt = (block) => {
     if (!symbolizerType) {
       status.textContent = 'Ingen symbolizer hittades.';
       preview.innerHTML = '';
-      summary.textContent = 'Ingen PointSymbolizer, LineSymbolizer eller PolygonSymbolizer hittades.';
+      summary.textContent =
+        'Ingen PointSymbolizer, LineSymbolizer eller PolygonSymbolizer hittades.';
       return;
     }
 
@@ -2637,7 +2725,6 @@ const initSldPreviewTryIt = (block) => {
   });
 };
 
-
 const initTryIt = () => {
   const tryItBlocks = document.querySelectorAll('[data-tryit]');
   if (!tryItBlocks.length) {
@@ -2655,7 +2742,7 @@ const initTryIt = () => {
     const prefix = `[${timestamp}] [${level}]`;
     tryItLogs[toolKey].push(`${prefix} ${message}`);
     if (tryItLogs[toolKey].length > 20) tryItLogs[toolKey].shift();
-    
+
     const logEl = document.getElementById(`${toolKey}-runlog`);
     if (logEl) {
       logEl.textContent = tryItLogs[toolKey].join('\n');
@@ -2707,8 +2794,8 @@ const initTryIt = () => {
     const input = block.querySelector('#json-tryit-input');
     const output = block.querySelector('#json-tryit-output');
     const status = block.querySelector('#json-tryit-status');
-    const reportOutput = block.querySelector('#json-report');
-    const logOutput = block.querySelector('#json-log');
+    const reportOutput = block.querySelector('#json-validation');
+    const logOutput = block.querySelector('#json-runlog');
     const metaOutput = block.querySelector('#json-meta');
     const advancedToggle = block.querySelector('#json-advanced-toggle');
     const advancedPanel = block.querySelector('#json-advanced-panel');
@@ -2874,7 +2961,15 @@ const initTryIt = () => {
         result.bbox = extractBbox(obj.geometry);
       } else if (
         obj.type &&
-        ['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'].includes(obj.type)
+        [
+          'Point',
+          'LineString',
+          'Polygon',
+          'MultiPoint',
+          'MultiLineString',
+          'MultiPolygon',
+          'GeometryCollection',
+        ].includes(obj.type)
       ) {
         result.isGeoJson = true;
         result.type = obj.type;
@@ -2899,7 +2994,11 @@ const initTryIt = () => {
     const generateReport = (parsed, analysis) => {
       const lines = ['═══ VALIDERINGSRAPPORT ═══', ''];
 
-      const rootType = Array.isArray(parsed) ? 'Array' : typeof parsed === 'object' ? 'Object' : typeof parsed;
+      const rootType = Array.isArray(parsed)
+        ? 'Array'
+        : typeof parsed === 'object'
+          ? 'Object'
+          : typeof parsed;
       lines.push(`Rottyp: ${rootType}`);
 
       lines.push(`GeoJSON: ${analysis.isGeoJson ? '[OK] Ja' : 'Nej'}`);
@@ -2914,7 +3013,9 @@ const initTryIt = () => {
         }
         if (analysis.bbox) {
           const { minx, miny, maxx, maxy, pointCount } = analysis.bbox;
-          lines.push(`BBOX: [OK] ${minx.toFixed(6)},${miny.toFixed(6)},${maxx.toFixed(6)},${maxy.toFixed(6)}`);
+          lines.push(
+            `BBOX: [OK] ${minx.toFixed(6)},${miny.toFixed(6)},${maxx.toFixed(6)},${maxy.toFixed(6)}`,
+          );
           lines.push(`Punkter analyserade: ${pointCount}`);
         } else {
           lines.push('BBOX: [WARN] Inga koordinater');
@@ -3196,12 +3297,6 @@ const initTryIt = () => {
       }
     };
 
-    if (advancedToggle && advancedPanel) {
-      advancedToggle.addEventListener('change', () => {
-        advancedPanel.style.display = advancedToggle.checked ? 'block' : 'none';
-      });
-    }
-
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const action = button.dataset.jsonAction;
@@ -3251,8 +3346,8 @@ const initTryIt = () => {
     const fallbackEl = block.querySelector('#mapsandbox-fallback');
     const statusEl = block.querySelector('#mapsandbox-status');
     const paramsOutput = block.querySelector('#mapsandbox-params');
-    const reportOutput = block.querySelector('#mapsandbox-report');
-    const logOutput = block.querySelector('#mapsandbox-log');
+    const reportOutput = block.querySelector('#mapsandbox-validation');
+    const logOutput = block.querySelector('#mapsandbox-runlog');
     const advancedToggle = block.querySelector('#mapsandbox-advanced-toggle');
     const advancedPanel = block.querySelector('#mapsandbox-advanced-panel');
     const buttons = block.querySelectorAll('[data-mapsandbox-action]');
@@ -3371,7 +3466,8 @@ const initTryIt = () => {
         return lines;
       }
 
-      const statusText = validation.warnings.length > 0 ? '[WARN] GILTIG MED VARNINGAR' : '[OK] GILTIG';
+      const statusText =
+        validation.warnings.length > 0 ? '[WARN] GILTIG MED VARNINGAR' : '[OK] GILTIG';
       lines.push(`Status: ${statusText}`);
       lines.push('');
 
@@ -3383,9 +3479,15 @@ const initTryIt = () => {
         lines.push(`  [PASS] Sökväg: ${url.pathname}`);
         lines.push(`  [PASS] SERVICE: ${getParam(params, 'SERVICE') || 'saknas'}`);
         lines.push(`  [PASS] REQUEST: ${getParam(params, 'REQUEST') || 'saknas'}`);
-        lines.push(`  ${getParam(params, 'BBOX') ? '[PASS]' : '[FAIL]'} BBOX: ${getParam(params, 'BBOX') || 'saknas'}`);
-        lines.push(`  ${(getParam(params, 'CRS') || getParam(params, 'SRS')) ? '[PASS]' : '[FAIL]'} CRS/SRS: ${getParam(params, 'CRS') || getParam(params, 'SRS') || 'saknas'}`);
-        lines.push(`  ${getParam(params, 'FORMAT') ? '[PASS]' : '[WARN]'} FORMAT: ${getParam(params, 'FORMAT') || 'saknas'}`);
+        lines.push(
+          `  ${getParam(params, 'BBOX') ? '[PASS]' : '[FAIL]'} BBOX: ${getParam(params, 'BBOX') || 'saknas'}`,
+        );
+        lines.push(
+          `  ${getParam(params, 'CRS') || getParam(params, 'SRS') ? '[PASS]' : '[FAIL]'} CRS/SRS: ${getParam(params, 'CRS') || getParam(params, 'SRS') || 'saknas'}`,
+        );
+        lines.push(
+          `  ${getParam(params, 'FORMAT') ? '[PASS]' : '[WARN]'} FORMAT: ${getParam(params, 'FORMAT') || 'saknas'}`,
+        );
       }
 
       if (validation.warnings.length > 0) {
@@ -3410,7 +3512,9 @@ const initTryIt = () => {
       const urlString = urlInput.value.trim();
       const validation = validateUrl(urlString);
       setReport(generateReport(validation));
-      setParams(validation.parsed ? generateParamsText(validation.parsed) : 'Kunde inte tolka URL.');
+      setParams(
+        validation.parsed ? generateParamsText(validation.parsed) : 'Kunde inte tolka URL.',
+      );
 
       if (!validation.valid) {
         setStatus('Valideringsfel - se rapport.');
@@ -3496,12 +3600,6 @@ const initTryIt = () => {
       showFallback(true);
     });
 
-    if (advancedToggle && advancedPanel) {
-      advancedToggle.addEventListener('change', () => {
-        advancedPanel.style.display = advancedToggle.checked ? 'block' : 'none';
-      });
-    }
-
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
         const action = button.dataset.mapsandboxAction;
@@ -3524,12 +3622,10 @@ const initTryIt = () => {
     const input = block.querySelector('#sld-tryit-input');
     const output = block.querySelector('#sld-tryit-output');
     const status = block.querySelector('#sld-tryit-status');
-    const report = block.querySelector('#sld-report');
-    const log = block.querySelector('#sld-log');
+    const report = block.querySelector('#sld-validation');
+    const log = block.querySelector('#sld-runlog');
     const normalized = block.querySelector('#sld-normalized');
     const lintOutput = block.querySelector('#sld-lint');
-    const advancedToggle = block.querySelector('#sld-advanced-toggle');
-    const advancedPanel = block.querySelector('#sld-advanced-panel');
     const buttons = block.querySelectorAll('[data-sld-action]');
 
     if (!input || !output || !status || !buttons.length) {
@@ -3608,16 +3704,19 @@ const initTryIt = () => {
       const reg = /(>)(<)(\/*)/g;
       let formatted = '';
       let pad = 0;
-      xml.replace(reg, '$1\n$2$3').split('\n').forEach((node) => {
-        let indent = 0;
-        if (node.match(/^<\/\w/)) {
-          if (pad > 0) pad -= 1;
-        } else if (node.match(/^<\w/)) {
-          indent = 1;
-        }
-        formatted += '  '.repeat(pad) + node + '\n';
-        pad += indent;
-      });
+      xml
+        .replace(reg, '$1\n$2$3')
+        .split('\n')
+        .forEach((node) => {
+          let indent = 0;
+          if (node.match(/^<\/\w/)) {
+            if (pad > 0) pad -= 1;
+          } else if (node.match(/^<\w/)) {
+            indent = 1;
+          }
+          formatted += '  '.repeat(pad) + node + '\n';
+          pad += indent;
+        });
       return formatted.trim();
     };
 
@@ -3642,7 +3741,9 @@ const initTryIt = () => {
     const getNames = (elements) => {
       const names = [];
       elements.forEach((el) => {
-        const nameNode = Array.from(el.getElementsByTagName('*')).find((n) => n.localName === 'Name');
+        const nameNode = Array.from(el.getElementsByTagName('*')).find(
+          (n) => n.localName === 'Name',
+        );
         if (nameNode && nameNode.textContent) names.push(nameNode.textContent.trim());
       });
       return names;
@@ -3681,7 +3782,11 @@ const initTryIt = () => {
       const version = root?.getAttribute('version') || '';
       const ns = root?.namespaceURI || '';
       const isSE = ns.includes('opengis.net/se') || version.startsWith('1.1');
-      const variant = isSE ? 'SE 1.1' : ns.includes('opengis.net/sld') || version.startsWith('1.0') ? 'SLD 1.0' : 'Okänd';
+      const variant = isSE
+        ? 'SE 1.1'
+        : ns.includes('opengis.net/sld') || version.startsWith('1.0')
+          ? 'SLD 1.0'
+          : 'Okänd';
 
       const namedLayers = findAll(doc, 'NamedLayer');
       const userLayers = findAll(doc, 'UserLayer');
@@ -3691,13 +3796,12 @@ const initTryIt = () => {
         .map((n) => n.localName);
       const symbolizerList = Array.from(new Set(symbolizers));
 
-      const expectedNs = isSE
-        ? ['se', 'ogc', 'xlink', 'xsi']
-        : ['sld', 'ogc', 'xlink', 'xsi'];
+      const expectedNs = isSE ? ['se', 'ogc', 'xlink', 'xsi'] : ['sld', 'ogc', 'xlink', 'xsi'];
       const present = [];
       const missing = [];
       expectedNs.forEach((prefix) => {
-        const attr = root?.getAttribute(prefix === 'sld' || prefix === 'se' ? 'xmlns' : `xmlns:${prefix}`) ||
+        const attr =
+          root?.getAttribute(prefix === 'sld' || prefix === 'se' ? 'xmlns' : `xmlns:${prefix}`) ||
           root?.getAttribute(`xmlns:${prefix}`);
         if (attr) {
           present.push(prefix);
@@ -3707,19 +3811,26 @@ const initTryIt = () => {
       });
 
       if (missing.length > 0) warnings.push(`Namespaces saknas: ${missing.join(', ')}`);
-      if (namedLayers.length === 0 && userLayers.length === 0) warnings.push('Inga NamedLayer/UserLayer hittades');
+      if (namedLayers.length === 0 && userLayers.length === 0)
+        warnings.push('Inga NamedLayer/UserLayer hittades');
       if (rules.length === 0) warnings.push('Inga Rule hittades');
       if (symbolizerList.length === 0) warnings.push('Inga Symbolizer hittades');
       if (variant === 'Okänd') warnings.push('Okänd SLD-variant');
 
-      reportLines.push(`Status: ${errors.length > 0 ? 'Invalid' : warnings.length > 0 ? 'Warnings' : 'Valid'}`);
+      reportLines.push(
+        `Status: ${errors.length > 0 ? 'Invalid' : warnings.length > 0 ? 'Warnings' : 'Valid'}`,
+      );
       reportLines.push(`PASS: StyledLayerDescriptor hittad (${sldNodes.length})`);
       reportLines.push(`${variant === 'Okänd' ? 'WARN' : 'PASS'}: Variant ${variant}`);
       reportLines.push(`${version ? 'PASS' : 'WARN'}: version-attribut ${version || 'saknas'}`);
-      reportLines.push(`${missing.length ? 'WARN' : 'PASS'}: namespaces ${missing.length ? 'saknas ' + missing.join(', ') : 'ok'}`);
+      reportLines.push(
+        `${missing.length ? 'WARN' : 'PASS'}: namespaces ${missing.length ? 'saknas ' + missing.join(', ') : 'ok'}`,
+      );
       reportLines.push(`PASS: NamedLayer ${namedLayers.length} / UserLayer ${userLayers.length}`);
       reportLines.push(`${rules.length ? 'PASS' : 'WARN'}: Rule ${rules.length}`);
-      reportLines.push(`${symbolizerList.length ? 'PASS' : 'WARN'}: Symbolizers ${symbolizerList.join(', ') || 'saknas'}`);
+      reportLines.push(
+        `${symbolizerList.length ? 'PASS' : 'WARN'}: Symbolizers ${symbolizerList.join(', ') || 'saknas'}`,
+      );
 
       const normalizedObj = {
         variant,
@@ -3746,17 +3857,22 @@ const initTryIt = () => {
       const findings = [];
 
       if (!raw.trim()) {
-        findings.push({ level: 'ERROR', code: 'SLD000', message: 'Ingen SLD-kod att linta', hint: 'Klistra in SLD-kod först' });
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD000',
+          message: 'Ingen SLD-kod att linta',
+          hint: 'Klistra in SLD-kod först',
+        });
         return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
       }
 
       const parsed = parseSld(raw);
       if (parsed.parserError) {
-        findings.push({ 
-          level: 'ERROR', 
-          code: 'SLD001', 
-          message: 'XML parsfel', 
-          hint: parsed.errorText || 'Kontrollera XML-syntax och namespaces' 
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD001',
+          message: 'XML parsfel',
+          hint: parsed.errorText || 'Kontrollera XML-syntax och namespaces',
         });
         return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
       }
@@ -3767,98 +3883,102 @@ const initTryIt = () => {
       // A) Structure checks
       const sldNodes = findAll(doc, 'StyledLayerDescriptor');
       if (sldNodes.length === 0) {
-        findings.push({ 
-          level: 'ERROR', 
-          code: 'SLD002', 
-          message: 'StyledLayerDescriptor saknas', 
-          hint: 'Rotelementet måste vara StyledLayerDescriptor' 
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD002',
+          message: 'StyledLayerDescriptor saknas',
+          hint: 'Rotelementet måste vara StyledLayerDescriptor',
         });
         return { findings, errorCount: 1, warnCount: 0, infoCount: 0 };
       }
 
       const namedLayers = findAll(doc, 'NamedLayer');
       const userLayers = findAll(doc, 'UserLayer');
-      
+
       if (namedLayers.length === 0 && userLayers.length === 0) {
-        findings.push({ 
-          level: 'ERROR', 
-          code: 'SLD003', 
-          message: 'Varken NamedLayer eller UserLayer hittades', 
-          hint: 'SLD måste innehålla minst ett NamedLayer eller UserLayer' 
+        findings.push({
+          level: 'ERROR',
+          code: 'SLD003',
+          message: 'Varken NamedLayer eller UserLayer hittades',
+          hint: 'SLD måste innehålla minst ett NamedLayer eller UserLayer',
         });
       }
 
       if (namedLayers.length > 0 && userLayers.length > 0) {
-        findings.push({ 
-          level: 'INFO', 
-          code: 'SLD004', 
-          message: 'Både NamedLayer och UserLayer finns', 
-          hint: 'Detta är ovanligt men tillåtet' 
+        findings.push({
+          level: 'INFO',
+          code: 'SLD004',
+          message: 'Både NamedLayer och UserLayer finns',
+          hint: 'Detta är ovanligt men tillåtet',
         });
       }
 
       const userStyles = findAll(doc, 'UserStyle');
       if (userStyles.length === 0) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD005', 
-          message: 'Ingen UserStyle hittades', 
-          hint: 'Lägg till UserStyle för att definiera styling' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD005',
+          message: 'Ingen UserStyle hittades',
+          hint: 'Lägg till UserStyle för att definiera styling',
         });
       }
 
       const rules = findAll(doc, 'Rule');
       if (rules.length === 0) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD006', 
-          message: 'Inga Rules hittades', 
-          hint: 'Lägg till minst en Rule för att rendera features' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD006',
+          message: 'Inga Rules hittades',
+          hint: 'Lägg till minst en Rule för att rendera features',
         });
       }
 
       // B) Namespace / version checks
       const version = root?.getAttribute('version');
       if (!version) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD010', 
-          message: 'version-attribut saknas', 
-          hint: 'Lägg till version="1.1.0" eller "1.0.0" på rotelementet' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD010',
+          message: 'version-attribut saknas',
+          hint: 'Lägg till version="1.1.0" eller "1.0.0" på rotelementet',
         });
       }
 
       const ns = root?.namespaceURI || '';
       const isSE = ns.includes('opengis.net/se') || (version && version.startsWith('1.1'));
-      
+
       const hasOgcNs = root?.getAttribute('xmlns:ogc') || root?.lookupNamespaceURI('ogc');
       const filters = findAll(doc, 'Filter');
-      
+
       if (isSE && filters.length > 0 && !hasOgcNs) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD011', 
-          message: 'SE-format med Filter men ogc-namespace saknas', 
-          hint: 'Lägg till xmlns:ogc="http://www.opengis.net/ogc"' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD011',
+          message: 'SE-format med Filter men ogc-namespace saknas',
+          hint: 'Lägg till xmlns:ogc="http://www.opengis.net/ogc"',
         });
       }
 
       const schemaLocation = root?.getAttribute('xsi:schemaLocation');
       if (!schemaLocation) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD012', 
-          message: 'schemaLocation saknas', 
-          hint: 'Lägg till xsi:schemaLocation för validering' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD012',
+          message: 'schemaLocation saknas',
+          hint: 'Lägg till xsi:schemaLocation för validering',
         });
       }
 
       // C) Scale sanity checks
       let allRulesHaveNoScale = true;
       rules.forEach((rule, idx) => {
-        const minScales = Array.from(rule.getElementsByTagName('*')).filter(n => n.localName === 'MinScaleDenominator');
-        const maxScales = Array.from(rule.getElementsByTagName('*')).filter(n => n.localName === 'MaxScaleDenominator');
-        
+        const minScales = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'MinScaleDenominator',
+        );
+        const maxScales = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'MaxScaleDenominator',
+        );
+
         if (minScales.length > 0 || maxScales.length > 0) {
           allRulesHaveNoScale = false;
         }
@@ -3866,79 +3986,85 @@ const initTryIt = () => {
         if (minScales.length > 0 && maxScales.length > 0) {
           const minVal = parseFloat(minScales[0].textContent);
           const maxVal = parseFloat(maxScales[0].textContent);
-          
+
           if (!isNaN(minVal) && !isNaN(maxVal) && minVal > maxVal) {
-            findings.push({ 
-              level: 'WARN', 
-              code: 'SLD020', 
-              message: `Rule ${idx + 1}: MinScaleDenominator > MaxScaleDenominator`, 
+            findings.push({
+              level: 'WARN',
+              code: 'SLD020',
+              message: `Rule ${idx + 1}: MinScaleDenominator > MaxScaleDenominator`,
               hint: `Min (${minVal}) ska vara mindre än Max (${maxVal})`,
-              path: `Rule[${idx}]`
+              path: `Rule[${idx}]`,
             });
           }
 
           if (!isNaN(minVal) && minVal < 1) {
-            findings.push({ 
-              level: 'INFO', 
-              code: 'SLD021', 
-              message: `Rule ${idx + 1}: Extremt liten MinScaleDenominator`, 
+            findings.push({
+              level: 'INFO',
+              code: 'SLD021',
+              message: `Rule ${idx + 1}: Extremt liten MinScaleDenominator`,
               hint: `Värde ${minVal} är ovanligt, kontrollera om avsiktligt`,
-              path: `Rule[${idx}]`
+              path: `Rule[${idx}]`,
             });
           }
 
           if (!isNaN(maxVal) && maxVal > 1000000000) {
-            findings.push({ 
-              level: 'INFO', 
-              code: 'SLD022', 
-              message: `Rule ${idx + 1}: Extremt stor MaxScaleDenominator`, 
+            findings.push({
+              level: 'INFO',
+              code: 'SLD022',
+              message: `Rule ${idx + 1}: Extremt stor MaxScaleDenominator`,
               hint: `Värde ${maxVal} är ovanligt, kontrollera om avsiktligt`,
-              path: `Rule[${idx}]`
+              path: `Rule[${idx}]`,
             });
           }
         }
       });
 
       if (allRulesHaveNoScale && rules.length > 0) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD023', 
-          message: 'Inga Rules har scale-gating', 
-          hint: 'Överväg MinScaleDenominator/MaxScaleDenominator för bättre prestanda' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD023',
+          message: 'Inga Rules har scale-gating',
+          hint: 'Överväg MinScaleDenominator/MaxScaleDenominator för bättre prestanda',
         });
       }
 
       // D) Symbolizer and common mistakes
       const polygonSymbolizers = findAll(doc, 'PolygonSymbolizer');
       polygonSymbolizers.forEach((ps, idx) => {
-        const fills = Array.from(ps.getElementsByTagName('*')).filter(n => n.localName === 'Fill');
-        const strokes = Array.from(ps.getElementsByTagName('*')).filter(n => n.localName === 'Stroke');
-        
+        const fills = Array.from(ps.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Fill',
+        );
+        const strokes = Array.from(ps.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Stroke',
+        );
+
         if (fills.length === 0 && strokes.length === 0) {
-          findings.push({ 
-            level: 'WARN', 
-            code: 'SLD030', 
-            message: `PolygonSymbolizer ${idx + 1}: Varken Fill eller Stroke`, 
+          findings.push({
+            level: 'WARN',
+            code: 'SLD030',
+            message: `PolygonSymbolizer ${idx + 1}: Varken Fill eller Stroke`,
             hint: 'Polygonen blir osynlig utan Fill eller Stroke',
-            path: `PolygonSymbolizer[${idx}]`
+            path: `PolygonSymbolizer[${idx}]`,
           });
         }
       });
 
       const lineSymbolizers = findAll(doc, 'LineSymbolizer');
       lineSymbolizers.forEach((ls, idx) => {
-        const strokes = Array.from(ls.getElementsByTagName('*')).filter(n => n.localName === 'Stroke');
+        const strokes = Array.from(ls.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Stroke',
+        );
         if (strokes.length > 0) {
-          const strokeWidths = Array.from(strokes[0].getElementsByTagName('*')).filter(n => 
-            n.localName === 'SvgParameter' && n.getAttribute('name') === 'stroke-width'
+          const strokeWidths = Array.from(strokes[0].getElementsByTagName('*')).filter(
+            (n) => n.localName === 'SvgParameter' && n.getAttribute('name') === 'stroke-width',
           );
           if (strokeWidths.length === 0) {
-            findings.push({ 
-              level: 'WARN', 
-              code: 'SLD031', 
-              message: `LineSymbolizer ${idx + 1}: stroke-width saknas`, 
+            findings.push({
+              level: 'WARN',
+              code: 'SLD031',
+              message: `LineSymbolizer ${idx + 1}: stroke-width saknas`,
               hint: 'Linjebredd blir default (ofta 1px), specificera för tydlighet',
-              path: `LineSymbolizer[${idx}]`
+              path: `LineSymbolizer[${idx}]`,
             });
           }
         }
@@ -3946,44 +4072,52 @@ const initTryIt = () => {
 
       const textSymbolizers = findAll(doc, 'TextSymbolizer');
       textSymbolizers.forEach((ts, idx) => {
-        const labels = Array.from(ts.getElementsByTagName('*')).filter(n => n.localName === 'Label');
+        const labels = Array.from(ts.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Label',
+        );
         if (labels.length === 0 || !labels[0].textContent.trim()) {
-          findings.push({ 
-            level: 'WARN', 
-            code: 'SLD032', 
-            message: `TextSymbolizer ${idx + 1}: Label saknas eller tom`, 
+          findings.push({
+            level: 'WARN',
+            code: 'SLD032',
+            message: `TextSymbolizer ${idx + 1}: Label saknas eller tom`,
             hint: 'Lägg till Label med PropertyName eller Literal',
-            path: `TextSymbolizer[${idx}]`
+            path: `TextSymbolizer[${idx}]`,
           });
         }
       });
 
       filters.forEach((filter, idx) => {
-        const propNames = Array.from(filter.getElementsByTagName('*')).filter(n => n.localName === 'PropertyName');
-        if (propNames.length === 0 || !propNames.some(p => p.textContent.trim())) {
-          findings.push({ 
-            level: 'WARN', 
-            code: 'SLD033', 
-            message: `Filter ${idx + 1}: PropertyName saknas eller tom`, 
+        const propNames = Array.from(filter.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'PropertyName',
+        );
+        if (propNames.length === 0 || !propNames.some((p) => p.textContent.trim())) {
+          findings.push({
+            level: 'WARN',
+            code: 'SLD033',
+            message: `Filter ${idx + 1}: PropertyName saknas eller tom`,
             hint: 'Filter behöver PropertyName för att fungera',
-            path: `Filter[${idx}]`
+            path: `Filter[${idx}]`,
           });
         }
       });
 
       // Check for multiple rules without filters (last-rule-wins)
-      const rulesWithoutFilter = rules.filter(rule => {
-        const ruleFilters = Array.from(rule.getElementsByTagName('*')).filter(n => n.localName === 'Filter');
-        const elseFilters = Array.from(rule.getElementsByTagName('*')).filter(n => n.localName === 'ElseFilter');
+      const rulesWithoutFilter = rules.filter((rule) => {
+        const ruleFilters = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'Filter',
+        );
+        const elseFilters = Array.from(rule.getElementsByTagName('*')).filter(
+          (n) => n.localName === 'ElseFilter',
+        );
         return ruleFilters.length === 0 && elseFilters.length === 0;
       });
 
       if (rulesWithoutFilter.length > 1) {
-        findings.push({ 
-          level: 'WARN', 
-          code: 'SLD034', 
-          message: `${rulesWithoutFilter.length} Rules utan Filter eller ElseFilter`, 
-          hint: 'Kan orsaka last-rule-wins problem, lägg till Filter för specifika villkor' 
+        findings.push({
+          level: 'WARN',
+          code: 'SLD034',
+          message: `${rulesWithoutFilter.length} Rules utan Filter eller ElseFilter`,
+          hint: 'Kan orsaka last-rule-wins problem, lägg till Filter för specifika villkor',
         });
       }
 
@@ -3992,15 +4126,15 @@ const initTryIt = () => {
       svgParams.forEach((param) => {
         const name = param.getAttribute('name');
         const value = param.textContent.trim();
-        
+
         if ((name === 'fill-opacity' || name === 'stroke-opacity') && value) {
           const numVal = parseFloat(value);
           if (!isNaN(numVal) && (numVal < 0 || numVal > 1)) {
-            findings.push({ 
-              level: 'WARN', 
-              code: 'SLD040', 
-              message: `${name} utanför [0..1]: ${value}`, 
-              hint: 'Opacity ska vara mellan 0 och 1' 
+            findings.push({
+              level: 'WARN',
+              code: 'SLD040',
+              message: `${name} utanför [0..1]: ${value}`,
+              hint: 'Opacity ska vara mellan 0 och 1',
             });
           }
         }
@@ -4008,11 +4142,11 @@ const initTryIt = () => {
         if (name === 'stroke-width' && value) {
           const numVal = parseFloat(value);
           if (!isNaN(numVal) && numVal <= 0) {
-            findings.push({ 
-              level: 'WARN', 
-              code: 'SLD041', 
-              message: `stroke-width <= 0: ${value}`, 
-              hint: 'Linjebredd måste vara > 0' 
+            findings.push({
+              level: 'WARN',
+              code: 'SLD041',
+              message: `stroke-width <= 0: ${value}`,
+              hint: 'Linjebredd måste vara > 0',
             });
           }
         }
@@ -4022,7 +4156,7 @@ const initTryIt = () => {
       let errorCount = 0;
       let warnCount = 0;
       let infoCount = 0;
-      findings.forEach(f => {
+      findings.forEach((f) => {
         if (f.level === 'ERROR') errorCount++;
         else if (f.level === 'WARN') warnCount++;
         else if (f.level === 'INFO') infoCount++;
@@ -4035,26 +4169,28 @@ const initTryIt = () => {
       const lines = [];
       lines.push('═══ SLD LINT RAPPORT ═══');
       lines.push('');
-      
+
       const { findings, errorCount, warnCount, infoCount } = lintResult;
-      
+
       if (findings.length === 0) {
         lines.push('Status: [OK] Inga problem hittade');
         return lines.join('\n');
       }
 
       lines.push(`Status: ${errorCount > 0 ? '[ERROR]' : warnCount > 0 ? '[WARN]' : '[INFO]'}`);
-      lines.push(`Totalt: ${findings.length} findings (${errorCount} errors, ${warnCount} warnings, ${infoCount} info)`);
+      lines.push(
+        `Totalt: ${findings.length} findings (${errorCount} errors, ${warnCount} warnings, ${infoCount} info)`,
+      );
       lines.push('');
 
       // Group by level
-      const errors = findings.filter(f => f.level === 'ERROR');
-      const warnings = findings.filter(f => f.level === 'WARN');
-      const infos = findings.filter(f => f.level === 'INFO');
+      const errors = findings.filter((f) => f.level === 'ERROR');
+      const warnings = findings.filter((f) => f.level === 'WARN');
+      const infos = findings.filter((f) => f.level === 'INFO');
 
       if (errors.length > 0) {
         lines.push('ERRORS:');
-        errors.forEach(f => {
+        errors.forEach((f) => {
           lines.push(`  [ERROR] ${f.code}: ${f.message}`);
           if (f.hint) lines.push(`    Hint: ${f.hint}`);
           if (f.path) lines.push(`    Path: ${f.path}`);
@@ -4064,7 +4200,7 @@ const initTryIt = () => {
 
       if (warnings.length > 0) {
         lines.push('WARNINGS:');
-        warnings.forEach(f => {
+        warnings.forEach((f) => {
           lines.push(`  [WARN] ${f.code}: ${f.message}`);
           if (f.hint) lines.push(`    Hint: ${f.hint}`);
           if (f.path) lines.push(`    Path: ${f.path}`);
@@ -4074,7 +4210,7 @@ const initTryIt = () => {
 
       if (infos.length > 0) {
         lines.push('INFO:');
-        infos.forEach(f => {
+        infos.forEach((f) => {
           lines.push(`  [INFO] ${f.code}: ${f.message}`);
           if (f.hint) lines.push(`    Hint: ${f.hint}`);
           if (f.path) lines.push(`    Path: ${f.path}`);
@@ -4086,7 +4222,7 @@ const initTryIt = () => {
 
     const runLint = () => {
       const raw = input.value.trim();
-      
+
       if (!raw) {
         setLint('Ingen SLD-kod att linta.');
         updateStatusText('Ange SLD-kod först.');
@@ -4099,10 +4235,14 @@ const initTryIt = () => {
       setLint(report);
 
       const { errorCount, warnCount, infoCount } = lintResult;
-      
+
       if (errorCount > 0) {
         updateStatusText(`Lint: ${errorCount} fel, ${warnCount} varningar`);
-        addToRunLog('LINT', 'ERROR', `${errorCount} fel, ${warnCount} varningar, ${infoCount} info`);
+        addToRunLog(
+          'LINT',
+          'ERROR',
+          `${errorCount} fel, ${warnCount} varningar, ${infoCount} info`,
+        );
       } else if (warnCount > 0) {
         updateStatusText(`Lint: ${warnCount} varningar`);
         addToRunLog('LINT', 'WARN', `${warnCount} varningar, ${infoCount} info`);
@@ -4134,7 +4274,7 @@ const initTryIt = () => {
       a.download = 'sld-lint-report.txt';
       a.click();
       URL.revokeObjectURL(url);
-      
+
       updateStatusText('Lint-rapport exporterad.');
       addToRunLog('EXPORT', 'OK', 'Lint TXT');
     };
@@ -4306,11 +4446,22 @@ const initTryIt = () => {
       addToRunLog('CLEAR', 'OK');
     };
 
-    if (advancedToggle && advancedPanel) {
-      advancedToggle.addEventListener('change', () => {
-        advancedPanel.style.display = advancedToggle.checked ? 'block' : 'none';
-      });
-    }
+    const suggestFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('SUGGEST-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    const applyFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('APPLY-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    const resetFixes = () => {
+      updateStatusText('Quick Fixes-funktionen är under utveckling.');
+      addToRunLog('RESET-FIXES', 'INFO', 'Under utveckling');
+    };
+
+    // Advanced panel now uses native <details> in the HTML; no toggle handler required.
 
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
@@ -4375,12 +4526,12 @@ const initTryIt = () => {
     const output = block.querySelector('#urlbuilder-output');
     const status = block.querySelector('#urlbuilder-status');
     const buttons = block.querySelectorAll('[data-url-action]');
-    
+
     // Enterprise elements
     const advancedToggle = block.querySelector('#urlbuilder-advanced-toggle');
     const advancedPanel = block.querySelector('#urlbuilder-advanced-panel');
-    const reportOutput = block.querySelector('#urlbuilder-report');
-    const logOutput = block.querySelector('#urlbuilder-log');
+    const reportOutput = block.querySelector('#urlbuilder-validation');
+    const logOutput = block.querySelector('#urlbuilder-runlog');
     const explainOutput = block.querySelector('#urlbuilder-explain');
 
     if (!base || !service || !layer || !format || !crs || !bbox || !output || !status) {
@@ -4388,7 +4539,9 @@ const initTryIt = () => {
     }
 
     const TOOL_KEY = 'urlbuilder';
-    const updateStatus = (msg) => { if (status) status.textContent = msg; };
+    const updateStatus = (msg) => {
+      if (status) status.textContent = msg;
+    };
     let runLog = [];
 
     const addToRunLog = (level, message) => {
@@ -4460,9 +4613,14 @@ const initTryIt = () => {
         if (!bboxVal) {
           errors.push('BBOX är obligatoriskt för WMS');
         } else {
-          const parts = bboxVal.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean);
+          const parts = bboxVal
+            .split(/[\s,]+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
           if (parts.length !== 4) {
-            errors.push('BBOX måste innehålla exakt 4 värden separerade med komma eller mellanslag');
+            errors.push(
+              'BBOX måste innehålla exakt 4 värden separerade med komma eller mellanslag',
+            );
           } else {
             const nums = parts.map((p) => Number(p));
             if (nums.some((n) => !Number.isFinite(n))) {
@@ -4522,7 +4680,11 @@ const initTryIt = () => {
 
       addLine('SERVICE', params.get('service') || serviceVal, 'Protocol family');
       addLine('VERSION', params.get('version') || '', isWfs ? 'WFS version' : 'WMS version');
-      addLine('REQUEST', params.get('request') || '', isWfs ? 'Operation (GetFeature)' : 'Operation (GetMap)');
+      addLine(
+        'REQUEST',
+        params.get('request') || '',
+        isWfs ? 'Operation (GetFeature)' : 'Operation (GetMap)',
+      );
 
       if (isWfs) {
         addLine('TYPENAMES', params.get('typenames') || '', 'Target layer(s)');
@@ -4531,7 +4693,11 @@ const initTryIt = () => {
         addLine('LAYERS', params.get('layers') || '', 'Target layer(s)');
         addLine('FORMAT', params.get('format') || '', 'Output format');
         const crsParam = params.get('srs') ? 'SRS' : 'CRS';
-        addLine(crsParam, params.get('srs') || params.get('crs') || '', 'Coordinate reference system');
+        addLine(
+          crsParam,
+          params.get('srs') || params.get('crs') || '',
+          'Coordinate reference system',
+        );
         addLine('BBOX', params.get('bbox') || '', 'Extent (minX,minY,maxX,maxY)');
         addLine('WIDTH', params.get('width') || '', 'Map width in pixels');
         addLine('HEIGHT', params.get('height') || '', 'Map height in pixels');
@@ -4836,58 +5002,60 @@ const initTryIt = () => {
           updateStatus('Öppnade URL i ny flik.');
           addToRunLog('INFO', 'Öppnade URL i ny flik');
         } else if (action === 'test') {
+          try {
+            if (window.location.protocol === 'file:') {
+              updateStatus('Kör via http.server för att testa URL (file:// blockeras).');
+              addToRunLog('WARN', 'Test blockerat: file:// används');
+              return;
+            }
+
+            const validation = validateInputs();
+            const report = generateValidationReport(validation);
+            setReport(report);
+            if (validation.errors.length > 0) {
+              updateStatus('Validering misslyckades. Se valideringsrapporten.');
+              addToRunLog('ERROR', `Test blockerat: ${validation.errors.length} fel`);
+              return;
+            }
+
+            if (!output.value.trim()) {
+              const generated = generate();
+              if (!generated) return;
+            }
+
+            const url = new URL(output.value.trim(), window.location.href);
+
+            if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+              updateStatus(
+                'Det här pekar på localhost. Starta GeoServer lokalt eller byt bas-URL för att testa.',
+              );
+              addToRunLog('WARN', 'Test blockerat: localhost-URL');
+              return;
+            }
+
+            updateStatus('Testar…');
+            addToRunLog('INFO', 'Testar URL');
+
+            const t0 = performance.now();
+            let res;
             try {
-              if (window.location.protocol === 'file:') {
-                updateStatus('Kör via http.server för att testa URL (file:// blockeras).');
-                addToRunLog('WARN', 'Test blockerat: file:// används');
-                return;
-              }
-
-              const validation = validateInputs();
-              const report = generateValidationReport(validation);
-              setReport(report);
-              if (validation.errors.length > 0) {
-                updateStatus('Validering misslyckades. Se valideringsrapporten.');
-                addToRunLog('ERROR', `Test blockerat: ${validation.errors.length} fel`);
-                return;
-              }
-
-              if (!output.value.trim()) {
-                const generated = generate();
-                if (!generated) return;
-              }
-
-              const url = new URL(output.value.trim(), window.location.href);
-
-              if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
-                updateStatus('Det här pekar på localhost. Starta GeoServer lokalt eller byt bas-URL för att testa.');
-                addToRunLog('WARN', 'Test blockerat: localhost-URL');
-                return;
-              }
-
-              updateStatus('Testar…');
-              addToRunLog('INFO', 'Testar URL');
-
-              const t0 = performance.now();
-              let res;
-              try {
-                res = await fetch(url.toString(), { method: 'GET' });
-              } catch (error) {
-                updateStatus('CORS blocked; open in new tab or test from server environment.');
-                addToRunLog('ERROR', 'CORS-blockerat test');
-                return;
-              }
-
-              const ms = Math.round(performance.now() - t0);
-              const ct = res.headers.get('content-type') || 'okänt';
-              const msg = `Svar: ${res.status} ${res.statusText} • ${ms} ms • ${ct}`;
-              updateStatus(msg);
-              addToRunLog('OK', `Test slutförd: ${res.status} (${ms}ms)`);
+              res = await fetch(url.toString(), { method: 'GET' });
             } catch (error) {
               updateStatus('CORS blocked; open in new tab or test from server environment.');
-              addToRunLog('ERROR', 'Test misslyckades: CORS/nätverksfel');
+              addToRunLog('ERROR', 'CORS-blockerat test');
+              return;
             }
+
+            const ms = Math.round(performance.now() - t0);
+            const ct = res.headers.get('content-type') || 'okänt';
+            const msg = `Svar: ${res.status} ${res.statusText} • ${ms} ms • ${ct}`;
+            updateStatus(msg);
+            addToRunLog('OK', `Test slutförd: ${res.status} (${ms}ms)`);
+          } catch (error) {
+            updateStatus('CORS blocked; open in new tab or test from server environment.');
+            addToRunLog('ERROR', 'Test misslyckades: CORS/nätverksfel');
           }
+        }
       });
     });
 
@@ -5173,11 +5341,9 @@ const initGridsetExplorer = () => {
   const EPSG3006 = 'EPSG:3006';
   const TILE_SIZE = 256;
 
-  const reportEl = document.getElementById('gridset-report');
-  const logEl = document.getElementById('gridset-log');
+  const reportEl = document.getElementById('gridset-validation');
+  const logEl = document.getElementById('gridset-runlog');
   const outputEl = document.getElementById('gridset-output');
-  const advancedToggle = document.getElementById('gridset-advanced-toggle');
-  const advancedPanel = document.getElementById('gridset-advanced-panel');
 
   let gridsetRunLog = [];
   let lastGridsetData = null;
@@ -5220,7 +5386,9 @@ const initGridsetExplorer = () => {
 
   const hasProj4 = typeof proj4 !== 'undefined';
   const canRegister =
-    ol?.proj?.proj4 && typeof ol.proj.proj4.register === 'function' && typeof proj4?.defs === 'function';
+    ol?.proj?.proj4 &&
+    typeof ol.proj.proj4.register === 'function' &&
+    typeof proj4?.defs === 'function';
 
   if (!hasProj4 || !canRegister) {
     setUiStatus('Kunde inte initiera EPSG:3006 (proj4/OpenLayers saknas).');
@@ -5283,10 +5451,7 @@ const initGridsetExplorer = () => {
 
   const map = new ol.Map({
     target: 'gridset-map',
-    layers: [
-      new ol.layer.Tile({ source: new ol.source.OSM() }),
-      vectorLayer,
-    ],
+    layers: [new ol.layer.Tile({ source: new ol.source.OSM() }), vectorLayer],
     view,
   });
 
@@ -5326,7 +5491,9 @@ const initGridsetExplorer = () => {
     reportLines.push(`Tile size: ${TILE_SIZE}px`);
     reportLines.push(`Extent: ${extent.name}`);
     reportLines.push(`Bounds: ${minx}, ${miny}, ${maxx}, ${maxy}`);
-    reportLines.push(`Width/Height: ${width.toLocaleString('sv-SE')} m / ${height.toLocaleString('sv-SE')} m`);
+    reportLines.push(
+      `Width/Height: ${width.toLocaleString('sv-SE')} m / ${height.toLocaleString('sv-SE')} m`,
+    );
     reportLines.push(`Zoom: ${typeof zoom === 'number' ? zoom.toFixed(2) : '—'}`);
     reportLines.push(`Resolution: ${resolution.toFixed(4)} m/px`);
     reportLines.push(`Tiles: ${tilesX} × ${tilesY} = ${totalTiles}`);
@@ -5491,20 +5658,24 @@ const initGridsetExplorer = () => {
               properties: { extentName: lastGridsetData.extentName },
               geometry: {
                 type: 'Polygon',
-                coordinates: [[
-                  [bounds.minx, bounds.miny],
-                  [bounds.maxx, bounds.miny],
-                  [bounds.maxx, bounds.maxy],
-                  [bounds.minx, bounds.maxy],
-                  [bounds.minx, bounds.miny],
-                ]],
+                coordinates: [
+                  [
+                    [bounds.minx, bounds.miny],
+                    [bounds.maxx, bounds.miny],
+                    [bounds.maxx, bounds.maxy],
+                    [bounds.minx, bounds.maxy],
+                    [bounds.minx, bounds.miny],
+                  ],
+                ],
               },
             },
           ],
         };
 
         try {
-          const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
+          const blob = new Blob([JSON.stringify(geojson, null, 2)], {
+            type: 'application/geo+json',
+          });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -5622,13 +5793,6 @@ const initGridsetExplorer = () => {
   view.on('change:resolution', () => updateInfo(activeExtentKey));
   view.on('change:center', () => updateInfo(activeExtentKey));
 
-  if (advancedToggle && advancedPanel) {
-    advancedToggle.addEventListener('change', () => {
-      advancedPanel.style.display = advancedToggle.checked ? 'block' : 'none';
-      addToGridsetLog('INFO', `Advanced mode ${advancedToggle.checked ? 'aktiverad' : 'inaktiverad'}`);
-    });
-  }
-
   initGridsetWorkflow();
   addToGridsetLog('INFO', 'Gridset Explorer initierat');
 
@@ -5640,7 +5804,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initOfflineNotice();
   initSearch();
-  initPageMeta(); 
+  initPageMeta();
   initCodeCopy();
   initTryIt();
   initWizard();
