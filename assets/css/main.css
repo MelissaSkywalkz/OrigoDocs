@@ -523,6 +523,15 @@ a {
   resize: vertical;
 }
 
+.tryit-input:focus-visible,
+.tryit-button:focus-visible,
+.tryit-pill:focus-visible,
+.tryit-advanced summary:focus-visible,
+.tryit-details summary:focus-visible {
+  outline: 3px solid #c7d2fe;
+  outline-offset: 2px;
+}
+
 .tryit input.tryit-input,
 .tryit select.tryit-input {
   min-height: 0;
@@ -534,6 +543,26 @@ a {
 .tryit-output {
   white-space: pre-wrap;
   min-height: 120px;
+}
+
+.tryit-section {
+  margin-top: 0.9rem;
+}
+
+.tryit-section:first-child {
+  margin-top: 0;
+}
+
+.tryit-actions-primary {
+  margin-top: 0.75rem;
+}
+
+.tryit-actions-secondary {
+  margin-top: 0.6rem;
+}
+
+.tryit-actions-advanced {
+  margin-top: 0.6rem;
 }
 
 .tryit-status {
@@ -2413,6 +2442,12 @@ table tbody tr:hover {
   background: #fff;
   padding: 1.1rem;
   margin: 1.2rem 0;
+}
+
+.tool-card:focus-visible,
+.tool-card-sub:focus-visible {
+  outline: 3px solid #c7d2fe;
+  outline-offset: 6px;
 }
 
 .tool-card-head h2,

@@ -1,94 +1,66 @@
 # OrigoDocs
 
-📘 **Intern dokumentationsportal för Origo Map**  
-En statisk docs-site med praktiska exempel, felsökning och “Try it”-verktyg för arbete med GIS, GeoServer och Origo Map.
+OrigoDocs är en statisk dokumentationsportal för Origo Map med praktiska exempel, felsökningsguider och interaktiva "Try‑it"‑verktyg.
 
-🌍 **Live docs:**  
-👉 https://melissaskywalkz.github.io/OrigoDocs/
-
-📖 **Projekt Wiki:**  
-👉 https://github.com/MelissaSkywalkz/OrigoDocs/wiki
+Live (publicerat via GitHub Pages): https://melissaskywalkz.github.io/OrigoDocs/
 
 ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)
 ![Static](https://img.shields.io/badge/site-static-blue)
 ![Prettier](https://img.shields.io/badge/code%20style-prettier-ff69b4)
 
----
+## Syfte
 
-## 🎯 Syfte
+OrigoDocs riktar sig till utvecklare, GIS‑integratörer och tekniska förvaltare som använder Origo Map och närliggande komponenter (GeoServer, GeoWebCache). Mål: snabba, praktiska exempel, konfigurationssnuttar och små interaktiva verktyg för felsökning och verifiering.
 
-OrigoDocs är till för utvecklare, GIS-ingenjörer och tekniska förvaltare som jobbar med **Origo Map**.  
-Fokus ligger på:
+## Try‑it‑verktygen (kortfattat)
 
-- Snabba **copy/paste-exempel**
-- Praktiska **konfigurationer** (JSON, lager, SLD)
-- **Felsökning** som faktiskt funkar i vardagen
-- Små **Try it-verktyg** för att testa och förstå
+- JSON — Validering och enkel metadata‑/BBOX‑extraktion för GeoJSON/Origo JSON.
+- URL builder — Bygg WMS/WFS Get‑requests, generera `curl` och textsnippets.
+- BBOX / Extent — Parsning, normalisering och validering av bounding boxes (stöder EPSG:3006 och EPSG:3008 i gränssnittet).
+- Resolutions — Verktyg för att lista/felsöka tile/resolution‑listor och skala⇄resolution‑omvandlingar.
+- Gridcalc — Kalkylator för tilecounts, cache‑estimat och konverteringar (resolution/scale/tilecount).
+- Gridset Explorer — Interaktiv gridset‑utforskare (projektioner och tile‑grid, primärt EPSG:3006). Markerad som experimentell i vissa fall; kontrollera stabilitetsnoteringen nedan.
+- SLD — Enkel SLD‑validering och snabpreview/förslag på enkla korrigeringar.
+- Map sandbox — Enkel OpenLayers‑preview för WMS/WMTS/XYZ‑källor (kan påverkas av CORS och externa servers begränsningar).
 
-Detta är inte en teoretisk manual utan en **arbetsyta**.
+## Drift och begränsningar
 
----
+- Alla verktyg körs helt i webbläsaren (client‑side); inga backend‑tjänster används.
+- CRS‑antaganden: verktygen utgår primärt från EPSG:3006 (SWEREF 99 TM) och stödjer även EPSG:3008 där det uttryckligen anges. Axis‑order och server‑specifika beteenden kan variera; se kommentarer i koden för varje verktyg.
+- Known limitations:
+  - Förhandsvisning i `Map sandbox` kan misslyckas på grund av CORS, server‑svar eller HTTPS‑restriktioner från externa WMS/WMTS‑leverantörer.
+  - Vissa avancerade gridset‑operationer och konverteringar kan vara experimentella; verifiera alltid mot din GeoServer/GeoWebCache‑konfiguration.
 
-## 🧭 Innehål & sidor
+## Lokalt arbete
 
-**Huvuddokumentation:**
-
-- **Origo guide** – grundläggande konfiguration, lager, WMS/WFS/WMTS
-- **JSON 101** – Origo JSON-format med valideringsverktyg
-- **Layermanager** – så fungerar lag-hiearkier
-- **GeoServer 101** – servering av data, WMS/WFS, CRS
-- **GeoServer styles** – SLD-format, styling, renderingskontroll
-- **GeoWebCache** – tile-caching, resolutions, gridsets
-- **Felsökning** – systematisk felsökning med symptom → orsak → nästa steg
-- **Try it-lab** – interaktiva verktyg
-- **Git & VS Code** – versionshantering för kollegor
-- **Origo-recept** – copy/paste-exempel
-
-**Try it-lab verktyg:**
-
-- JSON-validering & builder
-- BBOX/Extent explorer (EPSG:3008, EPSG:3006)
-- Resolutions & Gridcalc
-- SLD-validering & preview
-- Map sandbox (OpenLayers-preview)
-- Gridset Explorer (3006)
-
----
-
-## 🚀 Utveckling lokalt
-
-OrigoDocs är en statisk HTML-site och kräver ingen backend.
-
-**Live Server (VS Code):**
-
-```
-Högerklicka på index.html → Open with Live Server
-```
-
-**Python HTTP Server:**
+1. Starta en lokal statisk server (exempel):
 
 ```bash
 python -m http.server 8000
-Öppna: http://localhost:8000
+# öppna: http://localhost:8000
 ```
 
-**Kodformatering (Prettier):**
+2. Alternativt: använd VS Code Live Server (högerklicka `index.html` → Open with Live Server).
+
+3. Kodformattering:
 
 ```bash
 npm install
 npm run format
 ```
 
----
+## Verifikation före commit / PR
 
-## 📦 Publicering (GitHub Pages)
+- Starta lokal server och kontrollera navigering och sökfunktion.
+- Testa varje Try‑it‑verktyg du ändrat; använd `?dev=1` för utvecklarhjälp (debug‑selftests finns i `try-it.html`).
+- Kontrollera mobil vy (~560px breakpoint).
+- Se till att exporterade filer är deterministiska (inga okontrollerade tidsstämplar).
 
-Sajten publiceras automatiskt från `main`-branch till:  
-👉 https://melissaskywalkz.github.io/OrigoDocs/
+## Stabilitet och status
 
-**Lokala ändringar verifieras via:**
+- De flesta verktyg är stabila för grundläggande verifiering och felsökning.
+- Gridset Explorer och Map sandbox innehåller funktioner som kan kräva vidare validering mot specifika serversättningar och markeras därför som delvis experimentella — kontrollera kommentarer i koden och kör lokala tester.
 
-1. Lokal server (se ovan)
-2. Kolla mobile-viewport (~560px)
-3. Verifiera interna länkar & navigering
-4. Testa Try it-lab verktyg
+## Mer information
+
+Se `pages/try-it.html` för det användargränssnitt som innehåller alla verktyg. För utvecklarespecifika instruktioner och kodkonventioner, se `.github/copilot-instructions.md` och `CONTRIBUTING.md`.
