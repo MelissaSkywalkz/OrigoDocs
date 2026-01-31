@@ -317,11 +317,12 @@ const sldTool = (() => {
       return;
     }
 
-    if (await copyToClipboard(text)) {
-      updateStatus('SLD kopierad');
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'SLD kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();
@@ -346,8 +347,9 @@ const sldTool = (() => {
       return;
     }
 
-    downloadFile(`style-${Date.now()}.sld`, text, 'application/xml');
-    updateStatus('SLD exporterad');
+    const filename = `sld-${formatTimestamp()}.sld`;
+    const result = exportFile({ filename, mime: 'application/xml', content: text });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'SLD exporterad');
     updateUI();
   }
@@ -359,8 +361,9 @@ const sldTool = (() => {
       return;
     }
 
-    downloadFile(`style-${Date.now()}.txt`, text, 'text/plain');
-    updateStatus('TXT exporterad');
+    const filename = `sld-${formatTimestamp()}.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content: text });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
     updateUI();
   }
@@ -373,8 +376,9 @@ const sldTool = (() => {
     }
 
     const reportText = renderValidationReport(report).join('\n');
-    downloadFile(`sld-lint-${Date.now()}.txt`, reportText, 'text/plain');
-    updateStatus('Lint-rapport exporterad');
+    const filename = `sld-${formatTimestamp()}-lint.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content: reportText });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'Lint-rapport exporterad');
     updateUI();
   }
@@ -387,11 +391,12 @@ const sldTool = (() => {
     }
 
     const reportText = renderValidationReport(report).join('\n');
-    if (await copyToClipboard(reportText)) {
-      updateStatus('Lint-rapport kopierad');
+    const result = await copyToClipboard(reportText);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'Lint-rapport kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();

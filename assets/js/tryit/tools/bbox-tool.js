@@ -386,11 +386,12 @@ const bboxTool = (() => {
       return;
     }
 
-    if (await copyToClipboard(text)) {
-      updateStatus('BBOX kopierad');
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'BBOX kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();
@@ -403,11 +404,12 @@ const bboxTool = (() => {
       return;
     }
 
-    if (await copyToClipboard(text)) {
-      updateStatus('URL kopierad');
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'URL kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();
@@ -490,12 +492,13 @@ const bboxTool = (() => {
       ],
     };
 
-    downloadFile(
-      `bbox-${Date.now()}.geojson`,
-      JSON.stringify(geojson, null, 2),
-      'application/json',
-    );
-    updateStatus('GeoJSON exporterad');
+    const filename = `bbox-${formatTimestamp()}.geojson`;
+    const result = exportFile({
+      filename,
+      mime: 'application/json',
+      content: JSON.stringify(geojson, null, 2),
+    });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'GeoJSON exporterad');
     updateUI();
   }
@@ -513,8 +516,9 @@ const bboxTool = (() => {
       elements.urlOutput?.value || '(inget)',
     ].join('\n');
 
-    downloadFile(`bbox-${Date.now()}.txt`, content, 'text/plain');
-    updateStatus('TXT exporterad');
+    const filename = `bbox-${formatTimestamp()}.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
     updateUI();
   }

@@ -218,11 +218,12 @@ const gridcalcTool = (() => {
       return;
     }
 
-    if (await copyToClipboard(text)) {
-      updateStatus('Kopierat');
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'Resultat kopierat');
     } else {
-      updateStatus('Kopieringen misslyckades');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();
@@ -290,8 +291,9 @@ const gridcalcTool = (() => {
       `  Recommendation: ${der.seedRec}`,
     ].join('\n');
 
-    downloadFile(`gridcalc-${Date.now()}.txt`, content, 'text/plain');
-    updateStatus('TXT nedladdat');
+    const filename = `gridcalc-${formatTimestamp()}.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'TXT nedladdat');
     updateUI();
   }
@@ -307,12 +309,13 @@ const gridcalcTool = (() => {
       timestamp: new Date().toISOString(),
     };
 
-    downloadFile(
-      `gridcalc-${Date.now()}.json`,
-      JSON.stringify(jsonData, null, 2),
-      'application/json',
-    );
-    updateStatus('JSON nedladdat');
+    const filename = `gridcalc-${formatTimestamp()}.json`;
+    const result = exportFile({
+      filename,
+      mime: 'application/json',
+      content: JSON.stringify(jsonData, null, 2),
+    });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'JSON nedladdat');
     updateUI();
   }

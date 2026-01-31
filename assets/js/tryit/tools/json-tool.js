@@ -344,12 +344,12 @@ const jsonTool = (() => {
       return;
     }
 
-    const success = await copyToClipboard(text);
-    if (success) {
-      updateStatus('Kopierat.');
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'JSON kopierat till clipboard');
     } else {
-      updateStatus('Kopieringen misslyckades.');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
     updateUI();
@@ -374,8 +374,9 @@ const jsonTool = (() => {
     }
 
     const json = JSON.stringify(state.lastValidJson, null, 2);
-    downloadFile(`json-export-${Date.now()}.json`, json, 'application/json');
-    updateStatus('Exporterad.');
+    const filename = `json-${formatTimestamp()}.json`;
+    const result = exportFile({ filename, mime: 'application/json', content: json });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'JSON exporterad');
     updateUI();
   }
@@ -389,8 +390,9 @@ const jsonTool = (() => {
 
     const { minx, miny, maxx, maxy } = state.lastBbox;
     const content = `${minx},${miny},${maxx},${maxy}`;
-    downloadFile(`bbox-${Date.now()}.txt`, content, 'text/plain');
-    updateStatus('BBOX TXT exporterad.');
+    const filename = `json-${formatTimestamp()}-bbox.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'BBOX TXT exporterad');
     updateUI();
   }
@@ -426,8 +428,9 @@ const jsonTool = (() => {
     };
 
     const json = JSON.stringify(geojson, null, 2);
-    downloadFile(`bbox-${Date.now()}.geojson`, json, 'application/json');
-    updateStatus('BBOX GeoJSON exporterad.');
+    const filename = `json-${formatTimestamp()}-bbox.geojson`;
+    const result = exportFile({ filename, mime: 'application/geo+json', content: json });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'BBOX GeoJSON exporterad');
     updateUI();
   }

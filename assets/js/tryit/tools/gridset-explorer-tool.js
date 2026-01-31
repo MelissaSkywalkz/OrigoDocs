@@ -184,7 +184,8 @@ const gridsetExplorerTool = (() => {
     const ext = state.currentExtent;
     const bbox = `${ext.minx},${ext.miny},${ext.maxx},${ext.maxy}`;
 
-    if (await copyToClipboard(bbox)) {
+    const result = await copyToClipboard(bbox);
+    if (result.ok) {
       appState.addLog(TOOL_KEY, 'OK', 'BBOX kopierad');
     } else {
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
@@ -236,11 +237,12 @@ const gridsetExplorerTool = (() => {
       ],
     };
 
-    downloadFile(
-      `gridset-${Date.now()}.geojson`,
-      JSON.stringify(geojson, null, 2),
-      'application/json',
-    );
+    const filename = `gridset-${formatTimestamp()}.geojson`;
+    exportFile({
+      filename,
+      mime: 'application/json',
+      content: JSON.stringify(geojson, null, 2),
+    });
     appState.addLog(TOOL_KEY, 'OK', 'GeoJSON exporterad');
     updateUI();
   }
@@ -260,19 +262,24 @@ const gridsetExplorerTool = (() => {
       `Height: ${ext.maxy - ext.miny} m`,
     ].join('\n');
 
-    downloadFile(`gridset-${Date.now()}.txt`, content, 'text/plain');
+    const filename = `gridset-${formatTimestamp()}.txt`;
+    exportFile({ filename, mime: 'text/plain', content });
     appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
     updateUI();
   }
 
-  function copyGridset() {
+  async function copyGridset() {
     if (!state.currentExtent) return;
 
     const ext = state.currentExtent;
     const snippet = `<extent>[${ext.minx}, ${ext.miny}, ${ext.maxx}, ${ext.maxy}]</extent>`;
 
-    copyToClipboard(snippet);
-    appState.addLog(TOOL_KEY, 'OK', 'Gridset-snippet kopierad');
+    const result = await copyToClipboard(snippet);
+    if (result.ok) {
+      appState.addLog(TOOL_KEY, 'OK', 'Gridset-snippet kopierad');
+    } else {
+      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+    }
     updateUI();
   }
 

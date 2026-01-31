@@ -46,6 +46,7 @@ const ERROR_CODE_LABELS = {
   URL_MISSING_CRS: 'CRS/SRS saknas',
   URL_MISSING_FORMAT: 'Format saknas',
   URL_INVALID_BBOX: 'BBOX-format ogiltigt',
+  URL_MISSING_PARAM: 'Parameter saknas',
 
   // BBOX Tool
   BBOX_EMPTY_INPUT: 'Ingen input',
@@ -169,7 +170,7 @@ function renderValidationReport(report) {
   if (report.errors.length > 0) {
     lines.push('[ERROR] Validering misslyckades');
   } else if (report.warnings.length > 0) {
-    lines.push('[⚠] Godkänd med varningar');
+    lines.push('[WARN] Godkänd med varningar');
   } else {
     lines.push('[OK] Validering godkänd');
   }
@@ -268,15 +269,42 @@ function renderRunLog(element, entries) {
 }
 
 /**
- * Copy text to clipboard
+ * Format timestamp for deterministic filenames: YYYYMMDD-HHmmss
+ * @returns {string}
+ */
+function formatTimestamp() {
+  const d = new Date();
+  const pad = (n) => n.toString().padStart(2, '0');
+  return (
+    d.getFullYear().toString() +
+    pad(d.getMonth() + 1) +
+    pad(d.getDate()) +
+    '-' +
+    pad(d.getHours()) +
+    pad(d.getMinutes()) +
+    pad(d.getSeconds())
+  );
+}
+
+/**
+ * Ensure Windows-friendly newlines for TXT exports
+ * @param {string} content
+ * @returns {string}
+ */
+function normalizeNewlines(content) {
+  return content.replace(/\r?\n/g, '\r\n');
+}
+
+/**
+ * Copy text to clipboard with graceful error handling
  * @param {string} text
- * @returns {Promise<boolean>}
+ * @returns {Promise<{ok: boolean, message: string}>}
  */
 async function copyToClipboard(text) {
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
-      return true;
+      return { ok: true, message: 'Kopierat till urklipp.' };
     }
 
     // Fallback for older browsers
@@ -289,10 +317,10 @@ async function copyToClipboard(text) {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    return true;
+    return { ok: true, message: 'Kopierat till urklipp.' };
   } catch (error) {
     console.error('Clipboard copy failed:', error);
-    return false;
+    return { ok: false, message: 'Kunde inte kopiera till urklipp.' };
   }
 }
 
@@ -310,6 +338,34 @@ function downloadFile(filename, content, mimeType = 'text/plain') {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+/**
+ * Export file with safe defaults and graceful error handling
+ * Ensures UTF-8, Windows newlines for TXT, and supports deterministic filenames
+ * @param {{filename: string, mime: string, content: string}} payload
+ * @returns {{ok: boolean, message: string}}
+ */
+function exportFile({ filename, mime, content }) {
+  try {
+    let finalContent = content ?? '';
+    const lowerName = (filename || '').toLowerCase();
+
+    if (mime === 'text/plain' || lowerName.endsWith('.txt')) {
+      finalContent = normalizeNewlines(finalContent);
+    }
+
+    let finalMime = mime || 'text/plain';
+    if (!/charset=/i.test(finalMime)) {
+      finalMime = `${finalMime};charset=utf-8`;
+    }
+
+    downloadFile(filename, finalContent, finalMime);
+    return { ok: true, message: 'Fil exporterad.' };
+  } catch (error) {
+    console.error('Export failed:', error);
+    return { ok: false, message: 'Kunde inte exportera fil.' };
+  }
 }
 
 /**

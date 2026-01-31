@@ -21,6 +21,7 @@ const urlBuilderTool = (() => {
     status: null,
     reportEl: null,
     logEl: null,
+    explainEl: null,
   };
 
   let state = {
@@ -45,6 +46,7 @@ const urlBuilderTool = (() => {
     elements.status = block.querySelector('#urlbuilder-status');
     elements.reportEl = block.querySelector('#urlbuilder-validation');
     elements.logEl = block.querySelector('#urlbuilder-runlog');
+    elements.explainEl = block.querySelector('#urlbuilder-explain');
 
     if (!elements.base || !elements.output || !elements.status) {
       console.error('URL Builder Tool: Missing required DOM elements');
@@ -152,18 +154,143 @@ const urlBuilderTool = (() => {
     }
   }
 
+  const REMOVE_PARAM_VALUES = new Set(['', '__remove__', '__delete__']);
+
+  const PARAM_MEANINGS = {
+    service: 'Tjänst (WMS/WFS)',
+    request: 'Åtgärd (t.ex. GetMap/GetFeature)',
+    version: 'Tjänsteversion',
+    layers: 'Layer (WMS)',
+    typename: 'Layer (WFS, 1.1.0)',
+    typenames: 'Layer (WFS, 2.0.0)',
+    format: 'Outputformat (WMS)',
+    outputformat: 'Outputformat (WFS)',
+    crs: 'Koordinatsystem (WMS 1.3.0)',
+    srs: 'Koordinatsystem (WMS 1.1.1)',
+    bbox: 'BBOX (minx,miny,maxx,maxy)',
+    width: 'Bredd (px)',
+    height: 'Höjd (px)',
+    styles: 'Styles',
+  };
+
+  function normalizeText(value) {
+    return (value || '').trim();
+  }
+
+  function isUnsafeProtocol(url) {
+    return url.protocol.toLowerCase() === 'javascript:';
+  }
+
+  function createBaseUrl(baseValue) {
+    const trimmed = normalizeText(baseValue);
+    if (!trimmed) {
+      return { ok: false, url: null, error: { code: 'URL_MISSING_BASE', message: 'Bas-URL är tom' } };
+    }
+
+    try {
+      const url = new URL(trimmed, window.location.href);
+      if (isUnsafeProtocol(url)) {
+        return {
+          ok: false,
+          url: null,
+          error: { code: 'URL_INVALID_PROTOCOL', message: 'javascript: URLs är inte tillåtna' },
+        };
+      }
+
+      if (!['http:', 'https:'].includes(url.protocol.toLowerCase())) {
+        return {
+          ok: false,
+          url: null,
+          error: { code: 'URL_INVALID_PROTOCOL', message: 'Endast http/https tillåts' },
+        };
+      }
+
+      return { ok: true, url, error: null };
+    } catch (error) {
+      return {
+        ok: false,
+        url: null,
+        error: {
+          code: 'URL_INVALID_FORMAT',
+          message: 'Ogiltig bas-URL',
+          details: error.message,
+        },
+      };
+    }
+  }
+
+  function collectBaseParams(baseUrl) {
+    const baseParams = new URLSearchParams(baseUrl.search);
+    const removed = new Set();
+    const params = new URLSearchParams();
+
+    baseParams.forEach((value, key) => {
+      const trimmedKey = normalizeText(key);
+      const trimmedValue = normalizeText(value);
+      if (!trimmedKey) return;
+
+      if (trimmedKey.startsWith('-')) {
+        removed.add(trimmedKey.slice(1));
+        return;
+      }
+
+      if (REMOVE_PARAM_VALUES.has(trimmedValue)) {
+        removed.add(trimmedKey);
+        return;
+      }
+
+      params.set(trimmedKey, trimmedValue);
+    });
+
+    return { params, removed };
+  }
+
+  function buildParamExplanation(params, serviceValue) {
+    const explanation = [];
+    const entries = Array.from(params.entries());
+
+    const requiredForWms = ['service', 'request', 'version', 'layers', 'format', 'bbox'];
+    const requiredForWfs = ['service', 'request', 'version'];
+
+    const required = serviceValue === 'WFS' ? requiredForWfs : requiredForWms;
+
+    required.forEach((key) => {
+      const value = params.get(key);
+      explanation.push({
+        name: key,
+        value: value || '',
+        meaning: PARAM_MEANINGS[key] || 'Okänd parameter',
+        status: value ? 'ok' : 'error',
+      });
+    });
+
+    entries.forEach(([key, value]) => {
+      if (required.includes(key)) return;
+      explanation.push({
+        name: key,
+        value,
+        meaning: PARAM_MEANINGS[key] || 'Anpassad parameter',
+        status: value ? 'ok' : 'warn',
+      });
+    });
+
+    return explanation;
+  }
+
   function validateInputs() {
     const issues = [];
 
-    if (!elements.base.value.trim()) {
+    const baseCheck = createBaseUrl(elements.base.value);
+    if (!baseCheck.ok) {
       issues.push({
-        code: 'URL_MISSING_BASE',
-        message: 'Bas-URL är tom',
+        code: baseCheck.error.code,
+        message: baseCheck.error.message,
         field: 'base',
+        details: baseCheck.error.details,
       });
     }
 
-    if (!elements.layer.value.trim()) {
+    if (!normalizeText(elements.layer.value)) {
       issues.push({
         code: 'URL_MISSING_LAYER',
         message: 'Layer är tom',
@@ -189,19 +316,46 @@ const urlBuilderTool = (() => {
     }
 
     try {
-      const baseUrl = new URL(elements.base.value.trim(), window.location.href);
+      const baseResult = createBaseUrl(elements.base.value);
+      if (!baseResult.ok) {
+        return {
+          valid: false,
+          url: null,
+          errors: [baseResult.error],
+        };
+      }
+
+      const baseUrl = baseResult.url;
+      const serviceValue = normalizeText(elements.service?.value || 'WMS').toUpperCase();
+      const { params: baseParams, removed } = collectBaseParams(baseUrl);
+
       const params = new URLSearchParams();
+      baseParams.forEach((value, key) => {
+        if (!removed.has(key)) params.set(key, value);
+      });
 
-      params.set('service', elements.service?.value || 'WMS');
-      params.set('version', '1.1.1');
-      params.set('request', 'GetMap');
-      params.set('layers', elements.layer.value.trim());
-      params.set('styles', '');
-      params.set('format', elements.format?.value || 'image/png');
-      params.set('crs', elements.crs?.value || 'EPSG:3008');
+      const setParam = (key, value) => {
+        if (removed.has(key)) return;
+        const trimmed = normalizeText(value);
+        if (!trimmed) return;
+        params.set(key, trimmed);
+      };
 
-      if (elements.bbox?.value.trim()) {
-        params.set('bbox', elements.bbox.value.trim());
+      setParam('service', serviceValue);
+      setParam('version', serviceValue === 'WFS' ? '2.0.0' : '1.1.1');
+      setParam('request', serviceValue === 'WFS' ? 'GetFeature' : 'GetMap');
+
+      if (serviceValue === 'WFS') {
+        setParam('typenames', elements.layer.value);
+        setParam('outputFormat', elements.format?.value || 'application/json');
+      } else {
+        setParam('layers', elements.layer.value);
+        setParam('styles', '');
+        setParam('format', elements.format?.value || 'image/png');
+        setParam('crs', elements.crs?.value || 'EPSG:3008');
+        setParam('bbox', elements.bbox?.value);
+        setParam('width', '256');
+        setParam('height', '256');
       }
 
       baseUrl.search = params.toString();
@@ -209,6 +363,8 @@ const urlBuilderTool = (() => {
         valid: true,
         url: baseUrl.toString(),
         errors: [],
+        params,
+        removed,
       };
     } catch (error) {
       return {
@@ -245,6 +401,28 @@ const urlBuilderTool = (() => {
       report.meta.bbox = elements.bbox.value;
     }
 
+    if (result.params) {
+      const serviceValue = normalizeText(elements.service?.value || 'WMS').toUpperCase();
+      const explain = buildParamExplanation(result.params, serviceValue);
+      report.meta.paramExplain = explain;
+      report.meta.params = Object.fromEntries(result.params.entries());
+
+      explain
+        .filter((item) => item.status === 'error')
+        .forEach((item) => {
+          addReportWarning(
+            report,
+            'URL_MISSING_PARAM',
+            `Parametern ${item.name} saknas`,
+            item.name,
+          );
+        });
+    }
+
+    if (result.removed && result.removed.size > 0) {
+      report.meta.removedParams = Array.from(result.removed);
+    }
+
     return report;
   }
 
@@ -275,12 +453,12 @@ const urlBuilderTool = (() => {
       return;
     }
 
-    const success = await copyToClipboard(url);
-    if (success) {
-      updateStatus('Kopierat.');
+    const result = await copyToClipboard(url);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'URL kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades.');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
 
@@ -295,7 +473,12 @@ const urlBuilderTool = (() => {
     }
 
     try {
-      new URL(url);
+      const parsed = new URL(url);
+      if (!['http:', 'https:'].includes(parsed.protocol.toLowerCase())) {
+        updateStatus('Endast http/https tillåts.');
+        appState.addLog(TOOL_KEY, 'ERROR', 'URL-protokoll ej tillåtet');
+        return;
+      }
       updateStatus('URL-syntax OK.');
       appState.addLog(TOOL_KEY, 'OK', 'URL-syntax validerad');
     } catch (error) {
@@ -313,6 +496,19 @@ const urlBuilderTool = (() => {
       return;
     }
 
+    try {
+      const parsed = new URL(url);
+      if (!['http:', 'https:'].includes(parsed.protocol.toLowerCase())) {
+        updateStatus('Endast http/https tillåts.');
+        appState.addLog(TOOL_KEY, 'ERROR', 'URL-protokoll ej tillåtet');
+        return;
+      }
+    } catch {
+      updateStatus('Ogiltig URL.');
+      appState.addLog(TOOL_KEY, 'ERROR', 'URL öppning misslyckades: ogiltig URL');
+      return;
+    }
+
     window.open(url, '_blank');
     updateStatus('URL öppnad i ny flik.');
     appState.addLog(TOOL_KEY, 'OK', 'URL öppnad i ny flik');
@@ -327,12 +523,12 @@ const urlBuilderTool = (() => {
     }
 
     const curl = `curl "${url}"`;
-    const success = await copyToClipboard(curl);
-    if (success) {
-      updateStatus('Curl kopierad.');
+    const result = await copyToClipboard(curl);
+    if (result.ok) {
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'OK', 'Curl kopierad');
     } else {
-      updateStatus('Kopieringen misslyckades.');
+      updateStatus(result.message);
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
 
@@ -347,8 +543,9 @@ const urlBuilderTool = (() => {
     }
 
     const curl = `#!/bin/bash\n# Generated curl request\ncurl "${url}"\n`;
-    downloadFile(`request-${Date.now()}.sh`, curl, 'text/plain');
-    updateStatus('Curl-skript nedladdat.');
+    const filename = `urlbuilder-${formatTimestamp()}.sh`;
+    const result = exportFile({ filename, mime: 'text/plain', content: curl });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'Curl-skript nedladdat');
     updateUI();
   }
@@ -374,8 +571,9 @@ const urlBuilderTool = (() => {
       content += `BBOX: ${elements.bbox.value}\n`;
     }
 
-    downloadFile(`wms-request-${Date.now()}.txt`, content, 'text/plain');
-    updateStatus('TXT exporterad.');
+    const filename = `urlbuilder-${formatTimestamp()}.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
     updateUI();
   }
@@ -428,11 +626,32 @@ const urlBuilderTool = (() => {
     }
   }
 
+  function renderExplain(explain) {
+    if (!elements.explainEl) return;
+
+    if (!explain || explain.length === 0) {
+      elements.explainEl.textContent = '';
+      return;
+    }
+
+    const lines = [];
+    explain.forEach((item) => {
+      const statusLabel = item.status === 'error' ? 'FEL' : item.status === 'warn' ? 'VARNING' : 'OK';
+      lines.push(`${item.name} = ${item.value || '(saknas)'} (${statusLabel})`);
+      lines.push(`  ${item.meaning}`);
+    });
+
+    elements.explainEl.textContent = lines.join('\n');
+  }
+
   function updateUI() {
     if (elements.reportEl) {
       const report = appState.getReport(TOOL_KEY);
       renderReport(elements.reportEl, report);
     }
+
+    const report = appState.getReport(TOOL_KEY);
+    renderExplain(report?.meta?.paramExplain || []);
 
     if (elements.logEl) {
       const logs = appState.getLogs(TOOL_KEY);

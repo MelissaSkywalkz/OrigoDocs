@@ -214,8 +214,9 @@ const resolutionsTool = (() => {
     }
 
     const json = JSON.stringify(state.lastValidResolutions, null, 2);
-    downloadFile(`resolutions-origo-${Date.now()}.json`, json, 'application/json');
-    updateStatus('Origo JSON nedladdat');
+    const filename = `resolutions-${formatTimestamp()}.json`;
+    const result = exportFile({ filename, mime: 'application/json', content: json });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'Origo JSON nedladdat');
     updateUI();
   }
@@ -229,12 +230,10 @@ const resolutionsTool = (() => {
     const xml = state.lastValidResolutions
       .map((r) => `    <resolution>${r}</resolution>`)
       .join('\n');
-    downloadFile(
-      `resolutions-gwc-${Date.now()}.txt`,
-      `  <resolutions>\n${xml}\n  </resolutions>`,
-      'text/plain',
-    );
-    updateStatus('GWC format nedladdat');
+    const content = `  <resolutions>\n${xml}\n  </resolutions>`;
+    const filename = `resolutions-${formatTimestamp()}-gwc.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'GWC format nedladdat');
     updateUI();
   }
@@ -247,8 +246,9 @@ const resolutionsTool = (() => {
     }
 
     const reportText = renderValidationReport(report).join('\n');
-    downloadFile(`resolutions-report-${Date.now()}.txt`, reportText, 'text/plain');
-    updateStatus('Rapport nedladdad');
+    const filename = `resolutions-${formatTimestamp()}-report.txt`;
+    const result = exportFile({ filename, mime: 'text/plain', content: reportText });
+    updateStatus(result.message);
     appState.addLog(TOOL_KEY, 'OK', 'Rapport nedladdad');
     updateUI();
   }
