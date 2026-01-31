@@ -14,6 +14,20 @@ const urlBuilderTool = (() => {
     base: null,
     service: null,
     layer: null,
+/**
+ * Try‑it tool module: URL Builder
+ *
+ * Purpose:
+ * - Construct sample WMS/WFS request URLs, generate `curl` snippets and export text snippets.
+ *
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Generated snippets should be deterministic where feasible and labeled in Swedish.
+ * - Avoid embedding machine‑specific metadata unless documented.
+ */
     format: null,
     crs: null,
     bbox: null,

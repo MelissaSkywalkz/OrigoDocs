@@ -3,10 +3,20 @@
  * Interactive map-based gridset visualization (EPSG:3006)
  * Requires OpenLayers (ol from CDN)
  */
-
-const gridsetExplorerTool = (() => {
-  const TOOL_KEY = 'gridset';
-
+/**
+ * Try‑it tool module: Gridset Explorer
+ *
+ * Purpose:
+ * - Interactive exploration of tile grid definitions and generation of example snippets.
+ *
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Document CRS and tile size assumptions in `GRIDSET_CONFIG`.
+ * - Surface errors and status updates via `ValidationReport` and `appState`.
+ */
   let elements = {
     mapContainer: null,
     status: null,

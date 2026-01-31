@@ -1,6 +1,16 @@
 /**
- * SLD Tool Module
- * Validates and formats SLD (Styled Layer Descriptor) documents
+ * Try‑it tool module: SLD
+ *
+ * Purpose:
+ * - Validate and format SLD documents and offer basic lint/fix suggestions.
+ *
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Use `ValidationReport` helpers to render lint/warning/error messages in Swedish.
+ * - Suggested fixes must be explicit and optional; do not apply destructive changes silently.
  */
 
 const sldTool = (() => {

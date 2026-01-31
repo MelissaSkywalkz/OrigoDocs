@@ -12,6 +12,19 @@ const resolutionsTool = (() => {
     status: null,
     reportEl: null,
     logEl: null,
+    /**
+     * Try‑it tool module: Resolutions
+     *
+     * Purpose:
+     * - Parse, validate and present tile resolution lists used by caches (WMTS/GeoWebCache).
+     *
+     * Expected block structure in HTML: input → actions → output → report
+     * Public interface:
+     * - init(block)
+     *
+     * Conventions:
+     * - Use `ValidationReport` helpers for user messages and ensure keyboard accessibility.
+     */
     previewEl: null,
   };
 

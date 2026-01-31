@@ -1,6 +1,16 @@
 /**
- * Gridcalc Tool Module
- * Calculates tile sizes, cache estimates, and seed recommendations
+ * Try‑it tool module: Gridcalc
+ *
+ * Purpose:
+ * - Calculate tile counts, cache estimates and provide scale↔resolution conversions.
+ *
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Provide deterministic numeric outputs and clear method descriptions in code comments.
+ * - Surface validation issues via `ValidationReport` rather than console‑only messages.
  */
 
 const gridcalcTool = (() => {

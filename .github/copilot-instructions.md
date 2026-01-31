@@ -1,66 +1,102 @@
+```instructions
 # OrigoDocs — Copilot / AI Agent Instructions
 
-This repository is a static documentation portal for Origo Map. The guidance below is focused, actionable, and specific to this codebase so an AI coding agent can be immediately productive.
+This repository is a static documentation portal for Origo Map. The guidance below is focused, actionable, and specific so an AI coding agent or contributor can be productive while preserving repository quality.
 
-- **Big picture:** static HTML/CSS/JS site served as documentation. Content lives as individual HTML files (index.html, origo-guide.html, layermanager.html, etc.). `main.js` implements navigation, a dual search system (in-memory `OFFLINE_SEARCH_INDEX` + `search/search-index.json`), syntax highlighting, and UI behaviors including responsive navigation and accordion panels. `main.css` contains shared styling with CSS custom properties for theming. The `try-it.html` page includes interactive tools (JSON/GeoJSON validator, map sandbox, BBOX calculator, etc.) with OpenLayers integration.
+Big picture
+-----------
+- Static HTML/CSS/JS site. Content lives in root HTML files and `pages/`.
+- `assets/js/main.js` contains navigation, the offline search index (`OFFLINE_SEARCH_INDEX`) and UI helpers. `assets/css/main.css` contains shared styles.
+- `pages/try-it.html` includes interactive tools; most tools are client‑side only. Some tools use OpenLayers (via CDN) for mapping previews.
 
-- **How to run locally:** run any static server. Common commands used in the repo:
-  - `python -m http.server 8000` — open `http://localhost:8000`
-  - VS Code Live Server (right‑click index.html → Open with Live Server)
-  - **Published live at:** https://melissaskywalkz.github.io/OrigoDocs/ (auto-deployed from `main` via GitHub Pages)
+Run locally
+-----------
+- Start any static server, for example:
 
-- **Build / scripts:** there is no build pipeline. Use Prettier for formatting:
-  - `npm install`
-  - `npm run format` (runs `prettier --write "**/*.{html,css,js,json,md}"`)
+```bash
+python -m http.server 8000
+# then open http://localhost:8000
+```
 
-- **Key integration points & externals:**
-  - Origo (client library) — pages reference Origo concepts and configuration snippets.
-  - GeoServer and GeoWebCache — several pages (geoserver\*, geowebcache) explain server-side configs and caches.
-  - Origo Server (backend) — referenced in `origo-server.html`.
+- Alternatively use VS Code Live Server (right‑click `index.html` → Open with Live Server).
 
-- **Common developer workflows and where to change things:**
-  - Add a new page: copy an existing doc page HTML to preserve side menu and header structure (e.g., copy `pages/page.html` for a new page in `pages/`, or `index.html` for a root page). **Important:** pages in `pages/` use relative paths like `../assets/css/main.css` and `../index.html`, while root pages use `assets/css/main.css` and `index.html`.
-  - Update navigation: each page contains the side menu markup; add the new page link to `<div class="accordion-panel" id="nav-docs">` on all pages so navigation stays consistent. Update both `index.html` and all `pages/*.html` files.
-  - Search index: maintain BOTH search sources:
-    - `assets/js/main.js` — update the `OFFLINE_SEARCH_INDEX` constant (JavaScript array near top of file)
-    - `search/search-index.json` — keep in sync with the same entries in JSON format
-  - Styling: update `assets/css/main.css` for new classes; follow existing class names (`.tool-card`, `.doc-content`, `.tryit`, etc.) and the layout patterns used across pages. CSS uses custom properties (`:root` variables) for theming.
+Formatting
+----------
+- Use Prettier for formatting edits:
 
-- **Project-specific conventions and notes:**
-  - Content language is Swedish. Keep messaging and labels consistent with existing pages.
-  - Origo-specific claims that cannot be locally verified should be marked: `TODO: verifiera mot Origo-dokumentation` (this exact token is used throughout the codebase).
-  - The repo intentionally has no CI/tests; changes should be verified manually:
-    1. Run a local server and test navigation
-    2. Check mobile viewport (~560px breakpoint)
-    3. Verify internal links work correctly
-    4. Test Try it-lab tools if modified
-  - `try-it.html` uses OpenLayers (`ol@latest` from CDN) for the Map Sandbox tool. Other tools (JSON validator, BBOX calculator, etc.) are vanilla JS with inline `<script>` blocks at the end of the file.
+```bash
+npm install
+npm run format
+```
 
-- **Examples (copy/paste friendly):**
-  - Add a search index item in `main.js` (near the top):
+Key rules and expectations
+---------------------------
+- Language: user‑facing UI text must be Swedish. Use English for internal identifiers, code comments and examples where appropriate.
+- Defensive validation: tools must validate inputs and present errors to the user via the UI (use the shared `ValidationReport` pattern in `assets/js/tryit/ui-helpers.js`).
+- No silent failures: avoid console‑only messages for expected user errors. Any action that can fail must return a visible report or status.
+- Explicit assumptions: make CRS, axis order and extent assumptions explicit in constants or comments (e.g. EPSG:3006, EPSG:3008). If a claim cannot be locally verified, add `TODO: verifiera mot Origo-dokumentation`.
+- Deterministic exports: exported snippets or files should avoid embedding non‑essential timestamps or machine‑specific data. If timestamps are required, document why.
+- Accessibility: buttons must have explicit `type` attributes, interactive controls should include `aria-*` attributes as appropriate, and keyboard activation must be supported.
+- Dependencies: do not add new runtime dependencies without explicit justification and a PR note. Prefer no‑build, client‑side implementations.
+- Reuse utilities: prefer shared helpers and the `ValidationReport` rendering for consistent UX across tools.
+- Professional correctness: prefer conservative, well‑documented changes over speculative fixes. When in doubt, open a short issue or add a `TODO` with reproduction steps.
 
-    {
-    id: 'my-page-id',
-    title: 'My Page Title',
-    url: 'my-page.html',
-    content: 'short keywords used by offline search',
-    }
+Where to change things
+## OrigoDocs — Copilot / AI‑agent instruktioner
 
-  - Run formatting after edits:
-    - `npm install`
-    - `npm run format`
+Syfte
+-----
+- Ge korta, exakta instruktioner för AI‑assistenter och bidragsgivare så att ändringar blir korrekta, transparenta och underhållbara i ett professionellt GIS‑sammanhang.
 
-- **Files to inspect/edit for common tasks:**
-  - `index.html`, `page.html`, `origo-guide.html`, `layermanager.html` — page templates and examples
-  - `main.js` — navigation, `OFFLINE_SEARCH_INDEX`, UI behavior
-  - `main.css` — shared styles
-  - `search-index.json` — search index (used by the UI)
-  - `package.json` — formatting script
-  - `README.md` — contains developer notes and verification checklist
+Grundprinciper (kort)
+----------------------
+- Prioritera korrekthet, transparens och underhållbarhet.
+- Undvik spekulativ GIS‑beteende eller outtalade antaganden.
+- Validera alltid indata defensivt och visa fel via UI:t — inga konsol‑endast fel för förväntade användarfel.
+- Alla transformationer ska vara förklarbara och, när möjligt, reversibla.
+- Använd svenska för användargränssnitt och användardokumentation.
+- Använd engelska för interna identifierare, felkoder och datastrukturer.
+- Undvik globalt delat tillstånd och duplicerad logik.
+- Föredra små, granskbara commits. Lägg inte till nya beroenden utan uttryckligt godkännande.
+- Try‑it‑verktyg ska vara klient‑sidiga (inga serverside‑komponenter eller byggsteg utan godkännande).
 
-- **What NOT to change lightly:**
-  - Global navigation markup across pages — keep structure consistent or update every page.
-  - `OFFLINE_SEARCH_INDEX` entries without updating visible links and `search-index.json`.
-  - Relative path references (`../` vs direct) — these differ between root pages and pages in `pages/` folder.
+Regler för kod och verktyg
+--------------------------
+- Struktur: `assets/js/tryit/tools/` — varje modul exporterar `init(block)` och interagerar med ett block: input → actions → output → `ValidationReport`.
+- Validering: använd och återanvänd den delade `ValidationReport`‑mönstret i `assets/js/tryit/ui-helpers.js` för UI‑felrapporter.
+- Antaganden: gör CRS, axis‑order och extent‑antaganden explicita i konstanta värden och inline‑kommentarer (t.ex. `EPSG:3006`). Om något inte kan verifieras lokalt: lägg till `TODO: verifiera mot Origo-dokumentation`.
+- Transformationer: logga (i UI eller `ValidationReport`) vilka transformationer som applicerats och hur de kan backas/återställas; undvik tysta modifieringar av användardata.
+- State: håll lokalt per‑verktyg‑state; undvik globals. Dela logik via hjälpfunktioner i `assets/js/tryit/`.
 
-If anything in this file is unclear or you want additional examples (e.g., a page template diff, the exact HTML snippet to update the side menu), tell me which area to expand and I will iterate.
+Konventioner för språk och identifierare
+---------------------------------------
+- UI och dokumentation: svenska.
+- Felkoder, variabelnamn, funktioner, JSON‑fält och logg‑nycklar: engelska (t.ex. `error_invalid_bbox`).
+
+Commit‑ och granskningspolicy
+-----------------------------
+- Små commits med tydlig titel och kropp. Visa kort varför en förändring är säker.
+- Kommentera alla icke‑triviala GIS‑antaganden i koden och öppna en issue om verifiering krävs.
+
+Beroenden och bygg
+-------------------
+- Får ej lägga till nya runtime‑beroenden utan ett explicit PR‑kommentar och godkännande från projektägare.
+- Föredra no‑build klientkod; om ett byggsteg krävs, dokumentera varför och hur det körs lokalt.
+
+Testning och QA
+---------------
+- Manuell verifiering krävs: starta en statisk server och testa alla berörda Try‑it‑verktyg.
+- Använd `?dev=1` för inbyggda dev‑tester där sådana finns; dessa får inte ersätta manuell kontroll.
+- Kontrollera mobilvy (~560px), tangentbordsåtkomst och `aria-*` attribut.
+
+Godkännande och undantag
+------------------------
+- Förslag som bryter mot ovan (nya beroenden, serverside‑komponenter, stora API‑ändringar) kräver att förslaget dokumenteras i PR‑beskrivningen och godkänns av en projektägare.
+
+Kontakt
+-------
+- Vid frågor: öppna en issue eller tagga en projektägare i PR‑konversationen.
+
+---
+
+Skriv alltid tydligt och koncist — tänk på att framtida granskare ska kunna förstå varför en ändring gjordes utan att köra koden.

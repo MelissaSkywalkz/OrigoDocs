@@ -1,6 +1,16 @@
 /**
- * BBOX Tool Module - For EPSG:3008
- * Generates BBOX strings and WMS URLs
+ * Try‑it tool module: BBOX / Extent
+ *
+ * Purpose:
+ * - Parse, normalize and validate bounding boxes and generate example WMS URLs.
+ *
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Document CRS assumptions (e.g. EPSG:3008/EPSG:3006) in constants.
+ * - Use `ValidationReport` helpers for user messages and avoid silent failures.
  */
 
 const bboxTool = (() => {

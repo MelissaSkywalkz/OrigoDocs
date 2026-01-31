@@ -1,11 +1,17 @@
 /**
- * JSON Tool Module
+ * Try‑it tool module: JSON
  *
- * Handles: JSON validation, formatting, GeoJSON detection, BBOX extraction, exports
+ * Purpose:
+ * - Validate and format JSON/GeoJSON, detect basic GeoJSON features and extract BBOX.
  *
- * Interface:
- * - init(containerElement)
- * - Hooks into AppState for logging and validation reports
+ * Expected block structure in HTML: input → actions → output → report
+ * Public interface:
+ * - init(block)
+ *
+ * Conventions:
+ * - Use `appState` for logging.
+ * - Use `assets/js/tryit/ui-helpers.js` (`ValidationReport`) for user‑visible validation results.
+ * - Surface all user messages in Swedish and avoid console‑only errors for expected user input problems.
  */
 
 const jsonTool = (() => {
