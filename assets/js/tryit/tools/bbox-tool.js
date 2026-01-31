@@ -250,11 +250,7 @@ const bboxTool = (() => {
     }
 
     if (swapped) {
-      addReportWarning(
-        report,
-        'bbox.axisSwapped',
-        'Min/Max var omkastade – korrigerad',
-      );
+      addReportWarning(report, 'bbox.axisSwapped', 'Min/Max var omkastade – korrigerad');
       addReportFix(report, 'bbox.axisSwapped', 'Min/Max korrigerades automatiskt');
     }
 

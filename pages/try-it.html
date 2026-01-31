@@ -22,7 +22,12 @@
       </div>
       <div class="nav-content">
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">
+          <button
+            class="accordion-button"
+            aria-expanded="true"
+            aria-controls="nav-docs"
+            type="button"
+          >
             Dokumentation
           </button>
           <div class="accordion-panel" id="nav-docs">
@@ -44,7 +49,12 @@
           </div>
         </div>
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">
+          <button
+            class="accordion-button"
+            aria-expanded="false"
+            aria-controls="nav-shortcuts"
+            type="button"
+          >
             Snabblänkar
           </button>
           <div class="accordion-panel" id="nav-shortcuts" hidden>
@@ -214,7 +224,7 @@
                         data-json-action="send-to-urlbuilder"
                         type="button"
                       >
-                        Skicka BBOX till URL builder
+                        Skicka BBOX till URL‑builder
                       </button>
                     </div>
                     <label for="json-meta"><strong>Metadata</strong></label>
@@ -283,7 +293,7 @@
                     data-mapsandbox-action="use-urlbuilder"
                     type="button"
                   >
-                    URL Builder
+                    URL‑builder
                   </button>
                   <button
                     class="tryit-button secondary"
@@ -325,21 +335,21 @@
                 <div class="tryit-section tryit-section-output">
                   <strong>Förhandsvisning</strong>
                   <div class="mapsandbox-preview-container">
-                  <img
-                    id="mapsandbox-img"
-                    class="mapsandbox-preview-img"
-                    alt="Kartförhandsvisning"
-                  />
-                  <div id="mapsandbox-fallback" class="mapsandbox-fallback" style="display: none">
-                    <p><strong>Kunde inte ladda förhandsvisning</strong></p>
-                    <p>Tips:</p>
-                    <ul>
-                      <li>Öppna URL:en i ny flik</li>
-                      <li>Kör <code>python -m http.server</code> om du använder file://</li>
-                      <li>CORS-blockering kräver servermiljö</li>
-                    </ul>
+                    <img
+                      id="mapsandbox-img"
+                      class="mapsandbox-preview-img"
+                      alt="Kartförhandsvisning"
+                    />
+                    <div id="mapsandbox-fallback" class="mapsandbox-fallback" style="display: none">
+                      <p><strong>Kunde inte ladda förhandsvisning</strong></p>
+                      <p>Tips:</p>
+                      <ul>
+                        <li>Öppna URL:en i ny flik</li>
+                        <li>Kör <code>python -m http.server</code> om du använder file://</li>
+                        <li>CORS-blockering kräver servermiljö</li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
@@ -460,7 +470,10 @@
                         Ladda ner curl
                       </button>
                     </div>
-                    <div class="tryit-actions tryit-actions-advanced" style="align-items: center; gap: 1rem;">
+                    <div
+                      class="tryit-actions tryit-actions-advanced"
+                      style="align-items: center; gap: 1rem"
+                    >
                       <label class="tryit-inline">
                         <input id="urlbuilder-curl-multiline" type="checkbox" />
                         <span>Fler rader</span>
@@ -582,47 +595,47 @@
                   </p>
 
                   <div class="tryit-two-col">
-                  <div>
-                    <label for="bbox-minx"><strong>Min X</strong></label>
-                    <input
-                      id="bbox-minx"
-                      class="tryit-input"
-                      type="number"
-                      value="100000"
-                      aria-describedby="bbox-help bbox-range-hint"
-                    />
+                    <div>
+                      <label for="bbox-minx"><strong>Min X</strong></label>
+                      <input
+                        id="bbox-minx"
+                        class="tryit-input"
+                        type="number"
+                        value="100000"
+                        aria-describedby="bbox-help bbox-range-hint"
+                      />
+                    </div>
+                    <div>
+                      <label for="bbox-maxx"><strong>Max X</strong></label>
+                      <input
+                        id="bbox-maxx"
+                        class="tryit-input"
+                        type="number"
+                        value="200000"
+                        aria-describedby="bbox-help bbox-range-hint"
+                      />
+                    </div>
+                    <div>
+                      <label for="bbox-miny"><strong>Min Y</strong></label>
+                      <input
+                        id="bbox-miny"
+                        class="tryit-input"
+                        type="number"
+                        value="6400000"
+                        aria-describedby="bbox-help bbox-range-hint"
+                      />
+                    </div>
+                    <div>
+                      <label for="bbox-maxy"><strong>Max Y</strong></label>
+                      <input
+                        id="bbox-maxy"
+                        class="tryit-input"
+                        type="number"
+                        value="6500000"
+                        aria-describedby="bbox-help bbox-range-hint"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label for="bbox-maxx"><strong>Max X</strong></label>
-                    <input
-                      id="bbox-maxx"
-                      class="tryit-input"
-                      type="number"
-                      value="200000"
-                      aria-describedby="bbox-help bbox-range-hint"
-                    />
-                  </div>
-                  <div>
-                    <label for="bbox-miny"><strong>Min Y</strong></label>
-                    <input
-                      id="bbox-miny"
-                      class="tryit-input"
-                      type="number"
-                      value="6400000"
-                      aria-describedby="bbox-help bbox-range-hint"
-                    />
-                  </div>
-                  <div>
-                    <label for="bbox-maxy"><strong>Max Y</strong></label>
-                    <input
-                      id="bbox-maxy"
-                      class="tryit-input"
-                      type="number"
-                      value="6500000"
-                      aria-describedby="bbox-help bbox-range-hint"
-                    />
-                  </div>
-                </div>
                 </div>
 
                 <div class="tryit-actions tryit-actions-secondary tryit-actions-grid">
@@ -677,7 +690,7 @@
                         data-bbox-action="export-geojson"
                         type="button"
                       >
-                        Export GeoJSON
+                        Exportera GeoJSON
                       </button>
                       <button
                         class="tryit-button secondary"
@@ -685,7 +698,7 @@
                         aria-describedby="bbox-gridcalc-hint"
                         type="button"
                       >
-                        Export TXT
+                        Exportera TXT
                       </button>
                     </div>
                     <label for="bbox-normalized"><strong>Normaliserad BBOX</strong></label>
@@ -748,7 +761,9 @@
         <section class="tool-card" aria-labelledby="resolutions" tabindex="0">
           <div class="tool-card-head">
             <h2 id="resolutions">Upplösningar (EPSG:3008)</h2>
-            <p id="resolutions-help">Validera och exportera upplösningslistor för Origo och GeoWebCache.</p>
+            <p id="resolutions-help">
+              Validera och exportera upplösningslistor för Origo och GeoWebCache.
+            </p>
           </div>
 
           <div class="tryit" data-tryit="resolutions">
@@ -968,63 +983,62 @@
 
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
-                    URL-builder
-                    <div class="tryit-actions tryit-actions-advanced">
-                      <button
-                        class="tryit-button secondary"
-                        data-gridcalc-action="download-txt"
-                        type="button"
-                      >
-                        Ladda ner TXT
-                      </button>
-                      <button
-                        class="tryit-button secondary"
-                        data-gridcalc-action="download-json"
-                        type="button"
-                      >
-                        Ladda ner JSON
-                      </button>
-                    </div>
-                    <strong style="display: block; margin-top: 1rem; margin-bottom: 0.5rem"
-                      >Cache / Seed Estimator</strong
+                  URL-builder
+                  <div class="tryit-actions tryit-actions-advanced">
+                    <button
+                      class="tryit-button secondary"
+                      data-gridcalc-action="download-txt"
+                      type="button"
                     >
-                    <label
-                      for="gridcalc-tilekb"
-                      style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem"
-                      >Genomsnittlig tilestorlek (KB):</label
+                      Ladda ner TXT
+                    </button>
+                    <button
+                      class="tryit-button secondary"
+                      data-gridcalc-action="download-json"
+                      type="button"
                     >
-                    <input
-                      id="gridcalc-tilekb"
-                      class="tryit-input"
-                      type="number"
-                      step="any"
-                      value="20"
-                      style="margin-bottom: 0.75rem"
-                    />
-                    <label
-                      for="gridcalc-compression"
-                      style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem"
-                      >Komprimeringsfaktor:</label
-                    >
-                    <input
-                      id="gridcalc-compression"
-                      class="tryit-input"
-                      type="number"
-                      step="any"
-                      value="1.0"
-                      style="margin-bottom: 0.75rem"
-                    />
-                    <div class="tryit-actions tryit-actions-advanced" style="margin: 0 0 0.75rem 0">
-                      <button
-                        class="tryit-button"
-                        data-gridcalc-action="estimate-cache"
-                        type="button"
-                      >
-                        Beräkna cache-estimat
-                      </button>
-                    </div>
-                    <pre id="gridcalc-estimator-output" class="tryit-output tryit-mono"></pre>
+                      Ladda ner JSON
+                    </button>
                   </div>
+                  <strong style="display: block; margin-top: 1rem; margin-bottom: 0.5rem"
+                    >Cache / Seed Estimator</strong
+                  >
+                  <label
+                    for="gridcalc-tilekb"
+                    style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem"
+                    >Genomsnittlig tilestorlek (KB):</label
+                  >
+                  <input
+                    id="gridcalc-tilekb"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="20"
+                    style="margin-bottom: 0.75rem"
+                  />
+                  <label
+                    for="gridcalc-compression"
+                    style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem"
+                    >Komprimeringsfaktor:</label
+                  >
+                  <input
+                    id="gridcalc-compression"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="1.0"
+                    style="margin-bottom: 0.75rem"
+                  />
+                  <div class="tryit-actions tryit-actions-advanced" style="margin: 0 0 0.75rem 0">
+                    <button
+                      class="tryit-button"
+                      data-gridcalc-action="estimate-cache"
+                      type="button"
+                    >
+                      Beräkna cache-estimat
+                    </button>
+                  </div>
+                  <pre id="gridcalc-estimator-output" class="tryit-output tryit-mono"></pre>
                 </details>
               </div>
 
@@ -1108,10 +1122,10 @@
               <div class="tryit-advanced-panel">
                 <div class="gridset-actions tryit-actions tryit-actions-advanced">
                   <button class="tryit-button" data-gridset-action="export-geojson" type="button">
-                    Export GeoJSON
+                    Exportera GeoJSON
                   </button>
                   <button class="tryit-button" data-gridset-action="export-txt" type="button">
-                    Export TXT
+                    Exportera TXT
                   </button>
                 </div>
                 <div class="gridset-actions tryit-actions tryit-actions-advanced">
@@ -1273,10 +1287,10 @@
                   <div class="tryit-advanced-panel">
                     <div class="tryit-actions tryit-actions-advanced">
                       <button class="tryit-button" data-sld-action="export-sld" type="button">
-                        Export SLD
+                        Exportera SLD
                       </button>
                       <button class="tryit-button" data-sld-action="export-txt" type="button">
-                        Export TXT
+                        Exportera TXT
                       </button>
                       <button
                         class="tryit-button secondary"
@@ -1362,7 +1376,8 @@
           <div class="tool-card-sub" tabindex="0">
             <h3 id="sld-preview">SLD – Symbolförhandsvisning</h3>
             <p id="sldpreview-help">
-              Förhandsgranska symbolik från SLD utan att behöva en kartserver (legendförhandsvisning).
+              Förhandsgranska symbolik från SLD utan att behöva en kartserver
+              (legendförhandsvisning).
             </p>
 
             <div class="tryit" data-tryit="sldpreview">

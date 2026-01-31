@@ -14,20 +14,20 @@ const urlBuilderTool = (() => {
     base: null,
     service: null,
     layer: null,
-/**
- * Try‑it tool module: URL Builder
- *
- * Purpose:
- * - Construct sample WMS/WFS request URLs, generate `curl` snippets and export text snippets.
- *
- * Expected block structure in HTML: input → actions → output → report
- * Public interface:
- * - init(block)
- *
- * Conventions:
- * - Generated snippets should be deterministic where feasible and labeled in Swedish.
- * - Avoid embedding machine‑specific metadata unless documented.
- */
+    /**
+     * Try‑it tool module: URL Builder
+     *
+     * Purpose:
+     * - Construct sample WMS/WFS request URLs, generate `curl` snippets and export text snippets.
+     *
+     * Expected block structure in HTML: input → actions → output → report
+     * Public interface:
+     * - init(block)
+     *
+     * Conventions:
+     * - Generated snippets should be deterministic where feasible and labeled in Swedish.
+     * - Avoid embedding machine‑specific metadata unless documented.
+     */
     format: null,
     crs: null,
     bbox: null,
@@ -202,7 +202,11 @@ const urlBuilderTool = (() => {
   function createBaseUrl(baseValue) {
     const trimmed = normalizeText(baseValue);
     if (!trimmed) {
-      return { ok: false, url: null, error: { code: 'URL_MISSING_BASE', message: 'Bas-URL är tom' } };
+      return {
+        ok: false,
+        url: null,
+        error: { code: 'URL_MISSING_BASE', message: 'Bas-URL är tom' },
+      };
     }
 
     try {
@@ -433,7 +437,13 @@ const urlBuilderTool = (() => {
 
     if (!result.valid) {
       result.errors.forEach((err) => {
-        addReportError(report, err.code || 'URL_INVALID_FORMAT', err.message, err.field, err.details);
+        addReportError(
+          report,
+          err.code || 'URL_INVALID_FORMAT',
+          err.message,
+          err.field,
+          err.details,
+        );
       });
       return report;
     }
@@ -693,7 +703,8 @@ const urlBuilderTool = (() => {
 
     const lines = [];
     explain.forEach((item) => {
-      const statusLabel = item.status === 'error' ? 'FEL' : item.status === 'warn' ? 'VARNING' : 'OK';
+      const statusLabel =
+        item.status === 'error' ? 'FEL' : item.status === 'warn' ? 'VARNING' : 'OK';
       lines.push(`${item.name} = ${item.value || '(saknas)'} (${statusLabel})`);
       lines.push(`  ${item.meaning}`);
     });

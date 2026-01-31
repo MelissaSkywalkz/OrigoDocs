@@ -420,7 +420,11 @@ const sldTool = (() => {
     }
 
     if (!root.getAttribute('version')) {
-      addReportWarning(report, 'SLD_LINT_MISSING_VERSION', 'Saknad version på StyledLayerDescriptor');
+      addReportWarning(
+        report,
+        'SLD_LINT_MISSING_VERSION',
+        'Saknad version på StyledLayerDescriptor',
+      );
     }
 
     const namedLayer = doc.querySelector('NamedLayer');

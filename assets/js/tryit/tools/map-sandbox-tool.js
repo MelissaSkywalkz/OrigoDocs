@@ -5,20 +5,20 @@
 
 const mapSandboxTool = (() => {
   const TOOL_KEY = 'mapsandbox';
-/**
- * Try‑it tool module: Map Sandbox
- *
- * Purpose:
- * - Provide a simple OpenLayers preview for WMS/WMTS/XYZ sources to aid debugging.
- *
- * Expected block structure in HTML: input → actions → output → report
- * Public interface:
- * - init(block)
- *
- * Conventions:
- * - Previews may fail due to CORS or server restrictions; surface those errors to the user.
- * - Do not assume successful network access; always present a status report.
- */
+  /**
+   * Try‑it tool module: Map Sandbox
+   *
+   * Purpose:
+   * - Provide a simple OpenLayers preview for WMS/WMTS/XYZ sources to aid debugging.
+   *
+   * Expected block structure in HTML: input → actions → output → report
+   * Public interface:
+   * - init(block)
+   *
+   * Conventions:
+   * - Previews may fail due to CORS or server restrictions; surface those errors to the user.
+   * - Do not assume successful network access; always present a status report.
+   */
 
   let elements = {
     urlInput: null,

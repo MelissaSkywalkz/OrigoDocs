@@ -203,7 +203,7 @@ const gridcalcTool = (() => {
     addReportWarning(
       report,
       'GRIDCALC_PIXEL_SIZE_ASSUMPTION',
-      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)'
+      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)',
     );
     report.meta.rounding = `Skala avrundad till ${SCALE_DECIMALS} decimaler`;
     report.meta.pixelSizeMeters = PIXEL_SIZE_M;
@@ -227,7 +227,7 @@ const gridcalcTool = (() => {
     addReportWarning(
       report,
       'GRIDCALC_PIXEL_SIZE_ASSUMPTION',
-      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)'
+      'Antar pixelstorlek 0,28 mm (kan skilja mellan system)',
     );
     report.meta.rounding = `Resolution avrundad till ${RESOLUTION_DECIMALS} decimaler`;
     report.meta.pixelSizeMeters = PIXEL_SIZE_M;
@@ -301,7 +301,10 @@ const gridcalcTool = (() => {
         return { label: `${asNumber(bytesBig).toFixed(2)} GB`, gb: asNumber(bytesBig) };
       }
       if (bytesBig >= MB) {
-        return { label: `${(Number(bytesBig) / 1024 / 1024).toFixed(2)} MB`, gb: asNumber(bytesBig) };
+        return {
+          label: `${(Number(bytesBig) / 1024 / 1024).toFixed(2)} MB`,
+          gb: asNumber(bytesBig),
+        };
       }
       if (bytesBig >= KB) {
         return { label: `${(Number(bytesBig) / 1024).toFixed(2)} KB`, gb: asNumber(bytesBig) };
@@ -315,7 +318,9 @@ const gridcalcTool = (() => {
 
     const bytesPerTile = BigInt(Math.max(1, Math.round(tileKb * 1024)));
     const compressionScale = 1000n;
-    const compressionScaled = BigInt(Math.max(1, Math.round(compression * Number(compressionScale))));
+    const compressionScaled = BigInt(
+      Math.max(1, Math.round(compression * Number(compressionScale))),
+    );
 
     const totalBytes = (totalTiles * bytesPerTile * compressionScaled) / compressionScale;
     const human = bytesToHuman(totalBytes);

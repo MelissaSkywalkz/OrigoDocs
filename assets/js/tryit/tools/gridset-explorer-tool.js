@@ -17,6 +17,9 @@
  * - Document CRS and tile size assumptions in `GRIDSET_CONFIG`.
  * - Surface errors and status updates via `ValidationReport` and `appState`.
  */
+const gridsetExplorerTool = (() => {
+  const TOOL_KEY = 'gridset-explorer';
+
   let elements = {
     mapContainer: null,
     status: null,

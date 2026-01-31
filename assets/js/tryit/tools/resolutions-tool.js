@@ -163,8 +163,14 @@ const resolutionsTool = (() => {
     report.meta.descending = isDescending;
 
     state.lastValidResolutions = resolutions;
-    updateStatus(report.warnings.length === 0 ? 'Validering OK' : `Varningar: ${report.warnings.length}`);
-    appState.addLog(TOOL_KEY, report.warnings.length > 0 ? 'WARN' : 'OK', `${resolutions.length} värden`);
+    updateStatus(
+      report.warnings.length === 0 ? 'Validering OK' : `Varningar: ${report.warnings.length}`,
+    );
+    appState.addLog(
+      TOOL_KEY,
+      report.warnings.length > 0 ? 'WARN' : 'OK',
+      `${resolutions.length} värden`,
+    );
     appState.setReport(TOOL_KEY, report);
     updateUI();
   }
