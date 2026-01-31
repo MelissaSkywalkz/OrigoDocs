@@ -53,6 +53,10 @@ const ERROR_CODE_LABELS = {
   BBOX_INVALID_NUMBER: 'BBOX-värden måste vara tal',
   BBOX_OUT_OF_RANGE: 'BBOX-värden utanför giltigt område',
   BBOX_MIN_MAX_REVERSED: 'Min/Max är omkastade',
+  'bbox.nonNumeric': 'BBOX-värden måste vara tal',
+  'bbox.invalidFormat': 'BBOX måste innehålla exakt 4 värden',
+  'bbox.outOfRange': 'BBOX-värden utanför giltigt område',
+  'bbox.axisSwapped': 'Min/Max var omkastade',
 
   // Resolutions Tool
   RESOLUTION_EMPTY_INPUT: 'Ingen input',
