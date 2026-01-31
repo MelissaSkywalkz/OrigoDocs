@@ -378,62 +378,93 @@ const sldTool = (() => {
   }
 
   function actionLint() {
-    const parseResult = parseSld();
-
-    if (!parseResult.valid) {
-      const report = createValidationReport(false);
-      addReportError(report, 'SLD_PARSE_ERROR', 'XML-parsefel');
-      appState.setReport(TOOL_KEY, report);
-      updateStatus('XML-parsefel');
-      appState.addLog(TOOL_KEY, 'ERROR', 'Lint misslyckades: parse-fel');
+    const text = elements.input.value.trim();
+    if (!text) {
+      updateStatus('SLD tomt');
       return;
     }
 
-    const doc = parseResult.doc;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'application/xml');
+    const parserError = doc.querySelector('parsererror');
 
-    // Lint checks
-    const issues = [];
-
-    // Check xmlns
-    const sld = doc.documentElement;
-    if (!sld.getAttribute('xmlns')) {
-      issues.push('Saknad xmlns på StyledLayerDescriptor');
+    if (parserError || !doc.documentElement) {
+      const report = createValidationReport(false);
+      addReportError(report, 'SLD_LINT_PARSE_ERROR', 'XML-parsefel');
+      appState.setReport(TOOL_KEY, report);
+      updateStatus('XML-parsefel');
+      appState.addLog(TOOL_KEY, 'ERROR', 'Lint misslyckades: parse-fel');
+      updateUI();
+      return;
     }
 
-    // Check version
-    if (!sld.getAttribute('version')) {
-      issues.push('Saknad version på StyledLayerDescriptor');
+    const report = createValidationReport(true);
+    const root = doc.documentElement;
+
+    if (!root.getAttribute('xmlns') && !root.namespaceURI) {
+      addReportWarning(
+        report,
+        'SLD_LINT_MISSING_NAMESPACE',
+        'Saknad xmlns på StyledLayerDescriptor',
+      );
     }
 
-    // Check Title
+    if (!root.getAttribute('version')) {
+      addReportWarning(report, 'SLD_LINT_MISSING_VERSION', 'Saknad version på StyledLayerDescriptor');
+    }
+
     const namedLayer = doc.querySelector('NamedLayer');
     if (namedLayer && !namedLayer.querySelector('Title')) {
-      issues.push('NamedLayer saknar Title');
+      addReportWarning(report, 'SLD_LINT_MISSING_TITLE', 'NamedLayer saknar Title');
     }
 
-    // Check empty rules
     const rules = doc.querySelectorAll('Rule');
     rules.forEach((rule, idx) => {
       const symbolizers = rule.querySelectorAll(
+        'PointSymbolizer, LineSymbolizer, PolygonSymbolizer, TextSymbolizer, RasterSymbolizer',
+      );
+
+      if (!rule.closest('FeatureTypeStyle')) {
+        addReportWarning(
+          report,
+          'SLD_LINT_INVALID_RULE_STRUCTURE',
+          `Rule ${idx + 1} saknar FeatureTypeStyle`,
+        );
+      }
+
+      if (rule.querySelector('Filter') && rule.querySelector('ElseFilter')) {
+        addReportWarning(
+          report,
+          'SLD_LINT_INVALID_RULE_STRUCTURE',
+          `Rule ${idx + 1} har både Filter och ElseFilter`,
+        );
+      }
+
+      if (symbolizers.length === 0) {
+        addReportWarning(
+          report,
+          'SLD_LINT_INVALID_RULE_STRUCTURE',
+          `Rule ${idx + 1} saknar Symbolizer`,
+        );
+      }
+
+      const rasterSymbolizers = rule.querySelectorAll('RasterSymbolizer');
+      const vectorSymbolizers = rule.querySelectorAll(
         'PointSymbolizer, LineSymbolizer, PolygonSymbolizer, TextSymbolizer',
       );
-      if (symbolizers.length === 0) {
-        issues.push(`Rule ${idx + 1} saknar Symbolizer`);
+      if (rasterSymbolizers.length > 0 && vectorSymbolizers.length > 0) {
+        addReportWarning(
+          report,
+          'SLD_LINT_UNSUPPORTED_SYMBOLIZER_COMBINATION',
+          `Rule ${idx + 1} blandar RasterSymbolizer med andra symbolizers`,
+        );
       }
     });
 
-    const report = createValidationReport(true);
-    issues.forEach((issue) => {
-      addReportWarning(report, 'SLD_LINT_WARNING', issue);
-    });
-
     appState.setReport(TOOL_KEY, report);
-    updateStatus(issues.length === 0 ? 'Lint OK' : `${issues.length} problem`);
-    appState.addLog(
-      TOOL_KEY,
-      issues.length === 0 ? 'OK' : 'WARN',
-      `Lint: ${issues.length} problem`,
-    );
+    const total = report.warnings.length + report.errors.length;
+    updateStatus(total === 0 ? 'Lint OK' : `${total} problem`);
+    appState.addLog(TOOL_KEY, total === 0 ? 'OK' : 'WARN', `Lint: ${total} problem`);
     updateUI();
   }
 
