@@ -97,6 +97,32 @@
           <a href="#sld">SLD</a>
         </nav>
 
+        <template id="tryit-layout-template">
+          <div class="tryit">
+            <div class="tryit-grid">
+              <div>
+                <div class="tryit-section tryit-section-input"></div>
+                <div class="tryit-actions tryit-actions-primary"></div>
+                <details class="tryit-advanced">
+                  <summary><strong>Avancerat</strong></summary>
+                  <div class="tryit-advanced-panel">
+                    <div class="tryit-actions tryit-actions-advanced"></div>
+                  </div>
+                </details>
+              </div>
+              <div>
+                <div class="tryit-section tryit-section-output"></div>
+                <details class="tryit-details tryit-section-report" open>
+                  <summary><strong>Valideringsrapport</strong></summary>
+                </details>
+                <details class="tryit-details tryit-section-runlog">
+                  <summary><strong>Körhistorik</strong></summary>
+                </details>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <!-- JSON / GeoJSON -->
         <section class="tool-card" aria-labelledby="json" tabindex="0">
           <div class="tool-card-head">
@@ -110,14 +136,16 @@
           <div class="tryit" data-tryit="json">
             <div class="tryit-grid">
               <div>
-                <label for="json-tryit-input"><strong>Inmatning</strong></label>
-                <textarea
-                  id="json-tryit-input"
-                  class="tryit-input"
-                  spellcheck="false"
-                  aria-describedby="json-help"
-                ></textarea>
-                <div class="tryit-actions">
+                <div class="tryit-section tryit-section-input">
+                  <label for="json-tryit-input"><strong>Inmatning</strong></label>
+                  <textarea
+                    id="json-tryit-input"
+                    class="tryit-input"
+                    spellcheck="false"
+                    aria-describedby="json-help"
+                  ></textarea>
+                </div>
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-json-action="validate" type="button">
                     Validera
                   </button>
@@ -125,7 +153,7 @@
                     Prettify
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button class="tryit-button secondary" data-json-action="copy" type="button">
                     Kopiera
                   </button>
@@ -137,7 +165,7 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-json-action="minify"
@@ -153,7 +181,7 @@
                         Exportera JSON
                       </button>
                     </div>
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-json-action="export-bbox-txt"
@@ -169,7 +197,7 @@
                         Exportera BBOX GeoJSON
                       </button>
                     </div>
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-json-action="send-to-bbox"
@@ -191,15 +219,17 @@
                 </details>
               </div>
               <div>
-                <strong>Resultat</strong>
-                <pre class="tryit-output tryit-mono" id="json-tryit-output"></pre>
+                <div class="tryit-section tryit-section-output">
+                  <strong>Resultat</strong>
+                  <pre class="tryit-output tryit-mono" id="json-tryit-output"></pre>
+                </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Valideringsrapport</strong></summary>
                   <pre id="json-validation" class="tryit-output tryit-mono"></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre id="json-runlog" class="tryit-output tryit-mono"></pre>
                 </details>
@@ -221,20 +251,22 @@
           <div class="tryit" data-tryit="mapsandbox">
             <div class="tryit-grid">
               <div>
-                <label for="mapsandbox-url"><strong>WMS GetMap URL</strong></label>
-                <textarea
-                  id="mapsandbox-url"
-                  class="tryit-input"
-                  spellcheck="false"
-                  aria-describedby="mapsandbox-help"
-                ></textarea>
+                <div class="tryit-section tryit-section-input">
+                  <label for="mapsandbox-url"><strong>WMS GetMap URL</strong></label>
+                  <textarea
+                    id="mapsandbox-url"
+                    class="tryit-input"
+                    spellcheck="false"
+                    aria-describedby="mapsandbox-help"
+                  ></textarea>
+                </div>
 
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-mapsandbox-action="preview" type="button">
                     Förhandsgranska
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button
                     class="tryit-button secondary"
                     data-mapsandbox-action="clear"
@@ -263,25 +295,32 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <label for="mapsandbox-params"><strong>Parsed params</strong></label>
-                    <pre id="mapsandbox-params" class="tryit-output tryit-mono"></pre>
+                    <div class="tryit-section">
+                      <label for="mapsandbox-params"><strong>Parsed params</strong></label>
+                      <pre id="mapsandbox-params" class="tryit-output tryit-mono"></pre>
+                    </div>
 
-                    <label for="mapsandbox-validation" style="margin-top: 1rem; display: block"
-                      ><strong>Validation report</strong></label
-                    >
-                    <pre id="mapsandbox-validation" class="tryit-output tryit-mono"></pre>
+                    <div class="tryit-section tryit-section-report">
+                      <label for="mapsandbox-validation" style="margin-top: 1rem; display: block"
+                        ><strong>Validation report</strong></label
+                      >
+                      <pre id="mapsandbox-validation" class="tryit-output tryit-mono"></pre>
+                    </div>
 
-                    <label for="mapsandbox-runlog" style="margin-top: 1rem; display: block"
-                      ><strong>Run log</strong></label
-                    >
-                    <pre id="mapsandbox-runlog" class="tryit-output tryit-mono"></pre>
+                    <div class="tryit-section tryit-section-runlog">
+                      <label for="mapsandbox-runlog" style="margin-top: 1rem; display: block"
+                        ><strong>Run log</strong></label
+                      >
+                      <pre id="mapsandbox-runlog" class="tryit-output tryit-mono"></pre>
+                    </div>
                   </div>
                 </details>
               </div>
 
               <div>
-                <strong>Förhandsvisning</strong>
-                <div class="mapsandbox-preview-container">
+                <div class="tryit-section tryit-section-output">
+                  <strong>Förhandsvisning</strong>
+                  <div class="mapsandbox-preview-container">
                   <img id="mapsandbox-img" class="mapsandbox-preview-img" alt="Map preview" />
                   <div id="mapsandbox-fallback" class="mapsandbox-fallback" style="display: none">
                     <p><strong>Kunde inte ladda förhandsvisning</strong></p>
@@ -292,6 +331,7 @@
                       <li>CORS-blockering kräver servermiljö</li>
                     </ul>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -325,52 +365,58 @@
             </div>
             <div class="tryit-grid">
               <div>
-                <label for="urlbuilder-base"><strong>Bas-URL</strong></label>
-                <input
-                  id="urlbuilder-base"
-                  class="tryit-input"
-                  type="text"
-                  value="https://localhost/geoserver/workspace/ows"
-                  aria-describedby="urlbuilder-help"
-                />
-                <label for="urlbuilder-service"><strong>Tjänst</strong></label>
-                <select id="urlbuilder-service" class="tryit-input" aria-describedby="urlbuilder-help">
-                  <option value="WMS">WMS</option>
-                  <option value="WFS">WFS</option>
-                </select>
-                <label for="urlbuilder-layer"><strong>Layer</strong></label>
-                <input
-                  id="urlbuilder-layer"
-                  class="tryit-input"
-                  type="text"
-                  value="workspace:layer"
-                  aria-describedby="urlbuilder-help"
-                />
-                <label for="urlbuilder-format"><strong>Outputformat</strong></label>
-                <input
-                  id="urlbuilder-format"
-                  class="tryit-input"
-                  type="text"
-                  value="image/png"
-                  aria-describedby="urlbuilder-help"
-                />
-                <label for="urlbuilder-crs"><strong>CRS</strong></label>
-                <input
-                  id="urlbuilder-crs"
-                  class="tryit-input"
-                  type="text"
-                  value="EPSG:3008"
-                  aria-describedby="urlbuilder-help"
-                />
-                <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
-                <input
-                  id="urlbuilder-bbox"
-                  class="tryit-input"
-                  type="text"
-                  value="100000,6400000,200000,6500000"
-                  aria-describedby="urlbuilder-help"
-                />
-                <div class="tryit-actions">
+                <div class="tryit-section tryit-section-input">
+                  <label for="urlbuilder-base"><strong>Bas-URL</strong></label>
+                  <input
+                    id="urlbuilder-base"
+                    class="tryit-input"
+                    type="text"
+                    value="https://localhost/geoserver/workspace/ows"
+                    aria-describedby="urlbuilder-help"
+                  />
+                  <label for="urlbuilder-service"><strong>Tjänst</strong></label>
+                  <select
+                    id="urlbuilder-service"
+                    class="tryit-input"
+                    aria-describedby="urlbuilder-help"
+                  >
+                    <option value="WMS">WMS</option>
+                    <option value="WFS">WFS</option>
+                  </select>
+                  <label for="urlbuilder-layer"><strong>Layer</strong></label>
+                  <input
+                    id="urlbuilder-layer"
+                    class="tryit-input"
+                    type="text"
+                    value="workspace:layer"
+                    aria-describedby="urlbuilder-help"
+                  />
+                  <label for="urlbuilder-format"><strong>Outputformat</strong></label>
+                  <input
+                    id="urlbuilder-format"
+                    class="tryit-input"
+                    type="text"
+                    value="image/png"
+                    aria-describedby="urlbuilder-help"
+                  />
+                  <label for="urlbuilder-crs"><strong>CRS</strong></label>
+                  <input
+                    id="urlbuilder-crs"
+                    class="tryit-input"
+                    type="text"
+                    value="EPSG:3008"
+                    aria-describedby="urlbuilder-help"
+                  />
+                  <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
+                  <input
+                    id="urlbuilder-bbox"
+                    class="tryit-input"
+                    type="text"
+                    value="100000,6400000,200000,6500000"
+                    aria-describedby="urlbuilder-help"
+                  />
+                </div>
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-url-action="generate" type="button">
                     Generera
                   </button>
@@ -382,7 +428,7 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button class="tryit-button secondary" data-url-action="test" type="button">
                         Testa URL
                       </button>
@@ -390,7 +436,7 @@
                         Öppna
                       </button>
                     </div>
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-url-action="copy-curl"
@@ -406,7 +452,7 @@
                         Ladda ner curl
                       </button>
                     </div>
-                    <div class="tryit-actions" style="align-items: center; gap: 1rem;">
+                    <div class="tryit-actions tryit-actions-advanced" style="align-items: center; gap: 1rem;">
                       <label class="tryit-inline">
                         <input id="urlbuilder-curl-multiline" type="checkbox" />
                         <span>Multi-line</span>
@@ -416,7 +462,7 @@
                         <span>Lägg till -sS</span>
                       </label>
                     </div>
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-url-action="export-txt"
@@ -440,20 +486,22 @@
                 </details>
               </div>
               <div>
-                <strong>Resultat</strong>
-                <textarea
-                  id="urlbuilder-output"
-                  class="tryit-output"
-                  readonly
-                  aria-label="Resultat"
-                ></textarea>
+                <div class="tryit-section tryit-section-output">
+                  <strong>Resultat</strong>
+                  <textarea
+                    id="urlbuilder-output"
+                    class="tryit-output"
+                    readonly
+                    aria-label="Resultat"
+                  ></textarea>
+                </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Valideringsrapport</strong></summary>
                   <pre id="urlbuilder-validation" class="tryit-output tryit-mono"></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre id="urlbuilder-runlog" class="tryit-output tryit-mono"></pre>
                 </details>
@@ -477,52 +525,53 @@
           <div class="tryit" data-tryit="bbox">
             <div class="tryit-grid">
               <div>
-                <label for="bbox-base"><strong>Bas-URL</strong></label>
-                <input
-                  id="bbox-base"
-                  class="tryit-input"
-                  type="text"
-                  value="https://localhost/geoserver/workspace/wms"
-                  aria-describedby="bbox-help"
-                />
-                <label for="bbox-layer"><strong>Layer</strong></label>
-                <input
-                  id="bbox-layer"
-                  class="tryit-input"
-                  type="text"
-                  value="workspace:layer"
-                  aria-describedby="bbox-help"
-                />
-                <label for="bbox-format"><strong>Format</strong></label>
-                <input
-                  id="bbox-format"
-                  class="tryit-input"
-                  type="text"
-                  value="image/png"
-                  aria-describedby="bbox-help"
-                />
-                <label for="bbox-width"><strong>Bredd</strong></label>
-                <input
-                  id="bbox-width"
-                  class="tryit-input"
-                  type="number"
-                  value="512"
-                  aria-describedby="bbox-help"
-                />
-                <label for="bbox-height"><strong>Höjd</strong></label>
-                <input
-                  id="bbox-height"
-                  class="tryit-input"
-                  type="number"
-                  value="512"
-                  aria-describedby="bbox-help"
-                />
-                <p class="tryit-hint" id="bbox-range-hint">
-                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
-                  Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
-                </p>
+                <div class="tryit-section tryit-section-input">
+                  <label for="bbox-base"><strong>Bas-URL</strong></label>
+                  <input
+                    id="bbox-base"
+                    class="tryit-input"
+                    type="text"
+                    value="https://localhost/geoserver/workspace/wms"
+                    aria-describedby="bbox-help"
+                  />
+                  <label for="bbox-layer"><strong>Layer</strong></label>
+                  <input
+                    id="bbox-layer"
+                    class="tryit-input"
+                    type="text"
+                    value="workspace:layer"
+                    aria-describedby="bbox-help"
+                  />
+                  <label for="bbox-format"><strong>Format</strong></label>
+                  <input
+                    id="bbox-format"
+                    class="tryit-input"
+                    type="text"
+                    value="image/png"
+                    aria-describedby="bbox-help"
+                  />
+                  <label for="bbox-width"><strong>Bredd</strong></label>
+                  <input
+                    id="bbox-width"
+                    class="tryit-input"
+                    type="number"
+                    value="512"
+                    aria-describedby="bbox-help"
+                  />
+                  <label for="bbox-height"><strong>Höjd</strong></label>
+                  <input
+                    id="bbox-height"
+                    class="tryit-input"
+                    type="number"
+                    value="512"
+                    aria-describedby="bbox-help"
+                  />
+                  <p class="tryit-hint" id="bbox-range-hint">
+                    CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
+                    Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
+                  </p>
 
-                <div class="tryit-two-col">
+                  <div class="tryit-two-col">
                   <div>
                     <label for="bbox-minx"><strong>Min X</strong></label>
                     <input
@@ -564,8 +613,9 @@
                     />
                   </div>
                 </div>
+                </div>
 
-                <div class="tryit-actions tryit-actions-grid">
+                <div class="tryit-actions tryit-actions-secondary tryit-actions-grid">
                   <button class="tryit-button" data-bbox-action="preset-1" type="button">
                     Preset 1
                   </button>
@@ -577,7 +627,7 @@
                   </button>
                 </div>
 
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-bbox-action="generate" type="button">
                     Generera
                   </button>
@@ -585,7 +635,7 @@
                     Kopiera
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button class="tryit-button secondary" data-bbox-action="copy-url" type="button">
                     URL
                   </button>
@@ -611,7 +661,7 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-bbox-action="export-geojson"
@@ -640,20 +690,22 @@
               </div>
 
               <div>
-                <label class="tryit-block">
-                  <strong>BBOX-sträng</strong>
-                  <textarea id="bbox-output" class="tryit-output tryit-mono" readonly></textarea>
-                </label>
-                <label class="tryit-block">
-                  <strong>WMS GetMap URL</strong>
-                  <textarea
-                    id="bbox-url-output"
-                    class="tryit-output tryit-mono"
-                    readonly
-                  ></textarea>
-                </label>
+                <div class="tryit-section tryit-section-output">
+                  <label class="tryit-block">
+                    <strong>BBOX-sträng</strong>
+                    <textarea id="bbox-output" class="tryit-output tryit-mono" readonly></textarea>
+                  </label>
+                  <label class="tryit-block">
+                    <strong>WMS GetMap URL</strong>
+                    <textarea
+                      id="bbox-url-output"
+                      class="tryit-output tryit-mono"
+                      readonly
+                    ></textarea>
+                  </label>
+                </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Validering</strong></summary>
                   <pre
                     id="bbox-validation"
@@ -662,7 +714,7 @@
                   ></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre
                     id="bbox-runlog"
@@ -692,18 +744,20 @@
           <div class="tryit" data-tryit="resolutions">
             <div class="tryit-grid">
               <div>
-                <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
-                <textarea
-                  id="res-input"
-                  class="tryit-input"
-                  spellcheck="false"
-                  placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"
-                  aria-describedby="resolutions-help resolutions-hint"
-                ></textarea>
-                <p class="tryit-hint" id="resolutions-hint">
-                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
-                </p>
-                <div class="tryit-actions">
+                <div class="tryit-section tryit-section-input">
+                  <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
+                  <textarea
+                    id="res-input"
+                    class="tryit-input"
+                    spellcheck="false"
+                    placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"
+                    aria-describedby="resolutions-help resolutions-hint"
+                  ></textarea>
+                  <p class="tryit-hint" id="resolutions-hint">
+                    CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
+                  </p>
+                </div>
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-res-action="validate" type="button">
                     Validera
                   </button>
@@ -711,7 +765,7 @@
                     Origo JSON
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button class="tryit-button secondary" data-res-action="export-gwc" type="button">
                     GWC format
                   </button>
@@ -723,12 +777,12 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button class="tryit-button" data-res-action="fix" type="button">
                         Fixa lista
                       </button>
                     </div>
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-res-action="download-origo"
@@ -777,12 +831,14 @@
                 </details>
               </div>
               <div>
-                <label class="tryit-block">
-                  <strong>Export</strong>
-                  <textarea id="res-output" class="tryit-output tryit-mono" readonly></textarea>
-                </label>
+                <div class="tryit-section tryit-section-output">
+                  <label class="tryit-block">
+                    <strong>Export</strong>
+                    <textarea id="res-output" class="tryit-output tryit-mono" readonly></textarea>
+                  </label>
+                </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Valideringsrapport</strong></summary>
                   <pre
                     id="res-validation"
@@ -791,7 +847,7 @@
                   ></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre
                     id="res-runlog"
@@ -824,60 +880,62 @@
           <div class="tryit" data-tryit="gridcalc">
             <div class="tryit-grid">
               <div>
-                <label for="gridcalc-resolution"><strong>Resolution (m/px)</strong></label>
-                <input
-                  id="gridcalc-resolution"
-                  class="tryit-input"
-                  type="number"
-                  step="any"
-                  value="100"
-                  aria-describedby="gridcalc-help"
-                />
-                <label for="gridcalc-scale"><strong>Scale (1:)</strong></label>
-                <input
-                  id="gridcalc-scale"
-                  class="tryit-input"
-                  type="number"
-                  step="any"
-                  value="357142"
-                  aria-describedby="gridcalc-help"
-                />
-                <label for="gridcalc-tile"><strong>Tile Size (px)</strong></label>
-                <input
-                  id="gridcalc-tile"
-                  class="tryit-input"
-                  type="number"
-                  value="256"
-                  aria-describedby="gridcalc-help"
-                />
-                <label for="gridcalc-meta"><strong>Metatile (N×N)</strong></label>
-                <input
-                  id="gridcalc-meta"
-                  class="tryit-input"
-                  type="number"
-                  value="4"
-                  aria-describedby="gridcalc-help"
-                />
-                <label for="gridcalc-bboxwidth"><strong>BBOX Bredd (m)</strong></label>
-                <input
-                  id="gridcalc-bboxwidth"
-                  class="tryit-input"
-                  type="number"
-                  step="any"
-                  value="100000"
-                  aria-describedby="gridcalc-help"
-                />
-                <label for="gridcalc-bboxheight"><strong>BBOX Höjd (m)</strong></label>
-                <input
-                  id="gridcalc-bboxheight"
-                  class="tryit-input"
-                  type="number"
-                  step="any"
-                  value="100000"
-                  aria-describedby="gridcalc-help"
-                />
+                <div class="tryit-section tryit-section-input">
+                  <label for="gridcalc-resolution"><strong>Resolution (m/px)</strong></label>
+                  <input
+                    id="gridcalc-resolution"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="100"
+                    aria-describedby="gridcalc-help"
+                  />
+                  <label for="gridcalc-scale"><strong>Scale (1:)</strong></label>
+                  <input
+                    id="gridcalc-scale"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="357142"
+                    aria-describedby="gridcalc-help"
+                  />
+                  <label for="gridcalc-tile"><strong>Tile Size (px)</strong></label>
+                  <input
+                    id="gridcalc-tile"
+                    class="tryit-input"
+                    type="number"
+                    value="256"
+                    aria-describedby="gridcalc-help"
+                  />
+                  <label for="gridcalc-meta"><strong>Metatile (N×N)</strong></label>
+                  <input
+                    id="gridcalc-meta"
+                    class="tryit-input"
+                    type="number"
+                    value="4"
+                    aria-describedby="gridcalc-help"
+                  />
+                  <label for="gridcalc-bboxwidth"><strong>BBOX Bredd (m)</strong></label>
+                  <input
+                    id="gridcalc-bboxwidth"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="100000"
+                    aria-describedby="gridcalc-help"
+                  />
+                  <label for="gridcalc-bboxheight"><strong>BBOX Höjd (m)</strong></label>
+                  <input
+                    id="gridcalc-bboxheight"
+                    class="tryit-input"
+                    type="number"
+                    step="any"
+                    value="100000"
+                    aria-describedby="gridcalc-help"
+                  />
+                </div>
 
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-gridcalc-action="from-resolution" type="button">
                     Från Resolution
                   </button>
@@ -885,7 +943,7 @@
                     Från Scale
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button
                     class="tryit-button secondary"
                     data-gridcalc-action="preset"
@@ -901,7 +959,7 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
                         data-gridcalc-action="download-txt"
@@ -946,7 +1004,7 @@
                       value="1.0"
                       style="margin-bottom: 0.75rem"
                     />
-                    <div class="tryit-actions" style="margin: 0 0 0.75rem 0">
+                    <div class="tryit-actions tryit-actions-advanced" style="margin: 0 0 0.75rem 0">
                       <button
                         class="tryit-button"
                         data-gridcalc-action="estimate-cache"
@@ -961,17 +1019,19 @@
               </div>
 
               <div>
-                <label class="tryit-block">
-                  <strong>Resultat</strong>
-                  <textarea
-                    id="gridcalc-output"
-                    class="tryit-output tryit-mono"
-                    readonly
-                  ></textarea>
-                </label>
+                <div class="tryit-section tryit-section-output">
+                  <label class="tryit-block">
+                    <strong>Resultat</strong>
+                    <textarea
+                      id="gridcalc-output"
+                      class="tryit-output tryit-mono"
+                      readonly
+                    ></textarea>
+                  </label>
+                </div>
 
                 <!-- Validation Report Panel -->
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Validering</strong></summary>
                   <pre
                     id="gridcalc-validation"
@@ -981,7 +1041,7 @@
                 </details>
 
                 <!-- Run Log Panel -->
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre
                     id="gridcalc-runlog"
@@ -1012,7 +1072,7 @@
           </div>
 
           <div class="gridset-explorer" id="gridset-explorer-container">
-            <div class="gridset-actions">
+            <div class="gridset-actions tryit-actions tryit-actions-primary">
               <button class="tryit-button" data-extent-action="sverige" type="button">
                 Sverige
               </button>
@@ -1020,7 +1080,7 @@
                 Skaraborg
               </button>
             </div>
-            <div class="gridset-actions">
+            <div class="gridset-actions tryit-actions tryit-actions-secondary">
               <button class="tryit-button secondary" data-gridset-action="copy-bbox" type="button">
                 Kopiera BBOX
               </button>
@@ -1036,7 +1096,7 @@
             <details class="tryit-advanced">
               <summary><strong>Avancerat</strong></summary>
               <div class="tryit-advanced-panel">
-                <div class="gridset-actions">
+                <div class="gridset-actions tryit-actions tryit-actions-advanced">
                   <button class="tryit-button" data-gridset-action="export-geojson" type="button">
                     Export GeoJSON
                   </button>
@@ -1044,7 +1104,7 @@
                     Export TXT
                   </button>
                 </div>
-                <div class="gridset-actions">
+                <div class="gridset-actions tryit-actions tryit-actions-advanced">
                   <button
                     class="tryit-button secondary"
                     data-gridset-action="copy-gridset"
@@ -1072,7 +1132,7 @@
                   <option value="origo">Origo JSON</option>
                 </select>
 
-                <div class="gridset-actions">
+                <div class="gridset-actions tryit-actions tryit-actions-advanced">
                   <button
                     class="tryit-button secondary"
                     data-gridset-action="copy-snippet"
@@ -1089,8 +1149,10 @@
                   </button>
                 </div>
 
-                <label for="gridset-output"><strong>Output</strong></label>
-                <pre id="gridset-output" class="tryit-output tryit-mono"></pre>
+                <div class="tryit-section tryit-section-output">
+                  <label for="gridset-output"><strong>Output</strong></label>
+                  <pre id="gridset-output" class="tryit-output tryit-mono"></pre>
+                </div>
               </div>
             </details>
 
@@ -1119,12 +1181,12 @@
                   <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
                 </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Valideringsrapport</strong></summary>
                   <pre id="gridset-validation" class="tryit-output tryit-mono"></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre id="gridset-runlog" class="tryit-output tryit-mono"></pre>
                 </details>
@@ -1159,14 +1221,16 @@
           <div class="tryit" data-tryit="sld">
             <div class="tryit-grid">
               <div>
-                <label for="sld-tryit-input"><strong>Inmatning</strong></label>
-                <textarea
-                  id="sld-tryit-input"
-                  class="tryit-input"
-                  spellcheck="false"
-                  aria-describedby="sld-help"
-                ></textarea>
-                <div class="tryit-actions">
+                <div class="tryit-section tryit-section-input">
+                  <label for="sld-tryit-input"><strong>Inmatning</strong></label>
+                  <textarea
+                    id="sld-tryit-input"
+                    class="tryit-input"
+                    spellcheck="false"
+                    aria-describedby="sld-help"
+                  ></textarea>
+                </div>
+                <div class="tryit-actions tryit-actions-primary">
                   <button class="tryit-button" data-sld-action="check" type="button">
                     Kontrollera
                   </button>
@@ -1175,7 +1239,7 @@
                     Ladda mall
                   </button>
                 </div>
-                <div class="tryit-actions">
+                <div class="tryit-actions tryit-actions-secondary">
                   <button class="tryit-button secondary" data-sld-action="prettify" type="button">
                     Formatera
                   </button>
@@ -1193,7 +1257,7 @@
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
-                    <div class="tryit-actions">
+                    <div class="tryit-actions tryit-actions-advanced">
                       <button class="tryit-button" data-sld-action="export-sld" type="button">
                         Export SLD
                       </button>
@@ -1219,7 +1283,7 @@
                     <details class="tryit-details" open>
                       <summary><strong>Quick Fixes</strong></summary>
                       <div class="tryit-advanced-panel">
-                        <div class="tryit-actions">
+                        <div class="tryit-actions tryit-actions-advanced">
                           <button
                             class="tryit-button"
                             data-sld-action="suggest-fixes"
@@ -1261,15 +1325,17 @@
                 </details>
               </div>
               <div>
-                <strong>Resultat</strong>
-                <pre class="tryit-output" id="sld-tryit-output"></pre>
+                <div class="tryit-section tryit-section-output">
+                  <strong>Resultat</strong>
+                  <pre class="tryit-output" id="sld-tryit-output"></pre>
+                </div>
 
-                <details class="tryit-details" open>
+                <details class="tryit-details tryit-section-report" open>
                   <summary><strong>Valideringsrapport</strong></summary>
                   <pre id="sld-validation" class="tryit-output tryit-mono"></pre>
                 </details>
 
-                <details class="tryit-details">
+                <details class="tryit-details tryit-section-runlog">
                   <summary><strong>Körhistorik</strong></summary>
                   <pre id="sld-runlog" class="tryit-output tryit-mono tryit-log"></pre>
                 </details>
@@ -1288,15 +1354,17 @@
             <div class="tryit" data-tryit="sldpreview">
               <div class="tryit-grid">
                 <div>
-                  <label for="sldp-input"><strong>SLD-inmatning</strong></label>
-                  <textarea
-                    id="sldp-input"
-                    class="tryit-input"
-                    spellcheck="false"
-                    placeholder="Klistra in SLD här…"
-                    aria-describedby="sldpreview-help"
-                  ></textarea>
-                  <div class="tryit-actions">
+                  <div class="tryit-section tryit-section-input">
+                    <label for="sldp-input"><strong>SLD-inmatning</strong></label>
+                    <textarea
+                      id="sldp-input"
+                      class="tryit-input"
+                      spellcheck="false"
+                      placeholder="Klistra in SLD här…"
+                      aria-describedby="sldpreview-help"
+                    ></textarea>
+                  </div>
+                  <div class="tryit-actions tryit-actions-primary">
                     <button class="tryit-button" data-sldp-action="preview" type="button">
                       Förhandsgranska
                     </button>
@@ -1309,6 +1377,8 @@
                     <button class="tryit-button" data-sldp-action="sample-polygon" type="button">
                       Polygon-exempel
                     </button>
+                  </div>
+                  <div class="tryit-actions tryit-actions-secondary">
                     <button class="tryit-button secondary" data-sldp-action="clear" type="button">
                       Rensa
                     </button>
@@ -1319,24 +1389,26 @@
                   </div>
                 </div>
                 <div>
-                  <div class="field-label"><strong>Preview</strong></div>
-                  <div
-                    id="sldp-preview"
-                    style="
-                      border: 1px solid #ddd;
-                      padding: 1rem;
-                      min-height: 140px;
-                      background: #f9f9f9;
-                    "
-                  ></div>
-                  <label style="display: block; margin-top: 1rem"
-                    ><strong>Sammanfattning</strong></label
-                  >
-                  <pre
-                    id="sldp-summary"
-                    class="tryit-output"
-                    style="min-height: 80px; font-size: 0.85rem"
-                  ></pre>
+                  <div class="tryit-section tryit-section-output">
+                    <div class="field-label"><strong>Preview</strong></div>
+                    <div
+                      id="sldp-preview"
+                      style="
+                        border: 1px solid #ddd;
+                        padding: 1rem;
+                        min-height: 140px;
+                        background: #f9f9f9;
+                      "
+                    ></div>
+                    <label style="display: block; margin-top: 1rem"
+                      ><strong>Sammanfattning</strong></label
+                    >
+                    <pre
+                      id="sldp-summary"
+                      class="tryit-output"
+                      style="min-height: 80px; font-size: 0.85rem"
+                    ></pre>
+                  </div>
                   <div class="tryit-status" id="sldp-status"></div>
                 </div>
               </div>
