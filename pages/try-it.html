@@ -22,7 +22,7 @@
       </div>
       <div class="nav-content">
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">
             Dokumentation
           </button>
           <div class="accordion-panel" id="nav-docs">
@@ -44,7 +44,7 @@
           </div>
         </div>
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">
             Snabblänkar
           </button>
           <div class="accordion-panel" id="nav-shortcuts" hidden>
@@ -66,6 +66,7 @@
           data-nav-toggle
           aria-label="Öppna eller stäng meny"
           aria-expanded="true"
+          type="button"
         >
           <img src="../sort.png" alt="" />
         </button>
@@ -97,10 +98,10 @@
         </nav>
 
         <!-- JSON / GeoJSON -->
-        <section class="tool-card" aria-labelledby="json">
+        <section class="tool-card" aria-labelledby="json" tabindex="0">
           <div class="tool-card-head">
             <h2 id="json">JSON / GeoJSON</h2>
-            <p>
+            <p id="json-help">
               Validera och formatera JSON. Identifiera GeoJSON, beräkna BBOX och exportera i olika
               format.
             </p>
@@ -110,7 +111,12 @@
             <div class="tryit-grid">
               <div>
                 <label for="json-tryit-input"><strong>Inmatning</strong></label>
-                <textarea id="json-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+                <textarea
+                  id="json-tryit-input"
+                  class="tryit-input"
+                  spellcheck="false"
+                  aria-describedby="json-help"
+                ></textarea>
                 <div class="tryit-actions">
                   <button class="tryit-button" data-json-action="validate" type="button">
                     Validera
@@ -204,17 +210,24 @@
         </section>
 
         <!-- Map sandbox -->
-        <section class="tool-card" aria-labelledby="mapsandbox">
+        <section class="tool-card" aria-labelledby="mapsandbox" tabindex="0">
           <div class="tool-card-head">
             <h2 id="mapsandbox">Map sandbox</h2>
-            <p>Förhandsgranska WMS GetMap-anrop. Stöder URL-builder och BBOX-verktyget.</p>
+            <p id="mapsandbox-help">
+              Förhandsgranska WMS GetMap-anrop. Stöder URL-builder och BBOX-verktyget.
+            </p>
           </div>
 
           <div class="tryit" data-tryit="mapsandbox">
             <div class="tryit-grid">
               <div>
                 <label for="mapsandbox-url"><strong>WMS GetMap URL</strong></label>
-                <textarea id="mapsandbox-url" class="tryit-input" spellcheck="false"></textarea>
+                <textarea
+                  id="mapsandbox-url"
+                  class="tryit-input"
+                  spellcheck="false"
+                  aria-describedby="mapsandbox-help"
+                ></textarea>
 
                 <div class="tryit-actions">
                   <button class="tryit-button" data-mapsandbox-action="preview" type="button">
@@ -286,10 +299,10 @@
         </section>
 
         <!-- URL-builder -->
-        <section class="tool-card" aria-labelledby="urlbuilder">
+        <section class="tool-card" aria-labelledby="urlbuilder" tabindex="0">
           <div class="tool-card-head">
             <h2 id="urlbuilder">URL-builder</h2>
-            <p>
+            <p id="urlbuilder-help">
               Skapa giltiga WMS/WFS-tjänste-URL:er. Ange bas-URL, tjänst, lager och parametrar för
               att generera ett korrekt anrop.
             </p>
@@ -318,9 +331,10 @@
                   class="tryit-input"
                   type="text"
                   value="https://localhost/geoserver/workspace/ows"
+                  aria-describedby="urlbuilder-help"
                 />
                 <label for="urlbuilder-service"><strong>Tjänst</strong></label>
-                <select id="urlbuilder-service" class="tryit-input">
+                <select id="urlbuilder-service" class="tryit-input" aria-describedby="urlbuilder-help">
                   <option value="WMS">WMS</option>
                   <option value="WFS">WFS</option>
                 </select>
@@ -330,17 +344,31 @@
                   class="tryit-input"
                   type="text"
                   value="workspace:layer"
+                  aria-describedby="urlbuilder-help"
                 />
                 <label for="urlbuilder-format"><strong>Outputformat</strong></label>
-                <input id="urlbuilder-format" class="tryit-input" type="text" value="image/png" />
+                <input
+                  id="urlbuilder-format"
+                  class="tryit-input"
+                  type="text"
+                  value="image/png"
+                  aria-describedby="urlbuilder-help"
+                />
                 <label for="urlbuilder-crs"><strong>CRS</strong></label>
-                <input id="urlbuilder-crs" class="tryit-input" type="text" value="EPSG:3008" />
+                <input
+                  id="urlbuilder-crs"
+                  class="tryit-input"
+                  type="text"
+                  value="EPSG:3008"
+                  aria-describedby="urlbuilder-help"
+                />
                 <label for="urlbuilder-bbox"><strong>BBOX</strong></label>
                 <input
                   id="urlbuilder-bbox"
                   class="tryit-input"
                   type="text"
                   value="100000,6400000,200000,6500000"
+                  aria-describedby="urlbuilder-help"
                 />
                 <div class="tryit-actions">
                   <button class="tryit-button" data-url-action="generate" type="button">
@@ -413,7 +441,12 @@
               </div>
               <div>
                 <strong>Resultat</strong>
-                <textarea id="urlbuilder-output" class="tryit-output" readonly></textarea>
+                <textarea
+                  id="urlbuilder-output"
+                  class="tryit-output"
+                  readonly
+                  aria-label="Resultat"
+                ></textarea>
 
                 <details class="tryit-details" open>
                   <summary><strong>Valideringsrapport</strong></summary>
@@ -432,10 +465,10 @@
         </section>
 
         <!-- BBOX -->
-        <section class="tool-card" aria-labelledby="bbox">
+        <section class="tool-card" aria-labelledby="bbox" tabindex="0">
           <div class="tool-card-head">
             <h2 id="bbox">BBOX / Extent</h2>
-            <p>
+            <p id="bbox-help">
               Generera BBOX-sträng och WMS GetMap URL för
               <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>.
             </p>
@@ -450,16 +483,41 @@
                   class="tryit-input"
                   type="text"
                   value="https://localhost/geoserver/workspace/wms"
+                  aria-describedby="bbox-help"
                 />
                 <label for="bbox-layer"><strong>Layer</strong></label>
-                <input id="bbox-layer" class="tryit-input" type="text" value="workspace:layer" />
+                <input
+                  id="bbox-layer"
+                  class="tryit-input"
+                  type="text"
+                  value="workspace:layer"
+                  aria-describedby="bbox-help"
+                />
                 <label for="bbox-format"><strong>Format</strong></label>
-                <input id="bbox-format" class="tryit-input" type="text" value="image/png" />
+                <input
+                  id="bbox-format"
+                  class="tryit-input"
+                  type="text"
+                  value="image/png"
+                  aria-describedby="bbox-help"
+                />
                 <label for="bbox-width"><strong>Bredd</strong></label>
-                <input id="bbox-width" class="tryit-input" type="number" value="512" />
+                <input
+                  id="bbox-width"
+                  class="tryit-input"
+                  type="number"
+                  value="512"
+                  aria-describedby="bbox-help"
+                />
                 <label for="bbox-height"><strong>Höjd</strong></label>
-                <input id="bbox-height" class="tryit-input" type="number" value="512" />
-                <p class="tryit-hint">
+                <input
+                  id="bbox-height"
+                  class="tryit-input"
+                  type="number"
+                  value="512"
+                  aria-describedby="bbox-help"
+                />
+                <p class="tryit-hint" id="bbox-range-hint">
                   CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
                   Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
                 </p>
@@ -467,19 +525,43 @@
                 <div class="tryit-two-col">
                   <div>
                     <label for="bbox-minx"><strong>Min X</strong></label>
-                    <input id="bbox-minx" class="tryit-input" type="number" value="100000" />
+                    <input
+                      id="bbox-minx"
+                      class="tryit-input"
+                      type="number"
+                      value="100000"
+                      aria-describedby="bbox-help bbox-range-hint"
+                    />
                   </div>
                   <div>
                     <label for="bbox-maxx"><strong>Max X</strong></label>
-                    <input id="bbox-maxx" class="tryit-input" type="number" value="200000" />
+                    <input
+                      id="bbox-maxx"
+                      class="tryit-input"
+                      type="number"
+                      value="200000"
+                      aria-describedby="bbox-help bbox-range-hint"
+                    />
                   </div>
                   <div>
                     <label for="bbox-miny"><strong>Min Y</strong></label>
-                    <input id="bbox-miny" class="tryit-input" type="number" value="6400000" />
+                    <input
+                      id="bbox-miny"
+                      class="tryit-input"
+                      type="number"
+                      value="6400000"
+                      aria-describedby="bbox-help bbox-range-hint"
+                    />
                   </div>
                   <div>
                     <label for="bbox-maxy"><strong>Max Y</strong></label>
-                    <input id="bbox-maxy" class="tryit-input" type="number" value="6500000" />
+                    <input
+                      id="bbox-maxy"
+                      class="tryit-input"
+                      type="number"
+                      value="6500000"
+                      aria-describedby="bbox-help bbox-range-hint"
+                    />
                   </div>
                 </div>
 
@@ -522,7 +604,7 @@
                     Gridcalc
                   </button>
                 </div>
-                <p class="bbox-gridcalc-hint">
+                <p class="bbox-gridcalc-hint" id="bbox-gridcalc-hint">
                   Skickar BBOX-bredd/höjd till Gridcalc för tile-/metatile-estimat.
                 </p>
 
@@ -540,6 +622,7 @@
                       <button
                         class="tryit-button secondary"
                         data-bbox-action="export-txt"
+                        aria-describedby="bbox-gridcalc-hint"
                         type="button"
                       >
                         Export TXT
@@ -600,10 +683,10 @@
         </section>
 
         <!-- Resolutions -->
-        <section class="tool-card" aria-labelledby="resolutions">
+        <section class="tool-card" aria-labelledby="resolutions" tabindex="0">
           <div class="tool-card-head">
             <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
-            <p>Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
+            <p id="resolutions-help">Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
           </div>
 
           <div class="tryit" data-tryit="resolutions">
@@ -615,8 +698,9 @@
                   class="tryit-input"
                   spellcheck="false"
                   placeholder="En resolution per rad, hög → låg&#10;Ex: 400&#10;200&#10;100&#10;50"
+                  aria-describedby="resolutions-help resolutions-hint"
                 ></textarea>
-                <p class="tryit-hint">
+                <p class="tryit-hint" id="resolutions-hint">
                   CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
                 </p>
                 <div class="tryit-actions">
@@ -728,10 +812,10 @@
         </section>
 
         <!-- Gridcalc -->
-        <section class="tool-card" aria-labelledby="gridcalc">
+        <section class="tool-card" aria-labelledby="gridcalc" tabindex="0">
           <div class="tool-card-head">
             <h2 id="gridcalc">Gridset / Tile-kalkylator</h2>
-            <p>
+            <p id="gridcalc-help">
               Beräkna resolutioner, tile-storlekar och seed-rekommendationer för GeoWebCache
               gridsets.
             </p>
@@ -747,6 +831,7 @@
                   type="number"
                   step="any"
                   value="100"
+                  aria-describedby="gridcalc-help"
                 />
                 <label for="gridcalc-scale"><strong>Scale (1:)</strong></label>
                 <input
@@ -755,11 +840,24 @@
                   type="number"
                   step="any"
                   value="357142"
+                  aria-describedby="gridcalc-help"
                 />
                 <label for="gridcalc-tile"><strong>Tile Size (px)</strong></label>
-                <input id="gridcalc-tile" class="tryit-input" type="number" value="256" />
+                <input
+                  id="gridcalc-tile"
+                  class="tryit-input"
+                  type="number"
+                  value="256"
+                  aria-describedby="gridcalc-help"
+                />
                 <label for="gridcalc-meta"><strong>Metatile (N×N)</strong></label>
-                <input id="gridcalc-meta" class="tryit-input" type="number" value="4" />
+                <input
+                  id="gridcalc-meta"
+                  class="tryit-input"
+                  type="number"
+                  value="4"
+                  aria-describedby="gridcalc-help"
+                />
                 <label for="gridcalc-bboxwidth"><strong>BBOX Bredd (m)</strong></label>
                 <input
                   id="gridcalc-bboxwidth"
@@ -767,6 +865,7 @@
                   type="number"
                   step="any"
                   value="100000"
+                  aria-describedby="gridcalc-help"
                 />
                 <label for="gridcalc-bboxheight"><strong>BBOX Höjd (m)</strong></label>
                 <input
@@ -775,6 +874,7 @@
                   type="number"
                   step="any"
                   value="100000"
+                  aria-describedby="gridcalc-help"
                 />
 
                 <div class="tryit-actions">
@@ -902,10 +1002,10 @@
         </section>
 
         <!-- Gridset Explorer -->
-        <section class="tool-card" aria-labelledby="gridset-explorer">
+        <section class="tool-card" aria-labelledby="gridset-explorer" tabindex="0">
           <div class="tool-card-head">
             <h2 id="gridset-explorer">Gridset Explorer</h2>
-            <p>
+            <p id="gridset-help">
               Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i
               <span class="crs-nowrap">EPSG:3006</span>.
             </p>
@@ -962,7 +1062,11 @@
                 </div>
 
                 <label for="gridset-snippet-template"><strong>Snippet-mall</strong></label>
-                <select id="gridset-snippet-template" class="tryit-input">
+                <select
+                  id="gridset-snippet-template"
+                  class="tryit-input"
+                  aria-describedby="gridset-help"
+                >
                   <option value="plain">Plain summary</option>
                   <option value="gwc">GWC XML</option>
                   <option value="origo">Origo JSON</option>
@@ -1043,10 +1147,10 @@
         </section>
 
         <!-- SLD -->
-        <section class="tool-card" aria-labelledby="sld">
+        <section class="tool-card" aria-labelledby="sld" tabindex="0">
           <div class="tool-card-head">
             <h2 id="sld">SLD</h2>
-            <p>
+            <p id="sld-help">
               Testa och validera SLD (Styled Layer Descriptor). Kontrollera din styling före import
               i GeoServer.
             </p>
@@ -1056,7 +1160,12 @@
             <div class="tryit-grid">
               <div>
                 <label for="sld-tryit-input"><strong>Inmatning</strong></label>
-                <textarea id="sld-tryit-input" class="tryit-input" spellcheck="false"></textarea>
+                <textarea
+                  id="sld-tryit-input"
+                  class="tryit-input"
+                  spellcheck="false"
+                  aria-describedby="sld-help"
+                ></textarea>
                 <div class="tryit-actions">
                   <button class="tryit-button" data-sld-action="check" type="button">
                     Kontrollera
@@ -1170,9 +1279,11 @@
             </div>
           </div>
 
-          <div class="tool-card-sub">
+          <div class="tool-card-sub" tabindex="0">
             <h3 id="sld-preview">SLD – Symbol preview</h3>
-            <p>Förhandsgranska symbolik från SLD utan att behöva en kartserver (legend preview).</p>
+            <p id="sldpreview-help">
+              Förhandsgranska symbolik från SLD utan att behöva en kartserver (legend preview).
+            </p>
 
             <div class="tryit" data-tryit="sldpreview">
               <div class="tryit-grid">
@@ -1183,6 +1294,7 @@
                     class="tryit-input"
                     spellcheck="false"
                     placeholder="Klistra in SLD här…"
+                    aria-describedby="sldpreview-help"
                   ></textarea>
                   <div class="tryit-actions">
                     <button class="tryit-button" data-sldp-action="preview" type="button">
