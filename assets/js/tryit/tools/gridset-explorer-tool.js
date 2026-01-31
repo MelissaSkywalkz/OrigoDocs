@@ -16,6 +16,8 @@ const gridsetExplorerTool = (() => {
     bboxSpan: null,
     zoomSpan: null,
     tilesSpan: null,
+    snippetTemplate: null,
+    snippetOutput: null,
   };
 
   let state = {
@@ -25,6 +27,8 @@ const gridsetExplorerTool = (() => {
       sverige: { minx: 0, miny: 5500000, maxx: 1500000, maxy: 8000000 },
       skaraborg: { minx: 300000, miny: 6400000, maxx: 550000, maxy: 6650000 },
     },
+    tileSize: 256,
+    resolutions: [100, 50, 25, 12.5, 6.25],
   };
 
   function init(block) {
@@ -41,6 +45,8 @@ const gridsetExplorerTool = (() => {
     elements.bboxSpan = block.querySelector('#gridset-info-bbox');
     elements.zoomSpan = block.querySelector('#gridset-info-zoom');
     elements.tilesSpan = block.querySelector('#gridset-info-tiles');
+    elements.snippetTemplate = block.querySelector('#gridset-snippet-template');
+    elements.snippetOutput = block.querySelector('#gridset-output');
 
     if (!elements.mapContainer) {
       console.error('Gridset Explorer: Missing map container');
@@ -100,6 +106,12 @@ const gridsetExplorerTool = (() => {
         handleAction(btn.dataset.gridsetAction);
       });
     });
+
+    if (elements.snippetTemplate) {
+      elements.snippetTemplate.addEventListener('change', () => {
+        updateSnippet();
+      });
+    }
   }
 
   function handleAction(action) {
@@ -118,6 +130,12 @@ const gridsetExplorerTool = (() => {
         break;
       case 'copy-gridset':
         copyGridset();
+        break;
+      case 'copy-snippet':
+        copySnippet();
+        break;
+      case 'download-snippet':
+        downloadSnippet();
         break;
       case 'send-to-gridcalc':
         sendToGridcalc();
@@ -155,7 +173,7 @@ const gridsetExplorerTool = (() => {
     }
 
     // Estimate tiles at 256px/tile
-    const tileSize = 256;
+    const tileSize = state.tileSize;
     const resolution = 100; // placeholder
     const tileSpan = resolution * tileSize;
     const tilesX = Math.ceil(width / tileSpan);
@@ -172,8 +190,103 @@ const gridsetExplorerTool = (() => {
     report.meta.height = height;
     report.meta.tiles = formatNumber(totalTiles);
     report.meta.resolution = resolution;
+    report.meta.tileSize = tileSize;
+    report.meta.resolutions = state.resolutions;
 
     appState.setReport(TOOL_KEY, report);
+
+    updateSnippet();
+  }
+
+  function validateSnippetData() {
+    const report = createValidationReport(true);
+
+    if (!state.currentExtent) {
+      addReportError(report, 'GRIDSET_NO_EXTENT', 'Ingen extent vald');
+    }
+
+    if (!state.resolutions || state.resolutions.length === 0) {
+      addReportError(report, 'GRIDSET_NO_RESOLUTIONS', 'Resolutioner saknas');
+    }
+
+    if (!Number.isFinite(state.tileSize) || state.tileSize <= 0) {
+      addReportError(report, 'GRIDSET_INVALID_TILESIZE', 'Tile size måste vara > 0');
+    }
+
+    return report;
+  }
+
+  function getSnippetTemplate() {
+    return elements.snippetTemplate?.value || 'plain';
+  }
+
+  function buildSnippet(templateKey) {
+    const report = validateSnippetData();
+    if (!report.ok) {
+      return { ok: false, report, content: 'Kan inte skapa snippet: data saknas.' };
+    }
+
+    const ext = state.currentExtent;
+    const extent = [ext.minx, ext.miny, ext.maxx, ext.maxy];
+    const crs = 'EPSG:3006';
+    const tileSize = state.tileSize;
+    const resolutions = state.resolutions;
+
+    if (templateKey === 'gwc') {
+      const xml = [
+        '<gridSet>',
+        `  <name>${crs}</name>`,
+        `  <srs><number>3006</number></srs>`,
+        `  <extent>`,
+        `    <coords>`,
+        `      <double>${extent[0]}</double>`,
+        `      <double>${extent[1]}</double>`,
+        `      <double>${extent[2]}</double>`,
+        `      <double>${extent[3]}</double>`,
+        `    </coords>`,
+        `  </extent>`,
+        `  <tileWidth>${tileSize}</tileWidth>`,
+        `  <tileHeight>${tileSize}</tileHeight>`,
+        `  <resolutions>`,
+        ...resolutions.map((r) => `    <resolution>${r}</resolution>`),
+        `  </resolutions>`,
+        '</gridSet>',
+      ].join('\n');
+      return { ok: true, report, content: xml };
+    }
+
+    if (templateKey === 'origo') {
+      const obj = {
+        crs,
+        extent,
+        tileSize,
+        resolutions,
+      };
+      return { ok: true, report, content: JSON.stringify(obj, null, 2) };
+    }
+
+    const summary = [
+      'Gridset-snippet',
+      `CRS: ${crs}`,
+      `Extent: ${extent.join(', ')}`,
+      `Tile size: ${tileSize}px`,
+      `Resolutions: ${resolutions.join(', ')}`,
+    ].join('\n');
+    return { ok: true, report, content: summary };
+  }
+
+  function updateSnippet() {
+    if (!elements.snippetOutput) return;
+    const templateKey = getSnippetTemplate();
+    const snippet = buildSnippet(templateKey);
+
+    elements.snippetOutput.textContent = snippet.content;
+
+    if (!snippet.ok) {
+      appState.addLog(TOOL_KEY, 'WARN', 'Snippet kunde inte skapas');
+      appState.setReport(TOOL_KEY, snippet.report);
+      updateUI();
+    }
   }
 
   async function copyBbox() {
@@ -280,6 +393,39 @@ const gridsetExplorerTool = (() => {
     } else {
       appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
     }
+    updateUI();
+  }
+
+  async function copySnippet() {
+    const templateKey = getSnippetTemplate();
+    const snippet = buildSnippet(templateKey);
+
+    const result = await copyToClipboard(snippet.content || '');
+    if (result.ok) {
+      appState.addLog(TOOL_KEY, 'OK', 'Snippet kopierad');
+    } else {
+      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+    }
+    updateUI();
+  }
+
+  function downloadSnippet() {
+    const templateKey = getSnippetTemplate();
+    const snippet = buildSnippet(templateKey);
+
+    let extension = 'txt';
+    let mime = 'text/plain';
+    if (templateKey === 'origo') {
+      extension = 'json';
+      mime = 'application/json';
+    } else if (templateKey === 'gwc') {
+      extension = 'xml';
+      mime = 'application/xml';
+    }
+
+    const filename = `gridset-${formatTimestamp()}.${extension}`;
+    exportFile({ filename, mime, content: snippet.content || '' });
+    appState.addLog(TOOL_KEY, 'OK', 'Snippet nedladdad');
     updateUI();
   }
 
