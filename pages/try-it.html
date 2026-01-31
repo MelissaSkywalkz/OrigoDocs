@@ -85,21 +85,23 @@
 
         <nav class="troubleshoot-toc tryit-toc" aria-label="Snabbstart: Try it-lab">
           <strong>Snabbstart:</strong>
-          <a href="#json">JSON</a>
+          <a href="#json">JSON / GeoJSON</a>
           <a href="#urlbuilder">URL-builder</a>
+          <a href="#mapsandbox">Map sandbox</a>
           <a href="#bbox">BBOX / Extent</a>
           <a href="#resolutions">Resolutions</a>
           <a href="#gridcalc">Gridset / Tile</a>
           <a href="#gridset-explorer">Gridset Explorer</a>
           <a href="#sld">SLD</a>
-          <a href="#mapsandbox">Map sandbox</a>
         </nav>
 
-        <!-- JSON -->
+        <!-- JSON / GeoJSON -->
         <section class="tool-card" aria-labelledby="json">
           <div class="tool-card-head">
-            <h2 id="json">JSON</h2>
-            <p>Validera och formatera JSON. Bra för att kontrollera syntax och struktur.</p>
+            <h2 id="json">JSON / GeoJSON</h2>
+            <p>
+              Validera och formatera JSON. Identifiera GeoJSON, beräkna BBOX och exportera i olika format.
+            </p>
           </div>
 
           <div class="tryit" data-tryit="json">
@@ -114,11 +116,102 @@
                   <button class="tryit-button secondary" data-json-action="copy" type="button">Kopiera</button>
                   <button class="tryit-button secondary" data-json-action="clear" type="button">Rensa</button>
                 </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="json-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <div id="json-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div class="tryit-actions" style="margin: 0 0 1rem 0;">
+                    <button class="tryit-button secondary" data-json-action="export-json" type="button">Exportera normaliserad JSON</button>
+                    <button class="tryit-button secondary" data-json-action="export-bbox-txt" type="button">Exportera BBOX TXT</button>
+                    <button class="tryit-button secondary" data-json-action="export-bbox-geojson" type="button">Exportera BBOX GeoJSON</button>
+                  </div>
+                  <div class="tryit-actions" style="margin: 0 0 1rem 0;">
+                    <button class="tryit-button secondary" data-json-action="send-to-bbox" type="button">Skicka BBOX till BBOX-tool</button>
+                    <button class="tryit-button secondary" data-json-action="send-to-urlbuilder" type="button">Skicka BBOX till URL builder</button>
+                  </div>
+                  <label for="json-meta"><strong>Metadata</strong></label>
+                  <pre id="json-meta" class="tryit-output tryit-mono"></pre>
+                </div>
               </div>
               <div>
                 <strong>Resultat</strong>
-                <pre class="tryit-output" id="json-tryit-output"></pre>
+                <pre class="tryit-output tryit-mono" id="json-tryit-output"></pre>
+
+                <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                  <strong class="tryit-panel-title">Valideringsrapport</strong>
+                  <pre id="json-report" class="tryit-output tryit-mono"></pre>
+                </label>
+
+                <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                  <strong class="tryit-panel-title">Körhistorik</strong>
+                  <pre id="json-log" class="tryit-output tryit-mono tryit-log"></pre>
+                </label>
                 <div class="tryit-status" id="json-tryit-status"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Map sandbox -->
+        <section class="tool-card" aria-labelledby="mapsandbox">
+          <div class="tool-card-head">
+            <h2 id="mapsandbox">Map sandbox</h2>
+            <p>Förhandsgranska WMS GetMap-anrop. Stöder URL-builder och BBOX-verktyget.</p>
+          </div>
+
+          <div class="tryit" data-tryit="mapsandbox">
+            <div class="tryit-grid">
+              <div>
+                <label for="mapsandbox-url"><strong>WMS GetMap URL</strong></label>
+                <textarea id="mapsandbox-url" class="tryit-input" spellcheck="false"></textarea>
+
+                <div class="tryit-actions">
+                  <button class="tryit-button" data-mapsandbox-action="preview" type="button">Förhandsgranska</button>
+                  <button class="tryit-button secondary" data-mapsandbox-action="clear" type="button">Rensa</button>
+                  <button class="tryit-button secondary" data-mapsandbox-action="use-urlbuilder" type="button">Använd URL Builder output</button>
+                  <button class="tryit-button secondary" data-mapsandbox-action="use-bbox-url" type="button">Använd BBOX URL</button>
+                </div>
+
+                <div class="tryit-status" id="mapsandbox-status"></div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="mapsandbox-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <div id="mapsandbox-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <label for="mapsandbox-params"><strong>Parsed params</strong></label>
+                  <pre id="mapsandbox-params" class="tryit-output tryit-mono"></pre>
+
+                  <label for="mapsandbox-report" style="margin-top: 1rem; display: block;"><strong>Validation report</strong></label>
+                  <pre id="mapsandbox-report" class="tryit-output tryit-mono"></pre>
+
+                  <label for="mapsandbox-log" style="margin-top: 1rem; display: block;"><strong>Run log</strong></label>
+                  <pre id="mapsandbox-log" class="tryit-output tryit-mono"></pre>
+                </div>
+              </div>
+
+              <div>
+                <strong>Förhandsvisning</strong>
+                <div class="mapsandbox-preview-container">
+                  <img id="mapsandbox-img" class="mapsandbox-preview-img" alt="Map preview" />
+                  <div id="mapsandbox-fallback" class="mapsandbox-fallback" style="display: none;">
+                    <p><strong>Kunde inte ladda förhandsvisning</strong></p>
+                    <p>Tips:</p>
+                    <ul>
+                      <li>Öppna URL:en i ny flik</li>
+                      <li>Kör <code>python -m http.server</code> om du använder file://</li>
+                      <li>CORS-blockering kräver servermiljö</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -173,15 +266,55 @@
                   <button class="tryit-button secondary" data-url-action="test" type="button">Testa URL</button>
                   <button class="tryit-button secondary" data-url-action="open" type="button">Öppna</button>
                 </div>
+
+                <!-- Enterprise Mode Toggle -->
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="urlbuilder-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <!-- Advanced Mode Panel -->
+                <div id="urlbuilder-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div style="margin-bottom: 1rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Export</strong>
+                    <div class="tryit-actions" style="margin: 0;">
+                      <button class="tryit-button secondary" data-url-action="copy-curl" type="button">Kopiera curl</button>
+                      <button class="tryit-button secondary" data-url-action="download-curl" type="button">Ladda ner curl</button>
+                      <button class="tryit-button secondary" data-url-action="export-txt" type="button">Exportera TXT</button>
+                      <button class="tryit-button secondary" data-url-action="fix-bbox" type="button">Fixa BBOX</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="urlbuilder-explain"><strong>Förklaring av parametrar</strong></label>
+                    <pre id="urlbuilder-explain" class="tryit-output tryit-mono"></pre>
+                  </div>
+                </div>
               </div>
               <div>
                 <strong>Resultat</strong>
                 <textarea id="urlbuilder-output" class="tryit-output" readonly></textarea>
+
+                <!-- Validation Report Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Valideringsrapport</strong>
+                  <pre id="urlbuilder-report" class="tryit-output tryit-mono"></pre>
+                </label>
+
+                <!-- Run Log Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Körhistorik</strong>
+                  <pre id="urlbuilder-log" class="tryit-output tryit-mono"></pre>
+                </label>
+
                 <div class="tryit-status" id="urlbuilder-status"></div>
               </div>
             </div>
           </div>
         </section>
+
 
         <!-- BBOX -->
         <section class="tool-card" aria-labelledby="bbox">
@@ -238,7 +371,33 @@
                   <button class="tryit-button secondary" data-bbox-action="copy-bbox" type="button">Kopiera BBOX</button>
                   <button class="tryit-button secondary" data-bbox-action="copy-url" type="button">Kopiera URL</button>
                   <button class="tryit-button secondary" data-bbox-action="send-to-urlbuilder" type="button">Skicka till URL builder</button>
+                  <button class="tryit-button secondary" data-bbox-action="send-to-gridcalc" type="button">Skicka till Gridcalc</button>
                   <button class="tryit-button secondary" data-bbox-action="clear" type="button">Rensa</button>
+                </div>
+                <p class="bbox-gridcalc-hint">Skickar BBOX-bredd/höjd till Gridcalc för tile-/metatile-estimat.</p>
+
+                <!-- Enterprise Mode Toggle -->
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="bbox-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <!-- Advanced Mode Panel -->
+                <div id="bbox-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div style="margin-bottom: 1rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Export</strong>
+                    <div class="tryit-actions" style="margin: 0;">
+                      <button class="tryit-button secondary" data-bbox-action="export-geojson" type="button">Export GeoJSON</button>
+                      <button class="tryit-button secondary" data-bbox-action="export-txt" type="button">Export TXT</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="bbox-normalized"><strong>Normaliserad BBOX</strong></label>
+                    <textarea id="bbox-normalized" class="tryit-output tryit-mono" readonly style="min-height: 60px; font-size: 0.85rem;"></textarea>
+                  </div>
                 </div>
               </div>
 
@@ -251,6 +410,19 @@
                   <strong>WMS GetMap URL</strong>
                   <textarea id="bbox-url-output" class="tryit-output tryit-mono" readonly></textarea>
                 </label>
+
+                <!-- Validation Report Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Validering</strong>
+                  <pre id="bbox-validation" class="tryit-output" style="min-height: 100px; font-size: 0.85rem; background: #f8f9fa;"></pre>
+                </label>
+
+                <!-- Run Log Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Körhistorik</strong>
+                  <pre id="bbox-runlog" class="tryit-output" style="min-height: 120px; font-size: 0.85rem; background: #f0f0f0; overflow-y: auto;"></pre>
+                </label>
+
                 <div class="tryit-status" id="bbox-status"></div>
               </div>
             </div>
@@ -279,16 +451,58 @@
                   <button class="tryit-button" data-res-action="export-gwc" type="button">GWC format</button>
                   <button class="tryit-button secondary" data-res-action="clear" type="button">Rensa</button>
                 </div>
+
+                <!-- Enterprise Mode Toggle -->
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="res-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <!-- Advanced Mode Panel -->
+                <div id="res-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div style="margin-bottom: 1rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Åtgärder</strong>
+                    <div class="tryit-actions" style="margin: 0;">
+                      <button class="tryit-button" data-res-action="fix" type="button">Fixa lista</button>
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 1rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Nedladdningar</strong>
+                    <div class="tryit-actions" style="margin: 0;">
+                      <button class="tryit-button secondary" data-res-action="download-origo" type="button">Ladda ner Origo JSON</button>
+                      <button class="tryit-button secondary" data-res-action="download-gwc" type="button">Ladda ner GWC</button>
+                      <button class="tryit-button secondary" data-res-action="download-report" type="button">Ladda ner rapport</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="res-preview"><strong>Förhandsvisning</strong></label>
+                    <div id="res-preview" style="max-height: 300px; overflow-y: auto; background: white; border: 1px solid #dee2e6; border-radius: 4px;"></div>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #666; font-style: italic;">Klicka på "Använd i Gridcalc" för att skicka en resolution till Gridcalc-verktyget.</p>
+                  </div>
+                </div>
               </div>
               <div>
-                <label class="tryit-block">
-                  <strong>Rapport</strong>
-                  <pre id="res-report" class="tryit-output"></pre>
-                </label>
                 <label class="tryit-block">
                   <strong>Export</strong>
                   <textarea id="res-output" class="tryit-output tryit-mono" readonly></textarea>
                 </label>
+
+                <!-- Validation Report Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Valideringsrapport</strong>
+                  <pre id="res-validation" class="tryit-output" style="min-height: 120px; font-size: 0.85rem; background: #f8f9fa;"></pre>
+                </label>
+
+                <!-- Run Log Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Körhistorik</strong>
+                  <pre id="res-runlog" class="tryit-output" style="min-height: 120px; font-size: 0.85rem; background: #f0f0f0; overflow-y: auto;"></pre>
+                </label>
+
                 <div class="tryit-status" id="res-status"></div>
               </div>
             </div>
@@ -327,6 +541,37 @@
                   <button class="tryit-button secondary" data-gridcalc-action="copy" type="button">Kopiera</button>
                   <button class="tryit-button secondary" data-gridcalc-action="clear" type="button">Rensa</button>
                 </div>
+
+                <!-- Enterprise Mode Toggle -->
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="gridcalc-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <!-- Advanced Mode Panel -->
+                <div id="gridcalc-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div style="margin-bottom: 1rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">Nedladdningar</strong>
+                    <div class="tryit-actions" style="margin: 0;">
+                      <button class="tryit-button secondary" data-gridcalc-action="download-txt" type="button">Ladda ner TXT</button>
+                      <button class="tryit-button secondary" data-gridcalc-action="download-json" type="button">Ladda ner JSON</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <strong style="display: block; margin-bottom: 0.5rem;">Cache / Seed Estimator</strong>
+                    <label for="gridcalc-tilekb" style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem;">Genomsnittlig tilestorlek (KB):</label>
+                    <input id="gridcalc-tilekb" class="tryit-input" type="number" step="any" value="20" style="margin-bottom: 0.75rem;" />
+                    <label for="gridcalc-compression" style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem;">Komprimeringsfaktor:</label>
+                    <input id="gridcalc-compression" class="tryit-input" type="number" step="any" value="1.0" style="margin-bottom: 0.75rem;" />
+                    <div class="tryit-actions" style="margin: 0 0 0.75rem 0;">
+                      <button class="tryit-button" data-gridcalc-action="estimate-cache" type="button">Beräkna cache-estimat</button>
+                    </div>
+                    <pre id="gridcalc-estimator-output" class="tryit-output tryit-mono"></pre>
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -334,6 +579,19 @@
                   <strong>Resultat</strong>
                   <textarea id="gridcalc-output" class="tryit-output tryit-mono" readonly></textarea>
                 </label>
+
+                <!-- Validation Report Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Valideringsrapport</strong>
+                  <pre id="gridcalc-report" class="tryit-output" style="min-height: 120px; font-size: 0.85rem; background: #f8f9fa;"></pre>
+                </label>
+
+                <!-- Run Log Panel -->
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Körhistorik</strong>
+                  <pre id="gridcalc-log" class="tryit-output" style="min-height: 120px; font-size: 0.85rem; background: #f0f0f0; overflow-y: auto;"></pre>
+                </label>
+
                 <div class="tryit-status" id="gridcalc-status"></div>
               </div>
             </div>
@@ -353,6 +611,25 @@
               <button class="tryit-button" data-extent-action="skaraborg" type="button">Skaraborg</button>
               <button class="tryit-button secondary" data-gridset-action="copy-bbox" type="button">Kopiera BBOX</button>
               <button class="tryit-button secondary" data-gridset-action="send-to-urlbuilder" type="button">Skicka till URL builder</button>
+            </div>
+
+            <div class="gridset-actions">
+              <button class="tryit-button secondary" data-gridset-action="export-geojson" type="button">Export GeoJSON</button>
+              <button class="tryit-button secondary" data-gridset-action="export-txt" type="button">Export TXT</button>
+              <button class="tryit-button secondary" data-gridset-action="copy-gridset" type="button">Kopiera gridset-snippet</button>
+              <button class="tryit-button secondary" data-gridset-action="send-to-gridcalc" type="button">Skicka till Gridcalc</button>
+            </div>
+
+            <div style="margin-top: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="gridset-advanced-toggle" style="width: auto; cursor: pointer;" />
+                <strong>Advanced Mode</strong>
+              </label>
+            </div>
+
+            <div id="gridset-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+              <label for="gridset-output"><strong>Output</strong></label>
+              <pre id="gridset-output" class="tryit-output tryit-mono"></pre>
             </div>
 
             <div class="gridset-layout">
@@ -383,6 +660,16 @@
                 <div class="gridset-row">
                   <strong>Beräknade tiles:</strong> <span id="gridset-info-tiles">—</span>
                 </div>
+
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Valideringsrapport</strong>
+                  <pre id="gridset-report" class="tryit-output tryit-mono"></pre>
+                </label>
+
+                <label class="tryit-block" style="margin-top: 1rem;">
+                  <strong>Körhistorik</strong>
+                  <pre id="gridset-log" class="tryit-output tryit-mono"></pre>
+                </label>
 
                 <div class="gridset-note">
                   Förenklat exempel för att förstå gridsets/tiles.
@@ -417,14 +704,65 @@
                 <textarea id="sld-tryit-input" class="tryit-input" spellcheck="false"></textarea>
                 <div class="tryit-actions">
                   <button class="tryit-button" data-sld-action="check" type="button">Kontrollera</button>
+                  <button class="tryit-button" data-sld-action="lint" type="button">Lint</button>
                   <button class="tryit-button" data-sld-action="template" type="button">Ladda mall</button>
+                  <button class="tryit-button secondary" data-sld-action="prettify" type="button">Formatera</button>
+                  <button class="tryit-button secondary" data-sld-action="minify" type="button">Minifiera</button>
                   <button class="tryit-button secondary" data-sld-action="copy" type="button">Kopiera</button>
                   <button class="tryit-button secondary" data-sld-action="clear" type="button">Rensa</button>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="sld-advanced-toggle" style="width: auto; cursor: pointer;" />
+                    <strong>Advanced Mode</strong>
+                  </label>
+                </div>
+
+                <div id="sld-advanced-panel" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                  <div class="tryit-actions" style="margin: 0 0 1rem 0;">
+                    <button class="tryit-button secondary" data-sld-action="export-sld" type="button">Export SLD</button>
+                    <button class="tryit-button secondary" data-sld-action="export-txt" type="button">Export TXT</button>
+                    <button class="tryit-button secondary" data-sld-action="export-lint-txt" type="button">Export lint-report (TXT)</button>
+                    <button class="tryit-button secondary" data-sld-action="copy-lint" type="button">Copy lint-report</button>
+                  </div>
+
+                  <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                    <strong class="tryit-panel-title">Quick Fixes</strong>
+                    <div style="margin-top: 0.5rem;">
+                      <button class="tryit-button" data-sld-action="suggest-fixes" type="button">Föreslå fixes</button>
+                      <button class="tryit-button secondary" data-sld-action="apply-fixes" type="button">Apply selected fixes</button>
+                      <button class="tryit-button secondary" data-sld-action="reset-fixes" type="button">Reset fixes</button>
+                    </div>
+                    <div id="sld-fixes" data-sld-fixes style="margin-top: 1rem;"></div>
+                    <div id="sld-fixes-preview-wrapper" style="display: none; margin-top: 1rem;">
+                      <label><strong>Preview (before applying)</strong></label>
+                      <pre id="sld-fixes-preview" class="tryit-output tryit-mono" data-sld-fixes-preview style="max-height: 300px; overflow-y: auto;"></pre>
+                    </div>
+                  </label>
+
+                  <label for="sld-normalized"><strong>Normalized JSON</strong></label>
+                  <pre id="sld-normalized" class="tryit-output tryit-mono"></pre>
                 </div>
               </div>
               <div>
                 <strong>Resultat</strong>
                 <pre class="tryit-output" id="sld-tryit-output"></pre>
+
+                <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                  <strong class="tryit-panel-title">Valideringsrapport</strong>
+                  <pre id="sld-report" class="tryit-output tryit-mono"></pre>
+                </label>
+
+                <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                  <strong class="tryit-panel-title">Lint-rapport</strong>
+                  <pre id="sld-lint" class="tryit-output tryit-mono" data-sld-lint></pre>
+                </label>
+
+                <label class="tryit-block tryit-panel" style="margin-top: 1rem;">
+                  <strong class="tryit-panel-title">Körhistorik</strong>
+                  <pre id="sld-log" class="tryit-output tryit-mono tryit-log"></pre>
+                </label>
                 <div class="tryit-status" id="sld-tryit-status"></div>
               </div>
             </div>
@@ -462,41 +800,6 @@
           </div>
         </section>
 
-        <!-- Map sandbox -->
-        <section class="tool-card" aria-labelledby="mapsandbox">
-          <div class="tool-card-head">
-            <h2 id="mapsandbox">Map sandbox</h2>
-            <p>Visualisera BBOX, tile-grid och metatile-grid utan externa tjänster.</p>
-          </div>
-
-          <div class="tryit" data-tryit="mapsandbox">
-            <div class="tryit-grid">
-              <div>
-                <label for="ms-bbox-width"><strong>BBOX Bredd (m)</strong></label>
-                <input id="ms-bbox-width" class="tryit-input" type="number" step="any" value="100000" />
-                <label for="ms-bbox-height"><strong>BBOX Höjd (m)</strong></label>
-                <input id="ms-bbox-height" class="tryit-input" type="number" step="any" value="100000" />
-                <label for="ms-resolution"><strong>Resolution (m/px)</strong></label>
-                <input id="ms-resolution" class="tryit-input" type="number" step="any" value="100" />
-                <label for="ms-tile"><strong>Tile Size (px)</strong></label>
-                <input id="ms-tile" class="tryit-input" type="number" value="256" />
-                <label for="ms-meta"><strong>Metatile (N×N)</strong></label>
-                <input id="ms-meta" class="tryit-input" type="number" value="4" />
-                <p class="tryit-hint">
-                  CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span>
-                </p>
-                <div class="tryit-actions">
-                  <button class="tryit-button" data-ms-action="draw" type="button">Rita</button>
-                  <button class="tryit-button secondary" data-ms-action="clear" type="button">Rensa</button>
-                </div>
-              </div>
-              <div>
-                <canvas id="ms-canvas" width="600" height="400" style="border: 1px solid #ddd; display: block; margin-bottom: 1rem; background: #fff;"></canvas>
-                <div class="tryit-status" id="ms-status"></div>
-              </div>
-            </div>
-          </div>
-        </section>
       </section>
     </main>
 

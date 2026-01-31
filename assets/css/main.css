@@ -354,6 +354,76 @@ a {
   margin-top: 0.8rem;
 }
 
+/* SLD Quick Fixes */
+.sld-fix-item {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.sld-fix-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin: 0;
+}
+
+.sld-fix-checkbox {
+  margin-top: 0.25rem;
+  width: auto;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sld-fix-title {
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sld-fix-risk {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.sld-fix-risk-low {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.sld-fix-risk-medium {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.sld-fix-description {
+  margin-top: 0.5rem;
+  padding-left: 1.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Fix tryit-output readability in doc-content */
+.doc-content pre.tryit-output,
+.doc-content .tryit-output {
+  background: #f8fafc !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border);
+}
+
 .tryit-pill {
   border: 1px solid var(--border);
   background: #fff;
@@ -807,6 +877,11 @@ a {
   margin-top: 1.8rem;
 }
 
+.doc-content h2[id],
+.doc-content h3[id] {
+  scroll-margin-top: 96px;
+}
+
 .doc-content pre {
   background: #0f172a;
   color: #e2e8f0;
@@ -814,6 +889,122 @@ a {
   border-radius: 12px;
   overflow-x: auto;
 }
+
+/* Override for try-it tool outputs to ensure proper contrast */
+.doc-content pre.tryit-output,
+.doc-content .tryit pre {
+  background: #f8fafc;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px;
+  line-height: 1.4;
+}
+
+/* Resolutions send-to-gridcalc buttons */
+.res-send-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  background: #007bff;
+  color: white;
+  border: 1px solid #0056b3;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.res-send-btn:hover {
+  background: #0056b3;
+  border-color: #004085;
+}
+
+.res-send-btn:focus-visible {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+.res-send-btn:active {
+  background: #004085;
+  transform: translateY(1px);
+}
+
+.bbox-gridcalc-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
+
+.tryit-panel {
+  color: var(--text);
+}
+
+.tryit-panel-title {
+  color: var(--text);
+}
+
+.tryit-kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.tryit-log {
+  color: var(--text);
+  background: #f8fafc;
+}
+
+.tryit-panel .tryit-output,
+.tryit-panel pre,
+.tryit-output.tryit-mono {
+  color: var(--text);
+}
+
+/* Map sandbox preview */
+.mapsandbox-preview-container {
+  position: relative;
+  min-height: 320px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mapsandbox-preview-img {
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+}
+
+.mapsandbox-fallback {
+  padding: 1.5rem;
+  text-align: left;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.mapsandbox-fallback strong {
+  color: #dc3545;
+}
+
+.mapsandbox-fallback ul {
+  margin: 0.5rem 0 0 1.1rem;
+  line-height: 1.5;
+}
+
+.mapsandbox-fallback code {
+  background: #ffffff;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
 
 .doc-content table {
   width: 100%;
