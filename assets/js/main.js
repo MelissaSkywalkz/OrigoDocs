@@ -6,6 +6,7 @@ const OFFLINE_SEARCH_INDEX = [
     url: 'index.html',
     content: 'startsida översikt snabbstart länkar guide recept',
   },
+
   {
     id: 'json-101',
     title: 'JSON 101',
@@ -308,6 +309,51 @@ const WIZARD_DATA = {
           { label: 'Cache och uppdatering', href: '#sld-cache' },
           { label: 'Översikt', href: '#oversikt' },
           { label: 'Hur detta påverkar kartklienten', href: '#origo-impact' },
+        ],
+        escalate: ['Stilen uppdateras inte efter cache‑rensing.'],
+      },
+    ],
+  },
+  'geoserver-styles': {
+    title: 'Felsökningswizard',
+    symptoms: [
+      {
+        key: 'labels-not-showing',
+        label: 'Etiketter syns inte',
+        startHere: [
+          'Kontrollera att attributnamnet i SLD matchar data.',
+          'Testa enklare label med bara <PropertyName>.',
+          'Minska fontstorlek eller halo för att se om det blir synligt.',
+        ],
+        links: [
+          { label: 'Labels', href: '#labels' },
+          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
+        ],
+        escalate: ['Etiketter förblir osynliga efter förenklad test.'],
+      },
+      {
+        key: 'rules-fail-style',
+        label: 'Filter eller regler fungerar inte',
+        startHere: [
+          'Kontrollera filter‑syntax och attributnamn.',
+          'Testa en regel i taget och kontrollera typ av fält.',
+        ],
+        links: [
+          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
+        ],
+        escalate: ['Regler ger fel trots förenklad test.'],
+      },
+      {
+        key: 'style-cache',
+        label: 'Jag ser gamla stilar',
+        startHere: [
+          'Rensa GeoServer/GeoWebCache‑cache för laget.',
+          'Gör en hård refresh i webbläsaren (Ctrl+F5).',
+        ],
+        links: [
+          { label: 'Cache och uppdatering', href: '#sld-cache' },
+          { label: 'Översikt', href: '#overview' },
         ],
         escalate: ['Stilen uppdateras inte efter cache‑rensing.'],
       },
