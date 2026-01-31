@@ -14,11 +14,14 @@ const sldTool = (() => {
     logEl: null,
     normalizedEl: null,
     fixesDiv: null,
+    fixesPreview: null,
+    fixesPreviewWrapper: null,
   };
 
   let state = {
     lastValidSld: null,
     lastParsedDoc: null,
+    fixes: [],
   };
 
   function init(block) {
@@ -31,6 +34,8 @@ const sldTool = (() => {
     elements.logEl = block.querySelector('#sld-runlog');
     elements.normalizedEl = block.querySelector('#sld-normalized');
     elements.fixesDiv = block.querySelector('#sld-fixes');
+    elements.fixesPreview = block.querySelector('#sld-fixes-preview');
+    elements.fixesPreviewWrapper = block.querySelector('#sld-fixes-preview-wrapper');
 
     if (!elements.input || !elements.output || !elements.status) return false;
 
@@ -78,7 +83,204 @@ const sldTool = (() => {
       case 'copy-lint':
         actionCopyLint();
         break;
+      case 'suggest-fixes':
+        actionSuggestFixes();
+        break;
+      case 'apply-fixes':
+        actionApplyFixes();
+        break;
+      case 'reset-fixes':
+        actionResetFixes();
+        break;
     }
+  }
+
+  function formatXmlForDiff(xml) {
+    const reg = /(>)(<)(\/?)/g;
+    let formatted = '';
+    let pad = 0;
+    xml
+      .replace(reg, '$1\n$2$3')
+      .split('\n')
+      .forEach((node) => {
+        let indent = 0;
+        if (node.match(/^<\//)) {
+          if (pad > 0) pad -= 1;
+        } else if (node.match(/^<[^!?].*>$/) && !node.endsWith('/>') && !node.includes('</')) {
+          indent = 1;
+        }
+        formatted += '  '.repeat(pad) + node + '\n';
+        pad += indent;
+      });
+    return formatted.trim();
+  }
+
+  function diffChangedLines(beforeText, afterText) {
+    const beforeLines = beforeText.split('\n');
+    const afterLines = afterText.split('\n');
+    const max = Math.max(beforeLines.length, afterLines.length);
+    const diff = [];
+
+    for (let i = 0; i < max; i += 1) {
+      const beforeLine = beforeLines[i] ?? '';
+      const afterLine = afterLines[i] ?? '';
+      if (beforeLine !== afterLine) {
+        if (beforeLine) diff.push(`- ${beforeLine}`);
+        if (afterLine) diff.push(`+ ${afterLine}`);
+      }
+    }
+
+    return diff.length ? diff.join('\n') : 'Inga ändringar.';
+  }
+
+  function buildFixes(doc) {
+    const fixes = [];
+    const root = doc.documentElement;
+
+    if (root && !root.getAttribute('xmlns')) {
+      fixes.push({
+        id: 'fix-xmlns',
+        code: 'SLD_ADD_XMLNS',
+        label: 'Lägg till xmlns på StyledLayerDescriptor',
+        apply: (d) => d.documentElement.setAttribute('xmlns', 'http://www.opengis.net/sld'),
+      });
+    }
+
+    if (root && !root.getAttribute('version')) {
+      fixes.push({
+        id: 'fix-version',
+        code: 'SLD_ADD_VERSION',
+        label: 'Lägg till version="1.1.0"',
+        apply: (d) => d.documentElement.setAttribute('version', '1.1.0'),
+      });
+    }
+
+    return fixes;
+  }
+
+  function renderFixesList(fixes) {
+    if (!elements.fixesDiv) return;
+    elements.fixesDiv.innerHTML = '';
+
+    if (!fixes.length) {
+      elements.fixesDiv.textContent = 'Inga fixes hittades.';
+      return;
+    }
+
+    const list = document.createElement('div');
+    fixes.forEach((fix) => {
+      const row = document.createElement('label');
+      row.style.display = 'flex';
+      row.style.gap = '0.5rem';
+      row.style.alignItems = 'center';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.dataset.fixId = fix.id;
+      checkbox.addEventListener('change', () => updateFixPreview());
+
+      const text = document.createElement('span');
+      text.textContent = fix.label;
+
+      row.appendChild(checkbox);
+      row.appendChild(text);
+      list.appendChild(row);
+    });
+
+    elements.fixesDiv.appendChild(list);
+  }
+
+  function getSelectedFixes() {
+    if (!elements.fixesDiv) return [];
+    const selected = Array.from(elements.fixesDiv.querySelectorAll('input[type="checkbox"]'))
+      .filter((el) => el.checked)
+      .map((el) => el.dataset.fixId);
+    return state.fixes.filter((fix) => selected.includes(fix.id));
+  }
+
+  function updateFixPreview() {
+    if (!elements.fixesPreview || !elements.fixesPreviewWrapper) return;
+
+    const selected = getSelectedFixes();
+    if (!selected.length) {
+      elements.fixesPreviewWrapper.style.display = 'none';
+      elements.fixesPreview.textContent = '';
+      return;
+    }
+
+    const parseResult = parseSld();
+    if (!parseResult.valid) {
+      elements.fixesPreviewWrapper.style.display = 'none';
+      elements.fixesPreview.textContent = '';
+      return;
+    }
+
+    const serializer = new XMLSerializer();
+    const before = formatXmlForDiff(serializer.serializeToString(parseResult.doc));
+
+    const cloned = parseResult.doc.cloneNode(true);
+    selected.forEach((fix) => fix.apply(cloned));
+    const after = formatXmlForDiff(serializer.serializeToString(cloned));
+
+    elements.fixesPreviewWrapper.style.display = 'block';
+    elements.fixesPreview.textContent = diffChangedLines(before, after);
+  }
+
+  function actionSuggestFixes() {
+    const parseResult = parseSld();
+    if (!parseResult.valid) {
+      updateStatus('Validera SLD först');
+      return;
+    }
+
+    state.fixes = buildFixes(parseResult.doc);
+    renderFixesList(state.fixes);
+    updateFixPreview();
+    updateStatus('Fixes uppdaterade.');
+    appState.addLog(TOOL_KEY, 'INFO', `Fixes hittade: ${state.fixes.length}`);
+    updateUI();
+  }
+
+  function actionApplyFixes() {
+    const parseResult = parseSld();
+    if (!parseResult.valid) {
+      updateStatus('Validera SLD först');
+      return;
+    }
+
+    const selected = getSelectedFixes();
+    if (!selected.length) {
+      updateStatus('Inga fixes valda');
+      return;
+    }
+
+    const doc = parseResult.doc.cloneNode(true);
+    selected.forEach((fix) => fix.apply(doc));
+
+    const serializer = new XMLSerializer();
+    const updated = formatXmlForDiff(serializer.serializeToString(doc));
+    if (elements.input) elements.input.value = updated;
+
+    const report = appState.getReport(TOOL_KEY) || createValidationReport(true);
+    selected.forEach((fix) => {
+      addReportFix(report, fix.code, fix.label);
+    });
+    appState.setReport(TOOL_KEY, report);
+
+    updateStatus('Fixes applicerade');
+    appState.addLog(TOOL_KEY, 'OK', `Fixes applicerade: ${selected.length}`);
+    updateFixPreview();
+    updateUI();
+  }
+
+  function actionResetFixes() {
+    state.fixes = [];
+    if (elements.fixesDiv) elements.fixesDiv.textContent = '';
+    if (elements.fixesPreview) elements.fixesPreview.textContent = '';
+    if (elements.fixesPreviewWrapper) elements.fixesPreviewWrapper.style.display = 'none';
+    updateStatus('Fixes återställda');
+    appState.addLog(TOOL_KEY, 'INFO', 'Fixes återställda');
+    updateUI();
   }
 
   function parseSld() {
