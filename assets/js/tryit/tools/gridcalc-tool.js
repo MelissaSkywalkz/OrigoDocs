@@ -266,28 +266,66 @@ const gridcalcTool = (() => {
     const compression = parseFloat(elements.compressionInput?.value || 1.0);
 
     if (!Number.isFinite(tileKb) || tileKb <= 0) {
-      updateStatus('Invalid tile KB');
+      updateStatus('Ogiltig tile-storlek (KB)');
       return;
     }
 
-    const totalTiles = state.lastCalculation.derived.totalTiles;
-    const totalKB = totalTiles * tileKb * compression;
-    const totalMB = totalKB / 1024;
-    const totalGB = totalMB / 1024;
+    if (!Number.isFinite(compression) || compression <= 0) {
+      updateStatus('Ogiltig komprimeringsfaktor');
+      return;
+    }
+
+    const formatBigInt = (value) => {
+      const str = value.toString();
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    };
+
+    const bytesToHuman = (bytesBig) => {
+      const KB = 1024n;
+      const MB = KB * 1024n;
+      const GB = MB * 1024n;
+
+      const asNumber = (big) => Number(big) / 1024 / 1024 / 1024;
+
+      if (bytesBig >= GB) {
+        return { label: `${asNumber(bytesBig).toFixed(2)} GB`, gb: asNumber(bytesBig) };
+      }
+      if (bytesBig >= MB) {
+        return { label: `${(Number(bytesBig) / 1024 / 1024).toFixed(2)} MB`, gb: asNumber(bytesBig) };
+      }
+      if (bytesBig >= KB) {
+        return { label: `${(Number(bytesBig) / 1024).toFixed(2)} KB`, gb: asNumber(bytesBig) };
+      }
+
+      return { label: `${bytesBig.toString()} B`, gb: asNumber(bytesBig) };
+    };
+
+    const totalTilesNum = state.lastCalculation.derived.totalTiles;
+    const totalTiles = BigInt(Math.max(0, Math.round(totalTilesNum)));
+
+    const bytesPerTile = BigInt(Math.max(1, Math.round(tileKb * 1024)));
+    const compressionScale = 1000n;
+    const compressionScaled = BigInt(Math.max(1, Math.round(compression * Number(compressionScale))));
+
+    const totalBytes = (totalTiles * bytesPerTile * compressionScaled) / compressionScale;
+    const human = bytesToHuman(totalBytes);
+    const warnThresholdGb = 50;
+    const warnOver = Number.isFinite(human.gb) && human.gb > warnThresholdGb;
 
     const estimatorText = [
       'Cache Estimator Report',
       '',
       `Avg tile size: ${tileKb} KB`,
       `Compression: ${compression}x`,
-      `Total tiles: ${formatNumber(totalTiles)}`,
-      `Estimated size: ${totalMB.toFixed(2)} MB (${totalGB.toFixed(2)} GB)`,
+      `Total tiles: ${formatBigInt(totalTiles)}`,
+      `Estimated size: ${human.label}`,
+      warnOver ? `Warning: Estimate exceeds ${warnThresholdGb} GB` : 'Warning: None',
     ].join('\n');
 
     if (elements.estimatorOutput) elements.estimatorOutput.textContent = estimatorText;
 
-    updateStatus('Cache-estimat beräknat');
-    appState.addLog(TOOL_KEY, 'OK', `Cache-estimat: ${totalMB.toFixed(2)} MB`);
+    updateStatus(warnOver ? 'Cache-estimat klart (stor volym)' : 'Cache-estimat beräknat');
+    appState.addLog(TOOL_KEY, 'OK', `Cache-estimat: ${human.label}`);
     updateUI();
   }
 
