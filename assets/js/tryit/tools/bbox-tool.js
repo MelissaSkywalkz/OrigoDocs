@@ -113,39 +113,62 @@ const bboxTool = (() => {
       maxy: parseFloat(elements.maxy?.value || 0),
     };
 
-    const issues = [];
+    const report = createValidationReport();
 
     if (isNaN(values.minx) || isNaN(values.maxx) || isNaN(values.miny) || isNaN(values.maxy)) {
-      issues.push('Alla koordinater måste vara tal');
+      addReportError(report, 'BBOX_INVALID_NUMBER', 'Alla koordinater måste vara tal');
+      return report;
     }
 
-    if (values.minx >= values.maxx) issues.push('Min X måste vara mindre än Max X');
-    if (values.miny >= values.maxy) issues.push('Min Y måste vara mindre än Max Y');
-    if (values.minx < 0 || values.maxx > 1500000) issues.push('X-värden: 0 → 1,500,000');
-    if (values.miny < 5500000 || values.maxy > 8000000)
-      issues.push('Y-värden: 5,500,000 → 8,000,000');
+    if (values.minx >= values.maxx) {
+      addReportError(report, 'BBOX_MIN_MAX_REVERSED', 'Min X måste vara mindre än Max X', 'minx');
+    }
 
-    return {
-      valid: issues.length === 0,
-      values: issues.length === 0 ? values : null,
-      issues,
-    };
+    if (values.miny >= values.maxy) {
+      addReportError(report, 'BBOX_MIN_MAX_REVERSED', 'Min Y måste vara mindre än Max Y', 'miny');
+    }
+
+    if (values.minx < 0 || values.maxx > 1500000) {
+      addReportError(
+        report,
+        'BBOX_OUT_OF_RANGE',
+        'X-värden måste vara inom 0 → 1,500,000',
+        'x',
+      );
+    }
+
+    if (values.miny < 5500000 || values.maxy > 8000000) {
+      addReportError(
+        report,
+        'BBOX_OUT_OF_RANGE',
+        'Y-värden måste vara inom 5,500,000 → 8,000,000',
+        'y',
+      );
+    }
+
+    if (report.ok) {
+      report.meta.values = values;
+      report.meta.crs = BBOX_CRS;
+    }
+
+    return report;
   }
 
   function generate() {
     const validation = validateBbox();
 
-    if (!validation.valid) {
+    if (!validation.ok) {
       if (elements.output) elements.output.value = '';
       if (elements.urlOutput) elements.urlOutput.value = '';
-      updateStatus(validation.issues[0]);
-      appState.addLog(TOOL_KEY, 'ERROR', `Validering misslyckades: ${validation.issues[0]}`);
-      renderValidationReport(validation.issues);
+      const firstError = validation.errors[0]?.message || 'Validering misslyckades';
+      updateStatus(firstError);
+      appState.addLog(TOOL_KEY, 'ERROR', `Validering misslyckades: ${firstError}`);
+      appState.setReport(TOOL_KEY, validation);
       updateUI();
       return;
     }
 
-    const bbox = validation.values;
+    const bbox = validation.meta.values;
     state.lastBbox = bbox;
     state.hasGenerated = true;
 
@@ -185,9 +208,13 @@ const bboxTool = (() => {
       elements.normalizedEl.value = norm;
     }
 
+    validation.meta.bbox = bboxStr;
+    validation.meta.width = bbox.maxx - bbox.minx;
+    validation.meta.height = bbox.maxy - bbox.miny;
+
     updateStatus('BBOX genererad.');
     appState.addLog(TOOL_KEY, 'OK', `BBOX genererad: ${bboxStr}`);
-    renderValidationReport([]);
+    appState.setReport(TOOL_KEY, validation);
     updateUI();
   }
 
@@ -343,20 +370,6 @@ const bboxTool = (() => {
     updateStatus('TXT exporterad');
     appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
     updateUI();
-  }
-
-  function renderValidationReport(issues) {
-    if (!elements.reportEl) return;
-
-    const report = [
-      '═══ VALIDERINGSRAPPORT ═══',
-      '',
-      issues.length === 0 ? '[OK] Giltig BBOX' : '[WARN] Problem hittade',
-      '',
-      ...issues.map((i) => `  ${i}`),
-    ];
-
-    renderReport(elements.reportEl, report);
   }
 
   function updateStatus(message) {

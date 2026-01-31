@@ -98,23 +98,33 @@ const gridcalcTool = (() => {
 
   function calculate(source = 'manual') {
     const inputs = parseInputs();
-    const issues = [];
+    const report = createValidationReport(true);
 
-    if (!Number.isFinite(inputs.resolution) || inputs.resolution <= 0)
-      issues.push('Resolution invalid');
-    if (!Number.isFinite(inputs.scale) || inputs.scale <= 0) issues.push('Scale invalid');
-    if (!Number.isFinite(inputs.tile) || inputs.tile <= 0) issues.push('Tile size invalid');
-    if (!Number.isFinite(inputs.meta) || inputs.meta <= 0) issues.push('Metatile invalid');
-    if (!Number.isFinite(inputs.bboxwidth) || inputs.bboxwidth <= 0)
-      issues.push('BBOX width invalid');
-    if (!Number.isFinite(inputs.bboxheight) || inputs.bboxheight <= 0)
-      issues.push('BBOX height invalid');
+    if (!Number.isFinite(inputs.resolution) || inputs.resolution <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Resolution måste vara > 0', 'resolution');
+    }
+    if (!Number.isFinite(inputs.scale) || inputs.scale <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Skala måste vara > 0', 'scale');
+    }
+    if (!Number.isFinite(inputs.tile) || inputs.tile <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Tile size måste vara > 0', 'tile');
+    }
+    if (!Number.isFinite(inputs.meta) || inputs.meta <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Metatile måste vara > 0', 'meta');
+    }
+    if (!Number.isFinite(inputs.bboxwidth) || inputs.bboxwidth <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'BBOX-bredd måste vara > 0', 'bboxwidth');
+    }
+    if (!Number.isFinite(inputs.bboxheight) || inputs.bboxheight <= 0) {
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'BBOX-höjd måste vara > 0', 'bboxheight');
+    }
 
-    if (issues.length > 0) {
+    if (report.errors.length > 0) {
       if (elements.output) elements.output.value = '';
-      updateStatus(issues[0]);
-      appState.addLog(TOOL_KEY, 'ERROR', issues[0]);
-      appState.setReport(TOOL_KEY, ['═══ VALIDERINGSRAPPORT ═══', '', '[ERROR] ' + issues[0]]);
+      const firstError = report.errors[0]?.message || 'Ogiltig inmatning';
+      updateStatus(firstError);
+      appState.addLog(TOOL_KEY, 'ERROR', firstError);
+      appState.setReport(TOOL_KEY, report);
       updateUI();
       return;
     }
@@ -149,14 +159,13 @@ const gridcalcTool = (() => {
     updateStatus('Beräknad.');
     appState.addLog(TOOL_KEY, 'OK', `Beräkning från ${source}: ${formatNumber(totalTiles)} tiles`);
 
-    const report = [
-      '═══ VALIDERINGSRAPPORT ═══',
-      '',
-      '[OK] Giltig',
-      `Resolution: ${inputs.resolution.toFixed(4)} m/px`,
-      `Scale: 1:${inputs.scale.toFixed(0)}`,
-      `Tiles: ${formatNumber(totalTiles)}`,
-    ];
+    report.meta.resolution = inputs.resolution.toFixed(4);
+    report.meta.scale = inputs.scale.toFixed(0);
+    report.meta.tiles = formatNumber(totalTiles);
+    report.meta.tileSpanM = tileSpanM.toFixed(2);
+    report.meta.metaSpanM = metaSpanM.toFixed(2);
+    report.meta.seedRecommendation = seedRec;
+
     appState.setReport(TOOL_KEY, report);
     updateUI();
   }
@@ -164,7 +173,11 @@ const gridcalcTool = (() => {
   function fromResolution() {
     const res = parseFloat(elements.resolution?.value || 0);
     if (!Number.isFinite(res) || res <= 0) {
-      updateStatus('Invalid resolution');
+      const report = createValidationReport(false);
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Resolution måste vara > 0', 'resolution');
+      appState.setReport(TOOL_KEY, report);
+      updateStatus('Ogiltig resolution');
+      updateUI();
       return;
     }
     if (elements.scale) elements.scale.value = (res / PIXEL_SIZE_M).toFixed(0);
@@ -174,7 +187,11 @@ const gridcalcTool = (() => {
   function fromScale() {
     const scale = parseFloat(elements.scale?.value || 0);
     if (!Number.isFinite(scale) || scale <= 0) {
-      updateStatus('Invalid scale');
+      const report = createValidationReport(false);
+      addReportError(report, 'GRIDCALC_INVALID_NUMBER', 'Skala måste vara > 0', 'scale');
+      appState.setReport(TOOL_KEY, report);
+      updateStatus('Ogiltig skala');
+      updateUI();
       return;
     }
     if (elements.resolution) elements.resolution.value = (scale * PIXEL_SIZE_M).toFixed(4);

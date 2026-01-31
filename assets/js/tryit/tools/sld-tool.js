@@ -103,29 +103,29 @@ const sldTool = (() => {
   }
 
   function validateSld(doc) {
-    const issues = [];
+    const report = createValidationReport(true);
 
     // Check for StyledLayerDescriptor
     if (!doc.querySelector('StyledLayerDescriptor')) {
-      issues.push('Ingen StyledLayerDescriptor hittad');
+      addReportError(report, 'SLD_MISSING_ROOT', 'StyledLayerDescriptor saknas');
     }
 
     // Check for NamedLayer
     const namedLayers = doc.querySelectorAll('NamedLayer');
     if (namedLayers.length === 0) {
-      issues.push('Ingen NamedLayer hittad');
+      addReportError(report, 'SLD_MISSING_LAYER', 'NamedLayer saknas');
     }
 
     // Check for UserStyle
     const userStyles = doc.querySelectorAll('UserStyle');
     if (userStyles.length === 0) {
-      issues.push('Ingen UserStyle hittad');
+      addReportError(report, 'SLD_MISSING_STYLE', 'UserStyle saknas');
     }
 
     // Check for FeatureTypeStyle
     const fts = doc.querySelectorAll('FeatureTypeStyle');
     if (fts.length === 0) {
-      issues.push('Ingen FeatureTypeStyle hittad');
+      addReportError(report, 'SLD_MISSING_FEATURETYPESTYLE', 'FeatureTypeStyle saknas');
     }
 
     // Check for Symbolizers
@@ -133,54 +133,44 @@ const sldTool = (() => {
       'PointSymbolizer, LineSymbolizer, PolygonSymbolizer, TextSymbolizer, RasterSymbolizer',
     );
     if (symbolizers.length === 0) {
-      issues.push('Ingen Symbolizer hittad');
+      addReportError(report, 'SLD_MISSING_SYMBOLIZER', 'Symbolizer saknas');
     }
 
-    return {
-      valid: issues.length === 0,
-      issues,
-    };
+    report.meta.namedLayerCount = namedLayers.length;
+    report.meta.userStyleCount = userStyles.length;
+    report.meta.featureTypeStyleCount = fts.length;
+    report.meta.symbolizerCount = symbolizers.length;
+
+    return report;
   }
 
   function actionCheck() {
     const parseResult = parseSld();
 
     if (!parseResult.valid) {
+      const report = createValidationReport(false);
+      addReportError(report, 'SLD_PARSE_ERROR', `XML-parsefel: ${parseResult.error}`);
+      appState.setReport(TOOL_KEY, report);
       updateStatus(`XML-parsefel: ${parseResult.error}`);
       appState.addLog(TOOL_KEY, 'ERROR', `Parse-fel: ${parseResult.error}`);
-      renderReport();
       updateUI();
       return;
     }
 
-    const validation = validateSld(parseResult.doc);
+    const report = validateSld(parseResult.doc);
     state.lastValidSld = parseResult.doc;
     state.lastParsedDoc = parseResult.doc;
-
-    const report = [
-      '═══ VALIDERINGSRAPPORT ═══',
-      '',
-      validation.valid ? '[OK] Giltig SLD' : '[WARN] Problem',
-      '',
-    ];
-
-    if (validation.issues.length > 0) {
-      report.push('Problem:');
-      validation.issues.forEach((issue) => report.push(`  - ${issue}`));
-    } else {
-      report.push('[OK] SLD-struktur är korrekt');
-    }
 
     appState.setReport(TOOL_KEY, report);
     if (elements.output) elements.output.textContent = elements.input.value;
 
     updateStatus(
-      validation.valid ? 'Validering OK' : `${validation.issues.length} problem hittade`,
+      report.errors.length === 0 ? 'Validering OK' : `${report.errors.length} problem hittade`,
     );
     appState.addLog(
       TOOL_KEY,
-      validation.valid ? 'OK' : 'WARN',
-      validation.valid ? 'Validering OK' : `${validation.issues.length} problem`,
+      report.errors.length === 0 ? 'OK' : 'WARN',
+      report.errors.length === 0 ? 'Validering OK' : `${report.errors.length} problem`,
     );
     updateUI();
   }
@@ -189,8 +179,11 @@ const sldTool = (() => {
     const parseResult = parseSld();
 
     if (!parseResult.valid) {
-      updateStatus(`XML-parsefel`);
-      appState.addLog(TOOL_KEY, 'ERROR', `Lint misslyckades: parse-fel`);
+      const report = createValidationReport(false);
+      addReportError(report, 'SLD_PARSE_ERROR', 'XML-parsefel');
+      appState.setReport(TOOL_KEY, report);
+      updateStatus('XML-parsefel');
+      appState.addLog(TOOL_KEY, 'ERROR', 'Lint misslyckades: parse-fel');
       return;
     }
 
@@ -227,13 +220,10 @@ const sldTool = (() => {
       }
     });
 
-    const report = [
-      '═══ LINT REPORT ═══',
-      '',
-      issues.length === 0 ? '[OK] Inga problem' : `[WARN] ${issues.length} problem`,
-      '',
-      ...issues.map((i) => `  - ${i}`),
-    ];
+    const report = createValidationReport(true);
+    issues.forEach((issue) => {
+      addReportWarning(report, 'SLD_LINT_WARNING', issue);
+    });
 
     appState.setReport(TOOL_KEY, report);
     updateStatus(issues.length === 0 ? 'Lint OK' : `${issues.length} problem`);
@@ -376,26 +366,28 @@ const sldTool = (() => {
   }
 
   async function actionExportLintTxt() {
-    const report = appState.getReport(TOOL_KEY).join('\n');
+    const report = appState.getReport(TOOL_KEY);
     if (!report) {
       updateStatus('Ingen rapport');
       return;
     }
 
-    downloadFile(`sld-lint-${Date.now()}.txt`, report, 'text/plain');
+    const reportText = renderValidationReport(report).join('\n');
+    downloadFile(`sld-lint-${Date.now()}.txt`, reportText, 'text/plain');
     updateStatus('Lint-rapport exporterad');
     appState.addLog(TOOL_KEY, 'OK', 'Lint-rapport exporterad');
     updateUI();
   }
 
   async function actionCopyLint() {
-    const report = appState.getReport(TOOL_KEY).join('\n');
+    const report = appState.getReport(TOOL_KEY);
     if (!report) {
       updateStatus('Ingen rapport');
       return;
     }
 
-    if (await copyToClipboard(report)) {
+    const reportText = renderValidationReport(report).join('\n');
+    if (await copyToClipboard(reportText)) {
       updateStatus('Lint-rapport kopierad');
       appState.addLog(TOOL_KEY, 'OK', 'Lint-rapport kopierad');
     } else {
@@ -407,12 +399,6 @@ const sldTool = (() => {
 
   function updateStatus(message) {
     if (elements.status) elements.status.textContent = message;
-  }
-
-  function renderReport() {
-    if (elements.reportEl) {
-      renderReport(elements.reportEl, appState.getReport(TOOL_KEY));
-    }
   }
 
   function updateUI() {

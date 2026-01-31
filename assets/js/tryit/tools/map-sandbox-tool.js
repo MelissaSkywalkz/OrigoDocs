@@ -83,6 +83,9 @@ const mapSandboxTool = (() => {
     if (!urlString) {
       updateStatus('Ange en WMS URL');
       appState.addLog(TOOL_KEY, 'WARN', 'URL saknas');
+      const report = createValidationReport(true);
+      addReportWarning(report, 'URL_MISSING_BASE', 'URL saknas');
+      appState.setReport(TOOL_KEY, report);
       updateUI();
       return;
     }
@@ -90,8 +93,11 @@ const mapSandboxTool = (() => {
     const parseResult = parseUrl(urlString);
 
     if (!parseResult.valid) {
-      updateStatus(`Ogiltig URL: ${parseResult.error}`);
+      updateStatus('Ogiltig URL');
       appState.addLog(TOOL_KEY, 'ERROR', `URL-parsefel: ${parseResult.error}`);
+      const report = createValidationReport(false);
+      addReportError(report, 'URL_INVALID_FORMAT', 'Ogiltig URL', undefined, parseResult.error);
+      appState.setReport(TOOL_KEY, report);
       if (elements.previewImg) elements.previewImg.style.display = 'none';
       if (elements.fallback) elements.fallback.style.display = 'block';
       updateUI();
@@ -126,16 +132,9 @@ const mapSandboxTool = (() => {
       };
     }
 
-    const report = [
-      '═══ VALIDERINGSRAPPORT ═══',
-      '',
-      '[OK] URL-syntax giltig',
-      '',
-      'Parsed Parameters:',
-      ...Object.entries(parseResult.params).map(([k, v]) => `  ${k}: ${v}`),
-    ];
-
-    appState.setReport(TOOL_KEY, report);
+    const validationReport = createValidationReport(true);
+    validationReport.meta.parameters = parseResult.params;
+    appState.setReport(TOOL_KEY, validationReport);
     updateUI();
   }
 

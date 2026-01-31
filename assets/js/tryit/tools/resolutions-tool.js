@@ -97,26 +97,39 @@ const resolutionsTool = (() => {
     const { resolutions, errors } = parseResolutions();
 
     if (errors.length > 0) {
+      const report = createValidationReport(false);
+      errors.forEach((err) => {
+        addReportError(
+          report,
+          'RESOLUTION_INVALID_FORMAT',
+          `Ogiltigt värde på rad ${err.line}: ${err.text}`,
+          `rad ${err.line}`,
+        );
+      });
       updateStatus(`Parse-fel på ${errors.length} rader`);
       appState.addLog(TOOL_KEY, 'ERROR', `Parse-fel: ${errors.length} rader`);
-      renderValidationReport(resolutions, errors);
+      appState.setReport(TOOL_KEY, report);
       updateUI();
       return;
     }
 
     if (resolutions.length === 0) {
+      const report = createValidationReport(true);
+      addReportWarning(report, 'RESOLUTION_EMPTY_INPUT', 'Ingen data att validera');
       updateStatus('Ingen data');
       appState.addLog(TOOL_KEY, 'WARN', 'Ingen data att validera');
+      appState.setReport(TOOL_KEY, report);
       updateUI();
       return;
     }
 
     // Check ordering & duplicates
-    const issues = [];
     const unique = new Set(resolutions);
+    const report = createValidationReport(true);
 
     if (unique.size < resolutions.length) {
-      issues.push(`${resolutions.length - unique.size} dubbletter`);
+      const duplicateCount = resolutions.length - unique.size;
+      addReportWarning(report, 'RESOLUTION_DUPLICATE', `${duplicateCount} dubbletter`);
     }
 
     let isDescending = true;
@@ -128,13 +141,18 @@ const resolutionsTool = (() => {
     }
 
     if (!isDescending) {
-      issues.push('Inte strikt fallande ordning');
+      addReportWarning(report, 'RESOLUTION_OUT_OF_ORDER', 'Inte strikt fallande ordning');
     }
 
+    report.meta.count = resolutions.length;
+    report.meta.min = Math.min(...resolutions);
+    report.meta.max = Math.max(...resolutions);
+    report.meta.descending = isDescending;
+
     state.lastValidResolutions = resolutions;
-    updateStatus(issues.length === 0 ? 'Validering OK' : `Varningar: ${issues.length}`);
-    appState.addLog(TOOL_KEY, issues.length > 0 ? 'WARN' : 'OK', `${resolutions.length} värden`);
-    renderValidationReport(resolutions, []);
+    updateStatus(report.warnings.length === 0 ? 'Validering OK' : `Varningar: ${report.warnings.length}`);
+    appState.addLog(TOOL_KEY, report.warnings.length > 0 ? 'WARN' : 'OK', `${resolutions.length} värden`);
+    appState.setReport(TOOL_KEY, report);
     updateUI();
   }
 
@@ -222,13 +240,14 @@ const resolutionsTool = (() => {
   }
 
   function downloadReport() {
-    const report = appState.getReport(TOOL_KEY).join('\n');
+    const report = appState.getReport(TOOL_KEY);
     if (!report) {
       updateStatus('Ingen rapport att ladda ner');
       return;
     }
 
-    downloadFile(`resolutions-report-${Date.now()}.txt`, report, 'text/plain');
+    const reportText = renderValidationReport(report).join('\n');
+    downloadFile(`resolutions-report-${Date.now()}.txt`, reportText, 'text/plain');
     updateStatus('Rapport nedladdad');
     appState.addLog(TOOL_KEY, 'OK', 'Rapport nedladdad');
     updateUI();
@@ -242,30 +261,6 @@ const resolutionsTool = (() => {
     appState.clearTool(TOOL_KEY);
     appState.addLog(TOOL_KEY, 'INFO', 'Formulär rensat');
     updateUI();
-  }
-
-  function renderValidationReport(resolutions, errors) {
-    const report = ['═══ VALIDERINGSRAPPORT ═══', ''];
-
-    if (errors.length > 0) {
-      report.push(`[ERROR] Parse-fel på ${errors.length} rader`);
-      errors.forEach((e) => report.push(`  Rad ${e.line}: ${e.text}`));
-      appState.setReport(TOOL_KEY, report);
-      return;
-    }
-
-    if (resolutions.length === 0) {
-      report.push('[WARN] Ingen data');
-      appState.setReport(TOOL_KEY, report);
-      return;
-    }
-
-    report.push('[OK] Validerad');
-    report.push(`Antal: ${resolutions.length}`);
-    report.push(`Min: ${Math.min(...resolutions)}`);
-    report.push(`Max: ${Math.max(...resolutions)}`);
-
-    appState.setReport(TOOL_KEY, report);
   }
 
   function updateStatus(message) {

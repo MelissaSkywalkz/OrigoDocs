@@ -166,15 +166,12 @@ const gridsetExplorerTool = (() => {
       elements.tilesSpan.textContent = formatNumber(totalTiles);
     }
 
-    const report = [
-      '═══ VALIDERINGSRAPPORT ═══',
-      '',
-      '[OK] Extent vald',
-      `Extent: [${ext.minx}, ${ext.miny}, ${ext.maxx}, ${ext.maxy}]`,
-      `Width: ${width} m`,
-      `Height: ${height} m`,
-      `Estimated tiles (256px @ 100m/px): ${formatNumber(totalTiles)}`,
-    ];
+    const report = createValidationReport(true);
+    report.meta.extent = [ext.minx, ext.miny, ext.maxx, ext.maxy];
+    report.meta.width = width;
+    report.meta.height = height;
+    report.meta.tiles = formatNumber(totalTiles);
+    report.meta.resolution = resolution;
 
     appState.setReport(TOOL_KEY, report);
   }

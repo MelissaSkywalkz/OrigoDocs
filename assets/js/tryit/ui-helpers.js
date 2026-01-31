@@ -2,12 +2,220 @@
  * TryIt UI Helpers - Shared utilities for all tools
  *
  * Provides:
+ * - Unified ValidationReport type and rendering
  * - Status message rendering
  * - Validation report rendering
  * - Run log management
  * - File downloads
  * - Text copy utilities
  */
+
+/**
+ * Unified ValidationReport Type
+ * @typedef {Object} ValidationReport
+ * @property {boolean} ok - True if validation passed
+ * @property {Array<{code: string, message: string, field?: string, details?: string}>} errors - Array of errors
+ * @property {Array<{code: string, message: string, field?: string, details?: string}>} warnings - Array of warnings
+ * @property {Array<{code: string, description: string}>} fixesApplied - Fixes that were auto-applied
+ * @property {Object} meta - Additional metadata (tool-specific)
+ *
+ * Error codes must be in English and uppercase (e.g., JSON_PARSE_ERROR, BBOX_OUT_OF_RANGE)
+ * Messages rendered to UI should be Swedish
+ */
+
+/**
+ * Swedish translations for common error/warning codes
+ * Maps English codes to Swedish UI labels
+ */
+const ERROR_CODE_LABELS = {
+  // JSON Tool
+  JSON_PARSE_ERROR: 'JSON-parsefel',
+  JSON_EMPTY_INPUT: 'Ingen input',
+  GEOJSON_INVALID_COORDS: 'Ogiltiga koordinater',
+  GEOJSON_COORD_ORDER: 'Koordinater verkar vara omvända',
+  GEOJSON_EMPTY: 'Inga koordinater hittade',
+
+  // URL Builder
+  URL_INVALID_FORMAT: 'Ogiltigt URL-format',
+  URL_MISSING_BASE: 'Bas-URL saknas',
+  URL_MISSING_LAYER: 'Layer saknas',
+  URL_INVALID_PROTOCOL: 'Ogiltigt protokoll',
+  URL_MISSING_SERVICE: 'Service-parameter saknas',
+  URL_MISSING_REQUEST: 'Request-parameter saknas',
+  URL_MISSING_BBOX: 'BBOX saknas',
+  URL_MISSING_CRS: 'CRS/SRS saknas',
+  URL_MISSING_FORMAT: 'Format saknas',
+  URL_INVALID_BBOX: 'BBOX-format ogiltigt',
+
+  // BBOX Tool
+  BBOX_EMPTY_INPUT: 'Ingen input',
+  BBOX_INVALID_FORMAT: 'BBOX måste innehålla 4 värden',
+  BBOX_INVALID_NUMBER: 'BBOX-värden måste vara tal',
+  BBOX_OUT_OF_RANGE: 'BBOX-värden utanför giltigt område',
+  BBOX_MIN_MAX_REVERSED: 'Min/Max är omkastade',
+
+  // Resolutions Tool
+  RESOLUTION_EMPTY_INPUT: 'Ingen input',
+  RESOLUTION_INVALID_FORMAT: 'Ogiltigt format',
+  RESOLUTION_DUPLICATE: 'Duplikat resolution',
+  RESOLUTION_OUT_OF_ORDER: 'Resolutioner inte i ordning',
+  RESOLUTION_INVALID_VALUE: 'Resolution måste vara > 0',
+
+  // Gridcalc Tool
+  GRIDCALC_INVALID_INPUT: 'Ogiltig inmatning',
+  GRIDCALC_INVALID_NUMBER: 'Värde måste vara tal',
+  GRIDCALC_VALUE_TOO_SMALL: 'Värde för litet',
+  GRIDCALC_VALUE_TOO_LARGE: 'Värde för stort',
+
+  // SLD Tool
+  SLD_PARSE_ERROR: 'XML-parsefel',
+  SLD_EMPTY_INPUT: 'Ingen input',
+  SLD_MISSING_ROOT: 'StyledLayerDescriptor saknas',
+  SLD_MISSING_LAYER: 'NamedLayer eller UserLayer saknas',
+  SLD_MISSING_STYLE: 'UserStyle saknas',
+  SLD_MISSING_RULE: 'Rule saknas',
+  SLD_MISSING_FEATURETYPESTYLE: 'FeatureTypeStyle saknas',
+  SLD_INVALID_SCALE: 'Ogiltig scale-konfiguration',
+  SLD_MISSING_SYMBOLIZER: 'Symbolizer saknas',
+  SLD_MISSING_NAMESPACE: 'Namespace saknas',
+  SLD_LINT_WARNING: 'Lint-varning',
+
+  // Gridset Tool
+  GRIDSET_INVALID_EXTENT: 'Ogiltig extent',
+  GRIDSET_INVALID_RESOLUTION: 'Ogiltig resolution',
+  GRIDSET_INVALID_TILES: 'Ogiltig tile-konfiguration',
+};
+
+/**
+ * Create a new ValidationReport
+ * @param {boolean} ok
+ * @returns {ValidationReport}
+ */
+function createValidationReport(ok = true) {
+  return {
+    ok,
+    errors: [],
+    warnings: [],
+    fixesApplied: [],
+    meta: {},
+  };
+}
+
+/**
+ * Add error to ValidationReport
+ * @param {ValidationReport} report
+ * @param {string} code - English error code (e.g., JSON_PARSE_ERROR)
+ * @param {string} message - Swedish message
+ * @param {string} field - Optional field name
+ * @param {string} details - Optional additional details
+ */
+function addReportError(report, code, message, field, details) {
+  report.ok = false;
+  report.errors.push({
+    code,
+    message,
+    field: field || undefined,
+    details: details || undefined,
+  });
+}
+
+/**
+ * Add warning to ValidationReport
+ * @param {ValidationReport} report
+ * @param {string} code - English warning code
+ * @param {string} message - Swedish message
+ * @param {string} field - Optional field name
+ * @param {string} details - Optional additional details
+ */
+function addReportWarning(report, code, message, field, details) {
+  report.warnings.push({
+    code,
+    message,
+    field: field || undefined,
+    details: details || undefined,
+  });
+}
+
+/**
+ * Add applied fix to ValidationReport
+ * @param {ValidationReport} report
+ * @param {string} code - Fix code (e.g., BBOX_NORMALIZED, RESOLUTION_SORTED)
+ * @param {string} description - Swedish description
+ */
+function addReportFix(report, code, description) {
+  report.fixesApplied.push({
+    code,
+    description,
+  });
+}
+
+/**
+ * Render ValidationReport to formatted string array
+ * @param {ValidationReport} report
+ * @returns {string[]}
+ */
+function renderValidationReport(report) {
+  const lines = [];
+
+  // Header
+  lines.push('═══ VALIDERINGSRAPPORT ═══');
+  lines.push('');
+
+  // Status line
+  if (report.errors.length > 0) {
+    lines.push('[ERROR] Validering misslyckades');
+  } else if (report.warnings.length > 0) {
+    lines.push('[⚠] Godkänd med varningar');
+  } else {
+    lines.push('[OK] Validering godkänd');
+  }
+
+  lines.push('');
+
+  // Errors section
+  if (report.errors.length > 0) {
+    lines.push('Fel:');
+    report.errors.forEach((err) => {
+      const label = err.message || ERROR_CODE_LABELS[err.code] || err.code;
+      lines.push(`  [${err.code}] ${label}`);
+      if (err.field) lines.push(`    Fält: ${err.field}`);
+      if (err.details) lines.push(`    Detaljer: ${err.details}`);
+    });
+    lines.push('');
+  }
+
+  // Warnings section
+  if (report.warnings.length > 0) {
+    lines.push('Varningar:');
+    report.warnings.forEach((warn) => {
+      const label = warn.message || ERROR_CODE_LABELS[warn.code] || warn.code;
+      lines.push(`  [${warn.code}] ${label}`);
+      if (warn.field) lines.push(`    Fält: ${warn.field}`);
+      if (warn.details) lines.push(`    Detaljer: ${warn.details}`);
+    });
+    lines.push('');
+  }
+
+  // Fixes applied section
+  if (report.fixesApplied.length > 0) {
+    lines.push('Tillämpad korrigering:');
+    report.fixesApplied.forEach((fix) => {
+      lines.push(`  [${fix.code}] ${fix.description}`);
+    });
+    lines.push('');
+  }
+
+  // Meta section (if present)
+  if (Object.keys(report.meta).length > 0) {
+    lines.push('Metadata:');
+    Object.entries(report.meta).forEach(([key, value]) => {
+      const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+      lines.push(`  ${key}: ${displayValue}`);
+    });
+  }
+
+  return lines;
+}
 
 /**
  * Update tool status element
@@ -22,13 +230,25 @@ function updateStatus(element, message) {
 
 /**
  * Render validation report to DOM element
+ * Accepts either ValidationReport object or string array for backwards compatibility
  * @param {HTMLElement} element - Report container
- * @param {string[]} lines - Report lines
+ * @param {ValidationReport|string[]} reportOrLines - Report object or string array
  */
-function renderReport(element, lines) {
-  if (element) {
-    element.textContent = (lines || []).join('\n');
+function renderReport(element, reportOrLines) {
+  if (!element) return;
+
+  let lines;
+  if (Array.isArray(reportOrLines)) {
+    // Backwards compatibility with string arrays
+    lines = reportOrLines;
+  } else if (reportOrLines && typeof reportOrLines === 'object') {
+    // New ValidationReport format
+    lines = renderValidationReport(reportOrLines);
+  } else {
+    lines = [];
   }
+
+  element.textContent = lines.join('\n');
 }
 
 /**

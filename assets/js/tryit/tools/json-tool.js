@@ -230,36 +230,42 @@ const jsonTool = (() => {
   }
 
   function generateValidationReport(parseResult, bbox, isGeojson) {
-    const report = [];
+    const report = createValidationReport();
 
     if (!parseResult.valid) {
-      report.push('═══ VALIDERINGSRAPPORT ═══');
-      report.push('');
-      report.push('[ERROR] JSON-parsefel');
-      report.push('');
-      report.push(`Fel: ${parseResult.error}`);
+      addReportError(report, 'JSON_PARSE_ERROR', `JSON-parsefel: ${parseResult.error}`);
       return report;
     }
 
-    report.push('═══ VALIDERINGSRAPPORT ═══');
-    report.push('');
-    report.push('[OK] Giltig JSON');
-    report.push('');
-    report.push(`Format: ${isGeojson ? 'GeoJSON' : 'JSON'}`);
+    // Validation passed
+    report.ok = true;
 
+    // Add metadata
+    report.meta.format = isGeojson ? 'GeoJSON' : 'JSON';
     if (isGeojson && parseResult.data.features) {
-      report.push(`Features: ${parseResult.data.features.length}`);
+      report.meta.featureCount = parseResult.data.features.length;
     }
 
-    if (bbox) {
-      report.push('');
-      report.push('BBOX hittad:');
-      report.push(
-        `  X: ${bbox.minx.toFixed(6)} → ${bbox.maxx.toFixed(6)} (width: ${(bbox.maxx - bbox.minx).toFixed(2)})`,
-      );
-      report.push(
-        `  Y: ${bbox.miny.toFixed(6)} → ${bbox.maxy.toFixed(6)} (height: ${(bbox.maxy - bbox.miny).toFixed(2)})`,
-      );
+    // Check for GeoJSON coordinate order warnings
+    if (isGeojson && bbox) {
+      const { miny, maxy } = bbox;
+      if (Math.abs(miny) > 90 || Math.abs(maxy) > 90) {
+        addReportWarning(
+          report,
+          'GEOJSON_COORD_ORDER',
+          'Koordinater verkar vara omvända (lat/lon istället för lon/lat)',
+        );
+      }
+
+      // Add BBOX info to metadata
+      report.meta.bbox = {
+        minx: bbox.minx.toFixed(6),
+        miny: bbox.miny.toFixed(6),
+        maxx: bbox.maxx.toFixed(6),
+        maxy: bbox.maxy.toFixed(6),
+        width: (bbox.maxx - bbox.minx).toFixed(2),
+        height: (bbox.maxy - bbox.miny).toFixed(2),
+      };
     }
 
     return report;
@@ -272,7 +278,8 @@ const jsonTool = (() => {
       updateStatus(`Parse-fel: ${parseResult.error}`);
       appState.addLog(TOOL_KEY, 'ERROR', `Parse-fel: ${parseResult.error}`);
       renderOutput(parseResult.error);
-      appState.setReport(TOOL_KEY, generateValidationReport(parseResult, null, false));
+      const report = generateValidationReport(parseResult, null, false);
+      appState.setReport(TOOL_KEY, report);
       updateUI();
       return;
     }

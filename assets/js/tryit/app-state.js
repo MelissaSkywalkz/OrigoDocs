@@ -10,7 +10,7 @@ class AppState {
     // Tool logs: { [toolKey]: [...log entries] }
     this.logs = {};
 
-    // Validation reports: { [toolKey]: [...report lines] }
+    // Validation reports: { [toolKey]: ValidationReport }
     this.reports = {};
 
     // Tool-specific state (optional)
@@ -59,19 +59,19 @@ class AppState {
   /**
    * Set validation report for a tool
    * @param {string} toolKey
-   * @param {string[]} lines - Array of report lines
+   * @param {object} report - ValidationReport object
    */
   setReport(toolKey, lines) {
-    this.reports[toolKey] = Array.isArray(lines) ? lines : [lines];
+    this.reports[toolKey] = lines;
   }
 
   /**
    * Get validation report for a tool
    * @param {string} toolKey
-   * @returns {string[]}
+   * @returns {object|null}
    */
   getReport(toolKey) {
-    return this.reports[toolKey] || [];
+    return this.reports[toolKey] || null;
   }
 
   /**

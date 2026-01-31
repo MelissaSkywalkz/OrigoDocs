@@ -156,11 +156,19 @@ const urlBuilderTool = (() => {
     const issues = [];
 
     if (!elements.base.value.trim()) {
-      issues.push('Bas-URL är tom');
+      issues.push({
+        code: 'URL_MISSING_BASE',
+        message: 'Bas-URL är tom',
+        field: 'base',
+      });
     }
 
     if (!elements.layer.value.trim()) {
-      issues.push('Layer är tom');
+      issues.push({
+        code: 'URL_MISSING_LAYER',
+        message: 'Layer är tom',
+        field: 'layer',
+      });
     }
 
     return {
@@ -206,33 +214,35 @@ const urlBuilderTool = (() => {
       return {
         valid: false,
         url: null,
-        errors: [error.message],
+        errors: [
+          {
+            code: 'URL_INVALID_FORMAT',
+            message: 'Ogiltig bas-URL',
+            details: error.message,
+          },
+        ],
       };
     }
   }
 
   function generateValidationReport(result) {
-    const report = [];
-    report.push('═══ VALIDERINGSRAPPORT ═══');
-    report.push('');
+    const report = createValidationReport(result.valid);
 
     if (!result.valid) {
-      report.push('[ERROR] URL generation misslyckades');
-      report.push('');
-      result.errors.forEach((e) => report.push(`  ${e}`));
+      result.errors.forEach((err) => {
+        addReportError(report, err.code || 'URL_INVALID_FORMAT', err.message, err.field, err.details);
+      });
       return report;
     }
 
-    report.push('[OK] Giltig URL');
-    report.push('');
-    report.push('Parameters:');
-    report.push(`  Service: ${elements.service?.value || 'WMS'}`);
-    report.push(`  Layer: ${elements.layer?.value || '(inget)'}`);
-    report.push(`  Format: ${elements.format?.value || 'image/png'}`);
-    report.push(`  CRS: ${elements.crs?.value || 'EPSG:3008'}`);
+    // Valid - add metadata
+    report.meta.service = elements.service?.value || 'WMS';
+    report.meta.layer = elements.layer?.value || '(inget)';
+    report.meta.format = elements.format?.value || 'image/png';
+    report.meta.crs = elements.crs?.value || 'EPSG:3008';
 
     if (elements.bbox?.value) {
-      report.push(`  BBOX: ${elements.bbox.value}`);
+      report.meta.bbox = elements.bbox.value;
     }
 
     return report;
@@ -245,8 +255,9 @@ const urlBuilderTool = (() => {
 
     if (!result.valid) {
       if (elements.output) elements.output.value = '';
-      updateStatus(`Fel: ${result.errors[0]}`);
-      appState.addLog(TOOL_KEY, 'ERROR', `Generation misslyckades: ${result.errors[0]}`);
+      const firstError = result.errors[0]?.message || 'Validering misslyckades';
+      updateStatus(`Fel: ${firstError}`);
+      appState.addLog(TOOL_KEY, 'ERROR', `Generation misslyckades: ${firstError}`);
     } else {
       if (elements.output) elements.output.value = result.url;
       state.lastGeneratedUrl = result.url;
