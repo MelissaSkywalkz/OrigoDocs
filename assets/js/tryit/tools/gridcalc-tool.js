@@ -147,11 +147,11 @@ const gridcalcTool = (() => {
 
     const output = [
       `Resolution: ${inputs.resolution.toFixed(4)} m/px`,
-      `Scale: 1:${inputs.scale.toFixed(0)}`,
-      `Tile span (${inputs.tile}px): ${tileSpanM.toFixed(2)} m`,
-      `Meta span (${inputs.meta}×${inputs.meta}): ${metaSpanM.toFixed(2)} m`,
-      `Total tiles: ${formatNumber(totalTiles)}`,
-      `Recommendation: ${seedRec}`,
+      `Skala: 1:${inputs.scale.toFixed(0)}`,
+      `Tile-spann (${inputs.tile}px): ${tileSpanM.toFixed(2)} m`,
+      `Meta-spann (${inputs.meta}×${inputs.meta}): ${metaSpanM.toFixed(2)} m`,
+      `Antal tiles: ${formatNumber(totalTiles)}`,
+      `Rekommendation: ${seedRec}`,
     ].join('\n');
 
     if (elements.output) elements.output.value = output;
@@ -341,19 +341,19 @@ const gridcalcTool = (() => {
     const content = [
       '═══ GRIDCALC RAPPORT ═══',
       '',
-      'INPUTS:',
+      'INMATNING:',
       `  Resolution: ${inp.resolution.toFixed(4)} m/px`,
-      `  Scale: 1:${inp.scale.toFixed(0)}`,
-      `  Tile Size: ${inp.tile} px`,
+      `  Skala: 1:${inp.scale.toFixed(0)}`,
+      `  Tile-storlek: ${inp.tile} px`,
       `  Metatile: ${inp.meta}×${inp.meta}`,
       `  BBOX: ${inp.bboxwidth.toFixed(0)} × ${inp.bboxheight.toFixed(0)} m`,
       '',
-      'CALCULATED:',
-      `  Tile span: ${der.tileSpanM.toFixed(2)} m`,
-      `  Meta span: ${der.metaSpanM.toFixed(2)} m`,
+      'BERÄKNAT:',
+      `  Tile-spann: ${der.tileSpanM.toFixed(2)} m`,
+      `  Meta-spann: ${der.metaSpanM.toFixed(2)} m`,
       `  Tiles X/Y: ${der.tilesX} / ${der.tilesY}`,
-      `  Total tiles: ${formatNumber(der.totalTiles)}`,
-      `  Recommendation: ${der.seedRec}`,
+      `  Antal tiles: ${formatNumber(der.totalTiles)}`,
+      `  Rekommendation: ${der.seedRec}`,
     ].join('\n');
 
     const filename = `gridcalc-${formatTimestamp()}.txt`;
@@ -371,7 +371,6 @@ const gridcalcTool = (() => {
 
     const jsonData = {
       ...state.lastCalculation,
-      timestamp: new Date().toISOString(),
     };
 
     const filename = `gridcalc-${formatTimestamp()}.json`;

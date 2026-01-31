@@ -163,7 +163,7 @@ const sldTool = (() => {
     elements.fixesDiv.innerHTML = '';
 
     if (!fixes.length) {
-      elements.fixesDiv.textContent = 'Inga fixes hittades.';
+      elements.fixesDiv.textContent = 'Inga korrigeringar hittades.';
       return;
     }
 
@@ -236,8 +236,8 @@ const sldTool = (() => {
     state.fixes = buildFixes(parseResult.doc);
     renderFixesList(state.fixes);
     updateFixPreview();
-    updateStatus('Fixes uppdaterade.');
-    appState.addLog(TOOL_KEY, 'INFO', `Fixes hittade: ${state.fixes.length}`);
+    updateStatus('Korrigeringar uppdaterade.');
+    appState.addLog(TOOL_KEY, 'INFO', `Korrigeringar hittade: ${state.fixes.length}`);
     updateUI();
   }
 
@@ -267,8 +267,8 @@ const sldTool = (() => {
     });
     appState.setReport(TOOL_KEY, report);
 
-    updateStatus('Fixes applicerade');
-    appState.addLog(TOOL_KEY, 'OK', `Fixes applicerade: ${selected.length}`);
+    updateStatus('Korrigeringar applicerade');
+    appState.addLog(TOOL_KEY, 'OK', `Korrigeringar applicerade: ${selected.length}`);
     updateFixPreview();
     updateUI();
   }
@@ -278,8 +278,8 @@ const sldTool = (() => {
     if (elements.fixesDiv) elements.fixesDiv.textContent = '';
     if (elements.fixesPreview) elements.fixesPreview.textContent = '';
     if (elements.fixesPreviewWrapper) elements.fixesPreviewWrapper.style.display = 'none';
-    updateStatus('Fixes återställda');
-    appState.addLog(TOOL_KEY, 'INFO', 'Fixes återställda');
+    updateStatus('Korrigeringar återställda');
+    appState.addLog(TOOL_KEY, 'INFO', 'Korrigeringar återställda');
     updateUI();
   }
 

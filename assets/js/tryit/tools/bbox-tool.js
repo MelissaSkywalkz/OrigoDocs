@@ -25,6 +25,12 @@ const bboxTool = (() => {
   };
 
   const BBOX_CRS = 'EPSG:3008';
+  // Antagande: intervall nedan är generella Sverige-extent för EPSG:3008/3006.
+  // Justera här om din CRS har andra bounds eller axelordning.
+  const BBOX_RANGE_CONFIG = {
+    epsg3008: { minx: 0, maxx: 1500000, miny: 6100000, maxy: 7700000 },
+    epsg3006: { minx: 0, maxx: 1500000, miny: 5500000, maxy: 8000000 },
+  };
   const presets = {
     'preset-1': { minx: 100000, miny: 6400000, maxx: 200000, maxy: 6500000 },
     'preset-2': { minx: 200000, miny: 6500000, maxx: 350000, maxy: 6650000 },
@@ -173,19 +179,8 @@ const bboxTool = (() => {
     }
   }
 
-  const RANGE_EPSG_3008 = {
-    minx: 0,
-    maxx: 1500000,
-    miny: 6100000,
-    maxy: 7700000,
-  };
-
-  const RANGE_EPSG_3006 = {
-    minx: 0,
-    maxx: 1500000,
-    miny: 5500000,
-    maxy: 8000000,
-  };
+  const RANGE_EPSG_3008 = BBOX_RANGE_CONFIG.epsg3008;
+  const RANGE_EPSG_3006 = BBOX_RANGE_CONFIG.epsg3006;
 
   function isDevMode() {
     return (
@@ -506,13 +501,12 @@ const bboxTool = (() => {
   function exportTxt() {
     const content = [
       '═══ BBOX EXPORT ═══',
-      `Generated: ${new Date().toLocaleString('sv-SE')}`,
       `CRS: ${BBOX_CRS}`,
       '',
-      'BBOX String:',
+      'BBOX-sträng:',
       elements.output?.value || '(inget)',
       '',
-      'WMS GetMap URL:',
+      'WMS GetMap-URL:',
       elements.urlOutput?.value || '(inget)',
     ].join('\n');
 

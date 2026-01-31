@@ -586,7 +586,7 @@ const urlBuilderTool = (() => {
       multiline: Boolean(elements.curlMultiline?.checked),
       acceptHeader,
     });
-    const curl = `#!/bin/bash\n# Generated curl request\n${curlCommand}\n`;
+    const curl = `#!/bin/bash\n# Curl-begäran\n${curlCommand}\n`;
     const filename = `urlbuilder-${formatTimestamp()}.sh`;
     const result = exportFile({ filename, mime: 'text/plain', content: curl });
     updateStatus(result.message);
@@ -601,13 +601,12 @@ const urlBuilderTool = (() => {
       return;
     }
 
-    let content = '═══ WMS/WFS REQUEST ═══\n\n';
-    content += `Generated: ${new Date().toLocaleString('sv-SE')}\n\n`;
+    let content = '═══ WMS/WFS-BEGÄRAN ═══\n\n';
     content += '─── URL ───\n';
     content += `${url}\n\n`;
-    content += '─── Parameters ───\n';
-    content += `Service: ${elements.service?.value || 'WMS'}\n`;
-    content += `Layer: ${elements.layer?.value || '(none)'}\n`;
+    content += '─── Parametrar ───\n';
+    content += `Tjänst: ${elements.service?.value || 'WMS'}\n`;
+    content += `Lager: ${elements.layer?.value || '(saknas)'}\n`;
     content += `Format: ${elements.format?.value || 'image/png'}\n`;
     content += `CRS: ${elements.crs?.value || 'EPSG:3008'}\n`;
 

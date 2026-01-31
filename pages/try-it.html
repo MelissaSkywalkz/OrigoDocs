@@ -88,12 +88,12 @@
         <nav class="troubleshoot-toc tryit-toc" aria-label="Snabbstart: Try it-lab">
           <strong>Snabbstart:</strong>
           <a href="#json">JSON / GeoJSON</a>
-          <a href="#mapsandbox">Map sandbox</a>
+          <a href="#mapsandbox">Kartsandlåda</a>
           <a href="#urlbuilder">URL-builder</a>
           <a href="#bbox">BBOX / Extent</a>
-          <a href="#resolutions">Resolutions</a>
+          <a href="#resolutions">Upplösningar</a>
           <a href="#gridcalc">Gridset / Tile</a>
-          <a href="#gridset-explorer">Gridset Explorer</a>
+          <a href="#gridset-explorer">Gridset-utforskare</a>
           <a href="#sld">SLD</a>
         </nav>
 
@@ -150,9 +150,13 @@
                     Validera
                   </button>
                   <button class="tryit-button" data-json-action="prettify" type="button">
-                    Prettify
+                    Formatera
                   </button>
                 </div>
+                <p class="tryit-hint" id="json-actions-hint">
+                  Validera kontrollerar utan att ändra inmatningen. Formatera skriver om
+                  inmatningen.
+                </p>
                 <div class="tryit-actions tryit-actions-secondary">
                   <button class="tryit-button secondary" data-json-action="copy" type="button">
                     Kopiera
@@ -171,7 +175,7 @@
                         data-json-action="minify"
                         type="button"
                       >
-                        Minify
+                        Minifiera
                       </button>
                       <button
                         class="tryit-button secondary"
@@ -242,7 +246,7 @@
         <!-- Map sandbox -->
         <section class="tool-card" aria-labelledby="mapsandbox" tabindex="0">
           <div class="tool-card-head">
-            <h2 id="mapsandbox">Map sandbox</h2>
+            <h2 id="mapsandbox">Kartsandlåda</h2>
             <p id="mapsandbox-help">
               Förhandsgranska WMS GetMap-anrop. Stöder URL-builder och BBOX-verktyget.
             </p>
@@ -296,20 +300,20 @@
                   <summary><strong>Avancerat</strong></summary>
                   <div class="tryit-advanced-panel">
                     <div class="tryit-section">
-                      <label for="mapsandbox-params"><strong>Parsed params</strong></label>
+                      <label for="mapsandbox-params"><strong>Tolkade parametrar</strong></label>
                       <pre id="mapsandbox-params" class="tryit-output tryit-mono"></pre>
                     </div>
 
                     <div class="tryit-section tryit-section-report">
                       <label for="mapsandbox-validation" style="margin-top: 1rem; display: block"
-                        ><strong>Validation report</strong></label
+                        ><strong>Valideringsrapport</strong></label
                       >
                       <pre id="mapsandbox-validation" class="tryit-output tryit-mono"></pre>
                     </div>
 
                     <div class="tryit-section tryit-section-runlog">
                       <label for="mapsandbox-runlog" style="margin-top: 1rem; display: block"
-                        ><strong>Run log</strong></label
+                        ><strong>Körhistorik</strong></label
                       >
                       <pre id="mapsandbox-runlog" class="tryit-output tryit-mono"></pre>
                     </div>
@@ -321,7 +325,11 @@
                 <div class="tryit-section tryit-section-output">
                   <strong>Förhandsvisning</strong>
                   <div class="mapsandbox-preview-container">
-                  <img id="mapsandbox-img" class="mapsandbox-preview-img" alt="Map preview" />
+                  <img
+                    id="mapsandbox-img"
+                    class="mapsandbox-preview-img"
+                    alt="Kartförhandsvisning"
+                  />
                   <div id="mapsandbox-fallback" class="mapsandbox-fallback" style="display: none">
                     <p><strong>Kunde inte ladda förhandsvisning</strong></p>
                     <p>Tips:</p>
@@ -455,7 +463,7 @@
                     <div class="tryit-actions tryit-actions-advanced" style="align-items: center; gap: 1rem;">
                       <label class="tryit-inline">
                         <input id="urlbuilder-curl-multiline" type="checkbox" />
-                        <span>Multi-line</span>
+                        <span>Fler rader</span>
                       </label>
                       <label class="tryit-inline">
                         <input id="urlbuilder-curl-silent" type="checkbox" />
@@ -568,7 +576,9 @@
                   />
                   <p class="tryit-hint" id="bbox-range-hint">
                     CRS: <span class="crs-nowrap">SWEREF 99 13 30 (EPSG:3008)</span><br />
-                    Giltiga intervall: X: 0–1,500,000 | Y: 5,500,000–8,000,000
+                    Antagande: generella Sverige-intervall.<br />
+                    EPSG:3008 X: 0–1,500,000 | Y: 6,100,000–7,700,000<br />
+                    EPSG:3006 X: 0–1,500,000 | Y: 5,500,000–8,000,000
                   </p>
 
                   <div class="tryit-two-col">
@@ -617,13 +627,13 @@
 
                 <div class="tryit-actions tryit-actions-secondary tryit-actions-grid">
                   <button class="tryit-button" data-bbox-action="preset-1" type="button">
-                    Preset 1
+                    Förval 1
                   </button>
                   <button class="tryit-button" data-bbox-action="preset-2" type="button">
-                    Preset 2
+                    Förval 2
                   </button>
                   <button class="tryit-button" data-bbox-action="preset-3" type="button">
-                    Preset 3
+                    Förval 3
                   </button>
                 </div>
 
@@ -737,15 +747,15 @@
         <!-- Resolutions -->
         <section class="tool-card" aria-labelledby="resolutions" tabindex="0">
           <div class="tool-card-head">
-            <h2 id="resolutions">Resolutions (EPSG:3008)</h2>
-            <p id="resolutions-help">Validera och exportera resolutions-listor för Origo och GeoWebCache.</p>
+            <h2 id="resolutions">Upplösningar (EPSG:3008)</h2>
+            <p id="resolutions-help">Validera och exportera upplösningslistor för Origo och GeoWebCache.</p>
           </div>
 
           <div class="tryit" data-tryit="resolutions">
             <div class="tryit-grid">
               <div>
                 <div class="tryit-section tryit-section-input">
-                  <label for="res-input"><strong>Resolutions (höga → låga)</strong></label>
+                  <label for="res-input"><strong>Upplösningar (höga → låga)</strong></label>
                   <textarea
                     id="res-input"
                     class="tryit-input"
@@ -949,7 +959,7 @@
                     data-gridcalc-action="preset"
                     type="button"
                   >
-                    Preset (256/4x4)
+                    Förval (256/4x4)
                   </button>
                   <button class="tryit-button secondary" data-gridcalc-action="copy" type="button">
                     Kopiera
@@ -958,7 +968,7 @@
 
                 <details class="tryit-advanced">
                   <summary><strong>Avancerat</strong></summary>
-                  <div class="tryit-advanced-panel">
+                    URL-builder
                     <div class="tryit-actions tryit-actions-advanced">
                       <button
                         class="tryit-button secondary"
@@ -1064,7 +1074,7 @@
         <!-- Gridset Explorer -->
         <section class="tool-card" aria-labelledby="gridset-explorer" tabindex="0">
           <div class="tool-card-head">
-            <h2 id="gridset-explorer">Gridset Explorer</h2>
+            <h2 id="gridset-explorer">Gridset-utforskare</h2>
             <p id="gridset-help">
               Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i
               <span class="crs-nowrap">EPSG:3006</span>.
@@ -1127,7 +1137,7 @@
                   class="tryit-input"
                   aria-describedby="gridset-help"
                 >
-                  <option value="plain">Plain summary</option>
+                  <option value="plain">Enkel sammanfattning</option>
                   <option value="gwc">GWC XML</option>
                   <option value="origo">Origo JSON</option>
                 </select>
@@ -1150,14 +1160,18 @@
                 </div>
 
                 <div class="tryit-section tryit-section-output">
-                  <label for="gridset-output"><strong>Output</strong></label>
+                  <label for="gridset-output"><strong>Utdata</strong></label>
                   <pre id="gridset-output" class="tryit-output tryit-mono"></pre>
                 </div>
               </div>
             </details>
 
             <div class="gridset-layout">
-              <div id="gridset-map" class="gridset-map" aria-label="Karta: Gridset Explorer"></div>
+              <div
+                id="gridset-map"
+                class="gridset-map"
+                aria-label="Karta: Gridset-utforskare"
+              ></div>
 
               <div class="gridset-panel">
                 <div class="gridset-row">
@@ -1173,7 +1187,7 @@
                   <strong>Zoomnivå:</strong> <span id="gridset-info-zoom">—</span>
                 </div>
 
-                <div class="gridset-row"><strong>Tile size:</strong> 256px</div>
+                <div class="gridset-row"><strong>Tile-storlek:</strong> 256px</div>
 
                 <div class="gridset-row"><strong>CRS:</strong> EPSG:3006</div>
 
@@ -1269,19 +1283,19 @@
                         data-sld-action="export-lint-txt"
                         type="button"
                       >
-                        Export lint-report (TXT)
+                        Exportera lint-rapport (TXT)
                       </button>
                       <button
                         class="tryit-button secondary"
                         data-sld-action="copy-lint"
                         type="button"
                       >
-                        Copy lint-report
+                        Kopiera lint-rapport
                       </button>
                     </div>
 
                     <details class="tryit-details" open>
-                      <summary><strong>Quick Fixes</strong></summary>
+                      <summary><strong>Snabbfixar</strong></summary>
                       <div class="tryit-advanced-panel">
                         <div class="tryit-actions tryit-actions-advanced">
                           <button
@@ -1289,26 +1303,26 @@
                             data-sld-action="suggest-fixes"
                             type="button"
                           >
-                            Föreslå fixes
+                            Föreslå korrigeringar
                           </button>
                           <button
                             class="tryit-button secondary"
                             data-sld-action="apply-fixes"
                             type="button"
                           >
-                            Apply selected fixes
+                            Applicera valda korrigeringar
                           </button>
                           <button
                             class="tryit-button secondary"
                             data-sld-action="reset-fixes"
                             type="button"
                           >
-                            Reset fixes
+                            Återställ korrigeringar
                           </button>
                         </div>
                         <div id="sld-fixes" data-sld-fixes style="margin-top: 1rem"></div>
                         <div id="sld-fixes-preview-wrapper" style="display: none; margin-top: 1rem">
-                          <label><strong>Preview (before applying)</strong></label>
+                          <label><strong>Förhandsvisning (innan applicering)</strong></label>
                           <pre
                             id="sld-fixes-preview"
                             class="tryit-output tryit-mono"
@@ -1319,7 +1333,7 @@
                       </div>
                     </details>
 
-                    <label for="sld-normalized"><strong>Normalized JSON</strong></label>
+                    <label for="sld-normalized"><strong>Normaliserad JSON</strong></label>
                     <pre id="sld-normalized" class="tryit-output tryit-mono"></pre>
                   </div>
                 </details>
@@ -1346,9 +1360,9 @@
           </div>
 
           <div class="tool-card-sub" tabindex="0">
-            <h3 id="sld-preview">SLD – Symbol preview</h3>
+            <h3 id="sld-preview">SLD – Symbolförhandsvisning</h3>
             <p id="sldpreview-help">
-              Förhandsgranska symbolik från SLD utan att behöva en kartserver (legend preview).
+              Förhandsgranska symbolik från SLD utan att behöva en kartserver (legendförhandsvisning).
             </p>
 
             <div class="tryit" data-tryit="sldpreview">
@@ -1384,13 +1398,13 @@
                     </button>
                   </div>
                   <div class="callout callout-check" style="margin-top: 1rem; font-size: 0.9rem">
-                    <strong>Not:</strong> Detta är en symbol-preview (legend). Den renderar inte
-                    hela SLD-regelverket.
+                    <strong>Obs:</strong> Detta är en symbolförhandsvisning (legend). Den renderar
+                    inte hela SLD-regelverket.
                   </div>
                 </div>
                 <div>
                   <div class="tryit-section tryit-section-output">
-                    <div class="field-label"><strong>Preview</strong></div>
+                    <div class="field-label"><strong>Förhandsvisning</strong></div>
                     <div
                       id="sldp-preview"
                       style="
@@ -1434,5 +1448,119 @@
     <script defer src="../assets/js/tryit/tools/map-sandbox-tool.js"></script>
     <!-- Main App Init -->
     <script defer src="../assets/js/main.js"></script>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const isDev = params.get('dev') === '1';
+
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        const setValue = (selector, value) => {
+          const el = document.querySelector(selector);
+          if (!el) return false;
+          el.value = value;
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          return true;
+        };
+
+        const click = (selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return false;
+          el.click();
+          return true;
+        };
+
+        window.tryItSelfTest = async () => {
+          const results = [];
+          const logResult = (name, ok, details) => {
+            results.push({ name, ok, details });
+            const prefix = ok ? '[OK]' : '[FEL]';
+            const message = `${prefix} ${name}${details ? ` – ${details}` : ''}`;
+            if (ok) {
+              console.log(message);
+            } else {
+              console.warn(message);
+            }
+          };
+
+          // JSON
+          setValue('#json-tryit-input', '{"a":1}');
+          click('[data-json-action="validate"]');
+          await wait(100);
+          const jsonStatus = document.getElementById('json-tryit-status')?.textContent || '';
+          logResult('JSON validering', jsonStatus.includes('Validering'));
+
+          setValue('#json-tryit-input', '{"a":1}');
+          click('[data-json-action="prettify"]');
+          await wait(100);
+          const jsonInput = document.getElementById('json-tryit-input')?.value || '';
+          logResult('JSON formatering', jsonInput.includes('\n'));
+
+          // URL builder
+          setValue('#urlbuilder-base', 'https://example.com/geoserver/ows');
+          setValue('#urlbuilder-layer', 'workspace:layer');
+          click('[data-url-action="generate"]');
+          await wait(100);
+          const urlOut = document.getElementById('urlbuilder-output')?.value || '';
+          logResult('URL builder generera', urlOut.includes('service=WMS'));
+
+          // BBOX
+          setValue('#bbox-minx', '100000');
+          setValue('#bbox-miny', '6400000');
+          setValue('#bbox-maxx', '200000');
+          setValue('#bbox-maxy', '6500000');
+          click('[data-bbox-action="generate"]');
+          await wait(100);
+          const bboxOut = document.getElementById('bbox-output')?.value || '';
+          logResult('BBOX generering', bboxOut.split(',').length === 4);
+
+          // Upplösningar
+          setValue('#res-input', '400\n200\n100');
+          click('[data-res-action="validate"]');
+          await wait(100);
+          const resStatus = document.getElementById('res-status')?.textContent || '';
+          logResult('Upplösningar validering', resStatus.includes('Validering'));
+
+          // Gridcalc
+          setValue('#gridcalc-resolution', '100');
+          click('[data-gridcalc-action="from-resolution"]');
+          await wait(100);
+          const gridcalcOut = document.getElementById('gridcalc-output')?.value || '';
+          logResult('Gridcalc beräkning', gridcalcOut.includes('Rekommendation'));
+
+          // Gridset-utforskare
+          if (window.ol && document.querySelector('[data-extent-action="sverige"]')) {
+            click('[data-extent-action="sverige"]');
+            await wait(200);
+            const tilesText = document.getElementById('gridset-info-tiles')?.textContent || '';
+            logResult('Gridset-utforskare preset', tilesText !== '—' && tilesText !== '');
+          } else {
+            logResult('Gridset-utforskare preset', true, 'Hoppades över (OL saknas)');
+          }
+
+          // SLD
+          click('[data-sld-action="template"]');
+          click('[data-sld-action="check"]');
+          await wait(100);
+          const sldStatus = document.getElementById('sld-tryit-status')?.textContent || '';
+          logResult('SLD validering', sldStatus.includes('Validering'));
+
+          // Kartsandlåda
+          setValue('#mapsandbox-url', 'not-a-url');
+          click('[data-mapsandbox-action="preview"]');
+          await wait(100);
+          const mapStatus = document.getElementById('mapsandbox-status')?.textContent || '';
+          logResult('Kartsandlåda felhantering', mapStatus.includes('Ogiltig'));
+
+          return results;
+        };
+
+        if (isDev) {
+          window.addEventListener('load', () => {
+            window.tryItSelfTest();
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

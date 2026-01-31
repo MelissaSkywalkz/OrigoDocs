@@ -20,15 +20,24 @@ const gridsetExplorerTool = (() => {
     snippetOutput: null,
   };
 
-  let state = {
-    map: null,
-    currentExtent: null,
+  // Antagande: förinställda extents och resolutioner är förenklade exempel.
+  // Justera dessa värden för din faktiska CRS/extent-konfiguration.
+  const GRIDSET_CONFIG = {
+    crs: 'EPSG:3006',
     presets: {
       sverige: { minx: 0, miny: 5500000, maxx: 1500000, maxy: 8000000 },
       skaraborg: { minx: 300000, miny: 6400000, maxx: 550000, maxy: 6650000 },
     },
     tileSize: 256,
     resolutions: [100, 50, 25, 12.5, 6.25],
+  };
+
+  let state = {
+    map: null,
+    currentExtent: null,
+    presets: GRIDSET_CONFIG.presets,
+    tileSize: GRIDSET_CONFIG.tileSize,
+    resolutions: GRIDSET_CONFIG.resolutions,
   };
 
   function init(block) {
@@ -66,7 +75,7 @@ const gridsetExplorerTool = (() => {
     const ol = window.ol;
     const olExtent = ol.extent;
     const projection = new ol.proj.Projection({
-      code: 'EPSG:3006',
+      code: GRIDSET_CONFIG.crs,
       extent: [0, 5500000, 1500000, 8000000],
     });
     ol.proj.addProjection(projection);
@@ -88,7 +97,7 @@ const gridsetExplorerTool = (() => {
       }),
     });
 
-    appState.addLog(TOOL_KEY, 'OK', 'Karta initierad (EPSG:3006)');
+    appState.addLog(TOOL_KEY, 'OK', `Karta initierad (${GRIDSET_CONFIG.crs})`);
   }
 
   function attachEventListeners(block) {
@@ -174,7 +183,8 @@ const gridsetExplorerTool = (() => {
 
     // Estimate tiles at 256px/tile
     const tileSize = state.tileSize;
-    const resolution = 100; // placeholder
+    // Antagande: första resolutionen används för grov tile-estimat.
+    const resolution = state.resolutions[0];
     const tileSpan = resolution * tileSize;
     const tilesX = Math.ceil(width / tileSpan);
     const tilesY = Math.ceil(height / tileSpan);
@@ -228,7 +238,7 @@ const gridsetExplorerTool = (() => {
 
     const ext = state.currentExtent;
     const extent = [ext.minx, ext.miny, ext.maxx, ext.maxy];
-    const crs = 'EPSG:3006';
+    const crs = GRIDSET_CONFIG.crs;
     const tileSize = state.tileSize;
     const resolutions = state.resolutions;
 
@@ -268,9 +278,9 @@ const gridsetExplorerTool = (() => {
     const summary = [
       'Gridset-snippet',
       `CRS: ${crs}`,
-      `Extent: ${extent.join(', ')}`,
-      `Tile size: ${tileSize}px`,
-      `Resolutions: ${resolutions.join(', ')}`,
+      `Utsträckning: ${extent.join(', ')}`,
+      `Tile-storlek: ${tileSize}px`,
+      `Resolutioner: ${resolutions.join(', ')}`,
     ].join('\n');
     return { ok: true, report, content: summary };
   }
@@ -283,14 +293,21 @@ const gridsetExplorerTool = (() => {
     elements.snippetOutput.textContent = snippet.content;
 
     if (!snippet.ok) {
-      appState.addLog(TOOL_KEY, 'WARN', 'Snippet kunde inte skapas');
+      setStatus('Snippet kunde inte skapas', 'WARN');
       appState.setReport(TOOL_KEY, snippet.report);
       updateUI();
     }
   }
 
+  function setStatus(message, level = 'INFO') {
+    if (elements.status) elements.status.textContent = message;
+    if (message) appState.addLog(TOOL_KEY, level, message);
+  }
+
   async function copyBbox() {
     if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
       return;
     }
 
@@ -299,16 +316,20 @@ const gridsetExplorerTool = (() => {
 
     const result = await copyToClipboard(bbox);
     if (result.ok) {
-      appState.addLog(TOOL_KEY, 'OK', 'BBOX kopierad');
+      setStatus('BBOX kopierad', 'OK');
     } else {
-      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+      setStatus('Kopieringen misslyckades', 'ERROR');
     }
 
     updateUI();
   }
 
   function sendToUrlbuilder() {
-    if (!state.currentExtent) return;
+    if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
+      return;
+    }
 
     const ext = state.currentExtent;
     const bbox = `${ext.minx},${ext.miny},${ext.maxx},${ext.maxy}`;
@@ -317,14 +338,18 @@ const gridsetExplorerTool = (() => {
     if (bboxInput) {
       bboxInput.value = bbox;
       scrollIntoView(document.getElementById('urlbuilder-base'));
-      appState.addLog(TOOL_KEY, 'OK', 'Skickad till URL builder');
+      setStatus('Skickad till URL builder', 'OK');
     }
 
     updateUI();
   }
 
   function exportGeojson() {
-    if (!state.currentExtent) return;
+    if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
+      return;
+    }
 
     const ext = state.currentExtent;
     const geojson = {
@@ -351,47 +376,54 @@ const gridsetExplorerTool = (() => {
     };
 
     const filename = `gridset-${formatTimestamp()}.geojson`;
-    exportFile({
+    const result = exportFile({
       filename,
       mime: 'application/json',
       content: JSON.stringify(geojson, null, 2),
     });
-    appState.addLog(TOOL_KEY, 'OK', 'GeoJSON exporterad');
+    setStatus(result.message, 'OK');
     updateUI();
   }
 
   function exportTxt() {
-    if (!state.currentExtent) return;
+    if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
+      return;
+    }
 
     const ext = state.currentExtent;
     const content = [
       '═══ GRIDSET EXTENT ═══',
-      `Generated: ${new Date().toLocaleString('sv-SE')}`,
-      `CRS: EPSG:3006`,
+      `CRS: ${GRIDSET_CONFIG.crs}`,
       '',
-      `Extent: [${ext.minx}, ${ext.miny}, ${ext.maxx}, ${ext.maxy}]`,
+      `Utsträckning: [${ext.minx}, ${ext.miny}, ${ext.maxx}, ${ext.maxy}]`,
       `BBOX: ${ext.minx},${ext.miny},${ext.maxx},${ext.maxy}`,
-      `Width: ${ext.maxx - ext.minx} m`,
-      `Height: ${ext.maxy - ext.miny} m`,
+      `Bredd: ${ext.maxx - ext.minx} m`,
+      `Höjd: ${ext.maxy - ext.miny} m`,
     ].join('\n');
 
     const filename = `gridset-${formatTimestamp()}.txt`;
-    exportFile({ filename, mime: 'text/plain', content });
-    appState.addLog(TOOL_KEY, 'OK', 'TXT exporterad');
+    const result = exportFile({ filename, mime: 'text/plain', content });
+    setStatus(result.message, 'OK');
     updateUI();
   }
 
   async function copyGridset() {
-    if (!state.currentExtent) return;
+    if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
+      return;
+    }
 
     const ext = state.currentExtent;
     const snippet = `<extent>[${ext.minx}, ${ext.miny}, ${ext.maxx}, ${ext.maxy}]</extent>`;
 
     const result = await copyToClipboard(snippet);
     if (result.ok) {
-      appState.addLog(TOOL_KEY, 'OK', 'Gridset-snippet kopierad');
+      setStatus('Gridset-snippet kopierad', 'OK');
     } else {
-      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+      setStatus('Kopieringen misslyckades', 'ERROR');
     }
     updateUI();
   }
@@ -400,11 +432,18 @@ const gridsetExplorerTool = (() => {
     const templateKey = getSnippetTemplate();
     const snippet = buildSnippet(templateKey);
 
+    if (!snippet.ok) {
+      setStatus('Snippet saknas', 'WARN');
+      appState.setReport(TOOL_KEY, snippet.report);
+      updateUI();
+      return;
+    }
+
     const result = await copyToClipboard(snippet.content || '');
     if (result.ok) {
-      appState.addLog(TOOL_KEY, 'OK', 'Snippet kopierad');
+      setStatus('Snippet kopierad', 'OK');
     } else {
-      appState.addLog(TOOL_KEY, 'ERROR', 'Kopieringen misslyckades');
+      setStatus('Kopieringen misslyckades', 'ERROR');
     }
     updateUI();
   }
@@ -412,6 +451,13 @@ const gridsetExplorerTool = (() => {
   function downloadSnippet() {
     const templateKey = getSnippetTemplate();
     const snippet = buildSnippet(templateKey);
+
+    if (!snippet.ok) {
+      setStatus('Snippet saknas', 'WARN');
+      appState.setReport(TOOL_KEY, snippet.report);
+      updateUI();
+      return;
+    }
 
     let extension = 'txt';
     let mime = 'text/plain';
@@ -424,13 +470,17 @@ const gridsetExplorerTool = (() => {
     }
 
     const filename = `gridset-${formatTimestamp()}.${extension}`;
-    exportFile({ filename, mime, content: snippet.content || '' });
-    appState.addLog(TOOL_KEY, 'OK', 'Snippet nedladdad');
+    const result = exportFile({ filename, mime, content: snippet.content || '' });
+    setStatus(result.message, 'OK');
     updateUI();
   }
 
   function sendToGridcalc() {
-    if (!state.currentExtent) return;
+    if (!state.currentExtent) {
+      setStatus('Välj en extent först', 'WARN');
+      updateUI();
+      return;
+    }
 
     const ext = state.currentExtent;
     const width = Math.abs(ext.maxx - ext.minx);
@@ -443,7 +493,7 @@ const gridsetExplorerTool = (() => {
       widthInput.value = Math.round(width);
       heightInput.value = Math.round(height);
       scrollIntoView(document.getElementById('gridcalc'));
-      appState.addLog(TOOL_KEY, 'OK', 'Skickad till Gridcalc');
+      setStatus('Skickad till Gridcalc', 'OK');
     }
 
     updateUI();

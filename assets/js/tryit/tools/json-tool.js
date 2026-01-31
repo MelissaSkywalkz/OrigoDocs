@@ -10,6 +10,9 @@
 
 const jsonTool = (() => {
   const TOOL_KEY = 'json';
+  // Antagande: latitudintervall för varning om omkastad koordinatordning (WGS84).
+  // Justera vid andra CRS/axelordningar.
+  const GEOJSON_LATITUDE_RANGE = 90;
 
   let elements = {
     input: null,
@@ -193,33 +196,33 @@ const jsonTool = (() => {
     lines.push('');
 
     if (isGeojson) {
-      lines.push('Type: GeoJSON');
-      if (data.type) lines.push(`GeoJSON Type: ${data.type}`);
+      lines.push('Typ: GeoJSON');
+      if (data.type) lines.push(`GeoJSON-typ: ${data.type}`);
 
       if (data.features) {
-        lines.push(`Features: ${data.features.length}`);
+        lines.push(`Objekt: ${data.features.length}`);
         if (data.features.length > 0) {
           const props = Object.keys(data.features[0].properties || {});
-          lines.push(`Properties: ${props.join(', ')}`);
+          lines.push(`Egenskaper: ${props.join(', ')}`);
         }
       }
 
       if (bbox) {
         lines.push('');
-        lines.push(`BBOX [minx, miny, maxx, maxy]:`);
+        lines.push('BBOX [minx, miny, maxx, maxy]:');
         lines.push(`${bbox.minx}, ${bbox.miny}, ${bbox.maxx}, ${bbox.maxy}`);
         lines.push('');
-        lines.push(`Width:  ${(bbox.maxx - bbox.minx).toFixed(2)}`);
-        lines.push(`Height: ${(bbox.maxy - bbox.miny).toFixed(2)}`);
+        lines.push(`Bredd:  ${(bbox.maxx - bbox.minx).toFixed(2)}`);
+        lines.push(`Höjd: ${(bbox.maxy - bbox.miny).toFixed(2)}`);
       }
     } else {
-      lines.push('Type: JSON');
+      lines.push('Typ: JSON');
 
       if (Array.isArray(data)) {
-        lines.push(`Array length: ${data.length}`);
+        lines.push(`Antal i lista: ${data.length}`);
       } else {
         const keys = Object.keys(data);
-        lines.push(`Top-level keys: ${keys.length}`);
+        lines.push(`Nycklar på toppnivå: ${keys.length}`);
         if (keys.length <= 10) {
           keys.forEach((k) => lines.push(`  - ${k}`));
         }
@@ -249,7 +252,7 @@ const jsonTool = (() => {
     // Check for GeoJSON coordinate order warnings
     if (isGeojson && bbox) {
       const { miny, maxy } = bbox;
-      if (Math.abs(miny) > 90 || Math.abs(maxy) > 90) {
+      if (Math.abs(miny) > GEOJSON_LATITUDE_RANGE || Math.abs(maxy) > GEOJSON_LATITUDE_RANGE) {
         addReportWarning(
           report,
           'GEOJSON_COORD_ORDER',

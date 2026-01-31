@@ -90,11 +90,20 @@ const ERROR_CODE_LABELS = {
   SLD_MISSING_SYMBOLIZER: 'Symbolizer saknas',
   SLD_MISSING_NAMESPACE: 'Namespace saknas',
   SLD_LINT_WARNING: 'Lint-varning',
+  SLD_LINT_PARSE_ERROR: 'XML-parsefel (lint)',
+  SLD_LINT_MISSING_NAMESPACE: 'Saknad namespace',
+  SLD_LINT_MISSING_VERSION: 'Saknad version på StyledLayerDescriptor',
+  SLD_LINT_MISSING_TITLE: 'NamedLayer saknar Title',
+  SLD_LINT_INVALID_RULE_STRUCTURE: 'Ogiltig rulestruktur',
+  SLD_LINT_UNSUPPORTED_SYMBOLIZER_COMBINATION: 'Ogiltig symbolizer-kombination',
 
   // Gridset Tool
   GRIDSET_INVALID_EXTENT: 'Ogiltig extent',
   GRIDSET_INVALID_RESOLUTION: 'Ogiltig resolution',
   GRIDSET_INVALID_TILES: 'Ogiltig tile-konfiguration',
+  GRIDSET_NO_EXTENT: 'Ingen extent vald',
+  GRIDSET_NO_RESOLUTIONS: 'Resolutioner saknas',
+  GRIDSET_INVALID_TILESIZE: 'Ogiltig tile-storlek',
 };
 
 /**

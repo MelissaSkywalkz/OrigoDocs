@@ -36,7 +36,7 @@
             <a href="#tile-cache-101">Tile cache 101</a>
             <a href="#seed-truncate-bypass">Seed/Truncate</a>
             <a href="#crs-gridset">CRS & gridsets</a>
-            <a href="#grid-misalignment">Grid misalignment</a>
+            <a href="#grid-misalignment">Grid-feljustering</a>
             <a href="#seed-strategi">Seed‑strategi</a>
             <a href="#felsokningsflode">Felsökningsflöde</a>
             <a href="#cacheability">Cacheability</a>
@@ -129,11 +129,11 @@
           tomma tiles. Vår vanligaste CRS är EPSG:3008.
         </p>
         <p>
-          Tänk så här: CRS styr hur världen delas upp i zoomnivåer. Gridset och resolutions måste
+          Tänk så här: CRS styr hur världen delas upp i zoomnivåer. Gridset och upplösningar måste
           därför hänga ihop med samma projektion och samma extent.
         </p>
 
-        <h2 id="grid-misalignment">Grid misalignment</h2>
+        <h2 id="grid-misalignment">Grid-feljustering</h2>
         <ul>
           <li>
             <strong>Symptom:</strong> tiles hamnar fel, skuggförskjutning, tomma rutor vid vissa
@@ -141,7 +141,7 @@
           </li>
           <li><strong>Orsak:</strong> fel gridset, fel tile size eller blandade CRS.</li>
           <li>
-            <strong>Åtgärd:</strong> verifiera gridset/matrixset, matcha resolutions och seed om.
+            <strong>Åtgärd:</strong> verifiera gridset/matrixset, matcha upplösningar och seed om.
           </li>
         </ul>
 
@@ -212,7 +212,7 @@
           </li>
           <li><strong>Tung rendering:</strong> minska zoomintervall och seeda mindre område.</li>
           <li><strong>Extern WMS långsam:</strong> testa bypass och seeda bara nödvändigt.</li>
-          <li><strong>Fel zoomnivå:</strong> kontrollera resolutions och gridset.</li>
+          <li><strong>Fel zoomnivå:</strong> kontrollera upplösningar och gridset.</li>
         </ul>
 
         <h2 id="klientperspektiv">Klientperspektiv (Origo + browser)</h2>
