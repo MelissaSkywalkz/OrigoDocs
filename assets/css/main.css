@@ -1876,6 +1876,8 @@ a {
   background: transparent;
   scrollbar-width: thin;
   scrollbar-color: rgba(65, 90, 119, 0.3) transparent;
+  white-space: pre;
+  font-family: 'Courier New', 'Courier', monospace;
 }
 
 .doc-content .code-block pre::-webkit-scrollbar {
@@ -1902,6 +1904,11 @@ a {
   color: #e2e8f0;
   display: block;
   white-space: pre;
+}
+
+.code-block code span {
+  display: inline;
+  white-space: inherit;
 }
 
 /* Token color overrides - must come after base code color */

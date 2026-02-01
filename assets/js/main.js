@@ -554,8 +554,7 @@ const escapeHTML = (str) =>
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/"/g, '&quot;');
 
 const detectLangFromBadge = (badgeLabel) => {
   const v = (badgeLabel || '').toLowerCase();
@@ -592,152 +591,272 @@ const autoDetectLang = (text) => {
 };
 
 const highlightJSON = (text) => {
-  // Preserve strings before escaping the rest of the text
-  const stringLiterals = [];
-  let s = text.replace(/"(\\.|[^"\\])*"/g, (m) => {
-    const escaped = escapeHTML(m).replace(/&quot;/g, '"');
-    stringLiterals.push(escaped);
-    return `__JSON_STR_${stringLiterals.length - 1}__`;
-  });
+  const wrap = (cls, rawText) => `<span class="${cls}">${escapeHTML(rawText)}</span>`;
+  const out = [];
+  const len = text.length;
 
-  s = escapeHTML(s);
-  s = s.replace(/__JSON_STR_(\d+)__/g, (full, idx) => {
-    const content = stringLiterals[Number(idx)] || '';
-    return `<span class="tok-string">${content}</span>`;
-  });
+  const KNOWN_KEYS = new Set([
+    'type',
+    'source',
+    'sources',
+    'layers',
+    'layer',
+    'url',
+    'version',
+    'format',
+    'params',
+    'request',
+    'service',
+    'projection',
+    'projectionCode',
+    'crs',
+    'srs',
+    'extent',
+    'bbox',
+    'center',
+    'resolutions',
+    'zoom',
+    'minZoom',
+    'maxZoom',
+    'styles',
+    'style',
+    'legend',
+    'attribution',
+    'opacity',
+    'visible',
+    'controls',
+    'plugins',
+    'ui',
+    'map',
+    'strategy',
+  ]);
 
-  // 1) Keys: a string immediately followed by :
-  // We keep ":" as punctuation, and key in tok-key
-  const keyCount = (s.match(/<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g) || []).length;
-  s = s.replace(
-    /<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g,
-    (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`,
-  );
-  
-  // 2) Numbers
-  s = s.replace(
-    /(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi,
-    `<span class="tok-number">$1</span>`,
-  );
+  const isDigit = (ch) => ch >= '0' && ch <= '9';
+  const isWhitespace = (ch) => ch === ' ' || ch === '\n' || ch === '\r' || ch === '\t';
+  const isWordChar = (ch) =>
+    (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || isDigit(ch) || ch === '_';
 
-  // 3) Booleans + null
-  s = s.replace(/\btrue\b|\bfalse\b/g, (m) => `<span class="tok-boolean">${m}</span>`);
-  s = s.replace(/\bnull\b/g, `<span class="tok-null">null</span>`);
-
-  // 4) Punctuation (braces, brackets, commas)
-  s = s.replace(/[{}\[\],]/g, (m) => `<span class="tok-punct">${m}</span>`);
-
-  // ---- Extra polish: operate ONLY inside string spans to avoid breaking markup ----
-
-  // Helper: rewrite content inside tok-string spans without touching tags outside
-  const mapStringSpans = (html, transformFn) => {
-    let matchCount = 0;
-    const result = html.replace(
-      /<span class="tok-string">(")([\s\S]*?)(")<\/span>/g,
-      (full, q1, inner, q2) => {
-        matchCount++;
-        // inner is already escaped HTML (no raw quotes)
-        const nextInner = transformFn(inner);
-        return `<span class="tok-string">${q1}${nextInner}${q2}</span>`;
-      },
-    );
-    return result;
+  const pushText = (rawText) => {
+    if (rawText) out.push(escapeHTML(rawText));
   };
 
-  // 6) Highlight type values (WMS, WFS, WMTS, etc) inside strings
-  let typeValueCount = 0;
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /\b(WMS|WFS|WMTS|XYZ|VECTOR|GROUP|IMAGE|TILE|AGS_TILE|AGS_FEATURE|GEOJSON|TOPOJSON|GPX|KML|OSM|TMS)\b/g,
-      (m) => {
-        typeValueCount++;
-        return `<span class="tok-type-value">${m}</span>`;
-      },
-    );
+  const readString = (start) => {
+    let i = start + 1;
+    let escaped = false;
+    while (i < len) {
+      const ch = text[i];
+      if (escaped) {
+        escaped = false;
+        i += 1;
+        continue;
+      }
+      if (ch === '\\') {
+        escaped = true;
+        i += 1;
+        continue;
+      }
+      if (ch === '"') {
+        i += 1;
+        break;
+      }
+      i += 1;
+    }
+    return i;
+  };
+
+  const readNumber = (start) => {
+    let i = start;
+    if (text[i] === '-') i += 1;
+
+    const intStart = i;
+    while (i < len && isDigit(text[i])) i += 1;
+    if (intStart === i) return null;
+
+    if (i < len && text[i] === '.') {
+      const dotPos = i;
+      i += 1;
+      const fracStart = i;
+      while (i < len && isDigit(text[i])) i += 1;
+      if (fracStart === i) {
+        i = dotPos;
+      }
+    }
+
+    if (i < len && (text[i] === 'e' || text[i] === 'E')) {
+      const expPos = i;
+      i += 1;
+      if (i < len && (text[i] === '+' || text[i] === '-')) i += 1;
+      const expStart = i;
+      while (i < len && isDigit(text[i])) i += 1;
+      if (expStart === i) {
+        i = expPos;
+      }
+    }
+
+    return i;
+  };
+
+  const renderKey = (rawString) => {
+    let isKnown = false;
+    try {
+      const keyValue = JSON.parse(rawString);
+      isKnown = typeof keyValue === 'string' && KNOWN_KEYS.has(keyValue);
+    } catch (error) {
+      isKnown = false;
+    }
+
+    if (isKnown) {
+      return `<span class="tok-key"><span class="tok-key-known">${escapeHTML(
+        rawString,
+      )}</span></span>`;
+    }
+
+    return wrap('tok-key', rawString);
+  };
+
+  const matchKeyword = (start, keyword) => {
+    if (text.startsWith(keyword, start)) {
+      const next = text[start + keyword.length] || '';
+      if (!next || !isWordChar(next)) {
+        return start + keyword.length;
+      }
+    }
+    return null;
+  };
+
+  let i = 0;
+  while (i < len) {
+    const ch = text[i];
+
+    if (ch === '"') {
+      const end = readString(i);
+      const rawString = text.slice(i, end);
+      let lookahead = end;
+      while (lookahead < len && isWhitespace(text[lookahead])) lookahead += 1;
+
+      if (lookahead < len && text[lookahead] === ':') {
+        out.push(renderKey(rawString));
+        pushText(text.slice(end, lookahead));
+        out.push(wrap('tok-punct', ':'));
+        i = lookahead + 1;
+        continue;
+      }
+
+      out.push(wrap('tok-string', rawString));
+      i = end;
+      continue;
+    }
+
+    if (isWhitespace(ch)) {
+      out.push(ch);
+      i += 1;
+      continue;
+    }
+
+    if (ch === '-' || isDigit(ch)) {
+      const end = readNumber(i);
+      if (end) {
+        out.push(wrap('tok-number', text.slice(i, end)));
+        i = end;
+        continue;
+      }
+    }
+
+    if (ch === 't' || ch === 'f' || ch === 'n') {
+      const trueEnd = matchKeyword(i, 'true');
+      if (trueEnd) {
+        out.push(wrap('tok-boolean', 'true'));
+        i = trueEnd;
+        continue;
+      }
+      const falseEnd = matchKeyword(i, 'false');
+      if (falseEnd) {
+        out.push(wrap('tok-boolean', 'false'));
+        i = falseEnd;
+        continue;
+      }
+      const nullEnd = matchKeyword(i, 'null');
+      if (nullEnd) {
+        out.push(wrap('tok-null', 'null'));
+        i = nullEnd;
+        continue;
+      }
+    }
+
+    if (ch === '{' || ch === '}' || ch === '[' || ch === ']' || ch === ',' || ch === ':') {
+      out.push(wrap('tok-punct', ch));
+      i += 1;
+      continue;
+    }
+
+    pushText(ch);
+    i += 1;
+  }
+
+  return out.join('');
+};
+
+const runJsonHighlightTests = () => {
+  const samples = [
+    {
+      name: 'escapes-exponent',
+      input:
+        '{\n  "text": "A \\\"quote\\\" and \\\\ slash",\n  "ok": true,\n  "num": -12.5e+3\n}',
+    },
+    {
+      name: 'nested',
+      input: '{"a":{"b":[1,2,3],"c":null},"d":false}',
+    },
+    {
+      name: 'whitespace',
+      input: '[ 1 ,\n  2 , 3 ]',
+    },
+    {
+      name: 'keys',
+      input: '{ "type": "WMS", "projectionCode": "EPSG:3008" }',
+    },
+  ];
+
+  const results = samples.map(({ name, input }) => {
+    const html = highlightJSON(input);
+    const holder = document.createElement('div');
+    holder.innerHTML = html;
+    const textOk = holder.textContent === input;
+    const nlCount = (input.match(/\n/g) || []).length;
+    const nlOutCount = (holder.textContent.match(/\n/g) || []).length;
+    const newlineOk = nlCount === nlOutCount;
+    return {
+      name,
+      textOk,
+      newlineOk,
+      ok: textOk && newlineOk,
+    };
   });
 
-  // 7) Highlight EPSG codes inside strings
-  let crsCount = 0;
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /\b(EPSG:\d{4,5})\b/g,
-      (m) => {
-        crsCount++;
-        return `<span class="tok-crs">${m}</span>`;
-      },
-    );
-  });
-
-  // 8) Highlight URLs inside strings
-  let urlCount = 0;
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /(https?:\/\/[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+)/g,
-      (m) => {
-        urlCount++;
-        return `<span class="tok-url">${m}</span>`;
-      },
-    );
-  });
-
-  // 9) Highlight version strings inside strings (1.1.1, 1.3.0, etc)
-  let verCount = 0;
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /\b(\d+\.\d+\.\d+)\b/g,
-      (m) => {
-        verCount++;
-        return `<span class="tok-ver">${m}</span>`;
-      },
-    );
-  });
-
-  // 10) Highlight JSON-ish paths/pointers inside strings: /a/b, $.foo.bar, {x}/{y}/{z}
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /(\$\.?[A-Za-z0-9_$.\[\]-]+|\/[A-Za-z0-9._~\-\/]+|\{[A-Za-z0-9_]+\}(?:\/\{[A-Za-z0-9_]+\})+)/g,
-      (m) => `<span class="tok-pathish">${m}</span>`,
-    );
-  });
-
-  // 11) Highlight ISO dates inside strings (YYYY-MM-DD or full timestamp)
-  s = mapStringSpans(s, (inner) => {
-    return inner.replace(
-      /\b(\d{4}-\d{2}-\d{2}(?:[T ][0-2]\d:[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+\-][0-2]\d:[0-5]\d)?)?)\b/g,
-      (m) => `<span class="tok-date">${m}</span>`,
-    );
-  });
-
-  // 12) Highlight well-known Origo/GeoServer config keys
-  // This only affects keys (tok-key), not values.
-  const knownKeys =
-    /\b(")(type|source|sources|layers|layer|url|version|format|params|request|service|projection|projectionCode|crs|srs|extent|bbox|center|resolutions|zoom|minZoom|maxZoom|styles|style|legend|attribution|opacity|visible|controls|plugins|ui|map|strategy)\b(")/g;
-
-  let knownKeyCount = 0;
-  s = s.replace(/<span class="tok-key">([\s\S]*?)<\/span>/g, (full, keyText) => {
-    // keyText includes quotes, already escaped; try to upgrade if matches known list
-    const upgraded = keyText.replace(knownKeys, (m) => {
-      knownKeyCount++;
-      return `<span class="tok-key-known">${m}</span>`;
-    });
-    return `<span class="tok-key">${upgraded}</span>`;
-  });
-  
-
-  return s;
+  const failed = results.filter((r) => !r.ok);
+  if (failed.length > 0) {
+    console.warn('[JSON highlighter tests] Misslyckade tester:', failed);
+  } else {
+    console.info('[JSON highlighter tests] Alla tester OK.');
+  }
 };
 
 const highlightXML = (text) => {
   let s = escapeHTML(text);
-  s = s.replace(/&lt;!--[\s\S]*?--&gt;/g, (m) => `<span class="tok-comment">${m}</span>`);
-  s = s.replace(/(&lt;\/?)([A-Za-z0-9:_-]+)([^&]*?)(\/?&gt;)/g, (full, open, tag, attrs, close) => {
-    const attrsHL = attrs.replace(
-      /([A-Za-z0-9:_-]+)(=)(&quot;[^&]*?&quot;)/g,
-      (m, a, eq, v) =>
-        `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
-    );
-    return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
-  });
+  s = s.replace(/(&lt;\?[\s\S]*?\?&gt;)/g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(/(&lt;!--[\s\S]*?--&gt;)/g, (m) => `<span class="tok-comment">${m}</span>`);
+  s = s.replace(
+    /(&lt;)(\/?)([a-zA-Z_:][a-zA-Z0-9_:.-]*)((?:\s+[a-zA-Z_:][a-zA-Z0-9_:.-]*(?:=(?:"[^"]*"|'[^']*'))?)*?)(\s*)(&gt;)/g,
+    (m, open, slash, tag, attrs, ws, close) => {
+      let attrsHL = attrs
+        .replace(
+          /([a-zA-Z_:][a-zA-Z0-9_:.-]*)(\s*=\s*)("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,
+          (m, a, eq, v) =>
+            `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
+        );
+      return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
+    },
+  );
   return s;
 };
 
@@ -932,6 +1051,10 @@ const initDocCodeBlocks = () => {
 // Run after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   initDocCodeBlocks();
+  const devMode = new URLSearchParams(window.location.search).get('dev') === '1';
+  if (devMode) {
+    runJsonHighlightTests();
+  }
 });
 
 const highlightCode = (lang, text) => {
