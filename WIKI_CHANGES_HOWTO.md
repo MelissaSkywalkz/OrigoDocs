@@ -136,3 +136,25 @@ Fix markdown formatting and consistency issues
 For questions about these changes, refer to:
 - `WIKI_QUALITY_REVIEW.md` - Comprehensive review summary
 - `wiki-quality-fixes.patch` - Actual code changes in patch format
+
+---
+
+## Additional Whitespace Normalization (2026-02-01)
+
+A comprehensive whitespace normalization was applied to all wiki pages:
+
+### Changes Made
+- Removed trailing spaces from all non-empty lines
+- Normalized blank lines to be truly empty (no spaces/tabs)
+- Ensured consistent LF line endings
+- Preserved all code block content
+
+### Statistics
+- **7 files modified**: 585 insertions, 585 deletions (whitespace only)
+- **654 lines** had trailing whitespace removed
+- **No content changes** - purely mechanical cleanup
+
+### Wiki Commit
+Commit: `a8ea897` - "Comprehensive whitespace normalization"
+
+See `WHITESPACE_NORMALIZATION.md` in the main repository for full details.

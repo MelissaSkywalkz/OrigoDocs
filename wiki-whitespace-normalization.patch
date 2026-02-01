@@ -1,0 +1,2765 @@
+commit a8ea89759d6bed83189f1bcb3bb6a9524512b7f2
+Author: GitHub Copilot <github-copilot@github.com>
+Date:   Sun Feb 1 01:26:24 2026 +0000
+
+    Comprehensive whitespace normalization
+    
+    - Remove trailing spaces from all non-empty lines
+    - Remove spaces/tabs from blank lines
+    - Preserve code block content (spacing inside fenced blocks)
+    - Ensure consistent LF line endings
+    - 7 files modified: 585 insertions, 585 deletions (whitespace only)
+    
+    Files cleaned:
+    - CRS-amd-Coordinate-Assumptions.md: 78 lines
+    - Change-management.md: 135 lines
+    - Developing-and-maintenance.md: 125 lines
+    - Exports-and-integration.md: 95 lines
+    - Known-limitations-and-non-goals.md: 96 lines
+    - Tool-documentation.md: 124 lines
+    - Try-it-Labs-overview.md: 1 line
+    
+    No content or semantic changes - purely mechanical whitespace cleanup.
+
+diff --git "a/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md" "b/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md"
+index c996eca..6b21045 100644
+--- "a/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md"
++++ "b/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md"
+@@ -1,102 +1,102 @@
+ # CRS och Koordinatantaganden
+ --
+- 
++
+ Dokumentation om koordinatsystem, axelordning och bounds-validering i Try-it-labben.
+- 
++
+ ## Understödda koordinatsystem
+- 
++
+ Try-it-labben stöder primärt två svenska koordinatsystem:
+- 
++
+ ### EPSG:3006 (Sweref99 TM)
+- 
++
+ **Beskrivning:** Sweref99 TM (Transverse Mercator) är ett rikstäckande koordinatsystem för Sverige.
+- 
++
+ **Bounds (approximativa):**
+ - Min X: 181 896 m
+ - Max X: 1 083 947 m
+ - Min Y: 6 101 648 m
+ - Max Y: 7 689 478 m
+- 
++
+ **Användning:**
+ - Rikstäckande kartor
+ - Nationella dataset
+ - Integration med Lantmäteriet
+- 
++
+ **Axelordning:** Easting (X), Northing (Y)
+- 
++
+ ### EPSG:3008 (Sweref99 12 00)
+- 
++
+ **Beskrivning:** Sweref99 12 00 är en regional projektion för mellersta Sverige.
+- 
++
+ **Bounds (approximativa):**
+ - Min X: -1 200 000 m
+ - Max X: 2 600 000 m
+ - Min Y: 4 300 000 m
+ - Max Y: 8 500 000 m
+- 
++
+ **Användning:**
+ - Regionala kartor (främst Stockholms- och Svealand-området)
+ - GeoWebCache default gridset
+ - Mellansvenska kommuner
+- 
++
+ **Axelordning:** Easting (X), Northing (Y)
+- 
++
+ ## Axelordning
+- 
++
+ ### OpenLayers och Origo
+- 
++
+ OpenLayers och Origo använder **geografisk axelordning (X, Y)** för projicerade koordinatsystem:
+- 
++
+ ```javascript
+ // Korrekt ordning för EPSG:3006
+ const center = [319180, 6399862]; // [X/Easting, Y/Northing]
+ ```
+- 
++
+ Detta matchar EPSG-definitioner för Sweref99-projektioner.
+- 
++
+ ### WMS och OGC Standards
+- 
++
+ **WMS 1.1.x:** Använder geografisk ordning (X, Y)
+ ```
+ BBOX=319000,6399000,320000,6400000
+ ```
+- 
++
+ **WMS 1.3.0:** Använder axelordning enligt CRS-definition
+ - För EPSG:3006 och EPSG:3008: Fortfarande (X, Y)
+ - För EPSG:4326: **(Y, X)** - latitude först!
+- 
++
+ **Viktigt:** Origo använder primärt WMS 1.1.x, så geografisk ordning (X, Y) är standard.
+- 
++
+ ### GeoJSON
+- 
++
+ GeoJSON följer **RFC 7946** och använder alltid **longitude, latitude (X, Y)** för EPSG:4326:
+- 
++
+ ```json
+ {
+ "type": "Point",
+ "coordinates": [18.0686, 59.3293]  // [longitude, latitude]
+ }
+ ```
+- 
++
+ För projicerade koordinatsystem (EPSG:3006, EPSG:3008) används samma ordning (X, Y).
+- 
++
+ ## Bounds-validering
+- 
++
+ ### Filosofi
+- 
++
+ Try-it-labben använder **defensiv bounds-validering**:
+- 
++
+ 1. **Hård gräns:** Koordinater utanför approximativa bounds för Sverige genererar errors
+ 2. **Mjuk gräns:** Koordinater nära gränsen genererar warnings
+ 3. **Transparens:** Alla bounds-checks loggas i valideringsrapport
+- 
++
+ **Motivering:**
+ - Förhindra uppenbara fel (t.ex. blandade koordinatsystem)
+ - Tillåt edge cases (gränsområden, bufferzoner)
+ - Informera användare om potentiella problem
+- 
++
+ ### Bounds-check implementation
+- 
++
+ **BBOX Validator:**
+ ```javascript
+ function validateBounds(bbox, crs) {
+@@ -116,30 +116,30 @@ return { warning: 'BBOX_NEAR_EDGE' };
+ return { valid: true };
+ }
+ ```
+- 
++
+ **Toleransvärden:**
+ - `TOLERANCE`: 50 000 meter (tillåt bufferzoner)
+ - `EDGE_BUFFER`: 10 000 meter (varna nära gränsen)
+- 
++
+ ### Edge cases
+- 
++
+ **Internationella gränsområden:**
+ - Norge/Sverige-gränsen: Kan ligga nära bounds för EPSG:3006
+ - Öresundsbron: Ligger nära bounds för vissa Sweref99-zoner
+- 
++
+ **Lösning:** Verktyg genererar warning men tillåter data. Användare måste bedöma om data är korrekta.
+- 
++
+ **Havsområden:**
+ - Ekonomisk zon i Östersjön kan ligga utanför land-bounds
+- 
++
+ **Lösning:** Bounds är approximativa för *Sverige som land*, inte maritima zoner.
+- 
++
+ ## OpenLayers och Origo Expectations
+- 
++
+ ### Projection Definition
+- 
++
+ OpenLayers kräver explicit projection-definition för Sweref99-projektioner:
+- 
++
+ ```javascript
+ import proj4 from 'proj4';
+ import { register } from 'ol/proj/proj4';
+@@ -150,13 +150,13 @@ proj4.defs('EPSG:3006',
+  
+ register(proj4);
+ ```
+- 
++
+ **Try-it-labben:** Använder förladdade Proj4js-definitioner för EPSG:3006 och EPSG:3008.
+- 
++
+ ### View Configuration
+- 
++
+ Origo och OpenLayers förväntar view-konfiguration enligt:
+- 
++
+ ```javascript
+ {
+ center: [319180, 6399862],  // [X, Y] i valda CRS
+@@ -165,50 +165,50 @@ projection: 'EPSG:3006',
+ extent: [181896, 6101648, 1083947, 7689478]  // Optional bounding extent
+ }
+ ```
+- 
++
+ **Viktigt:**
+ - `center` måste ligga inom `extent` (om definierat)
+ - `zoom` mappar till `resolutions` array
+ - `projection` måste vara registrerad i Proj4js
+- 
++
+ ### Resolutions
+- 
++
+ Origo använder diskreta resolutioner istället för kontinuerlig zoom:
+- 
++
+ ```javascript
+ {
+ resolutions: [4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1],
+ extent: [...]
+ }
+ ```
+- 
++
+ **Beräkning:** Se [Resolutions Tool](Tool-Documentation#resolutions-tool) för detaljer.
+- 
++
+ ## Transformation mellan koordinatsystem
+- 
++
+ ### Limitation
+- 
++
+ Try-it-labben utför **ingen transformation** mellan koordinatsystem. Verktyg förväntar att input är i rätt CRS från början.
+- 
++
+ **Motivering:**
+ - Transformationer kräver exakta PROJ4-definitioner
+ - Felaktig transformation är värre än ingen transformation
+ - Användare bör vara medvetna om vilket CRS de arbetar i
+- 
++
+ ### Rekommendation
+- 
++
+ För transformation mellan koordinatsystem, använd:
+- 
++
+ - **QGIS:** Vector → Processing → Reproject Layer
+ - **ogr2ogr:** `ogr2ogr -t_srs EPSG:3006 output.shp input.shp`
+ - **Proj4js:** För client-side transformation i JavaScript
+- 
++
+ ## Validering av koordinater
+- 
++
+ ### Point Validation
+- 
++
+ Validera att en punkt ligger inom Sverige:
+- 
++
+ ```javascript
+ function validatePoint(x, y, crs) {
+ const bounds = CRS_BOUNDS[crs];
+@@ -221,11 +221,11 @@ return { valid: false, error: 'POINT_OUT_OF_BOUNDS' };
+ return { valid: true };
+ }
+ ```
+- 
++
+ ### BBOX Validation
+- 
++
+ Validera att en BBOX är giltig:
+- 
++
+ ```javascript
+ function validateBBOX(bbox, crs) {
+ // Check format
+@@ -242,13 +242,13 @@ return { error: 'BBOX_INVERTED' };
+ return validateBounds(bbox, crs);
+ }
+ ```
+- 
++
+ ## Sammanfattning
+- 
++
+ - Try-it-labben stöder **EPSG:3006** och **EPSG:3008**
+ - Axelordning är alltid **(X, Y)** för Sweref99-projektioner
+ - Bounds-validering är **defensiv** med tolerans för edge cases
+ - **Ingen transformation** mellan koordinatsystem utförs
+ - Följer **OpenLayers och Origo conventions** för projection-konfiguration
+- 
++
+ För specifik verktygs-användning, se [Tool Documentation](Tool-Documentation).
+\ No newline at end of file
+diff --git "a/Change\342\200\220management.md" "b/Change\342\200\220management.md"
+index a336934..4f768b7 100644
+--- "a/Change\342\200\220management.md"
++++ "b/Change\342\200\220management.md"
+@@ -1,23 +1,23 @@
+ # Change Management
+ 
+ Dokumentation om hur man uppdaterar dokumentation när verktyg ändras, versionshantering och synkronisering mellan Wiki, README och kod.
+- 
++
+ ## Principer för dokumentationsunderhåll
+- 
++
+ ### 1. Documentation-as-Code
+- 
++
+ All dokumentation versionshantehas tillsammans med koden:
+- 
++
+ - README.md → Git repository
+ - Wiki pages → GitHub Wiki (separat Git repository)
+ - Code comments → Inline i källkod
+- 
++
+ **Princip:** Dokumentation uppdateras i samma commit som kodändringen.
+- 
++
+ ### 2. Single Source of Truth
+- 
++
+ Varje typ av information har en primär källa:
+- 
++
+ \| Information \| Primär källa \| Sekundära referenser \|
+ \|-------------\|--------------\|---------------------\|
+ \| Vad projektet är \| README.md \| Wiki Home \|
+@@ -26,21 +26,21 @@ Varje typ av information har en primär källa:
+ \| Design-principer \| Try-it Labs Overview (Wiki) \| - \|
+ \| API/valideringskoder \| Error Handling (Wiki) \| Code comments \|
+ \| Development guide \| Development & Maintenance (Wiki) \| - \|
+- 
++
+ **Princip:** Upprepa aldrig samma information på flera ställen. Länka istället.
+- 
++
+ ### 3. Lagom detaljnivå
+- 
++
+ - **README:** High-level översikt och "getting started"
+ - **Wiki:** Djupgående teknisk dokumentation
+ - **Code comments:** Implementation-specifika detaljer
+- 
++
+ **Princip:** README ska vara snabb att läsa. Wiki ska vara komplett.
+- 
++
+ ## Workflow för dokumentationsuppdateringar
+- 
++
+ ### När kod ändras
+- 
++
+ ```mermaid
+ Code Change
+ ↓
+@@ -54,13 +54,13 @@ Commit all changes together
+ ↓
+ Update Changelog (if major change)
+ ```
+- 
++
+ ### Exempel: Lägg till ny validering
+- 
++
+ **Scenario:** JSON Validator får ny check för duplicerade nycklar.
+- 
++
+ **Steg:**
+- 
++
+ 1. **Uppdatera kod:**
+ ```javascript
+ // Check for duplicate keys in JSON
+@@ -71,7 +71,7 @@ message: 'JSON contains duplicate keys'
+ });
+ }
+ ```
+- 
++
+ 2. **Uppdatera Wiki - Error Handling:**
+ ```markdown
+ ### JSON Validator
+@@ -80,13 +80,13 @@ message: 'JSON contains duplicate keys'
+ \|-----\|-----\|-------------\|
+ \| `DUPLICATE_KEYS` \| Warning \| Duplicerade nycklar i objekt \|
+ ```
+- 
++
+ 3. **Uppdatera Wiki - Tool Documentation:**
+ ```markdown
+ **Common Warnings:**
+ - `DUPLICATE_KEYS`: Varning för duplicerade nycklar
+ ```
+- 
++
+ 4. **Commit:**
+ ```bash
+ git add pages/try-it.html
+@@ -96,7 +96,7 @@ git commit -m "Add duplicate key detection to JSON Validator
+ - Updated Wiki documentation with new error code
+ "
+ ```
+- 
++
+ 5. **Uppdatera Wiki** (separat Git repo):
+ ```bash
+ cd OrigoDocs.wiki
+@@ -107,13 +107,13 @@ git add .
+ git commit -m "Document DUPLICATE_KEYS warning in JSON Validator"
+ git push
+ ```
+- 
++
+ ### Exempel: Lägg till nytt verktyg
+- 
++
+ **Scenario:** Nytt verktyg "Coordinate Converter" läggs till.
+- 
++
+ **Steg:**
+- 
++
+ 1. **Implementera verktyg** i `try-it.html`
+ 2. **Uppdatera README.md:**
+ ```markdown
+@@ -123,12 +123,12 @@ git push
+ - **Coordinate Converter** ← NY
+ - BBOX/Extent explorer
+ ```
+- 
++
+ 3. **Uppdatera Wiki - Home:**
+ ```markdown
+ 9. **Coordinate Converter** – Konvertera mellan EPSG:3006 och EPSG:3008
+ ```
+- 
++
+ 4. **Skapa Wiki - Tool Documentation section:**
+ ```markdown
+ ## Coordinate Converter
+@@ -138,20 +138,20 @@ Konvertera koordinater mellan EPSG:3006 och EPSG:3008.
+  
+ ...
+ ```
+- 
++
+ 5. **Uppdatera Wiki - Development & Maintenance:**
+ ```markdown
+ ### Exempel på nyligen tillagda verktyg
+  
+ - Coordinate Converter (2026-01-31)
+ ```
+- 
++
+ 6. **Commit kod:**
+ ```bash
+ git add try-it.html README.md
+ git commit -m "Add Coordinate Converter tool"
+ ```
+- 
++
+ 7. **Uppdatera Wiki:**
+ ```bash
+ cd OrigoDocs.wiki
+@@ -160,28 +160,28 @@ git add .
+ git commit -m "Document Coordinate Converter tool"
+ git push
+ ```
+- 
++
+ ## Versionshantering
+- 
++
+ ### Semantic Versioning för dokumentation
+- 
++
+ Wiki följer versionsnummer från projektet:
+- 
++
+ - **Major (1.x → 2.x):** Stora strukturella ändringar i Try-it-labben
+ - **Minor (1.0 → 1.1):** Nya verktyg eller stora features
+ - **Patch (1.0.0 → 1.0.1):** Bug fixes och mindre ändringar
+- 
++
+ **Version dokumenteras i Wiki Home:**
+ ```markdown
+ # Välkommen till OrigoDocs Wiki
+  
+ > Dokumentation för OrigoDocs v1.1.0 (2026-01-31)
+ ```
+- 
++
+ ### Changelog
+- 
++
+ Om `CHANGELOG.md` finns i repository, uppdatera enligt Keep a Changelog format:
+- 
++
+ ```markdown
+ # Changelog
+  
+@@ -204,16 +204,16 @@ Om `CHANGELOG.md` finns i repository, uppdatera enligt Keep a Changelog format:
+  
+ ...
+ ```
+- 
++
+ ### Breaking Changes
+- 
++
+ Vid breaking changes (major version bump):
+- 
++
+ 1. Dokumentera i CHANGELOG
+ 2. Lägg till migration guide i Wiki
+ 3. Uppdatera alla exempel i dokumentation
+ 4. Kommunicera till användare (om möjligt)
+- 
++
+ **Exempel migration guide:**
+ ```markdown
+ # Migration Guide: 1.x → 2.0
+@@ -244,13 +244,13 @@ Vid breaking changes (major version bump):
+  
+ **Action required:** Update code that parses BBOX Validator output.
+ ```
+- 
++
+ ## Hålla Wiki, README och kod synkroniserade
+- 
++
+ ### Checklista vid ändringar
+- 
++
+ När du gör ändringar, kontrollera:
+- 
++
+ - [ ] **Kod uppdaterad:** Funktionalitet implementerad
+ - [ ] **Inline comments:** Komplexa delar kommenterade
+ - [ ] **README uppdaterad:** (om high-level change)
+@@ -259,9 +259,9 @@ När du gör ändringar, kontrollera:
+ - [ ] **Wiki Development uppdaterad:** (om development-process ändrad)
+ - [ ] **Changelog uppdaterad:** (om noteworthy change)
+ - [ ] **Exempel testade:** Alla kod-exempel i dokumentation fungerar
+- 
++
+ ### Automatiska checks
+- 
++
+ **Innan commit:**
+ ```bash
+ # Check att README är uppdaterad
+@@ -270,7 +270,7 @@ git diff HEAD -- README.md
+ # Check att Wiki är uppdaterad (om tillämpligt)
+ cd ../OrigoDocs.wiki && git status
+ ```
+- 
++
+ **Best practice:** Skriv commit message som inkluderar vad som uppdaterats:
+ ```
+ Add duplicate key detection to JSON Validator
+@@ -280,45 +280,45 @@ Add duplicate key detection to JSON Validator
+ - Updated Wiki Error Handling documentation
+ - Updated Wiki Tool Documentation
+ ```
+- 
++
+ ## Dokumentations-review
+- 
++
+ ### Före merge
+- 
++
+ Review att:
+- 
++
+ 1. **Accuracy:** Dokumentation matchar faktisk implementation
+ 2. **Completeness:** All ny funktionalitet är dokumenterad
+ 3. **Consistency:** Terminologi och struktur matchar existing docs
+ 4. **Examples:** Alla exempel är testade och fungerar
+ 5. **Links:** Alla interna länkar fungerar
+- 
++
+ ### Dokumentations-typer att review
+- 
++
+ **README.md:**
+ - [ ] Nya verktyg listade
+ - [ ] Nya dependencies dokumenterade
+ - [ ] "Getting started" uppdaterad (om relevant)
+- 
++
+ **Wiki - Tool Documentation:**
+ - [ ] Verktygs-specifik dokumentation uppdaterad
+ - [ ] Exempel testade
+ - [ ] Limitations dokumenterade
+- 
++
+ **Wiki - Error Handling:**
+ - [ ] Nya felkoder dokumenterade
+ - [ ] Error code table uppdaterad
+- 
++
+ **Wiki - Development:**
+ - [ ] Development-process uppdaterad (om relevant)
+ - [ ] Testing checklist uppdaterad (om relevant)
+- 
++
+ ## Versionshantering av Wiki
+- 
++
+ ### GitHub Wiki är ett Git Repository
+- 
++
+ GitHub Wiki är ett separat Git repository:
+- 
++
+ ```bash
+ # Klona wiki
+ git clone https://github.com/MelissaSkywalkz/OrigoDocs.wiki.git
+@@ -332,18 +332,18 @@ git add Home.md
+ git commit -m "Update Wiki Home with new version"
+ git push origin master
+ ```
+- 
++
+ **Viktigt:** Wiki-ändringar är INTE automatiskt synkade med main repo. Måste göras manuellt.
+- 
++
+ ### Wiki Branching Strategy
+- 
++
+ **Rekommendation:** Gör Wiki-ändringar direkt på `master` branch.
+- 
++
+ **Motivering:**
+ - Wiki har ingen CI/CD pipeline
+ - Breaking changes är ovanliga i dokumentation
+ - Enklare workflow
+- 
++
+ **Undantag:** Vid stora strukturella ändringar, använd feature branch:
+ ```bash
+ git checkout -b restructure-tool-docs
+@@ -354,69 +354,69 @@ git checkout master
+ git merge restructure-tool-docs
+ git push
+ ```
+- 
++
+ ## Synkronisera med Origo-projektet
+- 
++
+ Om OrigoDocs dokumenterar Origo Map, håll synk med Origo-versioner:
+- 
++
+ ### När Origo uppdateras
+- 
++
+ 1. **Kontrollera Origo release notes:**
+ - Nya konfigurationsparametrar?
+ - Deprecated features?
+ - Breaking changes?
+- 
++
+ 2. **Uppdatera OrigoDocs:**
+ - Uppdatera exempel med nya parametrar
+ - Dokumentera deprecated features
+ - Lägg till migration guides
+- 
++
+ 3. **Testa exempel:**
+ - Verifiera att alla Origo-exempel fungerar med nya versionen
+ - Uppdatera exempel som är broken
+- 
++
+ ### Versionsinformation
+- 
++
+ Dokumentera vilken Origo-version som gäller:
+- 
++
+ **README.md:**
+ ```markdown
+ ## Origo Compatibility
+  
+ Dokumentationen baseras på **Origo Map v4.0.0**.
+ ```
+- 
++
+ **Wiki Home:**
+ ```markdown
+ > Dokumentation för OrigoDocs v1.1.0 (2026-01-31)
+ > Kompatibel med Origo Map v4.0.0
+ ```
+- 
++
+ ## Kommunikation med användare
+- 
++
+ ### Vid breaking changes
+- 
++
+ När breaking changes görs i Try-it-labben:
+- 
++
+ 1. **Uppdatera dokumentation** med migration guide
+ 2. **Lägg till notice** i README och Wiki Home
+ 3. **Kommunicera** (om möjligt via GitHub Discussions eller issue)
+- 
++
+ **Exempel notice:**
+ ```markdown
+ > ⚠️ **Breaking Change in v2.0**
+ >
+ > BBOX Validator output format has changed. See [Migration Guide](Migration-v2.0).
+ ```
+- 
++
+ ### Deprecation notices
+- 
++
+ När features ska deprecated:
+- 
++
+ 1. **Lägg till deprecation notice** i dokumentation (minst 2 releases innan)
+ 2. **Förklara alternativ**
+ 3. **Sätt deadline** för när feature tas bort
+- 
++
+ **Exempel:**
+ ```markdown
+ > ⚠️ **Deprecated**
+@@ -424,17 +424,17 @@ När features ska deprecated:
+ > URL Builder support för WMS 1.0.0 är deprecated och kommer tas bort i v2.0.
+ > Använd WMS 1.1.1 eller senare.
+ ```
+- 
++
+ ## Best Practices
+- 
++
+ ### 1. Uppdatera dokumentation i samma commit
+- 
++
+ **BAD:**
+ ```bash
+ git commit -m "Add feature X"
+ # (glömmer uppdatera Wiki)
+ ```
+- 
++
+ **GOOD:**
+ ```bash
+ # Main repo
+@@ -448,11 +448,11 @@ git commit -m "Add feature X
+ # Wiki repo
+ git commit -m "Document feature X"
+ ```
+- 
++
+ ### 2. Testa exempel innan commit
+- 
++
+ Alla kod-exempel i dokumentation måste vara testade:
+- 
++
+ ```bash
+ # Testa JSON exempel
+ echo '{"test": "value"}' \| ... # validera fungerar
+@@ -460,44 +460,44 @@ echo '{"test": "value"}' \| ... # validera fungerar
+ # Testa cURL exempel
+ curl -X GET "https://example.com/..." # verifiera syntax
+ ```
+- 
++
+ ### 3. Använd konsistent terminologi
+- 
++
+ Använd samma termer överallt:
+- 
++
+ - **Try-it-labben** (inte "Try-it lab" eller "Tryit-labben")
+ - **BBOX** (inte "bounding box" eller "bbox")
+ - **Validation Report** (inte "validation result" eller "report")
+- 
++
+ ### 4. Länka mellan dokument
+- 
++
+ Undvik duplicering genom att länka:
+- 
++
+ **README.md:**
+ ```markdown
+ För detaljerad information om verktyg, se [Wiki Tool Documentation](https://github.com/MelissaSkywalkz/OrigoDocs/wiki/Tool-Documentation).
+ ```
+- 
++
+ **Wiki:**
+ ```markdown
+ För att komma igång lokalt, se [README.md](https://github.com/MelissaSkywalkz/OrigoDocs#readme).
+ ```
+- 
++
+ ### 5. Datumstämpla större ändringar
+- 
++
+ Vid större omskrivningar, notera datum:
+- 
++
+ ```markdown
+ > Senast uppdaterad: 2026-01-31
+ ```
+- 
++
+ ## Sammanfattning
+- 
++
+ - Dokumentation uppdateras i samma commit som kod
+ - Wiki och README har olika syften och detaljnivå
+ - Versionshantering följer Semantic Versioning
+ - Breaking changes kräver migration guides
+ - Testa alla exempel innan commit
+ - Wiki är separat Git repository och måste uppdateras manuellt
+- 
++
+ Vid tveksamhet om dokumentation är uppdaterad, använd checklista ovan.
+\ No newline at end of file
+diff --git "a/Developing\342\200\220and\342\200\220maintenance.md" "b/Developing\342\200\220and\342\200\220maintenance.md"
+index cd0bb2a..2ee7b17 100644
+--- "a/Developing\342\200\220and\342\200\220maintenance.md"
++++ "b/Developing\342\200\220and\342\200\220maintenance.md"
+@@ -1,30 +1,30 @@
+ Development och Maintenance
+- 
++
+ Riktlinjer för att lägga till nya verktyg, underhålla befintliga, och säkerställa konsistens i Try-it-labben.
+- 
++
+ ## Lägga till ett nytt Try-it verktyg
+- 
++
+ ### Krav
+- 
++
+ Innan ett nytt verktyg läggs till, verifiera att:
+- 
++
+ 1. **Unikt syfte:** Verktyget löser ett problem som inte redan hanteras
+ 2. **Client-side:** Alla operationer kan göras i webbläsare
+ 3. **Reproducerbart:** Samma input ger alltid samma output
+ 4. **Relevant för målgrupp:** GIS-utvecklare, integratörer eller tekniska förvaltare
+- 
++
+ ### Steg för implementation
+- 
++
+ #### 1. Design och specifikation
+- 
++
+ Dokumentera innan implementation:
+- 
++
+ - **Syfte:** Vad verktyget gör och varför det behövs
+ - **Input:** Vilken data verktyget tar emot och i vilket format
+ - **Output:** Vad verktyget returnerar
+ - **Validering:** Vilka valideringsregler som ska gälla
+ - **Edge cases:** Hur verktyget hanterar ovanliga inputs
+- 
++
+ **Exempel:**
+ ```markdown
+ # Coordinate Converter Tool
+@@ -44,11 +44,11 @@ Dokumentera innan implementation:
+ - Source och target CRS måste vara olika
+ - Koordinat måste ligga inom bounds för source CRS
+ ```
+- 
++
+ #### 2. HTML Structure
+- 
++
+ Lägg till verktyget i `try-it.html` enligt standard-layout:
+- 
++
+ ```html
+ <section class="tool-card" aria-labelledby="my-tool">
+ <div class="tool-card-head">
+@@ -88,16 +88,16 @@ Kort beskrivning av vad verktyget gör.
+ </div>
+ </section>
+ ```
+- 
++
+ **Viktigt:**
+ - Använd `tool-card` och `tool-card-body` för konsistens
+ - Ge unika IDs till alla interaktiva element
+ - Inkludera `aria-labelledby` för accessibility
+- 
++
+ #### 3. JavaScript Implementation
+- 
++
+ Implementera verktyget med följande struktur:
+- 
++
+ ```javascript
+ // Validation function
+ function validateMyTool() {
+@@ -174,17 +174,17 @@ a.click();
+ URL.revokeObjectURL(url);
+ }
+ ```
+- 
++
+ **Kodstandard:**
+ - Använd `function` declarations (inte arrow functions) för event handlers
+ - Validera alltid innan processing
+ - Separera parsing, validation och transformation
+ - Hantera errors gracefully med try-catch
+- 
++
+ #### 4. Styling
+- 
++
+ Använd befintliga CSS-klasser från `main.css`:
+- 
++
+ - `.tool-card` – Container för verktyg
+ - `.tool-card-head` – Header med titel och beskrivning
+ - `.tool-card-body` – Body med input/output
+@@ -193,34 +193,34 @@ Använd befintliga CSS-klasser från `main.css`:
+ - `.btn-secondary` – Sekundär knapp
+ - `.code-block` – Pre-formaterad kod
+ - `.validation-report` – Valideringsrapport-container
+- 
++
+ **Lägg INTE till nya CSS-klasser om inte absolut nödvändigt.**
+- 
++
+ #### 5. Documentation
+- 
++
+ Uppdatera följande dokument:
+- 
++
+ 1. **README.md:** Lägg till verktyget i listan över Try it-lab verktyg
+ 2. **Wiki - Tool Documentation:** Lägg till komplett dokumentation
+ 3. **try-it.html:** Uppdatera table of contents (om det finns)
+- 
++
+ ### Required Features
+- 
++
+ Alla verktyg måste ha:
+- 
++
+ 1. **Input validation:** Validera innan processing
+ 2. **Validation report:** Strukturerad rapport med errors/warnings/auto-fixes
+ 3. **Clear button:** Möjlighet att rensa input
+ 4. **Copy button:** Möjlighet att kopiera output
+ 5. **Export function:** Ladda ner resultat som fil
+ 6. **Error handling:** Graceful error handling med user-friendly meddelanden
+- 
++
+ ## UI-konsistens
+- 
++
+ ### Layout
+- 
++
+ Alla verktyg följer samma layout-mönster:
+- 
++
+ ```
+ ┌─────────────────────────────────────┐
+ │ HEADER (h2 + beskrivning)           │
+@@ -236,150 +236,150 @@ Alla verktyg följer samma layout-mönster:
+ │ VALIDATION REPORT                   │
+ └─────────────────────────────────────┘
+ ```
+- 
++
+ ### Färgkodning
+- 
++
+ - **Errors:** Röd (`#dc3545`)
+ - **Warnings:** Gul/orange (`#ffc107`)
+ - **Auto-fixes:** Blå (`#0dcaf0`)
+ - **Success:** Grön (`#28a745`)
+- 
++
+ ### Ikoner
+- 
++
+ Använd text-baserade ikoner för konsistens:
+- 
++
+ - ✓ – Success
+ - ❌ – Error
+ - ⚠️ – Warning
+ - 🔧 – Auto-fix
+ - 📋 – Copy
+- 
++
+ **Viktigt:** Inga externa ikon-bibliotek (Font Awesome, etc.). Håll sajten lightweight.
+- 
++
+ ## Accessibility
+- 
++
+ ### ARIA Labels
+- 
++
+ Lägg till ARIA-labels för screen readers:
+- 
++
+ ```html
+ <button aria-label="Validera JSON-input">Validera</button>
+ <textarea aria-label="JSON-input"></textarea>
+ <div role="alert" aria-live="polite" id="validationReport"></div>
+ ```
+- 
++
+ ### Keyboard Navigation
+- 
++
+ Säkerställ att:
+- 
++
+ - Alla interactive element är keyboard-accessible
+ - Tab-order är logisk (top-to-bottom, left-to-right)
+ - Focus states är synliga
+- 
++
+ ### Color Contrast
+- 
++
+ Verifiera att:
+- 
++
+ - Text har minst 4.5:1 contrast ratio mot bakgrund
+ - Error/warning färger är distinguishable även för colorblind
+- 
++
+ ## Testing Checklist
+- 
++
+ Innan merge, verifiera:
+- 
++
+ ### Funktionalitet
+- 
++
+ - [ ] Input validation fungerar korrekt
+ - [ ] Errors, warnings och auto-fixes genereras som förväntat
+ - [ ] Processing producerar korrekt output
+ - [ ] Export skapar giltig fil
+- 
++
+ ### Edge Cases
+- 
++
+ - [ ] Tom input hanteras gracefully
+ - [ ] Invalid input genererar tydliga felmeddelanden
+ - [ ] Mycket stora inputs hanteras (eller begränsas)
+ - [ ] Special characters i input orsakar inte crashes
+- 
++
+ ### UI/UX
+- 
++
+ - [ ] Layout matchar andra verktyg
+ - [ ] Färgkodning följer standard
+ - [ ] Knappar är tydligt labeled
+ - [ ] Output är läsbar (formatting, syntax highlighting)
+- 
++
+ ### Accessibility
+- 
++
+ - [ ] ARIA labels finns
+ - [ ] Keyboard navigation fungerar
+ - [ ] Focus states är synliga
+ - [ ] Color contrast är OK
+- 
++
+ ### Cross-browser
+- 
++
+ - [ ] Fungerar i Chrome
+ - [ ] Fungerar i Firefox
+ - [ ] Fungerar i Safari
+ - [ ] Fungerar i Edge
+- 
++
+ ### Mobile
+- 
++
+ - [ ] Layout funkar på mobil (viewport <600px)
+ - [ ] Knappar är touch-friendly (min 44x44px)
+ - [ ] Input-fields är scrollable
+- 
++
+ ## Underhåll av befintliga verktyg
+- 
++
+ ### Bug Fixes
+- 
++
+ När en bug hittas:
+- 
++
+ 1. Reproducera problemet lokalt
+ 2. Skriv test case (manuell eller kod)
+ 3. Fixa problemet med minimal code change
+ 4. Verifiera att fix fungerar
+ 5. Kör genom testing checklist
+ 6. Dokumentera fix i commit message
+- 
++
+ ### Feature Additions
+- 
++
+ När en ny feature läggs till:
+- 
++
+ 1. Verifiera att feature passar verktygets syfte
+ 2. Uppdatera dokumentation (README + Wiki)
+ 3. Lägg till feature med minimal breaking changes
+ 4. Uppdatera validation logic (om relevant)
+ 5. Testa thoroughly
+- 
++
+ ### Deprecations
+- 
++
+ När en feature ska deprecated:
+- 
++
+ 1. Lägg till warning i UI (minst 2 releases)
+ 2. Uppdatera dokumentation
+ 3. Kommunicera till användare (om möjligt)
+ 4. Efter 2 releases, ta bort feature
+ 5. Uppdatera changelog
+- 
++
+ ## Version Management
+- 
++
+ ### Versioning
+- 
++
+ OrigoDocs följer **Semantic Versioning** för major changes:
+- 
++
+ - **Major (1.0 → 2.0):** Breaking changes i API eller output-format
+ - **Minor (1.0 → 1.1):** Nya features utan breaking changes
+ - **Patch (1.0.0 → 1.0.1):** Bug fixes
+- 
++
+ **Exempel:**
+ - Lägg till nytt verktyg: Minor version bump
+ - Ändra JSON output-format: Major version bump
+ - Fixa validerings-bug: Patch version bump
+- 
++
+ ### Changelog
+- 
++
+ Underhåll `CHANGELOG.md` (om den finns) med:
+- 
++
+ ```markdown
+ ## [1.1.0] - 2026-01-31
+  
+@@ -394,11 +394,11 @@ Underhåll `CHANGELOG.md` (om den finns) med:
+ ### Deprecated
+ - URL Builder: WMS 1.0.0 support (tas bort i 2.0)
+ ```
+- 
++
+ ## Code Style
+- 
++
+ ### JavaScript
+- 
++
+ ```javascript
+ // Use camelCase for variables and functions
+ const myVariable = 'value';
+@@ -427,9 +427,9 @@ errors: [{ code: 'PARSE_ERROR', message: error.message }]
+ };
+ }
+ ```
+- 
++
+ ### HTML
+- 
++
+ ```html
+ <!-- Use semantic HTML -->
+ <section> not <div> for major sections
+@@ -449,11 +449,11 @@ errors: [{ code: 'PARSE_ERROR', message: error.message }]
+ ...
+ </section>
+ ```
+- 
++
+ ### CSS
+- 
++
+ Följ befintlig CSS-struktur i `main.css`:
+- 
++
+ ```css
+ /* Use comments to separate sections */
+ /* ============================================
+@@ -467,16 +467,16 @@ Tool Cards
+ /* Use CSS variables for colors */
+ .error { color: var(--color-error); }
+ ```
+- 
++
+ ## Performance
+- 
++
+ ### Best Practices
+- 
++
+ 1. **Debounce input:** Vid keystroke-validation, debounce för att undvika excessive calls
+ 2. **Lazy loading:** Ladda verktyg-specifika dependencies on demand
+ 3. **Minimize DOM operations:** Batch DOM updates när möjligt
+ 4. **Avoid memory leaks:** Rensa event listeners och intervals
+- 
++
+ **Exempel:**
+ ```javascript
+ // Debounce input validation
+@@ -488,13 +488,13 @@ validateInput();
+ }, 500); // 500ms debounce
+ });
+ ```
+- 
++
+ ## Sammanfattning
+- 
++
+ - Nya verktyg ska följa standard-layout och struktur
+ - Alla verktyg måste ha validation, export och error handling
+ - Konsistens i UI, färgkodning och accessibility är kritiskt
+ - Testing checklist måste följas innan merge
+ - Dokumentera alltid i README och Wiki
+- 
++
+ För mer information om specifika verktyg, se [Tool Documentation](Tool-Documentation).
+\ No newline at end of file
+diff --git "a/Exports\342\200\220and\342\200\220integration.md" "b/Exports\342\200\220and\342\200\220integration.md"
+index e2ce5e8..b741934 100644
+--- "a/Exports\342\200\220and\342\200\220integration.md"
++++ "b/Exports\342\200\220and\342\200\220integration.md"
+@@ -1,29 +1,29 @@
+ # Exports och Integration
+ 
+ Dokumentation om export-format och integration med externa system.
+- 
++
+ ## Översikt
+- 
++
+ Try-it-labben stöder export av validerad och transformerad data i flera format för integration med:
+- 
++
+ - **GeoServer:** SLD-filer, WMS/WFS-konfiguration
+ - **Origo:** JSON-konfigurationsfiler
+ - **CLI-verktyg:** cURL-kommandon för testning
+ - **Databaser:** SQL-skript (begränsad support)
+- 
++
+ Alla exports är **reproducerbara** – samma input ger alltid samma export.
+- 
++
+ ## Export-format
+- 
++
+ ### JSON Export
+- 
++
+ **Användning:** Origo-konfigurationsfiler, GeoJSON-data
+- 
++
+ **Format:**
+ - Pretty-printed med 2 space indentation
+ - UTF-8 encoding
+ - Line endings: LF (Unix-style)
+- 
++
+ **Exempel:**
+ ```json
+ {
+@@ -34,21 +34,21 @@ Alla exports är **reproducerbara** – samma input ger alltid samma export.
+ }
+ }
+ ```
+- 
++
+ **Verktyg som exporterar JSON:**
+ - JSON Validator / Formatter
+ - BBOX Validator (som array)
+ - Resolutions Tool (som resolutions-array)
+- 
++
+ ### XML Export
+- 
++
+ **Användning:** SLD-filer för GeoServer
+- 
++
+ **Format:**
+ - Indented med 2 spaces
+ - XML declaration: `<?xml version="1.0" encoding="UTF-8"?>`
+ - UTF-8 encoding
+- 
++
+ **Exempel:**
+ ```xml
+ <?xml version="1.0" encoding="UTF-8"?>
+@@ -58,37 +58,37 @@ Alla exports är **reproducerbara** – samma input ger alltid samma export.
+ </NamedLayer>
+ </StyledLayerDescriptor>
+ ```
+- 
++
+ **Verktyg som exporterar XML:**
+ - SLD Validator / Preview
+- 
++
+ ### cURL Command Export
+- 
++
+ **Användning:** Testning av WMS/WFS-endpoints från terminal
+- 
++
+ **Format:**
+ - Single-line command
+ - URL är quoted
+ - Headers inkluderade (om tillämpligt)
+- 
++
+ **Exempel:**
+ ```bash
+ curl -X GET "https://example.com/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&..."
+ ```
+- 
++
+ **Verktyg som exporterar cURL:**
+ - URL Builder
+ - Map Sandbox (för debugging)
+- 
++
+ ### Text Export
+- 
++
+ **Användning:** Parametrar, resolutions-lista
+- 
++
+ **Format:**
+ - Plain text
+ - UTF-8 encoding
+ - LF line endings
+- 
++
+ **Exempel:**
+ ```
+ 4096
+@@ -97,21 +97,21 @@ curl -X GET "https://example.com/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&..."
+ 512
+ 256
+ ```
+- 
++
+ **Verktyg som exporterar text:**
+ - Resolutions Tool
+ - Gridcalc (summary report)
+- 
++
+ ## Integration med GeoServer
+- 
++
+ ### SLD Upload
+- 
++
+ **Workflow:**
+- 
++
+ 1. Validera och preview SLD i SLD Validator
+ 2. Exportera till fil (t.ex. `my_style.sld`)
+ 3. Ladda upp till GeoServer via REST API eller UI
+- 
++
+ **REST API:**
+ ```bash
+ curl -v -u admin:geoserver -X POST \
+@@ -119,23 +119,23 @@ curl -v -u admin:geoserver -X POST \
+ -d @my_style.sld \
+ http://localhost:8080/geoserver/rest/styles
+ ```
+- 
++
+ **GeoServer UI:**
+ - Styles → Add a new style
+ - Upload SLD file
+ - Validate i GeoServer
+- 
++
+ **Viktigt:** GeoServer kan ha striktare validering än Try-it-labben. Testa alltid i GeoServer innan production.
+- 
++
+ ### WMS Layer Configuration
+- 
++
+ **Workflow:**
+- 
++
+ 1. Bygg WMS GetCapabilities URL i URL Builder
+ 2. Testa URL i Map Sandbox
+ 3. Kopiera URL till Origo-konfiguration
+ 4. Verifiera CORS-policy fungerar
+- 
++
+ **Origo-exempel:**
+ ```json
+ {
+@@ -145,51 +145,51 @@ http://localhost:8080/geoserver/rest/styles
+ "type": "WMS"
+ }
+ ```
+- 
++
+ ### BBOX och Extent
+- 
++
+ **Workflow:**
+- 
++
+ 1. Generera BBOX i BBOX Validator
+ 2. Exportera som JSON array
+ 3. Använd som `extent` i Origo eller `BoundingBox` i GeoServer
+- 
++
+ **Origo-exempel:**
+ ```json
+ {
+ "extent": [150000, 6500000, 200000, 6600000]
+ }
+ ```
+- 
++
+ **GeoServer Layer Preview:**
+ ```
+ http://localhost:8080/geoserver/wms?bbox=150000,6500000,200000,6600000
+ ```
+- 
++
+ ## Integration med Origo
+- 
++
+ ### JSON Configuration
+- 
++
+ **Workflow:**
+- 
++
+ 1. Validera JSON i JSON Validator
+ 2. Exportera formaterad JSON
+ 3. Kopiera till Origo `config.json`
+ 4. Testa i Origo
+- 
++
+ **Best practice:**
+ - Använd JSON Validator för att säkerställa giltig struktur
+ - Exportera med formatting för readability
+ - Versionshantera config-filen i Git
+- 
++
+ ### Resolutions Configuration
+- 
++
+ **Workflow:**
+- 
++
+ 1. Beräkna resolutions i Resolutions Tool
+ 2. Exportera som JSON array
+ 3. Lägg till i Origo view-konfiguration
+- 
++
+ **Origo-exempel:**
+ ```json
+ {
+@@ -199,15 +199,15 @@ http://localhost:8080/geoserver/wms?bbox=150000,6500000,200000,6600000
+ }
+ }
+ ```
+- 
++
+ ### Layer Testing
+- 
++
+ **Workflow:**
+- 
++
+ 1. Bygg layer URL i URL Builder
+ 2. Testa i Map Sandbox
+ 3. Om OK, lägg till i Origo sources och layers
+- 
++
+ **Origo sources-exempel:**
+ ```json
+ {
+@@ -217,17 +217,17 @@ http://localhost:8080/geoserver/wms?bbox=150000,6500000,200000,6600000
+ }
+ }
+ ```
+- 
++
+ ## Integration med CLI-verktyg
+- 
++
+ ### cURL Testing
+- 
++
+ **Workflow:**
+- 
++
+ 1. Bygg URL i URL Builder
+ 2. Exportera som cURL command
+ 3. Kör i terminal för att verifiera server-svar
+- 
++
+ **Exempel:**
+ ```bash
+ # Test WMS GetCapabilities
+@@ -236,44 +236,44 @@ curl -X GET "https://example.com/geoserver/wms?SERVICE=WMS&REQUEST=GetCapabiliti
+ # Test WMS GetMap (save as image)
+ curl -X GET "https://example.com/geoserver/wms?..." -o output.png
+ ```
+- 
++
+ ### ogr2ogr
+- 
++
+ **Integration med BBOX:**
+- 
++
+ 1. Generera BBOX i BBOX Validator
+ 2. Använd i ogr2ogr clip-operation
+- 
++
+ **Exempel:**
+ ```bash
+ ogr2ogr -f "ESRI Shapefile" \
+ -clipsrc 150000 6500000 200000 6600000 \
+ output.shp input.shp
+ ```
+- 
++
+ ### GDAL
+- 
++
+ **Integration med Resolutions:**
+- 
++
+ 1. Beräkna resolutions i Resolutions Tool
+ 2. Använd för att generera tiles med gdal2tiles
+- 
++
+ **Exempel:**
+ ```bash
+ gdal2tiles.py --zoom=0-10 --resampling=bilinear input.tif output_tiles/
+ ```
+- 
++
+ ## Export och reproducerbarhet
+- 
++
+ ### Principer
+- 
++
+ 1. **Deterministisk:** Samma input → samma export
+ 2. **Versionerad:** Export inkluderar metadata om version (där relevant)
+ 3. **Validerad:** Endast validerad data kan exporteras (errors blockerar export)
+ 4. **Dokumenterad:** Export inkluderar kommentarer eller metadata
+- 
++
+ ### Metadata i Exports
+- 
++
+ **JSON exports:**
+ ```json
+ {
+@@ -286,7 +286,7 @@ gdal2tiles.py --zoom=0-10 --resampling=bilinear input.tif output_tiles/
+ "bbox": [150000, 6500000, 200000, 6600000]
+ }
+ ```
+- 
++
+ **SLD exports:**
+ ```xml
+ <!-- Generated by OrigoDocs Try-it Lab - SLD Validator -->
+@@ -296,16 +296,16 @@ gdal2tiles.py --zoom=0-10 --resampling=bilinear input.tif output_tiles/
+ ...
+ </StyledLayerDescriptor>
+ ```
+- 
++
+ **Varför metadata?**
+ - Spårbarhet: Vet varifrån export kommer
+ - Debugging: Kan identifiera vilken version som användes
+ - Reproducerbarhet: Kan återskapa export med samma verktyg/version
+- 
++
+ ### Warnings vid Export
+- 
++
+ Om data har warnings exporteras den med en varning:
+- 
++
+ **Exempel:**
+ ```
+ ⚠️ Export contains warnings:
+@@ -313,25 +313,25 @@ Om data har warnings exporteras den med en varning:
+  
+ Export anyway? [Y/n]
+ ```
+- 
++
+ **Motivering:**
+ - Användare är medvetna om potentiella problem
+ - Ger möjlighet att granska innan export
+ - Förhindrar oavsiktliga exports av problematisk data
+- 
++
+ ## Användning i produktion
+- 
++
+ ### Rekommendationer
+- 
++
+ 1. **Validera alltid:** Använd Try-it-labben för att validera data innan production
+ 2. **Testa lokalt:** Testa exports i lokal miljö innan deployment
+ 3. **Versionshantera:** Commita exporterade filer till Git
+ 4. **Dokumentera:** Skriv README med hur exports användes
+- 
++
+ ### Workflow-exempel
+- 
++
+ **Scenario:** Uppdatera SLD för ett lager i GeoServer
+- 
++
+ 1. Redigera SLD i editor
+ 2. Validera i SLD Validator (Try-it Lab)
+ 3. Åtgärda errors och warnings
+@@ -340,15 +340,15 @@ Export anyway? [Y/n]
+ 6. Ladda upp till GeoServer production
+ 7. Verifiera i Origo
+ 8. Commita SLD-fil till Git
+- 
++
+ ### Säkerhet
+- 
++
+ **Viktigt:**
+ - Exports innehåller ingen sensitiv data från Try-it-labben
+ - Användare ansvarar för att inte inkludera credentials i exports
+ - URL Builder loggar ALDRIG lösenord eller API-nycklar
+ - Granska alltid exports innan delning med andra
+- 
++
+ **Exempel på vad som INTE ska exporteras:**
+ ```bash
+ # DÅLIGT: Credential i URL
+@@ -357,20 +357,20 @@ curl -X GET "******example.com/geoserver/wms?..."
+ # BRA: Använd separata credentials
+ curl -u admin:password -X GET "https://example.com/geoserver/wms?..."
+ ```
+- 
++
+ ## Begränsningar
+- 
++
+ - **Ingen automatisk upload:** Exports måste laddas upp manuellt
+ - **Ingen autentisering:** Try-it-labben hanterar inte credentials
+ - **Ingen database-export:** SQL-export är begränsad och inte production-ready
+ - **Ingen batch-processing:** Endast en fil åt gången kan exporteras
+- 
++
+ ## Sammanfattning
+- 
++
+ - Try-it-labben stöder export i JSON, XML, cURL, och text
+ - Exports är reproducerbara och inkluderar metadata
+ - Integration med GeoServer, Origo och CLI-verktyg är dokumenterad
+ - Endast validerad data (eller data med warnings efter bekräftelse) kan exporteras
+ - Användare ansvarar för att testa exports i målmiljö
+- 
++
+ För verktygs-specifika export-format, se [Tool Documentation](Tool-Documentation).
+\ No newline at end of file
+diff --git "a/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md" "b/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
+index ed3857f..5c6cbfc 100644
+--- "a/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
++++ "b/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
+@@ -1,299 +1,299 @@
+ # Kända Begränsningar och Non-Goals
+ --
+- 
++
+ Dokumentation om vad Try-it-labben medvetet inte gör och varför vissa features är utanför scope.
+- 
++
+ ## Filosofi
+- 
++
+ Try-it-labben är designad för **rapid validation och testing** av GIS-konfigurationer, inte som en fullständig GIS-plattform eller produktions-verktyg.
+- 
++
+ **Princip:** Gör en sak bra, inte allt halvbra.
+- 
++
+ ## Vad Try-it-labben medvetet INTE gör
+- 
++
+ ### 1. Datalagring och persistens
+- 
++
+ **Begränsning:**
+ - Ingen server-side storage
+ - Ingen localStorage för sparade konfigurationer
+ - Ingen användar-autentisering
+ - Ingen versionshantering av inputs
+- 
++
+ **Motivering:**
+ - Säkerhet: Ingen risk för dataläckage eller unauthorized access
+ - Enkelhet: Ingen backend-komplexitet
+ - Privacy: Användardata lämnar aldrig browsern (förutom Map Sandbox)
+- 
++
+ **Workaround:**
+ - Exportera data till filer
+ - Versionshantera exports med Git
+ - Använd browser bookmarks för återkommande URLs
+- 
++
+ ### 2. Transformation mellan koordinatsystem
+- 
++
+ **Begränsning:**
+ - Ingen transformation mellan EPSG:3006 ↔ EPSG:3008
+ - Ingen transformation till/från EPSG:4326 (WGS84)
+ - Ingen support för andra koordinatsystem än EPSG:3006 och EPSG:3008
+- 
++
+ **Motivering:**
+ - Komplexitet: Korrekt transformation kräver exakta PROJ4-definitioner
+ - Risk: Felaktig transformation är värre än ingen transformation
+ - Scope: Användare bör vara medvetna om vilket CRS de arbetar i
+- 
++
+ **Workaround:**
+ - Använd QGIS Desktop för transformation
+ - Använd ogr2ogr CLI-verktyg
+ - Använd Proj4js direkt i egen kod
+- 
++
+ ### 3. Geometri-operationer
+- 
++
+ **Begränsning:**
+ - Ingen spatial analysis (intersection, union, buffer)
+ - Ingen geometry-validering (self-intersecting polygons, etc.)
+ - Ingen generering av komplex geometry
+- 
++
+ **Motivering:**
+ - Scope: Try-it-labben är för konfiguration, inte geodata-processing
+ - Komplexitet: Spatial operations kräver bibliotek som GEOS/JTS
+ - Performance: Client-side spatial operations är långsamma för stora dataset
+- 
++
+ **Workaround:**
+ - Använd QGIS Desktop för spatial analysis
+ - Använd PostGIS för database-baserade operations
+ - Använd Turf.js för enklare client-side operations
+- 
++
+ ### 4. Autentisering och auktorisering
+- 
++
+ **Begränsning:**
+ - Ingen support för HTTP Basic Auth
+ - Ingen support för OAuth/******
+ - Ingen support för API keys
+ - Ingen session management
+- 
++
+ **Motivering:**
+ - Säkerhet: Credentials ska inte hanteras i client-side JavaScript
+ - Complexity: Secure credential management kräver backend
+ - Scope: Try-it-labben är för public endpoints
+- 
++
+ **Workaround:**
+ - Testa autentiserade endpoints i QGIS Desktop
+ - Använd Postman för API testing med credentials
+ - Använd lokal GeoServer (same-origin) för development
+- 
++
+ ### 5. Batch-processing
+- 
++
+ **Begränsning:**
+ - Ingen bulk validation av flera filer samtidigt
+ - Ingen batch-export till zip-archives
+ - Ingen pipeline-automation (chain multiple tools)
+- 
++
+ **Motivering:**
+ - UI Complexity: Batch-UI blir komplex och error-prone
+ - Performance: Client-side batch operations blockerar browser
+ - Scope: Verktyg är för single-item validation
+- 
++
+ **Workaround:**
+ - Skriv egna scripts med Node.js för batch-processing
+ - Använd shell scripts med curl för bulk-operations
+ - Använd Python för automation
+- 
++
+ ### 6. Advanced GeoServer-konfiguration
+- 
++
+ **Begränsning:**
+ - Ingen konfiguration av GeoServer stores
+ - Ingen konfiguration av security/authentication
+ - Ingen workspace/namespace management
+ - Ingen layer group configuration
+- 
++
+ **Motivering:**
+ - Scope: Try-it-labben är för data validation, inte server administration
+ - Complexity: GeoServer REST API är omfattande och komplicerad
+ - Risk: Felaktig server-konfiguration kan påverka production
+- 
++
+ **Workaround:**
+ - Använd GeoServer Web UI för server-konfiguration
+ - Använd GeoServer REST API direkt med curl/Postman
+ - Använd Ansible/Terraform för infrastructure-as-code
+- 
++
+ ### 7. Data-validering mot faktisk geodata
+- 
++
+ **Begränsning:**
+ - Ingen validering att BBOX faktiskt innehåller data
+ - Ingen validering att layer finns i database
+ - Ingen geometri-check mot faktisk geodata
+- 
++
+ **Motivering:**
+ - Data Access: Kräver access till production databases
+ - Performance: Kräver server-side processing
+ - Scope: Verktyg validerar konfiguration, inte data
+- 
++
+ **Workaround:**
+ - Testa i GeoServer Layer Preview
+ - Använd QGIS för data-validation
+ - Använd SQL queries direkt mot database
+- 
++
+ ### 8. Real-time collaboration
+- 
++
+ **Begränsning:**
+ - Ingen multi-user editing
+ - Ingen real-time sync mellan användare
+ - Ingen kommentarsfunktion eller review-process
+- 
++
+ **Motivering:**
+ - Complexity: Real-time sync kräver WebSockets och backend
+ - Scope: Verktyg är för individuell validering
+ - Alternativ: Använd Git för collaboration
+- 
++
+ **Workaround:**
+ - Dela exports via Git/GitHub
+ - Använd screen-sharing för pair programming
+ - Dokumentera i commit messages
+- 
++
+ ## Scope-begränsningar per verktyg
+- 
++
+ ### JSON Validator
+- 
++
+ **Validerar INTE:**
+ - Origo-specific schema (kräver JSON Schema validator)
+ - Referential integrity (att layers refererar till existerande sources)
+ - Logical consistency (att resolutions matchar extent)
+- 
++
+ **Varför:** Schema-validering kräver uppdaterad Origo JSON Schema och omfattande implementation.
+- 
++
+ ### URL Builder
+- 
++
+ **Testar INTE:**
+ - Om server faktiskt finns
+ - Om credentials krävs
+ - Om CORS är enabled
+- 
++
+ **Varför:** Kräver aktiv HTTP request, vilket Map Sandbox hanterar.
+- 
++
+ ### BBOX Validator
+- 
++
+ **Validerar INTE:**
+ - Om BBOX faktiskt innehåller geografi i Sverige
+ - Om BBOX matchar faktiska kommun/region-gränser
+ - Om BBOX överlappar med tillgängliga data
+- 
++
+ **Varför:** Kräver access till geodata och spatial analysis.
+- 
++
+ ### Resolutions Tool
+- 
++
+ **Genererar INTE:**
+ - Custom scales (endast halvering)
+ - Resolutions för andra CRS än EPSG:3008
+ - Validering mot faktiska GeoWebCache gridsets
+- 
++
+ **Varför:** Kräver integration med GeoWebCache REST API.
+- 
++
+ ### Gridcalc
+- 
++
+ **Uppskattar INTE:**
+ - Faktisk tile-storlek (använder genomsnitt)
+ - Compression ratio
+ - Seed-tid
+- 
++
+ **Varför:** Faktiska värden varierar mycket beroende på data och server-prestanda.
+- 
++
+ ### SLD Validator
+- 
++
+ **Validerar INTE:**
+ - Full SLD schema compliance
+ - Om symbolizers faktiskt renderas korrekt i GeoServer
+ - Om färger är colorblind-friendly
+- 
++
+ **Varför:** Full validation kräver GeoServer rendering engine.
+- 
++
+ ### Map Sandbox
+- 
++
+ **Gör INTE:**
+ - Caching av tiles mellan sessioner
+ - Load testing / performance testing
+ - Autentisering mot protected endpoints
+- 
++
+ **Varför:** Scope är quick preview, inte production use.
+- 
++
+ ## När använda andra verktyg
+- 
++
+ ### Använd QGIS Desktop när
+- 
++
+ - Du behöver advanced spatial analysis
+ - Du ska transformera koordinatsystem
+ - Du behöver testa autentiserade datakällor
+ - Du ska validera geodata-kvalitet
+- 
++
+ ### Använd GeoServer Web UI när
+- 
++
+ - Du ska konfigurera stores och workspaces
+ - Du ska ändra security settings
+ - Du ska skapa layer groups
+ - Du behöver full kontroll över server
+- 
++
+ ### Använd Postman/curl när
+- 
++
+ - Du testar REST APIs med autentisering
+ - Du behöver spara request collections
+ - Du ska automatisera API-testing
+ - Du behöver inspektera raw HTTP responses
+- 
++
+ ### Använd Python/Node.js scripts när
+- 
++
+ - Du behöver batch-processing
+ - Du ska automatisera workflows
+ - Du behöver custom validation logic
+ - Du ska integrera med CI/CD pipelines
+- 
++
+ ## Produktionssystem-guidance
+- 
++
+ ### Try-it-labben är INTE production-ready för
+- 
++
+ 1. **End-user facing tools:** Användare ska inte direkt använda Try-it-labben
+ 2. **Automated pipelines:** Använd CLI-verktyg eller APIs istället
+ 3. **High-availability services:** Ingen SLA, ingen monitoring
+ 4. **Large-scale processing:** Performance-begränsning i browser
+- 
++
+ ### Try-it-labben ÄR lämplig för
+- 
++
+ 1. **Development:** Rapid prototyping och testing under utveckling
+ 2. **Debugging:** Felsökning av konfigurations-problem
+ 3. **Documentation:** Visa exempel och best practices
+ 4. **Education:** Lära kollegor om GIS-koncept
+- 
++
+ ## Feature Requests
+- 
++
+ ### Hur vi utvärderar nya features
+- 
++
+ Nya features utvärderas mot följande kriterier:
+- 
++
+ 1. **Scope:** Passar featuren inom Try-it-labbens syfte?
+ 2. **Complexity:** Kan featuren implementeras client-side utan backend?
+ 3. **Maintenance:** Kan featuren underhållas långsiktigt?
+ 4. **Value:** Ger featuren tillräckligt värde för målgruppen?
+- 
++
+ ### Features som är out-of-scope
+- 
++
+ Följande feature-kategorier kommer **aldrig** att implementeras:
+- 
++
+ - Backend-kräver features (database, authentication, real-time sync)
+ - Advanced spatial analysis (GIS desktop-funktionalitet)
+ - Server administration (GeoServer/database-konfiguration)
+ - Production-grade features (monitoring, logging, SLA)
+- 
++
+ ### Features som är under utvärdering
+- 
++
+ Följande features kan eventuellt implementeras framöver:
+- 
++
+ - Export till additional formats (GeoPackage, Shapefile)
+ - JSON Schema validation för Origo
+ - Basic coordinate transformation (EPSG:3006 ↔ EPSG:3008)
+ - Offline-mode med service workers
+- 
++
+ ## Jämförelse med andra verktyg
+- 
++
+ ### Try-it-labben vs QGIS Desktop
+- 
++
+ \| Feature \| Try-it-labben \| QGIS Desktop \|
+ \|---------\|---------------\|--------------\|
+ \| Installation \| Ingen (web-based) \| Krävs \|
+@@ -302,9 +302,9 @@ Följande features kan eventuellt implementeras framöver:
+ \| WMS/WFS Testing \| Begränsad \| Full \|
+ \| Autentisering \| Nej \| Ja \|
+ \| Best för \| Quick validation \| Production work \|
+- 
++
+ ### Try-it-labben vs GeoServer Web UI
+- 
++
+ \| Feature \| Try-it-labben \| GeoServer UI \|
+ \|---------\|---------------\|--------------\|
+ \| SLD Preview \| Basic \| Full rendering \|
+@@ -312,9 +312,9 @@ Följande features kan eventuellt implementeras framöver:
+ \| Layer Management \| Nej \| Ja \|
+ \| CORS Testing \| Ja \| Nej \|
+ \| Best för \| Pre-deployment test \| Server administration \|
+- 
++
+ ### Try-it-labben vs Postman/curl
+- 
++
+ \| Feature \| Try-it-labben \| Postman \|
+ \|---------\|---------------\|---------\|
+ \| URL Building \| Guided \| Manual \|
+@@ -322,18 +322,18 @@ Följande features kan eventuellt implementeras framöver:
+ \| Request Collections \| Nej \| Ja \|
+ \| Visual Preview \| Ja (Map Sandbox) \| Nej \|
+ \| Best för \| WMS/WMTS preview \| API testing \|
+- 
++
+ ## Sammanfattning
+- 
++
+ Try-it-labben är ett **focused validation tool** med medvetna begränsningar:
+- 
++
+ - Ingen backend-funktionalitet
+ - Ingen advanced GIS-processing
+ - Ingen production-grade features
+ - Ingen autentisering eller auktorisering
+- 
++
+ **Styrka:** Snabb, enkel, säker validering av GIS-konfigurationer i webbläsare.
+- 
++
+ **När tveksam:** Använd QGIS, GeoServer UI eller CLI-verktyg istället.
+- 
++
+ För specifika verktygs-begränsningar, se [Tool Documentation](Tool-Documentation).
+\ No newline at end of file
+diff --git "a/Tool\342\200\220documentation.md" "b/Tool\342\200\220documentation.md"
+index cd33ab6..5557d11 100644
+--- "a/Tool\342\200\220documentation.md"
++++ "b/Tool\342\200\220documentation.md"
+@@ -98,150 +98,150 @@ Validera och formatera JSON och GeoJSON för användning i Origo-konfigurationer
+ **Validation Report:**
+ - ✓ Valid JSON
+ - ⚠️ Warning: Not valid GeoJSON (missing `type` field)
+- 
++
+ ---
+- 
++
+ ## URL Builder
+- 
++
+ ### Syfte
+- 
++
+ Konstruera och testa WMS, WFS och WMTS GetCapabilities och GetMap URL:er.
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Bygga korrekta WMS GetMap-requests
+ - Generera GetCapabilities-URL:er för felsökning
+ - Testa parameterkombinationer innan konfiguration i Origo
+ - Skapa curl-kommandon för CLI-testning
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Form-fält:**
+ - **Base URL:** (required) GeoServer URL (med eller utan `?`)
+ - **Service Type:** (required) WMS, WFS eller WMTS
+ - **Request Type:** (required) GetCapabilities, GetMap, GetFeature, etc.
+ - **Parameters:** (optional) Key-value par
+- 
++
+ **Antaganden:**
+ - Base URL är HTTP eller HTTPS
+ - Parameters följer OGC-standard
+ - URL-encoding hanteras automatiskt
+- 
++
+ ### Output-format
+- 
++
+ - **Constructed URL:** Komplett URL med alla parametrar
+ - **cURL Command:** Färdig curl-kommando för terminal
+ - **Query Parameters:** Tabell med parametrar
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **URL Format:** Giltig HTTP/HTTPS URL
+ 2. **Required Parameters:** Service-specifika required parameters finns
+ 3. **Parameter Conflicts:** T.ex. kan inte ha både VERSION och ACCEPTVERSIONS
+- 
++
+ **Common Errors:**
+ - `URL_INVALID`: Ogiltig URL-format
+ - `MISSING_REQUIRED_PARAM`: Saknar required parameter (t.ex. `LAYERS` för GetMap)
+ - `INVALID_SERVICE`: Service type matchar inte request type
+- 
++
+ **Common Warnings:**
+ - `DEPRECATED_PARAMETER`: Parameter är deprecated i standard
+ - `UNKNOWN_PARAMETER`: Parameter känns inte igen (men tillåts)
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Validerar inte om server verkligen finns
+ - Testar inte CORS-policy
+ - Kan inte autentisera mot protected endpoints
+ - Stöder inte SOAP-bindings
+- 
++
+ ### Exempel
+- 
++
+ **Input:**
+ - Base URL: `https://example.com/geoserver/wms`
+ - Service: WMS
+ - Request: GetMap
+ - Parameters: `LAYERS=topp:states`, `BBOX=-180,-90,180,90`, `WIDTH=800`, `HEIGHT=600`, `SRS=EPSG:4326`
+- 
++
+ **Output URL:**
+ ```
+ https://example.com/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&LAYERS=topp:states&BBOX=-180,-90,180,90&WIDTH=800&HEIGHT=600&SRS=EPSG:4326&FORMAT=image/png
+ ```
+- 
++
+ **cURL Command:**
+ ```bash
+ curl -X GET "https://example.com/geoserver/wms?SERVICE=WMS&REQUEST=GetMap&..."
+ ```
+- 
++
+ ---
+- 
++
+ ## BBOX Validator / Generator
+- 
++
+ ### Syfte
+- 
++
+ Validera och generera bounding boxes för svenska koordinatsystem (EPSG:3006, EPSG:3008).
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Validera BBOX i Origo extent-konfiguration
+ - Generera BBOX för specifika kommuner eller regioner
+ - Konvertera mellan WMS BBOX-format och Origo extent-format
+ - Verifiera att BBOX ligger inom Sverige
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Input-format:**
+ - **Array:** `[minX, minY, maxX, maxY]` (Origo-format)
+ - **String:** `"minX,minY,maxX,maxY"` (WMS-format)
+ - **Object:** `{minX, minY, maxX, maxY}`
+- 
++
+ **CRS-antaganden:**
+ - EPSG:3006 (Sweref99 TM): bounds ca `[181896, 6101648, 1083947, 7689478]`
+ - EPSG:3008 (Sweref99 12 00): bounds ca `[-1200000, 4300000, 2600000, 8500000]`
+- 
++
+ ### Output-format
+- 
++
+ - **Normalized BBOX:** Array-format `[minX, minY, maxX, maxY]`
+ - **WMS String:** Komma-separerad sträng
+ - **Center Point:** `[centerX, centerY]`
+ - **Dimensions:** `{width, height}`
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **Format Check:** Fyra numeriska värden
+ 2. **Order Check:** minX < maxX och minY < maxY
+ 3. **Bounds Check:** Ligger inom Sverige (approximation)
+ 4. **Size Check:** Varning om BBOX är mycket liten (<100m) eller mycket stor (>hela Sverige)
+- 
++
+ **Common Errors:**
+ - `BBOX_INVALID_FORMAT`: Fel antal värden eller icke-numeriska värden
+ - `BBOX_INVERTED`: minX > maxX eller minY > maxY
+ - `BBOX_OUT_OF_BOUNDS`: Ligger utanför svenska koordinatsystem
+- 
++
+ **Common Warnings:**
+ - `BBOX_VERY_SMALL`: BBOX mindre än 100x100 meter
+ - `BBOX_VERY_LARGE`: BBOX större än hela Sverige
+- 
++
+ **Auto-fixes:**
+ - Swappar minX/maxX om inverterade
+ - Swappar minY/maxY om inverterade
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Validerar endast EPSG:3006 och EPSG:3008
+ - Bounds-check är approximativ (använder hårda gränser, inte exakta Sverige-gränser)
+ - Kan inte transformera mellan koordinatsystem
+ - Ingen integration med faktiska kommun- eller regionsgränser
+- 
++
+ ### Exempel
+- 
++
+ **Input (EPSG:3006):**
+ ```
+ [150000, 6500000, 200000, 6600000]
+ ```
+- 
++
+ **Output:**
+ ```json
+ {
+@@ -259,38 +259,38 @@ Validera och generera bounding boxes för svenska koordinatsystem (EPSG:3006, EP
+ }
+ }
+ ```
+- 
++
+ ---
+- 
++
+ ## Resolutions Tool
+- 
++
+ ### Syfte
+- 
++
+ Beräkna resolutioner för EPSG:3008 (Sweref99 12 00) baserat på zoomnivåer.
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Generera resolutions-array för Origo-konfiguration
+ - Matcha resolutioner med GeoWebCache gridset
+ - Beräkna pixelstorlek för specifik zoomnivå
+ - Verifiera resolutions-konfiguration mot GeoServer
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Input:**
+ - **Zoom Levels:** Min och max zoomnivå (0-20)
+ - **Base Resolution:** (optional) Startresolution (default: 4096 för EPSG:3008)
+- 
++
+ **Antaganden:**
+ - Resolution halveras för varje zoomnivå
+ - Formula: `resolution = baseResolution / (2 ^ zoom)`
+ - EPSG:3008 standard base resolution: 4096 meter/pixel
+- 
++
+ ### Output-format
+- 
++
+ - **Resolutions Array:** `[res0, res1, res2, ...]`
+ - **Table View:** Tabell med zoom, resolution, och pixelstorlek
+- 
++
+ **Exempel output:**
+ ```json
+ {
+@@ -298,34 +298,34 @@ Beräkna resolutioner för EPSG:3008 (Sweref99 12 00) baserat på zoomnivåer.
+ "zoomLevels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+ }
+ ```
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **Zoom Range:** Min <= Max, och inom 0-20
+ 2. **Base Resolution:** Positivt tal
+ 3. **Array Length:** Varning om fler än 20 nivåer (prestanda)
+- 
++
+ **Common Errors:**
+ - `ZOOM_INVALID_RANGE`: Min > Max
+ - `BASE_RESOLUTION_INVALID`: Negativt eller noll
+- 
++
+ **Common Warnings:**
+ - `TOO_MANY_LEVELS`: Fler än 20 zoomnivåer (prestanda-risk i Origo)
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Endast EPSG:3008 (standard base resolution)
+ - Antar alltid halvering mellan nivåer (ingen support för custom scales)
+ - Ingen validering mot faktiska GeoWebCache gridsets
+- 
++
+ ### Exempel
+- 
++
+ **Input:**
+ - Min Zoom: 0
+ - Max Zoom: 5
+ - Base Resolution: 4096
+- 
++
+ **Output:**
+ ```
+ Zoom 0: 4096 m/px
+@@ -335,41 +335,41 @@ Zoom 3: 512 m/px
+ Zoom 4: 256 m/px
+ Zoom 5: 128 m/px
+ ```
+- 
++
+ ---
+- 
++
+ ## Gridcalc / Cache Estimator
+- 
++
+ ### Syfte
+- 
++
+ Uppskatta cache-storlek och antal tiles för GeoWebCache-konfigurationer.
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Planera disk-utrymme för tile-cache
+ - Uppskatta seed-tid för GeoWebCache
+ - Jämföra olika BBOX och zoomnivå-kombinationer
+ - Verifiera att cache inte blir för stor
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Input:**
+ - **BBOX:** Extent som ska cachas
+ - **Zoom Levels:** Min och max zoomnivå
+ - **Tile Size:** (default: 256x256 pixels)
+ - **CRS:** EPSG:3006 eller EPSG:3008
+- 
++
+ **Antaganden:**
+ - Tile size är kvadratisk (256x256 eller 512x512)
+ - Gridset följer standard resolution-schema
+ - Genomsnittlig tile-storlek: 20 KB (konfigurerbar)
+- 
++
+ ### Output-format
+- 
++
+ - **Total Tiles:** Antal tiles för alla zoomnivåer
+ - **Estimated Size:** Uppskattad disk-storlek i GB
+ - **Per-Level Breakdown:** Tiles och storlek per zoomnivå
+- 
++
+ **Exempel output:**
+ ```json
+ {
+@@ -382,37 +382,37 @@ Uppskatta cache-storlek och antal tiles för GeoWebCache-konfigurationer.
+ ]
+ }
+ ```
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **BBOX Validity:** Giltig BBOX
+ 2. **Zoom Range:** Rimlig range (0-20)
+ 3. **Tile Count:** Varning om >1 miljon tiles
+- 
++
+ **Common Errors:**
+ - `BBOX_INVALID`: Se BBOX Validator
+ - `ZOOM_INVALID_RANGE`: Se Resolutions Tool
+- 
++
+ **Common Warnings:**
+ - `VERY_LARGE_CACHE`: Cache >100 GB
+ - `TOO_MANY_TILES`: >1 miljon tiles (kan ta lång tid att seeda)
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Uppskattning är baserad på genomsnittlig tile-storlek (faktisk storlek varierar mycket)
+ - Ingen hänsyn till bildformat (PNG vs JPEG)
+ - Ingen hänsyn till kompression
+ - Antar uniform tile-densitet (faktiskt kan vissa områden ha färre tiles)
+- 
++
+ ### Exempel
+- 
++
+ **Input:**
+ - BBOX: `[150000, 6500000, 200000, 6600000]` (EPSG:3006)
+ - Zoom: 0-10
+ - Tile Size: 256
+ - Avg Tile Size: 20 KB
+- 
++
+ **Output:**
+ ```
+ Total Tiles: ~45000
+@@ -420,123 +420,123 @@ Estimated Size: ~900 MB
+ Zoom 0-5: ~100 tiles
+ Zoom 6-10: ~44900 tiles
+ ```
+- 
++
+ ---
+- 
++
+ ## Gridset Explorer
+- 
++
+ ### Syfte
+- 
++
+ Visualisera gridsets för EPSG:3006 och förstå tile-gränser.
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Förstå hur tiles lägger sig över en BBOX
+ - Felsöka varför tiles inte renderas som förväntat
+ - Verifiera tile-alignment mellan GeoServer och Origo
+ - Visa gridset-struktur för kollegor
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Input:**
+ - **BBOX:** (optional) Fokusera på specifikt område
+ - **Zoom Level:** Vilken zoomnivå att visa
+- 
++
+ **Antaganden:**
+ - EPSG:3006 standard gridset
+ - Tile size: 256x256 pixels
+ - Origin: top-left (GeoWebCache standard)
+- 
++
+ ### Output-format
+- 
++
+ - **Visual Grid:** SVG-baserad visualisering av tiles
+ - **Tile List:** Lista av tiles som överlappar BBOX
+ - **Grid Metadata:** Origin, resolution, tile size
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **Zoom Level:** Inom 0-20
+ 2. **BBOX:** (om angiven) Giltig BBOX
+- 
++
+ **Common Warnings:**
+ - `TOO_MANY_TILES_TO_DISPLAY`: För många tiles för att visa (>1000)
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Endast visuell - kan inte generera faktiska tiles
+ - Performance-begränsning vid höga zoomnivåer (>15)
+ - Ingen export till bild-format
+ - Endast EPSG:3006 (inte EPSG:3008)
+- 
++
+ ### Exempel
+- 
++
+ **Input:**
+ - BBOX: `[150000, 6500000, 200000, 6600000]`
+ - Zoom: 8
+- 
++
+ **Output:**
+ - SVG-grid som visar tile-boundaries
+ - Lista: Tiles (8, 12), (8, 13), (9, 12), (9, 13)
+- 
++
+ ---
+- 
++
+ ## SLD Validator / Preview
+- 
++
+ ### Syfte
+- 
++
+ Validera SLD (Styled Layer Descriptor) XML och förhandsgranska symboler.
+- 
++
+ ### Typiska användningsfall
+- 
++
+ - Validera SLD innan uppladdning till GeoServer
+ - Förhandsgranska symboler utan att starta GeoServer
+ - Felsöka varför stil inte renderas som förväntat
+ - Konvertera mellan SLD-versioner (begränsad support)
+- 
++
+ ### Input-format och antaganden
+- 
++
+ **Input:**
+ - **SLD XML:** Giltig XML-sträng
+ - **SLD Version:** 1.0.0 eller 1.1.0
+- 
++
+ **Antaganden:**
+ - UTF-8 encoding
+ - Följer OGC SLD-standard
+ - Använder standard symbolizers (Point, Line, Polygon)
+- 
++
+ ### Output-format
+- 
++
+ - **Validation Report:** Lista av errors och warnings
+ - **Symbol Preview:** Canvas-baserad rendering av symboler
+ - **Parsed Rules:** Strukturerad vy av SLD-regler
+- 
++
+ ### Valideringsbeteende
+- 
++
+ **Checks:**
+ 1. **XML Well-formedness:** Giltig XML
+ 2. **SLD Schema:** Följer SLD-schema (basic check)
+ 3. **Symbolizer Validity:** Giltiga symbolizers
+ 4. **Color Formats:** Hex-colors är giltiga
+- 
++
+ **Common Errors:**
+ - `XML_PARSE_ERROR`: Ogiltig XML-syntax
+ - `SLD_INVALID_VERSION`: Version stöds inte
+ - `SYMBOLIZER_INVALID`: Okänd eller felaktig symbolizer
+- 
++
+ **Common Warnings:**
+ - `COLOR_FORMAT_DEPRECATED`: Använder deprecated color-format
+ - `MISSING_TITLE`: Ingen title-element (best practice)
+- 
++
+ ### Kända begränsningar
+- 
++
+ - Endast basic SLD-validering (inte full schema-validation)
+ - Preview är approximativ (exakt rendering kräver GeoServer)
+ - Ingen support för advanced filters (Functions, Expressions)
+ - Kan inte testa mot faktisk geodata
+- 
++
+ ### Exempel
+- 
++
+ **Input SLD:**
+ ```xml
+ <PolygonSymbolizer>
+@@ -545,12 +545,12 @@ Validera SLD (Styled Layer Descriptor) XML och förhandsgranska symboler.
+ </Fill>
+ </PolygonSymbolizer>
+ ```
+- 
++
+ **Output:**
+ - ✓ Valid SLD 1.0.0
+ - Preview: Röd fylld polygon
+ - No errors or warnings
+- 
++
+ ---
+ 
+ ## Map Sandbox
+diff --git "a/Try\342\200\220it\342\200\220Labs\342\200\220overview.md" "b/Try\342\200\220it\342\200\220Labs\342\200\220overview.md"
+index bb20d88..ad8bdfb 100644
+--- "a/Try\342\200\220it\342\200\220Labs\342\200\220overview.md"
++++ "b/Try\342\200\220it\342\200\220Labs\342\200\220overview.md"
+@@ -1,7 +1,7 @@
+ # Try-it Labs – Översikt
+ 
+ Try-it-labben är en samling klient-sidoverktyg för att validera, formatera och testa GIS-konfigurationer direkt i webbläsaren.
+- 
++
+ ## Vad är Try-it-labben?
+ 
+ Try-it-labben består av åtta oberoende verktyg som alla körs helt på klientsidan utan backend-beroenden. Verktyg tar emot indata (JSON, URL:er, koordinater), utför validering och transformering, och returnerar strukturerad output inklusive valideringsrapporter.
