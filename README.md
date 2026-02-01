@@ -49,12 +49,27 @@ npm install
 npm run format
 ```
 
+4. Bygg search index (efter innehållsändringar):
+
+```bash
+npm run build:search
+```
+
+## Sökfunktion
+
+OrigoDocs har en fulltextsökfunktion som indexerar alla sidor och särskilt felsökningssymptom:
+- **Tangentbordsgenväg:** `/` eller `Cmd/Ctrl+K` öppnar sök
+- **Navigation:** `↑↓` för att bläddra, `Enter` för att välja
+- **Prioritering:** Felsökningssymptom väger högst vid felrelaterade sökningar
+- **Highlight:** Matchande text markeras i resultaten
+
 ## Verifikation före commit / PR
 
 - Starta lokal server och kontrollera navigering och sökfunktion.
 - Testa varje Try‑it‑verktyg du ändrat; använd `?dev=1` för utvecklarhjälp (debug‑selftests finns i `try-it.html`).
 - Kontrollera mobil vy (~560px breakpoint).
 - Se till att exporterade filer är deterministiska (inga okontrollerade tidsstämplar).
+- Om du ändrat innehåll: kör `npm run build:search` och commit `search/search-index.json`.
 
 ## Stabilitet och status
 

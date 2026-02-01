@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
-    "dev": "python3 -m http.server 8000"
+    "dev": "python3 -m http.server 8000",
+    "build:search": "node scripts/build-search-index.js",
+    "prebuild": "npm run build:search"
   },
   "devDependencies": {
     "prettier": "^3.2.5"

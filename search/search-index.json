@@ -1,92 +1,912 @@
 [
   {
     "id": "index",
-    "title": "Start",
+    "title": "Origo Map: intern lathund",
+    "category": "Origo Map",
     "url": "index.html",
-    "content": "startsida översikt snabbstart länkar guide recept"
-  },
-  {
-    "id": "json-101",
-    "title": "JSON 101",
-    "url": "page.html",
-    "content": "json objekt arrayer datatyper exempel validering felsökning"
-  },
-  {
-    "id": "origo-guide",
-    "title": "Origo – guide",
-    "url": "origo-guide.html",
-    "content": "origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel"
-  },
-  {
-    "id": "layermanager",
-    "title": "Layermanager",
-    "url": "layermanager.html",
-    "content": "layermanager katalog sök lager plugin"
-  },
-  {
-    "id": "geoserver",
-    "title": "GeoServer 101",
-    "url": "geoserver.html",
-    "content": "geoserver wms wfs datakällor postgis geopackage publicera lager"
-  },
-  {
-    "id": "geoserver-styles",
-    "title": "GeoServer – styles",
-    "url": "geoserver-styles.html",
-    "content": "sld se 1.1 styling symbolizer etiketter filter skalstyrning"
-  },
-  {
-    "id": "geowebcache",
-    "title": "GeoWebCache",
-    "url": "geowebcache.html",
-    "content": "tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning"
-  },
-  {
-    "id": "origo-server",
-    "title": "Origo Server",
-    "url": "origo-server.html",
-    "content": "origo server proxy state elevation backend endpoints drift felsökning localhost"
-  },
-  {
-    "id": "git-vscode",
-    "title": "Git & VS Code",
-    "url": "git-vscode.html",
-    "content": "git versionering vscode grunder arbetsflöde"
+    "heading": "Start",
+    "content": "",
+    "type": "page",
+    "weight": 1
   },
   {
     "id": "examples",
     "title": "Origo-recept",
-    "url": "examples.html",
-    "content": "recept kopiera konfig wms wfs wmts controls"
-  },
-  {
-    "id": "try-it",
-    "title": "Try it-lab",
-    "url": "try-it.html",
-    "content": "try it json validera url builder bbox sld styling"
+    "category": "Origo",
+    "url": "pages/examples.html",
+    "heading": "Origo-recept",
+    "content": "Så använder du recepten Kopiera blocket som matchar ditt behov och byt ut URL:er, layernamn och CRS. Testa alltid lokalt innan du pushar. Minimal init { \"init\": { \"target\": \"map\", \"view\": { \"center\": [0, 0], \"zoom\": 2, \"projection\": \"EPSG:3857\" } } } Verifiera att init‑nycklar fungerar i din Origo-version. WMS-lager { \"source\": { \"wms_example\": { \"url\": \"https://localhost/geoserver/example_workspace/wms\", \"version\": \"1.1.1\" } }, \"layers\": [ { \"name\": \"example_layer_wms\", \"title\": \"WMS‑lager\", \"t",
+    "type": "page",
+    "weight": 1
   },
   {
     "id": "faq-gis",
     "title": "FAQ GIS",
-    "url": "faq-gis.html",
-    "content": "vanliga frågor gis begrepp crs"
+    "category": "FAQ",
+    "url": "pages/faq-gis.html",
+    "heading": "FAQ GIS",
+    "content": "Vanligaste felen och lösningar Kartan visar inte mina lager Möjliga orsaker CORS blockerar anrop (kontrollera Console → CORS-fel). Fel URL (workspace/layer/endpoint) eller 404/403. Fel CRS/projection (t.ex. kartan i 3006 men tjänsten svarar i 3857). GeoServer saknar rättigheter för användaren/rollen. Snabbt test curl -I https://server/geoserver/workspace/wms Tips Testa samma URL i webbläsaren (GetCapabilities). Jämför CRS i Origo-konfig och i tjänstens svar. Lagret syns men hamnar “fel” på karta",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "faq-gis-wms-wfs-wmts",
+    "title": "FAQ GIS: WMS, WFS och WMTS i Origo",
+    "category": "FAQ",
+    "url": "pages/faq-gis.html#wms-wfs-wmts",
+    "heading": "WMS, WFS och WMTS i Origo",
+    "content": "Exempel på hur du definierar olika lager i Origo-konfigurationen: { \"source\": { \"wms_example\": { \"url\": \"https://localhost/geoserver/example_workspace/wms\", \"version\": \"1.1.1\" }, \"wfs_example\": { \"url\": \"https://localhost/geoserver/example_workspace/ows\", \"strategy\": \"all\" }, \"wmts_example\": { \"url\"",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles",
+    "title": "GeoServer styles",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html",
+    "heading": "GeoServer styles",
+    "content": "SLD: SE 1.1 Här bygger du stilar för GeoServer med SLD/SE 1.1. Importera en style, koppla den till lagret och testa i preview innan du går vidare. Snabbcheck Importera style → koppla till layer → testa preview. Välj rätt format SLD/SE 1.1: standardiserat och stabilt. CSS Extension: snabbare att skriva, kräver extension. MBStyle: passar vektor‑tiles och moderna kartstilar. SLD Cookbook: färdiga exempel Denna SLD är en referensmall. Kopiera exakt. Ändra endast: färg (fill, stroke), storlek (Size),",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "geoserver-styles-overview",
+    "title": "GeoServer styles: SLD: SE 1.1",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#overview",
+    "heading": "SLD: SE 1.1",
+    "content": "Här bygger du stilar för GeoServer med SLD/SE 1.1. Importera en style, koppla den till lagret och testa i preview innan du går vidare. Snabbcheck Importera style → koppla till layer → testa preview. Välj rätt format SLD/SE 1.1: standardiserat och stabilt. CSS Extension: snabbare att skriva, kräver e",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-format",
+    "title": "GeoServer styles: Välj rätt format",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#format",
+    "heading": "Välj rätt format",
+    "content": "SLD/SE 1.1: standardiserat och stabilt. CSS Extension: snabbare att skriva, kräver extension. MBStyle: passar vektor‑tiles och moderna kartstilar. SLD Cookbook: färdiga exempel Denna SLD är en referensmall. Kopiera exakt. Ändra endast: färg (fill, stroke), storlek (Size), stroke‑width. Ändra INTE: n",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-sld-cookbook",
+    "title": "GeoServer styles: SLD Cookbook: färdiga exempel",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#sld-cookbook",
+    "heading": "SLD Cookbook: färdiga exempel",
+    "content": "Denna SLD är en referensmall. Kopiera exakt. Ändra endast: färg (fill, stroke), storlek (Size), stroke‑width. Ändra INTE: namespaces, se: -prefix, version, struktur. Vanligt misstag Fel namespace/schema eller fel datatyp (point/line/polygon) gör att inget syns, även om SLD importeras. Punkt: cirkel ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-labels",
+    "title": "GeoServer styles: Labels: enkel etikett",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#labels",
+    "heading": "Labels: enkel etikett",
+    "content": "&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;se:StyledLayerDescriptor version=&quot;1.1.0&quot; xmlns:se=&quot;http://www.opengis.net/se&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; xmlns:xsi=&quot;http://www.w3.o",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-parameterguide",
+    "title": "GeoServer styles: Parameterguide",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#parameterguide",
+    "heading": "Parameterguide",
+    "content": "Parameter Vad gör den Säker att ändra fill Fyllnadsfärg Ja stroke Kantfärg Ja stroke-width Kanttjocklek Ja Size Symbolstorlek Ja se: namespace Struktu",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-sld-felsokning",
+    "title": "GeoServer styles: SLD‑felsökning",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#sld-felsokning",
+    "heading": "SLD‑felsökning",
+    "content": "Import och namespaces Schemafel beror ofta på fel namespace eller version. Validera att se: -prefix används konsekvent. Skala och synlighet Min/MaxScaleDenominator kan göra att inget syns. Labels kräver rätt attribut och rimlig storlek. Cache och uppdatering Gamla stilar beror ofta på cache i GeoWeb",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-sld-import",
+    "title": "GeoServer styles: Import och namespaces",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#sld-import",
+    "heading": "Import och namespaces",
+    "content": "Schemafel beror ofta på fel namespace eller version. Validera att se: -prefix används konsekvent. Skala och synlighet Min/MaxScaleDenominator kan göra att inget syns. Labels kräver rätt attribut och rimlig storlek. Cache och uppdatering Gamla stilar beror ofta på cache i GeoWebCache. Testa hård refr",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-sld-scale",
+    "title": "GeoServer styles: Skala och synlighet",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#sld-scale",
+    "heading": "Skala och synlighet",
+    "content": "Min/MaxScaleDenominator kan göra att inget syns. Labels kräver rätt attribut och rimlig storlek. Cache och uppdatering Gamla stilar beror ofta på cache i GeoWebCache. Testa hård refresh när stilen uppdateras. Vanligt fel: SLD 1.0 vs SE 1.1 (prefix och schema). Styles som laddar men inte syns → fel d",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-sld-cache",
+    "title": "GeoServer styles: Cache och uppdatering",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#sld-cache",
+    "heading": "Cache och uppdatering",
+    "content": "Gamla stilar beror ofta på cache i GeoWebCache. Testa hård refresh när stilen uppdateras. Vanligt fel: SLD 1.0 vs SE 1.1 (prefix och schema). Styles som laddar men inte syns → fel datatyp eller fel skala. Namespace‑misstag → kontrollera se: och schemaLocation. Om du testar WMS → rensa cache bara vid",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-origo-impact",
+    "title": "GeoServer styles: Hur detta påverkar kartklienten i Origo",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#origo-impact",
+    "heading": "Hur detta påverkar kartklienten i Origo",
+    "content": "Origo visar resultatet av GeoServers rendering. Om du byter style i GeoServer syns det i WMS‑bilder och tiles utan att Origo‑konfigurationen behöver ändras. # exempel på WMS‑anrop med style (placeholder) https://localhost/geoserver/example_workspace/wms?service=WMS&amp;request=GetMap&amp;layers=exam",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-css-extension",
+    "title": "GeoServer styles: CSS Extension",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#css-extension",
+    "heading": "CSS Extension",
+    "content": "CSS Extension är ett snabbare sätt att skriva styles. Det passar för enkla regler och snabba justeringar, men kräver att extensionen är installerad i GeoServer. * { mark: symbol(\"circle\"); mark-size: 10; fill: #3b82f6; stroke: #ffffff; stroke-width: 1; } * { stroke: #0f766e; stroke-width: 2; stroke-",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver-styles-mbstyle",
+    "title": "GeoServer styles: MBStyle",
+    "category": "GeoServer",
+    "url": "pages/geoserver-styles.html#mbstyle",
+    "heading": "MBStyle",
+    "content": "MBStyle är bra för modern styling och vektor‑tiles. Du behöver MBStyle‑stöd i GeoServer och ett vektor‑tile‑lager som källa. { \"version\": 8, \"name\": \"Polygon fill\", \"sources\": { \"vector-source\": { \"type\": \"vector\", \"url\": \"http://localhost/tiles.json\" } }, \"layers\": [ { \"id\": \"fill-layer\", \"type\": \"",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geoserver",
+    "title": "GeoServer 101",
+    "category": "GeoServer",
+    "url": "pages/geoserver.html",
+    "heading": "GeoServer 101",
+    "content": "Snabbcheck Workspace → datastore → layer → style → preview. Om ett steg saknas kommer lagret inte att synas i klienten. Vad är GeoServer? GeoServer är en server som publicerar geografisk data via standardiserade tjänster. Den visar inte kartan – den serverar data som andra klienter (t.ex. Origo) kan rita upp. GeoServer = data/tjänster Origo = kartklient som använder tjänsterna WMS/WFS = bryggan mellan server och klient Så tänker GeoServer (mental modell) Datakälla – t.ex. PostGIS, GeoPackage, Sh",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "geowebcache",
+    "title": "GeoWebCache",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html",
+    "heading": "GeoWebCache",
+    "content": "Tile cache 101 GeoWebCache är tile-cachen som sitter nära GeoServer. Den lagrar kartbilder som små tiles så att klienten (Origo) får snabba svar vid pan/zoom. Hur GeoWebCache hänger ihop med GeoServer GeoServer renderar kartan. GeoWebCache sparar resultatet som tiles. Klienten hämtar tiles i stället för att rendera om varje gång. Begrepp (enkelt) Gridset / tiling scheme: hur tiles delas upp (t.ex. 256x256). Seed: förgenerera tiles i förväg. Metatiles: större tile-bitar för effektiv rendering. Tr",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "geowebcache-tile-cache-101",
+    "title": "GeoWebCache: Tile cache 101",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#tile-cache-101",
+    "heading": "Tile cache 101",
+    "content": "GeoWebCache är tile-cachen som sitter nära GeoServer. Den lagrar kartbilder som små tiles så att klienten (Origo) får snabba svar vid pan/zoom. Hur GeoWebCache hänger ihop med GeoServer GeoServer renderar kartan. GeoWebCache sparar resultatet som tiles. Klienten hämtar tiles i stället för att render",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-geoserver-koppling",
+    "title": "GeoWebCache: Hur GeoWebCache hänger ihop med GeoServer",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#geoserver-koppling",
+    "heading": "Hur GeoWebCache hänger ihop med GeoServer",
+    "content": "GeoServer renderar kartan. GeoWebCache sparar resultatet som tiles. Klienten hämtar tiles i stället för att rendera om varje gång. Begrepp (enkelt) Gridset / tiling scheme: hur tiles delas upp (t.ex. 256x256). Seed: förgenerera tiles i förväg. Metatiles: större tile-bitar för effektiv rendering. Tru",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-begrepp",
+    "title": "GeoWebCache: Begrepp (enkelt)",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#begrepp",
+    "heading": "Begrepp (enkelt)",
+    "content": "Gridset / tiling scheme: hur tiles delas upp (t.ex. 256x256). Seed: förgenerera tiles i förväg. Metatiles: större tile-bitar för effektiv rendering. Truncate: rensa cache för ett lager eller område. Bypass: kringgå cache vid felsökning. Seed / Truncate / Bypass: skillnaden Seed: bygger nya tiles (sn",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-seed-truncate-bypass",
+    "title": "GeoWebCache: Seed / Truncate / Bypass: skillnaden",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#seed-truncate-bypass",
+    "heading": "Seed / Truncate / Bypass: skillnaden",
+    "content": "Seed: bygger nya tiles (snabbare första visning). Truncate: tar bort gamla tiles (kräver ny rendering). Bypass: går förbi cache för att se “live” rendering. Vanligt misstag Att seeda allt på alla zoomnivåer. Välj hellre relevant område och nivåer för att undvika långa körningar. CRS & gridsets Grids",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-crs-gridset",
+    "title": "GeoWebCache: CRS & gridsets",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#crs-gridset",
+    "heading": "CRS & gridsets",
+    "content": "Gridset måste matcha kartans CRS. Om gridset/CRS inte stämmer får du fel placering eller tomma tiles. Vår vanligaste CRS är EPSG:3008. Tänk så här: CRS styr hur världen delas upp i zoomnivåer. Gridset och upplösningar måste därför hänga ihop med samma projektion och samma extent. Grid-feljustering S",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-grid-misalignment",
+    "title": "GeoWebCache: Grid-feljustering",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#grid-misalignment",
+    "heading": "Grid-feljustering",
+    "content": "Symptom: tiles hamnar fel, skuggförskjutning, tomma rutor vid vissa zoom. Orsak: fel gridset, fel tile size eller blandade CRS. Åtgärd: verifiera gridset/matrixset, matcha upplösningar och seed om. Gridset, origin och matrixset Origin påverkar tile-alignment. Fel origin ger offset. Kontrollera att m",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-gridset-origin",
+    "title": "GeoWebCache: Gridset, origin och matrixset",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#gridset-origin",
+    "heading": "Gridset, origin och matrixset",
+    "content": "Origin påverkar tile-alignment. Fel origin ger offset. Kontrollera att matrixset matchar gridset och CRS. Verifiera att samma gridset används i klient och cache. Seeding och REST-anrop Seed kan misslyckas om REST-payload är felaktig. Testa seeding med små BBOX och få zoomnivåer. Kommunikationsfel sy",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-seeding-rest",
+    "title": "GeoWebCache: Seeding och REST-anrop",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#seeding-rest",
+    "heading": "Seeding och REST-anrop",
+    "content": "Seed kan misslyckas om REST-payload är felaktig. Testa seeding med små BBOX och få zoomnivåer. Kommunikationsfel syns ofta i GeoServer-loggar. Seed‑strategi Seed per område och per zoomintervall, inte allt samtidigt. Använd metatiles för jämnare rendering. Börja med lägre zoomnivåer och bygg ut steg",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-seed-strategi",
+    "title": "GeoWebCache: Seed‑strategi",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#seed-strategi",
+    "heading": "Seed‑strategi",
+    "content": "Seed per område och per zoomintervall, inte allt samtidigt. Använd metatiles för jämnare rendering. Börja med lägre zoomnivåer och bygg ut stegvis. Cacheability och parametrar Filter och viewparams gör att cache inte kan återanvändas. Undvik dynamiska parametrar för lager som ska cacheas. Testa samm",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-cacheability",
+    "title": "GeoWebCache: Cacheability och parametrar",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#cacheability",
+    "heading": "Cacheability och parametrar",
+    "content": "Filter och viewparams gör att cache inte kan återanvändas. Undvik dynamiska parametrar för lager som ska cacheas. Testa samma request utan filter för att jämföra. Metastore och disk quota Disk quota kan stoppa seeding om cache-disken är full. Rensa endast cache-kataloger, inte konfig. Metastore går ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-metastore-disk",
+    "title": "GeoWebCache: Metastore och disk quota",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#metastore-disk",
+    "heading": "Metastore och disk quota",
+    "content": "Disk quota kan stoppa seeding om cache-disken är full. Rensa endast cache-kataloger, inte konfig. Metastore går ofta att återskapa om cache rensas korrekt. Praktisk checklista Använd cache för publika bakgrundskartor och statiska lager. Seeda bara de zoom-nivåer som faktiskt används. Rensa cache när",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-checklista",
+    "title": "GeoWebCache: Praktisk checklista",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#checklista",
+    "heading": "Praktisk checklista",
+    "content": "Använd cache för publika bakgrundskartor och statiska lager. Seeda bara de zoom-nivåer som faktiskt används. Rensa cache när stilen eller datan ändras. Rensa inte cache i onödan. Det är dyrt. Seeda hellre smala områden än hela världen. Testa alltid visuellt i Origo efter ändring. Stale tiles Om du s",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-stale-tiles",
+    "title": "GeoWebCache: Stale tiles",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#stale-tiles",
+    "heading": "Stale tiles",
+    "content": "Om du ser gamla kartbilder, rensa cache eller ändra tile-URL för cache-busting. Vanliga misstag Rensa cache i live utan plan. Seeda för många zoom‑nivåer samtidigt. Fel gridset för CRS. Felsökningsflöde Gamla tiles: truncate cache och testa ny seed. Tomma tiles: kontrollera bbox/extent och att lagre",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-vanliga-misstag",
+    "title": "GeoWebCache: Vanliga misstag",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#vanliga-misstag",
+    "heading": "Vanliga misstag",
+    "content": "Rensa cache i live utan plan. Seeda för många zoom‑nivåer samtidigt. Fel gridset för CRS. Felsökningsflöde Gamla tiles: truncate cache och testa ny seed. Tomma tiles: kontrollera bbox/extent och att lagret är publicerat. Tung rendering: minska zoomintervall och seeda mindre område. Extern WMS långsa",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-felsokningsflode",
+    "title": "GeoWebCache: Felsökningsflöde",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#felsokningsflode",
+    "heading": "Felsökningsflöde",
+    "content": "Gamla tiles: truncate cache och testa ny seed. Tomma tiles: kontrollera bbox/extent och att lagret är publicerat. Tung rendering: minska zoomintervall och seeda mindre område. Extern WMS långsam: testa bypass och seeda bara nödvändigt. Fel zoomnivå: kontrollera upplösningar och gridset. Klientperspe",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "geowebcache-klientperspektiv",
+    "title": "GeoWebCache: Klientperspektiv (Origo + browser)",
+    "category": "GeoServer",
+    "url": "pages/geowebcache.html#klientperspektiv",
+    "heading": "Klientperspektiv (Origo + browser)",
+    "content": "Kontrollera Network-fliken: ser du tiles (.png/.jpeg)? Granska cache headers (t.ex. Cache-Control ). Hård reload (Ctrl/Cmd + Shift + R) för att kringgå lokal cache. # exempel: cache-busting https://geoserver.example.com/geoserver/gwc/service/wms?layer=workspace:layer&v=2026-01-25",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "git-vscode",
+    "title": "Git & VS Code",
+    "category": "Arbetssätt",
+    "url": "pages/git-vscode.html",
+    "heading": "Git & VS Code",
+    "content": "Tips Pulla alltid innan du börjar och push först när du testat lokalt. Små commits minskar risken för merge conflicts. Git – superkort begreppslista repo : mappen med hela projektet och historiken. commit : en sparpunkt med dina ändringar. branch : en separat “arbetsgren” för en feature. pull : hämta andras ändringar till din dator. push : skicka dina ändringar till servern. remote / origin : den server repo:t ligger på. merge : slå ihop ändringar från två grenar. merge conflict : Git vet inte v",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "layermanager",
+    "title": "Layermanager",
+    "category": "Origo plugin",
+    "url": "pages/layermanager.html",
+    "heading": "Layermanager",
+    "content": "Vad är Layermanager? Layermanager är ett Origo-plugin som hjälper användare att hitta och lägga till lager från en katalogtjänst (t.ex. GeoServer eller CSW). Så här lägger du till Layermanager i Origo Installera pluginet (npm eller inkluderad bundle). Aktivera pluginet i Origo-konfigurationen. Peka pluginet mot katalog/GeoServer-URL. Exempel: Layermanager i konfig (pseudo-JSON) { \"plugins\": [ { \"name\": \"layermanager\", \"options\": { \"url\": \"https://geoserver.example.com/geoserver\", \"types\": [\"tema",
+    "type": "page",
+    "weight": 1
   },
   {
     "id": "npm",
     "title": "npm & plugins",
-    "url": "npm.html",
-    "content": "npm paket plugin installera versionslåsning"
+    "category": "npm",
+    "url": "pages/npm.html",
+    "heading": "npm & plugins",
+    "content": "Installera plugins via npm npm install @leverantor/origo-plugin npm install @leverantor/origo-plugin@1.2.3 Använd exakta versioner för stabilitet. Notera eventuella peer dependencies . Bygg in i ett statiskt projekt Om pluginen kräver byggsteg: använd en enkel bundler (t.ex. Vite) och generera statiska filer. Kontrollera i pluginets README om bundling krävs. # exempel på enkel setup npm create vite@latest origo-demo cd origo-demo npm install npm run build Snabba kommandon Init & install npm init",
+    "type": "page",
+    "weight": 1
   },
   {
-    "id": "troubleshooting",
-    "title": "Felsökning",
-    "url": "troubleshooting.html",
-    "content": "felsökning cors crs 404 cache problem"
+    "id": "origo-guide",
+    "title": "Origo guide",
+    "category": "Origo",
+    "url": "pages/origo-guide.html",
+    "heading": "Origo guide",
+    "content": "Innehåll Minimal init Lager WMS WFS WMTS Clustering WMS vs WFS Controls Grupper & LayerManager Prestanda Vanliga fel Snabbstart Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON-konfig och bygger kartan utifrån lager, controls och plugins. Att verifiera Den här sidan innehåller exempel som är “rätt typ” men vissa exakta nycklar behöver verifieras mot Origo-versionen ni kör. När du bekräftat en nyckel: byt ut “TODO” och lås exemplet. Minimal init En minsta konfig",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "origo-guide-snabbstart",
+    "title": "Origo guide: Snabbstart",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#snabbstart",
+    "heading": "Snabbstart",
+    "content": "Origo är kartklienten. GeoServer levererar data och kartbilder. Origo läser en JSON-konfig och bygger kartan utifrån lager, controls och plugins. Att verifiera Den här sidan innehåller exempel som är “rätt typ” men vissa exakta nycklar behöver verifieras mot Origo-versionen ni kör. När du bekräftat ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-minimal-init",
+    "title": "Origo guide: Minimal init",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#minimal-init",
+    "heading": "Minimal init",
+    "content": "En minsta konfiguration som sätter projektion, extent och startvy. { \"app\": { \"title\": \"Origo karta\", \"language\": \"sv\" }, \"projectionCode\": \"EPSG:3008\", \"extent\": [100000, 6400000, 200000, 6500000], \"center\": [150000, 6450000], \"zoom\": 5, \"resolutions\": [560, 280, 140, 70, 35] } Lager: WMS, WFS, WMT",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-lager",
+    "title": "Origo guide: Lager: WMS, WFS, WMTS",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#lager",
+    "heading": "Lager: WMS, WFS, WMTS",
+    "content": "WMS { \"source\": { \"wms_example\": { \"url\": \"https://localhost/geoserver/example_workspace/wms\", \"version\": \"1.1.1\" } }, \"layers\": [ { \"name\": \"example_baselayer\", \"type\": \"WMS\", \"source\": \"wms_example\" }, { \"name\": \"example_theme\", \"type\": \"WMS\", \"source\": \"wms_example\", \"visible\": false } ] } Tumreg",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-wms",
+    "title": "Origo guide: WMS",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#wms",
+    "heading": "WMS",
+    "content": "{ \"source\": { \"wms_example\": { \"url\": \"https://localhost/geoserver/example_workspace/wms\", \"version\": \"1.1.1\" } }, \"layers\": [ { \"name\": \"example_baselayer\", \"type\": \"WMS\", \"source\": \"wms_example\" }, { \"name\": \"example_theme\", \"type\": \"WMS\", \"source\": \"wms_example\", \"visible\": false } ] } Tumregel: ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-wfs",
+    "title": "Origo guide: WFS",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#wfs",
+    "heading": "WFS",
+    "content": "{ \"source\": { \"wfs_example\": { \"url\": \"https://localhost/geoserver/example_workspace/ows\", \"strategy\": \"all\" } }, \"layers\": [ { \"name\": \"example_layer_wfs\", \"type\": \"WFS\", \"source\": \"wfs_example\" } ] } WFS passar när du behöver attribut i klienten eller klick-logik. WMTS { \"source\": { \"wmts_example\"",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-wmts",
+    "title": "Origo guide: WMTS",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#wmts",
+    "heading": "WMTS",
+    "content": "{ \"source\": { \"wmts_example\": { \"url\": \"https://localhost/geoserver/example_workspace/gwc/service/wmts\", \"matrixSet\": \"EXAMPLE_3008_GRID\", \"matrixIdsPrefix\": \"EXAMPLE_3008_GRID:\", \"tileSize\": [512, 512] } }, \"layers\": [ { \"name\": \"example_layer_wmts\", \"type\": \"WMTS\", \"source\": \"wmts_example\" } ] } C",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-clustering",
+    "title": "Origo guide: Clustering",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#clustering",
+    "heading": "Clustering",
+    "content": "Clustering används när många punktfeatures ska visas utan att kartan blir tung. { \"layers\": [ { \"name\": \"example_points\", \"type\": \"WFS\", \"source\": \"wfs_example\", \"layerType\": \"cluster\", \"clusterOptions\": { \"clusterDistance\": 30, \"clusterMaxZoom\": 12 } } ] } Beslutsruta: WMS eller WFS? Fråga Välj WMS",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-wms-vs-wfs",
+    "title": "Origo guide: Beslutsruta: WMS eller WFS?",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#wms-vs-wfs",
+    "heading": "Beslutsruta: WMS eller WFS?",
+    "content": "Fråga Välj WMS Välj WFS Vill du visa lager snabbt? Ja Nej Behöver du klick/attribut? Nej Ja Är prestanda kritisk? Ja Nej Tumregel: Om du är osäker",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-controls",
+    "title": "Origo guide: Controls",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#controls",
+    "heading": "Controls",
+    "content": "{ \"controls\": [ { \"name\": \"home\" }, { \"name\": \"mapmenu\" }, { \"name\": \"sharemap\", \"options\": { \"serviceEndpoint\": \"https://localhost/mapstate/\" } }, { \"name\": \"print\", \"options\": { \"sizeInitial\": \"a4\" } }, { \"name\": \"legend\" }, { \"name\": \"measure\" } ] } Grupper & LayerManager { \"groups\": [ { \"name\": ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-layermanager",
+    "title": "Origo guide: Grupper & LayerManager",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#layermanager",
+    "heading": "Grupper & LayerManager",
+    "content": "{ \"groups\": [ { \"name\": \"grp_example\", \"title\": \"Exempelgrupp\" } ] } Prestanda WMS + cache ger snabbast visning. WFS ger mer data men belastar klienten. Styling i GeoServer påverkar renderingtiden. Vanliga fel Fel CRS eller fel extent gör att inget syns i kartan. WMS fungerar men WFS blir segt utan ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-prestanda",
+    "title": "Origo guide: Prestanda",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#prestanda",
+    "heading": "Prestanda",
+    "content": "WMS + cache ger snabbast visning. WFS ger mer data men belastar klienten. Styling i GeoServer påverkar renderingtiden. Vanliga fel Fel CRS eller fel extent gör att inget syns i kartan. WMS fungerar men WFS blir segt utan filter eller bbox. Fel source-namn i layer gör att lager inte laddas. Tips: Om ",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-guide-vanliga-fel",
+    "title": "Origo guide: Vanliga fel",
+    "category": "Origo",
+    "url": "pages/origo-guide.html#vanliga-fel",
+    "heading": "Vanliga fel",
+    "content": "Fel CRS eller fel extent gör att inget syns i kartan. WMS fungerar men WFS blir segt utan filter eller bbox. Fel source-namn i layer gör att lager inte laddas. Tips: Om du fastnar – börja på Felsökning och följ “symptom → nästa steg”.",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server",
+    "title": "Origo Server",
+    "category": "Origo",
+    "url": "pages/origo-server.html",
+    "heading": "Origo Server",
+    "content": "Översikt Origo Server fungerar som ett stöd bakom Origo‑klienten. Den kan ligga mellan Origo och GeoServer för att hantera vissa tjänster och förenkla klienten. TODO: verifiera exakt roll i arkitekturen mot Origo Server‑källor. Användningsfall Proxy för karttjänster med gemensam hantering av CORS och auth. Elevation‑tjänst för mätning/höjd. State/share för att spara kartlägen. TODO: verifiera vilka use‑case som stöds i Origo Server. Installera & kör Hög nivå: hämta koden, installera beroenden oc",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "origo-server-overview",
+    "title": "Origo Server: Översikt",
+    "category": "Origo",
+    "url": "pages/origo-server.html#overview",
+    "heading": "Översikt",
+    "content": "Origo Server fungerar som ett stöd bakom Origo‑klienten. Den kan ligga mellan Origo och GeoServer för att hantera vissa tjänster och förenkla klienten. TODO: verifiera exakt roll i arkitekturen mot Origo Server‑källor. Användningsfall Proxy för karttjänster med gemensam hantering av CORS och auth. E",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-anvandningsfall",
+    "title": "Origo Server: Användningsfall",
+    "category": "Origo",
+    "url": "pages/origo-server.html#anvandningsfall",
+    "heading": "Användningsfall",
+    "content": "Proxy för karttjänster med gemensam hantering av CORS och auth. Elevation‑tjänst för mätning/höjd. State/share för att spara kartlägen. TODO: verifiera vilka use‑case som stöds i Origo Server. Installera & kör Hög nivå: hämta koden, installera beroenden och starta servern. # TODO: verifiera exakta k",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-install-run",
+    "title": "Origo Server: Installera & kör",
+    "category": "Origo",
+    "url": "pages/origo-server.html#install-run",
+    "heading": "Installera & kör",
+    "content": "Hög nivå: hämta koden, installera beroenden och starta servern. # TODO: verifiera exakta kommandon git clone https://example.com/origo-server.git cd origo-server npm install npm start Konfiguration Konfigurationen styr exempelvis endpoints och proxy‑mål. { \"server\": { \"port\": 3001 }, \"proxy\": { \"tar",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-konfiguration",
+    "title": "Origo Server: Konfiguration",
+    "category": "Origo",
+    "url": "pages/origo-server.html#konfiguration",
+    "heading": "Konfiguration",
+    "content": "Konfigurationen styr exempelvis endpoints och proxy‑mål. { \"server\": { \"port\": 3001 }, \"proxy\": { \"target\": \"https://localhost/geoserver\" } } TODO: verifiera filnamn och nycklar i Origo Server‑konfig. Endpoints # TODO: verifiera endpoints https://localhost/origoserver/health https://localhost/origos",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-endpoints",
+    "title": "Origo Server: Endpoints",
+    "category": "Origo",
+    "url": "pages/origo-server.html#endpoints",
+    "heading": "Endpoints",
+    "content": "# TODO: verifiera endpoints https://localhost/origoserver/health https://localhost/origoserver/proxy?url=https://localhost/geoserver/wms https://localhost/origoserver/state Recept Proxy:a WMS/WFS # TODO: verifiera proxy‑format https://localhost/origoserver/proxy?url=https://localhost/geoserver/works",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-recept",
+    "title": "Origo Server: Recept",
+    "category": "Origo",
+    "url": "pages/origo-server.html#recept",
+    "heading": "Recept",
+    "content": "Proxy:a WMS/WFS # TODO: verifiera proxy‑format https://localhost/origoserver/proxy?url=https://localhost/geoserver/workspace/wms Share/state till server # TODO: verifiera state‑endpoint och payload curl -X POST https://localhost/origoserver/state -H \"Content-Type: application/json\" -d '{ \"state\": \".",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-felsokning",
+    "title": "Origo Server: Felsökning",
+    "category": "Origo",
+    "url": "pages/origo-server.html#felsokning",
+    "heading": "Felsökning",
+    "content": "CORS: verifiera att proxy används och att klienten pekar rätt. 401/403: kontrollera auth och tokens i proxy‑kedjan. Timeouts: testa kortare requests och granska serverloggar. Reverse proxy: säkerställ att rätt headers skickas vidare. TODO: verifiera loggplatser och relevanta inställningar. Release‑c",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "origo-server-release",
+    "title": "Origo Server: Release‑checklista",
+    "category": "Origo",
+    "url": "pages/origo-server.html#release",
+    "heading": "Release‑checklista",
+    "content": "Verifiera vilka endpoints som påverkas. Testa proxy‑flöden mot https://localhost/geoserver . Kontrollera att Origo kan nå state/elevation. Dokumentera ändringen i release‑playbooken.",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "page",
+    "title": "JSON 101: Origo lathund",
+    "category": "JSON",
+    "url": "pages/page.html",
+    "heading": "JSON 101",
+    "content": "Vad är JSON? JSON är ett textformat för data. Det består av objekt (nyckel/värde) och arrayer (listor). Det används ofta för konfigurationer i webbkartor. JSON står för JavaScript Object Notation och är lätt för både människor och maskiner att läsa. Origo använder JSON för att definiera kartans inställningar, lager och UI-komponenter. Vanliga fel Extra kommatecken (trailing comma) efter sista raden. Felaktiga citattecken. JSON kräver dubbla \"\". Fel teckenkodning eller “smarta” citattecken från W",
+    "type": "page",
+    "weight": 1
   },
   {
     "id": "release-playbook",
     "title": "Release‑playbook",
-    "url": "release-playbook.html",
-    "content": "release checklista geoserver geowebcache origo deploy cache styles data"
+    "category": "Release",
+    "url": "pages/release-playbook.html",
+    "heading": "Release‑playbook",
+    "content": "Snabb överblick Planera vad som ändras och vilka lager som påverkas. Verifiera data, styles och cache innan du publicerar. Testa lokalt i Origo och i GeoServer Preview. Dokumentera vad som gjorts och hur du kan backa. Verifiera live och gör en snabb sanity‑check. Återställ checklistor Förberedelser Pull senaste ändringar Skapa ny branch Bekräfta testmiljö/konfig Bekräfta vilka lager/stilar/cache som påverkas Ta snapshot/backup av kritiska filer",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "troubleshooting",
+    "title": "Felsökning",
+    "category": "Support",
+    "url": "pages/troubleshooting.html",
+    "heading": "Felsökning",
+    "content": "Innehålls meny: Symptom → nästa steg Snabb checklista Vanliga fel GeoServer-relaterade Origo Server-relaterat Prestanda Debug-kommandon Symptom → nästa steg Välj symptom, läs vanlig rotorsak och gå vidare till rätt sida/verktyg. Symptom Vanlig rotorsak Nästa steg Tom karta Frontend Fel CRS, extent eller URL Origo guide Try it-lab: BBOX/URL WMS funkar i browser men inte i Origo Frontend CORS, mixed content eller fel URL Origo guide CORS Syns bara vid vissa zoomnivåer GeoWebCache Upplösningsmismat",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "troubleshooting-symptom-rotorsak",
+    "title": "Felsökning: Symptom → nästa steg",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "Symptom → nästa steg",
+    "content": "Välj symptom, läs vanlig rotorsak och gå vidare till rätt sida/verktyg. Symptom Vanlig rotorsak Nästa steg <h3 class=\"sy",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-snabb-checklista",
+    "title": "Felsökning: Snabb checklista",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#snabb-checklista",
+    "heading": "Snabb checklista",
+    "content": "1 Öppna DevTools Console + Network. Leta efter fel och 404:or först. 2 Verifiera att config laddas JSON/config ska inte ge 404 och ska vara rätt fil. <div class=\"ts-st",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-vanliga-fel",
+    "title": "Felsökning: Vanliga fel",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#vanliga-fel",
+    "heading": "Vanliga fel",
+    "content": "Vanligaste orsaken till tom karta Fel CRS eller extent mellan GeoServer, GeoWebCache och Origo. CORS Browser Domänen blockeras → använd proxy eller rätt CORS-inställning. CORS-sektionen Origo guide",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-geoserver-relaterade",
+    "title": "Felsökning: GeoServer-relaterade",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#geoserver-relaterade",
+    "heading": "GeoServer-relaterade",
+    "content": "Tom karta Fel layernamn eller CRS/projection mismatch. GeoServer 101 403 / 401 Inloggning krävs eller rättigheter saknas. Behörigheter WMS funkar, WFS segt För stora dataset eller fel tjänst för rendering. Byt till WMS",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-origo-server-relaterat",
+    "title": "Felsökning: Origo Server-relaterat",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#origo-server-relaterat",
+    "heading": "Origo Server-relaterat",
+    "content": "Timeouts För långa requests eller proxy-begränsningar. Tips: testa mindre bbox 401 / 403 Fel auth mellan Origo, Origo Server och GeoServer. Kontrollera tokens / headers CORS Klienten måste gå via proxy när det behövs. CORS-felsökning <h2 id=\"prestand",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-prestanda",
+    "title": "Felsökning: Prestanda",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#prestanda",
+    "heading": "Prestanda",
+    "content": "Gamla tiles Reload räcker inte – cache måste tömmas. GeoWebCache Tiles ligger fel Gridset eller upplösningsmismatch. Grid-feljustering SLD syns inte Scale-filter eller fel datatyp. GeoServer styles",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshooting-debug-kommandon",
+    "title": "Felsökning: Debug-kommandon",
+    "category": "Support",
+    "url": "pages/troubleshooting.html#debug-kommandon",
+    "heading": "Debug-kommandon",
+    "content": "# i browserns console localStorage.clear() # curl för att se headers curl -I https://exempel.se/config.json",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "troubleshoot-symptom-0",
+    "title": "Felsökning: Tom karta",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "Tom karta",
+    "content": "Symptom: Tom karta. Orsak: ",
+    "keywords": "tom karta ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-1",
+    "title": "Felsökning: WMS funkar i browser men inte i Origo",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "WMS funkar i browser men inte i Origo",
+    "content": "Symptom: WMS funkar i browser men inte i Origo. Orsak: ",
+    "keywords": "wms funkar i browser men inte i origo ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-2",
+    "title": "Felsökning: Syns bara vid vissa zoomnivåer",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "Syns bara vid vissa zoomnivåer",
+    "content": "Symptom: Syns bara vid vissa zoomnivåer. Orsak: ",
+    "keywords": "syns bara vid vissa zoomnivåer ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-3",
+    "title": "Felsökning: Tiles är förskjutna",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "Tiles är förskjutna",
+    "content": "Symptom: Tiles är förskjutna. Orsak: ",
+    "keywords": "tiles är förskjutna ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-4",
+    "title": "Felsökning: Gamla tiles efter ändring",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "Gamla tiles efter ändring",
+    "content": "Symptom: Gamla tiles efter ändring. Orsak: ",
+    "keywords": "gamla tiles efter ändring ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-5",
+    "title": "Felsökning: SLD importeras inte",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "SLD importeras inte",
+    "content": "Symptom: SLD importeras inte. Orsak: ",
+    "keywords": "sld importeras inte ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-6",
+    "title": "Felsökning: SLD syns inte trots import",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "SLD syns inte trots import",
+    "content": "Symptom: SLD syns inte trots import. Orsak: ",
+    "keywords": "sld syns inte trots import ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-7",
+    "title": "Felsökning: WFS är långsamt",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "WFS är långsamt",
+    "content": "Symptom: WFS är långsamt. Orsak: ",
+    "keywords": "wfs är långsamt ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-8",
+    "title": "Felsökning: GeoPackage bytt men inget händer",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "GeoPackage bytt men inget händer",
+    "content": "Symptom: GeoPackage bytt men inget händer. Orsak: ",
+    "keywords": "geopackage bytt men inget händer ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "troubleshoot-symptom-9",
+    "title": "Felsökning: JS-fel stoppar allt",
+    "category": "Felsökning",
+    "url": "pages/troubleshooting.html#symptom-rotorsak",
+    "heading": "JS-fel stoppar allt",
+    "content": "Symptom: JS-fel stoppar allt. Orsak: ",
+    "keywords": "js-fel stoppar allt ",
+    "type": "symptom",
+    "weight": 2
+  },
+  {
+    "id": "try-it",
+    "title": "Try it-lab",
+    "category": "Verktyg",
+    "url": "pages/try-it.html",
+    "heading": "Try it-lab",
+    "content": "Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren. Snabbstart: JSON / GeoJSON Kartsandlåda URL-builder BBOX / Extent Upplösningar Gridset / Tile Gridset-utforskare SLD Avancerat Valideringsrapport Körhistorik JSON / GeoJSON Validera och formatera JSON. Identifiera GeoJSON, beräkna BBOX och exportera i olika format. Inmatning Validera Formatera Validera kontrollerar utan att ändra inmatningen. Formatera skriver om inmatningen. Kopiera Rensa Avancerat M",
+    "type": "page",
+    "weight": 1
+  },
+  {
+    "id": "try-it-json",
+    "title": "Try it-lab: JSON / GeoJSON",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#json",
+    "heading": "JSON / GeoJSON",
+    "content": "Validera och formatera JSON. Identifiera GeoJSON, beräkna BBOX och exportera i olika format. Inmatning <button class=\"tryit-but",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-mapsandbox",
+    "title": "Try it-lab: Kartsandlåda",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#mapsandbox",
+    "heading": "Kartsandlåda",
+    "content": "Förhandsgranska WMS GetMap-anrop. Stöder URL-builder och BBOX-verktyget. WMS GetMap URL <button class=\"tryit-button\" data-maps",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-urlbuilder",
+    "title": "Try it-lab: URL-builder",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#urlbuilder",
+    "heading": "URL-builder",
+    "content": "Skapa giltiga WMS/WFS-tjänste-URL:er. Ange bas-URL, tjänst, lager och parametrar för att generera ett korrekt anrop. WMS GetCapabilities WFS GetCapabilities WMS GetMap (demo) <button class=\"tryit-pill seconda",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-bbox",
+    "title": "Try it-lab: BBOX / Extent",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#bbox",
+    "heading": "BBOX / Extent",
+    "content": "Generera BBOX-sträng och WMS GetMap URL för SWEREF 99 13 30 (EPSG:3008) . Bas-URL Layer",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-resolutions",
+    "title": "Try it-lab: Upplösningar (EPSG:3008)",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#resolutions",
+    "heading": "Upplösningar (EPSG:3008)",
+    "content": "Validera och exportera upplösningslistor för Origo och GeoWebCache. Upplösningar (höga → låga) <p class=",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-gridcalc",
+    "title": "Try it-lab: Gridset / Tile-kalkylator",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#gridcalc",
+    "heading": "Gridset / Tile-kalkylator",
+    "content": "Beräkna resolutioner, tile-storlekar och seed-rekommendationer för GeoWebCache gridsets. Resolution (m/px) Scale (1:)",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-gridset-explorer",
+    "title": "Try it-lab: Gridset-utforskare",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#gridset-explorer",
+    "heading": "Gridset-utforskare",
+    "content": "Interaktiv karta för att förstå extents, tile-indelning och gridset-logik i EPSG:3006 . Sverige Skaraborg <button class=\"tryit-button secondary\" data-g",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-sld",
+    "title": "Try it-lab: SLD",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#sld",
+    "heading": "SLD",
+    "content": "Testa och validera SLD (Styled Layer Descriptor). Kontrollera din styling före import i GeoServer. Inmatning <button class=\"tryit-bu",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
+    "id": "try-it-sld-preview",
+    "title": "Try it-lab: SLD – Symbolförhandsvisning",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#sld-preview",
+    "heading": "SLD – Symbolförhandsvisning",
+    "content": "Förhandsgranska symbolik från SLD utan att behöva en kartserver (legendförhandsvisning). SLD-inmatning <div class=\"tryit-act",
+    "type": "section",
+    "weight": 1.2
   }
 ]

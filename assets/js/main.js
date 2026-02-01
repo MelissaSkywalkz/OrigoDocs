@@ -3,95 +3,182 @@ const OFFLINE_SEARCH_INDEX = [
   {
     id: 'index',
     title: 'Start',
+    category: 'Origo Map',
     url: 'index.html',
     content: 'startsida översikt snabbstart länkar guide recept',
+    type: 'page',
+    weight: 1,
   },
-
   {
     id: 'json-101',
     title: 'JSON 101',
+    category: 'Dokumentation',
     url: 'pages/page.html',
     content: 'json objekt arrayer datatyper exempel validering felsökning',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'origo-guide',
     title: 'Origo – guide',
+    category: 'Origo',
     url: 'pages/origo-guide.html',
     content:
       'origo init konfiguration wms wfs wmts lager controls clustering prestanda epsg 3008 vanliga fel',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'layermanager',
     title: 'Layermanager',
+    category: 'Origo',
     url: 'pages/layermanager.html',
     content: 'layermanager katalog sök lager plugin',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'geoserver',
     title: 'GeoServer 101',
+    category: 'GeoServer',
     url: 'pages/geoserver.html',
     content: 'geoserver wms wfs datakällor postgis geopackage publicera lager',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'geoserver-styles',
     title: 'GeoServer – styles',
+    category: 'GeoServer',
     url: 'pages/geoserver-styles.html',
     content: 'sld se 1.1 styling symbolizer etiketter filter skalstyrning',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'geowebcache',
     title: 'GeoWebCache',
+    category: 'GeoWebCache',
     url: 'pages/geowebcache.html',
     content:
       'tile cache gridset grid misalignment epsg 3008 seed truncate metatiles prestanda felsökning',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'origo-server',
     title: 'Origo Server',
+    category: 'Origo',
     url: 'pages/origo-server.html',
     content: 'origo server proxy state elevation backend endpoints drift felsökning localhost',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'git-vscode',
     title: 'Git & VS Code',
+    category: 'Utveckling',
     url: 'pages/git-vscode.html',
     content: 'git versionering vscode grunder arbetsflöde',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'examples',
     title: 'Origo-recept',
+    category: 'Origo',
     url: 'pages/examples.html',
     content: 'recept kopiera konfig wms wfs wmts controls',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'try-it',
     title: 'Try it-lab',
+    category: 'Verktyg',
     url: 'pages/try-it.html',
     content: 'try it json validera url builder bbox sld styling',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'faq-gis',
     title: 'FAQ GIS',
+    category: 'FAQ',
     url: 'pages/faq-gis.html',
     content: 'vanliga frågor gis begrepp crs',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'npm',
     title: 'npm & plugins',
+    category: 'Utveckling',
     url: 'pages/npm.html',
     content: 'npm paket plugin installera versionslåsning',
+    type: 'page',
+    weight: 1,
   },
   {
     id: 'troubleshooting',
     title: 'Felsökning',
+    category: 'Support',
     url: 'pages/troubleshooting.html',
-    content: 'felsökning cors crs 404 cache problem',
+    content: 'felsökning cors crs 404 cache problem tom karta tiles förskjuten',
+    keywords: 'fel funkar inte syns inte tom förskjuten långsam',
+    type: 'page',
+    weight: 2.0,
+  },
+  {
+    id: 'troubleshoot-symptom-tom-karta',
+    title: 'Felsökning: Tom karta',
+    category: 'Felsökning',
+    url: 'pages/troubleshooting.html#symptom-rotorsak',
+    content: 'Symptom: Tom karta. Orsak: Fel CRS, extent eller URL',
+    keywords: 'tom karta syns inte',
+    type: 'symptom',
+    weight: 2.0,
+  },
+  {
+    id: 'troubleshoot-symptom-cors',
+    title: 'Felsökning: WMS funkar i browser men inte i Origo',
+    category: 'Felsökning',
+    url: 'pages/troubleshooting.html#symptom-rotorsak',
+    content:
+      'Symptom: WMS funkar i browser men inte i Origo. Orsak: CORS, mixed content eller fel URL',
+    keywords: 'wms funkar inte cors',
+    type: 'symptom',
+    weight: 2.0,
+  },
+  {
+    id: 'troubleshoot-symptom-zoom',
+    title: 'Felsökning: Syns bara vid vissa zoomnivåer',
+    category: 'Felsökning',
+    url: 'pages/troubleshooting.html#symptom-rotorsak',
+    content:
+      'Symptom: Syns bara vid vissa zoomnivåer. Orsak: Upplösningsmismatch mellan Origo och GeoWebCache',
+    keywords: 'zoom nivå syns inte upplösning',
+    type: 'symptom',
+    weight: 2.0,
+  },
+  {
+    id: 'troubleshoot-symptom-tiles-shift',
+    title: 'Felsökning: Tiles är förskjutna',
+    category: 'Felsökning',
+    url: 'pages/troubleshooting.html#symptom-rotorsak',
+    content: 'Symptom: Tiles är förskjutna. Orsak: Gridset, upplösningar eller CRS fel',
+    keywords: 'förskjuten offset tiles fel position',
+    type: 'symptom',
+    weight: 2.0,
   },
   {
     id: 'release-playbook',
     title: 'Release‑playbook',
+    category: 'Utveckling',
     url: 'pages/release-playbook.html',
     content: 'release checklista geoserver geowebcache origo deploy cache styles data',
+    type: 'page',
+    weight: 1,
   },
 ];
 
@@ -287,6 +374,7 @@ const initSearch = () => {
   }
 
   let searchIndex = IS_OFFLINE_FILE ? OFFLINE_SEARCH_INDEX : [];
+  let selectedIndex = -1;
 
   if (!IS_OFFLINE_FILE) {
     const searchIndexUrl = new URL('../search/search-index.json', document.baseURI).href;
@@ -305,6 +393,69 @@ const initSearch = () => {
   const clearResults = () => {
     results.innerHTML = '';
     results.classList.add('hidden');
+    selectedIndex = -1;
+  };
+
+  /**
+   * Highlight matching text in string
+   * @param {string} text
+   * @param {string} query
+   * @returns {string}
+   */
+  const highlightMatch = (text, query) => {
+    if (!query || !text) return text;
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  };
+
+  /**
+   * Calculate search score for an item
+   * @param {Object} item
+   * @param {string} query
+   * @returns {number}
+   */
+  const calculateScore = (item, query) => {
+    const lowerQuery = query.toLowerCase();
+    let score = 0;
+
+    // Base weight from item type
+    const weight = item.weight || 1;
+    score *= weight;
+
+    // Title exact match
+    if (item.title.toLowerCase() === lowerQuery) {
+      score += 100;
+    } else if (item.title.toLowerCase().includes(lowerQuery)) {
+      score += 50;
+    }
+
+    // Heading match
+    if (item.heading && item.heading.toLowerCase().includes(lowerQuery)) {
+      score += 30;
+    }
+
+    // Keyword match (for symptoms)
+    if (item.keywords && item.keywords.includes(lowerQuery)) {
+      score += 40;
+    }
+
+    // Content match
+    if (item.content && item.content.toLowerCase().includes(lowerQuery)) {
+      score += 10;
+    }
+
+    // Category match
+    if (item.category && item.category.toLowerCase().includes(lowerQuery)) {
+      score += 15;
+    }
+
+    // Boost troubleshooting items for error-like queries
+    const errorKeywords = ['fel', 'funkar inte', 'syns inte', 'tom', 'förskjuten', 'långsam'];
+    if (item.type === 'symptom' && errorKeywords.some((kw) => lowerQuery.includes(kw))) {
+      score += 50;
+    }
+
+    return score;
   };
 
   const renderResults = (items) => {
@@ -315,11 +466,35 @@ const initSearch = () => {
       return;
     }
 
-    items.forEach((item) => {
+    items.forEach((item, index) => {
       const li = document.createElement('li');
+      li.className = 'search-result-item';
+      if (index === selectedIndex) {
+        li.classList.add('selected');
+      }
+
       const link = document.createElement('a');
       link.href = item.url;
-      link.textContent = item.title;
+
+      const titleEl = document.createElement('div');
+      titleEl.className = 'search-result-title';
+      titleEl.innerHTML = highlightMatch(item.title, input.value.trim());
+
+      const snippetEl = document.createElement('div');
+      snippetEl.className = 'search-result-snippet';
+
+      let snippetText = '';
+      if (item.category) {
+        snippetText += `${item.category} • `;
+      }
+      if (item.type === 'symptom') {
+        snippetText += '🔍 ';
+      }
+      snippetText += (item.content || '').substring(0, 100);
+      snippetEl.innerHTML = highlightMatch(snippetText, input.value.trim());
+
+      link.appendChild(titleEl);
+      link.appendChild(snippetEl);
       li.appendChild(link);
       results.appendChild(li);
     });
@@ -328,23 +503,73 @@ const initSearch = () => {
   };
 
   const handleInput = () => {
-    const query = input.value.trim().toLowerCase();
+    const query = input.value.trim();
+    selectedIndex = -1;
 
     if (!query) {
       clearResults();
       return;
     }
 
-    const matches = searchIndex.filter((item) => {
-      const haystack = `${item.title} ${item.content}`.toLowerCase();
-      return haystack.includes(query);
-    });
+    // Score and filter matches
+    const scored = searchIndex
+      .map((item) => ({
+        ...item,
+        score: calculateScore(item, query),
+      }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score);
 
-    renderResults(matches.slice(0, 8));
+    renderResults(scored.slice(0, 8));
+  };
+
+  const handleKeyboard = (event) => {
+    const items = results.querySelectorAll('.search-result-item');
+    if (!items.length) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      renderResults(
+        Array.from(items).map((item) => {
+          const link = item.querySelector('a');
+          return {
+            url: link.href,
+            title: link.querySelector('.search-result-title').textContent,
+            content: link.querySelector('.search-result-snippet').textContent,
+          };
+        }),
+      );
+      items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      renderResults(
+        Array.from(items).map((item) => {
+          const link = item.querySelector('a');
+          return {
+            url: link.href,
+            title: link.querySelector('.search-result-title').textContent,
+            content: link.querySelector('.search-result-snippet').textContent,
+          };
+        }),
+      );
+      items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (event.key === 'Enter' && selectedIndex >= 0) {
+      event.preventDefault();
+      const selectedLink = items[selectedIndex]?.querySelector('a');
+      if (selectedLink) {
+        window.location.href = selectedLink.href;
+      }
+    } else if (event.key === 'Escape') {
+      clearResults();
+      input.blur();
+    }
   };
 
   input.addEventListener('input', handleInput);
   input.addEventListener('focus', handleInput);
+  input.addEventListener('keydown', handleKeyboard);
 
   results.addEventListener('click', (event) => {
     const link = event.target.closest('a');
@@ -550,11 +775,7 @@ const replaceOutsideTags = (html, regex, replacer) => {
 };
 
 const escapeHTML = (str) =>
-  str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const detectLangFromBadge = (badgeLabel) => {
   const v = (badgeLabel || '').toLowerCase();
@@ -800,8 +1021,7 @@ const runJsonHighlightTests = () => {
   const samples = [
     {
       name: 'escapes-exponent',
-      input:
-        '{\n  "text": "A \\\"quote\\\" and \\\\ slash",\n  "ok": true,\n  "num": -12.5e+3\n}',
+      input: '{\n  "text": "A \\\"quote\\\" and \\\\ slash",\n  "ok": true,\n  "num": -12.5e+3\n}',
     },
     {
       name: 'nested',
@@ -848,12 +1068,11 @@ const highlightXML = (text) => {
   s = s.replace(
     /(&lt;)(\/?)([a-zA-Z_:][a-zA-Z0-9_:.-]*)((?:\s+[a-zA-Z_:][a-zA-Z0-9_:.-]*(?:=(?:"[^"]*"|'[^']*'))?)*?)(\s*)(&gt;)/g,
     (m, open, slash, tag, attrs, ws, close) => {
-      let attrsHL = attrs
-        .replace(
-          /([a-zA-Z_:][a-zA-Z0-9_:.-]*)(\s*=\s*)("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,
-          (m, a, eq, v) =>
-            `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
-        );
+      let attrsHL = attrs.replace(
+        /([a-zA-Z_:][a-zA-Z0-9_:.-]*)(\s*=\s*)("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,
+        (m, a, eq, v) =>
+          `<span class="tok-attr">${a}</span><span class="tok-punct">${eq}</span><span class="tok-value">${v}</span>`,
+      );
       return `${open}<span class="tok-tag">${tag}</span>${attrsHL}${close}`;
     },
   );
@@ -906,15 +1125,11 @@ const highlightJS = (text) => {
 
   // 6) Function calls: foo( ... )
   // Avoid highlighting after a dot (method calls) by checking previous char in replacer
-  s = replaceOutsideTags(
-    s,
-    /\b([A-Za-z_$][\w$]*)\s*(?=\()/g,
-    (m, name, offset, full) => {
-      const prev = full[offset - 1];
-      if (prev === '.') return m; // method call; handled below
-      return `<span class="tok-fn">${name}</span>`;
-    },
-  );
+  s = replaceOutsideTags(s, /\b([A-Za-z_$][\w$]*)\s*(?=\()/g, (m, name, offset, full) => {
+    const prev = full[offset - 1];
+    if (prev === '.') return m; // method call; handled below
+    return `<span class="tok-fn">${name}</span>`;
+  });
 
   // 7) Properties / methods after dot: obj.prop / obj.method(
   s = replaceOutsideTags(s, /\.([A-Za-z_$][\w$]*)/g, (m, prop) => {
@@ -941,13 +1156,22 @@ const highlightCLI = (text) => {
   let s = escapeHTML(text);
 
   // Prompt ($ or >)
-  s = s.replace(/(^|\n)\s*([$>])\s?/g, (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `);
+  s = s.replace(
+    /(^|\n)\s*([$>])\s?/g,
+    (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `,
+  );
 
   // Flags
-  s = s.replace(/(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g, (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`);
+  s = s.replace(
+    /(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g,
+    (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`,
+  );
 
   // Paths
-  s = s.replace(/(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g, (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`);
+  s = s.replace(
+    /(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g,
+    (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`,
+  );
 
   // Env vars
   s = s.replace(/\$[A-Za-z_][A-Za-z0-9_]*/g, (m) => `<span class="tok-builtin">${m}</span>`);
@@ -1079,20 +1303,20 @@ const applyCodeHighlighting = (codeEl, badgeLabel) => {
     detectLangFromClasses(codeEl) ||
     detectLangFromBadge(badgeLabel) ||
     autoDetectLang(codeEl.textContent);
-  
+
   if (!lang) {
     return false;
   }
 
   const raw = codeEl.textContent;
   const html = highlightCode(lang, raw);
-  
+
   if (!html) {
     return false;
   }
 
   codeEl.innerHTML = html;
-  
+
   return true;
 };
 
@@ -3091,6 +3315,164 @@ const initTryIt = () => {
     }
   });
   // ═══════════════════════════════════════════════════════════════
+};
+
+// ═══════════════════════════════════════════════════════════════
+// WIZARD DATA
+// ═══════════════════════════════════════════════════════════════
+const WIZARD_DATA = {
+  'geoserver-styles': {
+    title: 'SLD-felsökning',
+    symptoms: [
+      {
+        key: 'sld-import-error',
+        label: 'SLD importeras inte',
+        startHere: [
+          'Kontrollera namespace och XML-syntax (se SLD Cookbook nedan)',
+          'Verifiera att datatyp matchar (point/line/polygon)',
+          'Testa importera i GeoServer Admin → Styles',
+          'Läs felmeddelande från GeoServer (ofta namespace-fel)',
+        ],
+        links: [
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
+          { label: 'Try it-lab: SLD-check', href: 'try-it.html#sld' },
+        ],
+        escalate: [
+          'XML-validering misslyckas (schema-fel)',
+          'Import fungerar men syns inte i preview',
+        ],
+      },
+      {
+        key: 'sld-not-rendering',
+        label: 'SLD syns inte trots import',
+        startHere: [
+          'Kontrollera att stylen är kopplad till layern',
+          'Verifiera MinScaleDenominator / MaxScaleDenominator (skalstyrning)',
+          'Testa med enklare SLD (ta bort filter och scale-regler)',
+          'Kontrollera datatyp: PointSymbolizer för punkt, LineSymbolizer för linje',
+        ],
+        links: [
+          { label: 'SLD-felsökning', href: '#sld-felsokning' },
+          { label: 'Parameterguide', href: '#parameterguide' },
+        ],
+        escalate: [
+          'SLD syns i förhandsvisning men inte i Origo',
+          'Bara vissa objekt renderas (filter-problem)',
+        ],
+      },
+      {
+        key: 'sld-colors-wrong',
+        label: 'Färger fel eller försvinner',
+        startHere: [
+          'Kontrollera hexkod-format (#RRGGBB)',
+          'Verifiera att fill och stroke är korrekt definierade',
+          'Testa med enkla grundfärger (#ff0000, #00ff00)',
+          'Kontrollera opacity/alpha-värden (0-1)',
+        ],
+        links: [
+          { label: 'SLD Cookbook', href: '#sld-cookbook' },
+          { label: 'Parameterguide', href: '#parameterguide' },
+        ],
+        escalate: [
+          'Färg fungerar lokalt men inte på server',
+          'Färg ändras beroende på zoomnivå (oväntad skalstyrning)',
+        ],
+      },
+      {
+        key: 'sld-labels-missing',
+        label: 'Etiketter syns inte',
+        startHere: [
+          'Kontrollera TextSymbolizer och PropertyName',
+          'Verifiera att attributnamn finns i data',
+          'Testa utan VendorOptions först',
+          'Kontrollera font-family och font-size',
+        ],
+        links: [
+          { label: 'Labels: enkel etikett', href: '#labels' },
+          { label: 'SLD-felsökning', href: '#sld-felsokning' },
+        ],
+        escalate: [
+          'Etiketter syns i preview men inte i WMS-request',
+          'Etiketter överlappar varandra (behöver placement/halo)',
+        ],
+      },
+    ],
+  },
+  geowebcache: {
+    title: 'GeoWebCache-felsökning',
+    symptoms: [
+      {
+        key: 'tiles-misaligned',
+        label: 'Tiles är förskjutna',
+        startHere: [
+          'Verifiera gridset och origin (EPSG:3008 eller EPSG:3006)',
+          'Kontrollera att extent matchar mellan Origo och GeoWebCache',
+          'Jämför resolutions mellan klient och gridset',
+          'Testa bypass cache för att se live-rendering',
+        ],
+        links: [
+          { label: 'CRS & gridsets', href: '#crs-gridset' },
+          { label: 'Grid-feljustering', href: '#grid-misalignment' },
+          { label: 'Try it-lab: Gridcalc', href: 'try-it.html#gridcalc' },
+        ],
+        escalate: [
+          'Offset konsekvent vid alla zoomnivåer',
+          'Fungerar i andra CRS men inte EPSG:3008',
+        ],
+      },
+      {
+        key: 'tiles-stale',
+        label: 'Gamla tiles efter ändring',
+        startHere: [
+          'Truncate cache för berörd layer',
+          'Kontrollera att seeding inte pågår',
+          'Verifiera disk quota (kan blockera nya tiles)',
+          'Testa med cache-busting-parameter (?v=timestamp)',
+        ],
+        links: [
+          { label: 'Seed / Truncate / Bypass', href: '#seed-truncate-bypass' },
+          { label: 'Stale tiles', href: '#stale-tiles' },
+        ],
+        escalate: ['Truncate fungerar inte', 'Disk quota nådd men cache rensas inte automatiskt'],
+      },
+      {
+        key: 'seed-fails',
+        label: 'Seeding misslyckas',
+        startHere: [
+          'Kontrollera GeoServer-loggar för REST-fel',
+          'Börja med litet område och få zoomnivåer',
+          'Verifiera gridset och BBOX-format',
+          'Kontrollera disk space och quota',
+        ],
+        links: [
+          { label: 'Seeding och REST-anrop', href: '#seeding-rest' },
+          { label: 'Seed-strategi', href: '#seed-strategi' },
+        ],
+        escalate: [
+          'Seeding startar men hänger sig',
+          'Felmeddelande om ogiltigt gridset trots korrekt config',
+        ],
+      },
+      {
+        key: 'tiles-zoom-specific',
+        label: 'Syns bara vid vissa zoomnivåer',
+        startHere: [
+          'Jämför resolutions mellan Origo och GeoWebCache gridset',
+          'Kontrollera att alla zoomnivåer är seedade',
+          'Verifiera MinScaleDenominator / MaxScaleDenominator i SLD',
+          'Testa bypass cache för att se om data finns',
+        ],
+        links: [
+          { label: 'Grid-feljustering', href: '#grid-misalignment' },
+          { label: 'Try it-lab: Upplösningar', href: 'try-it.html#resolutions' },
+        ],
+        escalate: [
+          'Data finns men tiles renderas tomma vid vissa zoom',
+          'Fungerar utan cache men inte med cache',
+        ],
+      },
+    ],
+  },
 };
 
 const initWizard = () => {
