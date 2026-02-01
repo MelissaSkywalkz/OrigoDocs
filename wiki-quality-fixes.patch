@@ -1,0 +1,185 @@
+From 153aad2ab218ca52f478362573a616286f45b006 Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <github-copilot@github.com>
+Date: Sun, 1 Feb 2026 01:13:21 +0000
+Subject: [PATCH] Fix markdown formatting and consistency issues
+
+- Fix filename typo: CRS-amd -> CRS-and
+- Remove extra dashes after H1 headings
+- Fix missing H1 heading in Developing-and-maintenance.md
+- Fix missing blank line after H1 in Error-handling
+- Fix OAuth2 masking issue
+- Fix table formatting (remove escaped pipes)
+- Fix masked URL example in Exports-and-integration.md
+---
+ ...0\220Coordinate\342\200\220Assumptions.md" |  1 -
+ "Change\342\200\220management.md"             | 16 +++----
+ ...\342\200\220and\342\200\220maintenance.md" |  2 +-
+ ...2\200\220validation\342\200\220reports.md" |  1 +
+ ...\342\200\220and\342\200\220integration.md" |  2 +-
+ ...220and\342\200\220non\342\200\220goals.md" | 47 +++++++++----------
+ "Tool\342\200\220documentation.md"            |  1 -
+ 7 files changed, 34 insertions(+), 36 deletions(-)
+ rename "CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md" => "CRS\342\200\220and\342\200\220Coordinate\342\200\220Assumptions.md" (99%)
+
+diff --git "a/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md" "b/CRS\342\200\220and\342\200\220Coordinate\342\200\220Assumptions.md"
+similarity index 99%
+rename from "CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md"
+rename to "CRS\342\200\220and\342\200\220Coordinate\342\200\220Assumptions.md"
+index c996eca..eab877e 100644
+--- "a/CRS\342\200\220amd\342\200\220Coordinate\342\200\220Assumptions.md"
++++ "b/CRS\342\200\220and\342\200\220Coordinate\342\200\220Assumptions.md"
+@@ -1,5 +1,4 @@
+ # CRS och Koordinatantaganden
+---
+  
+ Dokumentation om koordinatsystem, axelordning och bounds-validering i Try-it-labben.
+  
+diff --git "a/Change\342\200\220management.md" "b/Change\342\200\220management.md"
+index a336934..b3d562a 100644
+--- "a/Change\342\200\220management.md"
++++ "b/Change\342\200\220management.md"
+@@ -18,14 +18,14 @@ All dokumentation versionshantehas tillsammans med koden:
+  
+ Varje typ av information har en primär källa:
+  
+-\| Information \| Primär källa \| Sekundära referenser \|
+-\|-------------\|--------------\|---------------------\|
+-\| Vad projektet är \| README.md \| Wiki Home \|
+-\| Hur man kör lokalt \| README.md \| - \|
+-\| Verktygs-funktionalitet \| Tool Documentation (Wiki) \| - \|
+-\| Design-principer \| Try-it Labs Overview (Wiki) \| - \|
+-\| API/valideringskoder \| Error Handling (Wiki) \| Code comments \|
+-\| Development guide \| Development & Maintenance (Wiki) \| - \|
++| Information | Primär källa | Sekundära referenser |
++|-------------|--------------|---------------------|
++| Vad projektet är | README.md | Wiki Home |
++| Hur man kör lokalt | README.md | - |
++| Verktygs-funktionalitet | Tool Documentation (Wiki) | - |
++| Design-principer | Try-it Labs Overview (Wiki) | - |
++| API/valideringskoder | Error Handling (Wiki) | Code comments |
++| Development guide | Development & Maintenance (Wiki) | - |
+  
+ **Princip:** Upprepa aldrig samma information på flera ställen. Länka istället.
+  
+diff --git "a/Developing\342\200\220and\342\200\220maintenance.md" "b/Developing\342\200\220and\342\200\220maintenance.md"
+index cd0bb2a..d2c4ab8 100644
+--- "a/Developing\342\200\220and\342\200\220maintenance.md"
++++ "b/Developing\342\200\220and\342\200\220maintenance.md"
+@@ -1,4 +1,4 @@
+-Development och Maintenance
++# Development och Maintenance
+  
+ Riktlinjer för att lägga till nya verktyg, underhålla befintliga, och säkerställa konsistens i Try-it-labben.
+  
+diff --git "a/Error\342\200\220handling\342\200\220and\342\200\220validation\342\200\220reports.md" "b/Error\342\200\220handling\342\200\220and\342\200\220validation\342\200\220reports.md"
+index 9c86029..7fbb75a 100644
+--- "a/Error\342\200\220handling\342\200\220and\342\200\220validation\342\200\220reports.md"
++++ "b/Error\342\200\220handling\342\200\220and\342\200\220validation\342\200\220reports.md"
+@@ -1,4 +1,5 @@
+ # Error Handling och Valideringsrapporter
++
+ Dokumentation om valideringslogik, felrapporter och strukturen av ValidationReport.
+ ## ValidationReport-struktur
+ Alla verktyg i Try-it-labben genererar en strukturerad valideringsrapport med tre kategorier av meddelanden:
+diff --git "a/Exports\342\200\220and\342\200\220integration.md" "b/Exports\342\200\220and\342\200\220integration.md"
+index e2ce5e8..8326179 100644
+--- "a/Exports\342\200\220and\342\200\220integration.md"
++++ "b/Exports\342\200\220and\342\200\220integration.md"
+@@ -352,7 +352,7 @@ Export anyway? [Y/n]
+ **Exempel på vad som INTE ska exporteras:**
+ ```bash
+ # DÅLIGT: Credential i URL
+-curl -X GET "******example.com/geoserver/wms?..."
++curl -X GET "https://admin:password@example.com/geoserver/wms?..."
+  
+ # BRA: Använd separata credentials
+ curl -u admin:password -X GET "https://example.com/geoserver/wms?..."
+diff --git "a/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md" "b/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
+index ed3857f..d6eaab0 100644
+--- "a/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
++++ "b/Known\342\200\220limitations\342\200\220and\342\200\220non\342\200\220goals.md"
+@@ -1,5 +1,4 @@
+ # Kända Begränsningar och Non-Goals
+---
+  
+ Dokumentation om vad Try-it-labben medvetet inte gör och varför vissa features är utanför scope.
+  
+@@ -67,7 +66,7 @@ Try-it-labben är designad för **rapid validation och testing** av GIS-konfigur
+  
+ **Begränsning:**
+ - Ingen support för HTTP Basic Auth
+-- Ingen support för OAuth/******
++- Ingen support för OAuth2
+ - Ingen support för API keys
+ - Ingen session management
+  
+@@ -294,34 +293,34 @@ Följande features kan eventuellt implementeras framöver:
+  
+ ### Try-it-labben vs QGIS Desktop
+  
+-\| Feature \| Try-it-labben \| QGIS Desktop \|
+-\|---------\|---------------\|--------------\|
+-\| Installation \| Ingen (web-based) \| Krävs \|
+-\| CRS Transformation \| Nej \| Ja \|
+-\| Spatial Analysis \| Nej \| Ja \|
+-\| WMS/WFS Testing \| Begränsad \| Full \|
+-\| Autentisering \| Nej \| Ja \|
+-\| Best för \| Quick validation \| Production work \|
++| Feature | Try-it-labben | QGIS Desktop |
++|---------|---------------|--------------|
++| Installation | Ingen (web-based) | Krävs |
++| CRS Transformation | Nej | Ja |
++| Spatial Analysis | Nej | Ja |
++| WMS/WFS Testing | Begränsad | Full |
++| Autentisering | Nej | Ja |
++| Best för | Quick validation | Production work |
+  
+ ### Try-it-labben vs GeoServer Web UI
+  
+-\| Feature \| Try-it-labben \| GeoServer UI \|
+-\|---------\|---------------\|--------------\|
+-\| SLD Preview \| Basic \| Full rendering \|
+-\| Server Config \| Nej \| Ja \|
+-\| Layer Management \| Nej \| Ja \|
+-\| CORS Testing \| Ja \| Nej \|
+-\| Best för \| Pre-deployment test \| Server administration \|
++| Feature | Try-it-labben | GeoServer UI |
++|---------|---------------|--------------|
++| SLD Preview | Basic | Full rendering |
++| Server Config | Nej | Ja |
++| Layer Management | Nej | Ja |
++| CORS Testing | Ja | Nej |
++| Best för | Pre-deployment test | Server administration |
+  
+ ### Try-it-labben vs Postman/curl
+  
+-\| Feature \| Try-it-labben \| Postman \|
+-\|---------\|---------------\|---------\|
+-\| URL Building \| Guided \| Manual \|
+-\| Autentisering \| Nej \| Ja \|
+-\| Request Collections \| Nej \| Ja \|
+-\| Visual Preview \| Ja (Map Sandbox) \| Nej \|
+-\| Best för \| WMS/WMTS preview \| API testing \|
++| Feature | Try-it-labben | Postman |
++|---------|---------------|---------|
++| URL Building | Guided | Manual |
++| Autentisering | Nej | Ja |
++| Request Collections | Nej | Ja |
++| Visual Preview | Ja (Map Sandbox) | Nej |
++| Best för | WMS/WMTS preview | API testing |
+  
+ ## Sammanfattning
+  
+diff --git "a/Tool\342\200\220documentation.md" "b/Tool\342\200\220documentation.md"
+index cd33ab6..0245cea 100644
+--- "a/Tool\342\200\220documentation.md"
++++ "b/Tool\342\200\220documentation.md"
+@@ -1,5 +1,4 @@
+ # Verktygsdokumentation
+---
+ 
+ Detaljerad dokumentation för varje verktyg i Try-it-labben.
+ 
+-- 
+2.52.0
+
