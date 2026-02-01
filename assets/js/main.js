@@ -146,6 +146,7 @@ const initNavigation = () => {
     document.body.appendChild(backdrop);
   }
 
+  // Expand / collapse the navigation and synchronize toggle buttons + backdrop
   const setExpanded = (expanded) => {
     toggleButtons.forEach((button) => {
       button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -227,138 +228,6 @@ const initNavigation = () => {
   markActiveLink();
   handleMediaChange();
   mediaQuery.addEventListener('change', handleMediaChange);
-};
-
-const WIZARD_DATA = {
-  geowebcache: {
-    title: 'Felsökningswizard',
-    symptoms: [
-      {
-        key: 'stale-tiles',
-        label: 'Jag ser gamla tiles',
-        startHere: [
-          'Kör truncate för lagret i GeoWebCache.',
-          'Testa lagret i GeoServer Layer Preview.',
-          'Ladda om kartan med hård refresh.',
-        ],
-        links: [
-          { label: 'Seed / Truncate / Bypass – skillnaden', href: '#seed-truncate-bypass' },
-          { label: 'Praktisk checklista', href: '#checklista' },
-          { label: 'Stale tiles', href: '#stale-tiles' },
-        ],
-        escalate: [
-          'Felet kvarstår efter truncate och ny seed.',
-          'Loggar visar återkommande renderingsfel.',
-        ],
-      },
-      {
-        key: 'offset-tiles',
-        label: 'Tiles hamnar fel / offset',
-        startHere: [
-          'Kontrollera gridset och CRS (EPSG:3008).',
-          'Verifiera origin och matrixset i gridset.',
-          'Testa samma lager i WMS 1.1.1.',
-        ],
-        links: [
-          { label: 'CRS & gridsets', href: '#crs-gridset' },
-          { label: 'Grid misalignment', href: '#grid-misalignment' },
-          { label: 'Gridset, origin och matrixset', href: '#gridset-origin' },
-          { label: 'Begrepp (enkelt)', href: '#begrepp' },
-        ],
-        escalate: ['Offset kvarstår efter gridset/CRS-kontroll.'],
-      },
-      {
-        key: 'holes-tiles',
-        label: 'Tomma tiles eller “hål”',
-        startHere: [
-          'Kontrollera attributnamn i Label.',
-          'Justera fontstorlek och placement.',
-          'Testa en enkel label utan halo.',
-        ],
-        links: [
-          { label: 'Labels – enkel etikett', href: '#labels' },
-          { label: 'Skala och synlighet', href: '#sld-scale' },
-          { label: 'Parameterguide', href: '#parameterguide' },
-        ],
-        escalate: ['Labels syns inte trots förenklad label.'],
-      },
-      {
-        key: 'rules-fail',
-        label: 'Filter-regler fungerar inte',
-        startHere: [
-          'Kontrollera filter-syntax och attributnamn.',
-          'Testa en regel i taget.',
-          'Verifiera datatyper i attributen.',
-        ],
-        links: [
-          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
-          { label: 'Parameterguide', href: '#parameterguide' },
-          { label: 'SLD Cookbook', href: '#sld-cookbook' },
-        ],
-        escalate: ['Filter ger fel även med enkel regel.'],
-      },
-      {
-        key: 'style-cache',
-        label: 'Jag ser gamla stilar',
-        startHere: [
-          'Rensa cache för lagret i GeoWebCache.',
-          'Gör hård refresh i webbläsaren.',
-          'Bekräfta att rätt style är aktiv.',
-        ],
-        links: [
-          { label: 'Cache och uppdatering', href: '#sld-cache' },
-          { label: 'Översikt', href: '#oversikt' },
-          { label: 'Hur detta påverkar kartklienten', href: '#origo-impact' },
-        ],
-        escalate: ['Stilen uppdateras inte efter cache‑rensing.'],
-      },
-    ],
-  },
-  'geoserver-styles': {
-    title: 'Felsökningswizard',
-    symptoms: [
-      {
-        key: 'labels-not-showing',
-        label: 'Etiketter syns inte',
-        startHere: [
-          'Kontrollera att attributnamnet i SLD matchar data.',
-          'Testa enklare label med bara <PropertyName>.',
-          'Minska fontstorlek eller halo för att se om det blir synligt.',
-        ],
-        links: [
-          { label: 'Labels', href: '#labels' },
-          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
-        ],
-        escalate: ['Etiketter förblir osynliga efter förenklad test.'],
-      },
-      {
-        key: 'rules-fail-style',
-        label: 'Filter eller regler fungerar inte',
-        startHere: [
-          'Kontrollera filter‑syntax och attributnamn.',
-          'Testa en regel i taget och kontrollera typ av fält.',
-        ],
-        links: [
-          { label: 'SLD‑felsökning', href: '#sld-felsokning' },
-          { label: 'SLD Cookbook', href: '#sld-cookbook' },
-        ],
-        escalate: ['Regler ger fel trots förenklad test.'],
-      },
-      {
-        key: 'style-cache',
-        label: 'Jag ser gamla stilar',
-        startHere: [
-          'Rensa GeoServer/GeoWebCache‑cache för laget.',
-          'Gör en hård refresh i webbläsaren (Ctrl+F5).',
-        ],
-        links: [
-          { label: 'Cache och uppdatering', href: '#sld-cache' },
-          { label: 'Översikt', href: '#overview' },
-        ],
-        escalate: ['Stilen uppdateras inte efter cache‑rensing.'],
-      },
-    ],
-  },
 };
 
 const initAccordions = () => {
@@ -669,6 +538,17 @@ const detectLanguageBadge = (codeBlock, pre) => {
   return 'Kod';
 };
 
+const replaceOutsideTags = (html, regex, replacer) => {
+  // Split into [text, <tag>, text, <tag>...], only replace in text parts
+  return html
+    .split(/(<[^>]+>)/g)
+    .map((part, i) => {
+      if (i % 2 === 1) return part; // tag
+      return part.replace(regex, replacer);
+    })
+    .join('');
+};
+
 const escapeHTML = (str) =>
   str
     .replace(/&/g, '&amp;')
@@ -712,16 +592,138 @@ const autoDetectLang = (text) => {
 };
 
 const highlightJSON = (text) => {
-  let s = escapeHTML(text);
-  s = s.replace(/"(\\.|[^"\\])*"/g, (m) => `<span class="tok-string">${m}</span>`);
+  // Preserve strings before escaping the rest of the text
+  const stringLiterals = [];
+  let s = text.replace(/"(\\.|[^"\\])*"/g, (m) => {
+    const escaped = escapeHTML(m).replace(/&quot;/g, '"');
+    stringLiterals.push(escaped);
+    return `__JSON_STR_${stringLiterals.length - 1}__`;
+  });
+
+  s = escapeHTML(s);
+  s = s.replace(/__JSON_STR_(\d+)__/g, (full, idx) => {
+    const content = stringLiterals[Number(idx)] || '';
+    return `<span class="tok-string">${content}</span>`;
+  });
+
+  // 1) Keys: a string immediately followed by :
+  // We keep ":" as punctuation, and key in tok-key
+  const keyCount = (s.match(/<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g) || []).length;
   s = s.replace(
     /<span class="tok-string">("(?:\\.|[^"\\])*")<\/span>\s*:/g,
     (m, g1) => `<span class="tok-key">${g1}</span><span class="tok-punct">:</span>`,
   );
-  s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
+  
+  // 2) Numbers
+  s = s.replace(
+    /(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi,
+    `<span class="tok-number">$1</span>`,
+  );
+
+  // 3) Booleans + null
   s = s.replace(/\btrue\b|\bfalse\b/g, (m) => `<span class="tok-boolean">${m}</span>`);
   s = s.replace(/\bnull\b/g, `<span class="tok-null">null</span>`);
+
+  // 4) Punctuation (braces, brackets, commas)
   s = s.replace(/[{}\[\],]/g, (m) => `<span class="tok-punct">${m}</span>`);
+
+  // ---- Extra polish: operate ONLY inside string spans to avoid breaking markup ----
+
+  // Helper: rewrite content inside tok-string spans without touching tags outside
+  const mapStringSpans = (html, transformFn) => {
+    let matchCount = 0;
+    const result = html.replace(
+      /<span class="tok-string">(")([\s\S]*?)(")<\/span>/g,
+      (full, q1, inner, q2) => {
+        matchCount++;
+        // inner is already escaped HTML (no raw quotes)
+        const nextInner = transformFn(inner);
+        return `<span class="tok-string">${q1}${nextInner}${q2}</span>`;
+      },
+    );
+    return result;
+  };
+
+  // 6) Highlight type values (WMS, WFS, WMTS, etc) inside strings
+  let typeValueCount = 0;
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /\b(WMS|WFS|WMTS|XYZ|VECTOR|GROUP|IMAGE|TILE|AGS_TILE|AGS_FEATURE|GEOJSON|TOPOJSON|GPX|KML|OSM|TMS)\b/g,
+      (m) => {
+        typeValueCount++;
+        return `<span class="tok-type-value">${m}</span>`;
+      },
+    );
+  });
+
+  // 7) Highlight EPSG codes inside strings
+  let crsCount = 0;
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /\b(EPSG:\d{4,5})\b/g,
+      (m) => {
+        crsCount++;
+        return `<span class="tok-crs">${m}</span>`;
+      },
+    );
+  });
+
+  // 8) Highlight URLs inside strings
+  let urlCount = 0;
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /(https?:\/\/[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+)/g,
+      (m) => {
+        urlCount++;
+        return `<span class="tok-url">${m}</span>`;
+      },
+    );
+  });
+
+  // 9) Highlight version strings inside strings (1.1.1, 1.3.0, etc)
+  let verCount = 0;
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /\b(\d+\.\d+\.\d+)\b/g,
+      (m) => {
+        verCount++;
+        return `<span class="tok-ver">${m}</span>`;
+      },
+    );
+  });
+
+  // 10) Highlight JSON-ish paths/pointers inside strings: /a/b, $.foo.bar, {x}/{y}/{z}
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /(\$\.?[A-Za-z0-9_$.\[\]-]+|\/[A-Za-z0-9._~\-\/]+|\{[A-Za-z0-9_]+\}(?:\/\{[A-Za-z0-9_]+\})+)/g,
+      (m) => `<span class="tok-pathish">${m}</span>`,
+    );
+  });
+
+  // 11) Highlight ISO dates inside strings (YYYY-MM-DD or full timestamp)
+  s = mapStringSpans(s, (inner) => {
+    return inner.replace(
+      /\b(\d{4}-\d{2}-\d{2}(?:[T ][0-2]\d:[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|[+\-][0-2]\d:[0-5]\d)?)?)\b/g,
+      (m) => `<span class="tok-date">${m}</span>`,
+    );
+  });
+
+  // 12) Highlight well-known Origo/GeoServer config keys
+  // This only affects keys (tok-key), not values.
+  const knownKeys =
+    /\b(")(type|source|sources|layers|layer|url|version|format|params|request|service|projection|projectionCode|crs|srs|extent|bbox|center|resolutions|zoom|minZoom|maxZoom|styles|style|legend|attribution|opacity|visible|controls|plugins|ui|map|strategy)\b(")/g;
+
+  let knownKeyCount = 0;
+  s = s.replace(/<span class="tok-key">([\s\S]*?)<\/span>/g, (full, keyText) => {
+    // keyText includes quotes, already escaped; try to upgrade if matches known list
+    const upgraded = keyText.replace(knownKeys, (m) => {
+      knownKeyCount++;
+      return `<span class="tok-key-known">${m}</span>`;
+    });
+    return `<span class="tok-key">${upgraded}</span>`;
+  });
+  
+
   return s;
 };
 
@@ -756,37 +758,181 @@ const highlightCSS = (text) => {
 
 const highlightJS = (text) => {
   let s = escapeHTML(text);
+
+  // 1) Comments first
   s = s.replace(/\/\/[^\n]*/g, (m) => `<span class="tok-comment">${m}</span>`);
   s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => `<span class="tok-comment">${m}</span>`);
+
+  // 2) Strings / templates
   s = s.replace(
     /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|`([\s\S]*?)`/g,
     (m) => `<span class="tok-string">${m}</span>`,
   );
-  s = s.replace(
-    /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|import|export|from|try|catch|finally|throw|await|async)\b/g,
-    `<span class="tok-keyword">$1</span>`,
+
+  // 3) Keywords (expanded list)
+  const kw =
+    /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|extends|super|import|export|from|try|catch|finally|throw|await|async|typeof|instanceof|in|of|this|yield|default)\b/g;
+
+  s = replaceOutsideTags(s, kw, `<span class="tok-keyword">$1</span>`);
+
+  // 4) Literals
+  s = replaceOutsideTags(s, /\b(true|false)\b/g, `<span class="tok-boolean">$1</span>`);
+  s = replaceOutsideTags(s, /\b(null|undefined)\b/g, `<span class="tok-null">$1</span>`);
+
+  // 5) Builtins / globals (professional, common ones)
+  const builtins =
+    /\b(Array|Object|String|Number|Boolean|Date|RegExp|Math|JSON|Promise|Map|Set|WeakMap|WeakSet|URL|URLSearchParams|Error|TypeError|ReferenceError|fetch|console|document|window|navigator|localStorage|sessionStorage)\b/g;
+
+  s = replaceOutsideTags(s, builtins, `<span class="tok-builtin">$1</span>`);
+
+  // 6) Function calls: foo( ... )
+  // Avoid highlighting after a dot (method calls) by checking previous char in replacer
+  s = replaceOutsideTags(
+    s,
+    /\b([A-Za-z_$][\w$]*)\s*(?=\()/g,
+    (m, name, offset, full) => {
+      const prev = full[offset - 1];
+      if (prev === '.') return m; // method call; handled below
+      return `<span class="tok-fn">${name}</span>`;
+    },
   );
-  s = s.replace(/(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi, `<span class="tok-number">$1</span>`);
-  s = s.replace(/[{}()[\],.;:+\-*/=<>!&|?]/g, (m) => `<span class="tok-operator">${m}</span>`);
+
+  // 7) Properties / methods after dot: obj.prop / obj.method(
+  s = replaceOutsideTags(s, /\.([A-Za-z_$][\w$]*)/g, (m, prop) => {
+    return `.<span class="tok-property">${prop}</span>`;
+  });
+
+  // 8) Numbers
+  s = replaceOutsideTags(
+    s,
+    /(-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b)/gi,
+    `<span class="tok-number">$1</span>`,
+  );
+
+  // 9) Operators + punctuation
+  s = replaceOutsideTags(s, /[{}()\[\],.;:+\-*\/=<>!&|?]/g, (m) => {
+    // Separate operator-ish chars from punctuation if you want
+    return `<span class="tok-operator">${m}</span>`;
+  });
+
   return s;
 };
 
 const highlightCLI = (text) => {
   let s = escapeHTML(text);
-  s = s.replace(
-    /(^|\n)\s*([$>])\s?/g,
-    (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `,
-  );
-  s = s.replace(
-    /(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g,
-    (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`,
-  );
-  s = s.replace(
-    /(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g,
-    (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`,
-  );
+
+  // Prompt ($ or >)
+  s = s.replace(/(^|\n)\s*([$>])\s?/g, (m, p1, p2) => `${p1}<span class="tok-prompt">${p2}</span> `);
+
+  // Flags
+  s = s.replace(/(\s|^)(--[a-zA-Z0-9_-]+|-[a-zA-Z]+)/g, (m, p1, flag) => `${p1}<span class="tok-flag">${flag}</span>`);
+
+  // Paths
+  s = s.replace(/(\s|^)(\.{0,2}\/[A-Za-z0-9._/-]+)/g, (m, p1, path) => `${p1}<span class="tok-path">${path}</span>`);
+
+  // Env vars
+  s = s.replace(/\$[A-Za-z_][A-Za-z0-9_]*/g, (m) => `<span class="tok-builtin">${m}</span>`);
+
+  // Operators: pipes, redirects, &&, ||
+  s = s.replace(/(\|\||&&|[|<>])/g, (m) => `<span class="tok-operator">${m}</span>`);
+
   return s;
 };
+
+const initDocCodeBlocks = () => {
+  const root = document.querySelector('.doc-content');
+  if (!root) {
+    return;
+  }
+
+  const pres = Array.from(root.querySelectorAll('pre'));
+  let wrappedCount = 0;
+  let highlightedCount = 0;
+
+  pres.forEach((pre) => {
+    // Skip try-it tool outputs and special cases
+    if (
+      pre.classList.contains('tryit-output') ||
+      pre.closest('.tryit') ||
+      pre.closest('.tryit-panel') ||
+      pre.closest('details.tryit-details')
+    ) {
+      return;
+    }
+
+    const code = pre.querySelector('code');
+    if (!code) return;
+
+    // Already wrapped?
+    if (pre.closest('.code-block')) return;
+
+    // Create wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'code-header';
+
+    const langEl = document.createElement('span');
+    langEl.className = 'code-lang';
+
+    // Reuse your language detection logic
+    const badgeLabel = detectLanguageBadge(code, pre) || 'Kod';
+    langEl.textContent = badgeLabel;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.type = 'button';
+    copyBtn.textContent = 'Kopiera';
+
+    // Copy handler (uses raw code text, not highlighted HTML)
+    copyBtn.addEventListener('click', async () => {
+      try {
+        const text = code.textContent || '';
+        await navigator.clipboard.writeText(text);
+        copyBtn.classList.add('copied');
+        copyBtn.textContent = 'Kopierat';
+        window.setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.textContent = 'Kopiera';
+        }, 1200);
+      } catch (err) {
+        // Fallback: select text
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        copyBtn.classList.add('copied');
+        copyBtn.textContent = 'Markera och kopiera';
+        window.setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.textContent = 'Kopiera';
+          sel.removeAllRanges();
+        }, 1500);
+      }
+    });
+
+    header.appendChild(langEl);
+    header.appendChild(copyBtn);
+
+    // Insert wrapper around pre
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(header);
+    wrapper.appendChild(pre);
+    wrappedCount++;
+
+    // Apply highlighting (your existing logic)
+    const highlighted = applyCodeHighlighting(code, badgeLabel);
+    if (highlighted) highlightedCount++;
+  });
+};
+
+// Run after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  initDocCodeBlocks();
+});
 
 const highlightCode = (lang, text) => {
   switch (lang) {
@@ -810,13 +956,21 @@ const applyCodeHighlighting = (codeEl, badgeLabel) => {
     detectLangFromClasses(codeEl) ||
     detectLangFromBadge(badgeLabel) ||
     autoDetectLang(codeEl.textContent);
-  if (!lang) return;
+  
+  if (!lang) {
+    return false;
+  }
 
   const raw = codeEl.textContent;
   const html = highlightCode(lang, raw);
-  if (!html) return;
+  
+  if (!html) {
+    return false;
+  }
 
   codeEl.innerHTML = html;
+  
+  return true;
 };
 
 const initCodeCopy = () => {

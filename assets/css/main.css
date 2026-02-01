@@ -17,6 +17,18 @@
   --radius: 14px;
   --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   --sidebar-width: 16rem;
+
+  /* Code syntax highlighting palette (VS Code-like) */
+  --code-bg: #0d1117;
+  --code-panel: #151b23;
+  --c-cyan: #4fc1ff;
+  --c-blue-light: #9cdcfe;
+  --c-purple: #c586c0;
+  --c-green: #b5cea8;
+  --c-yellow: #dcdcaa;
+  --c-orange: #ce9178;
+  --c-blue: #569cd6;
+  --c-red: #f44747;
 }
 
 * {
@@ -978,10 +990,10 @@ a {
   scroll-margin-top: 96px;
 }
 
-.doc-content pre {
+.doc-content pre:not(.tryit-output):not(.tryit-mono) {
   background: #0f172a;
   color: #e2e8f0;
-  padding: 2.4rem 1.2rem 1rem;
+  padding: 1.2rem;
   border-radius: 12px;
   overflow-x: auto;
 }
@@ -1892,8 +1904,131 @@ a {
   white-space: pre;
 }
 
-.code-badge {
-  display: none;
+/* Token color overrides - must come after base code color */
+/* JSON token colors - editor-style palette */
+.doc-content .code-block code .tok-key,
+.code-block code .tok-key {
+  color: var(--c-blue-light) !important;
+  font-weight: 500;
+}
+
+/* Known keys must override regular keys - nested inside tok-key */
+.doc-content .code-block code .tok-key .tok-key-known,
+.code-block code .tok-key .tok-key-known,
+.doc-content .code-block code .tok-key-known,
+.code-block code .tok-key-known {
+  color: var(--c-cyan) !important;
+  font-weight: 600;
+}
+
+.doc-content .code-block code .tok-string,
+.code-block code .tok-string {
+  color: var(--c-orange) !important;
+}
+
+/* Nested tokens inside strings - must have higher specificity */
+.doc-content .code-block code .tok-string .tok-type-value,
+.code-block code .tok-string .tok-type-value,
+.doc-content .code-block code .tok-type-value,
+.code-block code .tok-type-value {
+  color: var(--c-purple) !important;
+  font-weight: 600;
+}
+
+.doc-content .code-block code .tok-string .tok-crs,
+.code-block code .tok-string .tok-crs,
+.doc-content .code-block code .tok-crs,
+.code-block code .tok-crs {
+  color: var(--c-cyan) !important;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.doc-content .code-block code .tok-string .tok-url,
+.code-block code .tok-string .tok-url,
+.doc-content .code-block code .tok-url,
+.code-block code .tok-url {
+  color: var(--c-cyan) !important;
+  text-decoration: underline;
+}
+
+.doc-content .code-block code .tok-string .tok-ver,
+.code-block code .tok-string .tok-ver,
+.doc-content .code-block code .tok-ver,
+.code-block code .tok-ver {
+  color: var(--c-yellow) !important;
+  font-weight: 500;
+}
+
+.doc-content .code-block code .tok-number,
+.code-block code .tok-number {
+  color: var(--c-green) !important;
+  font-weight: 500;
+}
+.doc-content .code-block code .tok-boolean,
+.code-block code .tok-boolean {
+  color: var(--c-blue) !important;
+  font-weight: 600;
+}
+.doc-content .code-block code .tok-null,
+.code-block code .tok-null {
+  color: var(--c-red) !important;
+  font-weight: 600;
+}
+.doc-content .code-block code .tok-punct,
+.code-block code .tok-punct {
+  color: rgba(235, 245, 255, 0.70) !important;
+}
+.doc-content .code-block code .tok-comment,
+.code-block code .tok-comment {
+  color: var(--c-muted) !important;
+  font-style: italic;
+}
+
+/* Other language tokens */
+.doc-content .code-block code .tok-keyword,
+.code-block code .tok-keyword {
+  color: #c586c0 !important;
+}
+.doc-content .code-block code .tok-operator,
+.code-block code .tok-operator {
+  color: #d4d4d4 !important;
+}
+.doc-content .code-block code .tok-tag,
+.code-block code .tok-tag {
+  color: #4ec9b0 !important;
+}
+.doc-content .code-block code .tok-attr,
+.code-block code .tok-attr {
+  color: #9cdcfe !important;
+}
+.doc-content .code-block code .tok-value,
+.code-block code .tok-value {
+  color: #ce9178 !important;
+}
+.doc-content .code-block code .tok-fn,
+.code-block code .tok-fn {
+  color: #dcdcaa !important;
+}
+.doc-content .code-block code .tok-property,
+.code-block code .tok-property {
+  color: #7fd7ff !important;
+}
+.doc-content .code-block code .tok-builtin,
+.code-block code .tok-builtin {
+  color: #4fc1ff !important;
+}
+.doc-content .code-block code .tok-prompt,
+.code-block code .tok-prompt {
+  color: #4fc1ff !important;
+}
+.doc-content .code-block code .tok-flag,
+.code-block code .tok-flag {
+  color: #dcdcaa !important;
+}
+.doc-content .code-block code .tok-path,
+.code-block code .tok-path {
+  color: #b5cea8 !important;
 }
 
 .code-header {
@@ -1961,6 +2096,28 @@ a {
   display: none !important;
 }
 
+/* Token highlighting - broader selectors for reliability */
+.tok-key {
+  color: #9cdcfe !important;
+}
+.tok-string {
+  color: #ce9178 !important;
+}
+.tok-number {
+  color: #b5cea8 !important;
+}
+.tok-boolean {
+  color: #569cd6 !important;
+}
+.tok-null {
+  color: #c586c0 !important;
+}
+.tok-punct {
+  color: #d4d4d4 !important;
+  opacity: 0.9;
+}
+
+/* Legacy selectors for backwards compatibility */
 .code-block pre code .tok-key {
   color: #9cdcfe;
 }
@@ -1981,6 +2138,68 @@ a {
   opacity: 0.9;
 }
 
+/* XML/HTML tokens */
+.tok-tag {
+  color: #4ec9b0 !important;
+}
+.tok-attr {
+  color: #9cdcfe !important;
+}
+.tok-value {
+  color: #ce9178 !important;
+}
+.tok-comment {
+  color: #6a9955 !important;
+}
+
+/* JavaScript tokens */
+.tok-keyword {
+  color: #c586c0 !important;
+}
+.tok-operator {
+  color: #d4d4d4 !important;
+  opacity: 0.9;
+}
+.tok-fn {
+  color: #dcdcaa !important;
+}
+.tok-property {
+  color: #7fd7ff !important;
+  opacity: 0.95;
+}
+.tok-builtin {
+  color: #4fc1ff !important;
+}
+
+/* CLI tokens */
+.tok-prompt {
+  color: #4fc1ff !important;
+}
+.tok-flag {
+  color: #dcdcaa !important;
+}
+.tok-path {
+  color: #b5cea8 !important;
+}
+
+/* JSON extras */
+.tok-url {
+  color: #4fc1ff !important;
+}
+.tok-date {
+  color: #dcdcaa !important;
+}
+.tok-pathish {
+  color: #b5cea8 !important;
+}
+.tok-key-known {
+  color: #c586c0 !important;
+}
+.tok-crs {
+  color: #b5cea8 !important;
+}
+
+/* Legacy selectors */
 .code-block pre code .tok-tag {
   color: #4ec9b0;
 }
@@ -1993,7 +2212,6 @@ a {
 .code-block pre code .tok-comment {
   color: #6a9955;
 }
-
 .code-block pre code .tok-keyword {
   color: #c586c0;
 }
@@ -2001,7 +2219,6 @@ a {
   color: #d4d4d4;
   opacity: 0.9;
 }
-
 .code-block pre code .tok-prompt {
   color: #4fc1ff;
 }
@@ -2009,6 +2226,31 @@ a {
   color: #dcdcaa;
 }
 .code-block pre code .tok-path {
+  color: #b5cea8;
+}
+.code-block pre code .tok-fn {
+  color: #dcdcaa;
+}
+.code-block pre code .tok-property {
+  color: #7fd7ff;
+  opacity: 0.95;
+}
+.code-block pre code .tok-builtin {
+  color: #4fc1ff;
+}
+.code-block pre code .tok-url {
+  color: #4fc1ff;
+}
+.code-block pre code .tok-date {
+  color: #dcdcaa;
+}
+.code-block pre code .tok-pathish {
+  color: #b5cea8;
+}
+.code-block pre code .tok-key-known {
+  color: #c586c0;
+}
+.code-block pre code .tok-crs {
   color: #b5cea8;
 }
 
@@ -2477,3 +2719,124 @@ html {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+/* =========================
+   Code blocks polish (editor-like)
+   Place at the VERY END of the stylesheet
+   ========================= */
+
+:root {
+  /* Keep site in light scheme, but define code-theme vars */
+  --code-bg-1: #0b1220;
+  --code-bg-2: #0a1020;
+  --code-border: rgba(255, 255, 255, 0.10);
+  --code-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --code-fg: rgba(235, 245, 255, 0.92);
+  --code-fg-dim: rgba(235, 245, 255, 0.70);
+  --code-selection: rgba(88, 128, 255, 0.35);
+
+  /* Token palette (close to VS Code dark / similar to your reference image) */
+  --tok-key: #9cdcfe;
+  --tok-string: #ce9178;
+  --tok-number: #b5cea8;
+  --tok-boolean: #569cd6;
+  --tok-null: #c586c0;
+  --tok-punct: rgba(212, 212, 212, 0.90);
+
+  --tok-tag: #4ec9b0;
+  --tok-attr: #9cdcfe;
+  --tok-value: #ce9178;
+  --tok-comment: #6a9955;
+
+  --tok-keyword: #c586c0;
+  --tok-operator: rgba(212, 212, 212, 0.90);
+
+  --tok-prompt: #4fc1ff;
+  --tok-flag: #dcdcaa;
+  --tok-path: #b5cea8;
+}
+
+/* Ensure code-block container has proper "panel" feel */
+.doc-content .code-block {
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(105, 120, 255, 0.18), transparent 55%),
+    radial-gradient(900px 600px at 85% 20%, rgba(90, 220, 180, 0.10), transparent 60%),
+    linear-gradient(180deg, var(--code-bg-1), var(--code-bg-2));
+  border: 1px solid var(--code-border);
+  box-shadow: var(--code-shadow);
+}
+
+/* Make pre behave predictably inside code-block */
+.doc-content .code-block pre {
+  background: transparent !important;
+  padding: 1.1rem 1.2rem 1.2rem !important;
+  margin: 0 !important;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+/* Better typography */
+.doc-content .code-block code {
+  color: var(--code-fg) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace !important;
+  font-size: 0.93rem;
+  white-space: pre;
+}
+
+/* Selection + focus states */
+.doc-content .code-block ::selection {
+  background: var(--code-selection);
+}
+
+.doc-content .code-block:focus-within {
+  border-color: rgba(125, 160, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(125, 160, 255, 0.18), var(--code-shadow);
+}
+
+/* Header polish */
+.code-header {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.code-lang {
+  color: var(--code-fg-dim);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.copy-btn {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--code-fg-dim) !important;
+}
+
+.copy-btn:hover {
+  border-color: rgba(125, 160, 255, 0.30) !important;
+  color: var(--code-fg) !important;
+}
+
+/* Token colors – use vars (keeps it consistent across languages) */
+.code-block pre code .tok-key { color: var(--tok-key) !important; }
+.code-block pre code .tok-string { color: var(--tok-string) !important; }
+.code-block pre code .tok-number { color: var(--tok-number) !important; }
+.code-block pre code .tok-boolean { color: var(--tok-boolean) !important; }
+.code-block pre code .tok-null { color: var(--tok-null) !important; }
+.code-block pre code .tok-punct { color: var(--tok-punct) !important; }
+
+.code-block pre code .tok-tag { color: var(--tok-tag) !important; }
+.code-block pre code .tok-attr { color: var(--tok-attr) !important; }
+.code-block pre code .tok-value { color: var(--tok-value) !important; }
+.code-block pre code .tok-comment { color: var(--tok-comment) !important; font-style: italic; }
+
+.code-block pre code .tok-keyword { color: var(--tok-keyword) !important; }
+.code-block pre code .tok-operator { color: var(--tok-operator) !important; opacity: 0.95; }
+
+.code-block pre code .tok-prompt { color: var(--tok-prompt) !important; }
+.code-block pre code .tok-flag { color: var(--tok-flag) !important; }
+.code-block pre code .tok-path { color: var(--tok-path) !important; }

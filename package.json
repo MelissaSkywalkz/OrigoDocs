@@ -2,7 +2,8 @@
   "name": "origo-docs-portal",
   "private": true,
   "scripts": {
-    "format": "prettier --write \"**/*.{html,css,js,json,md}\""
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
+    "dev": "python3 -m http.server 8000"
   },
   "devDependencies": {
     "prettier": "^3.2.5"
