@@ -23,6 +23,12 @@
         </div>
       </header>
 
+      <!-- Framträdande blocker-banner för WAITING_APPROVAL/BLOCKED. -->
+      <section class="status-banner" id="blockerBanner" hidden aria-live="assertive">
+        <h2 id="blockerTitle">Action needed</h2>
+        <p id="blockerDetail">Approval is required before execution can continue.</p>
+      </section>
+
       <!-- Presence Orb är nu visuellt centrum; ringar och signaler roterar runt den. -->
       <section class="orb-zone" aria-label="Presence Core">
         <div class="ring ring-energy" aria-hidden="true"></div>
@@ -111,6 +117,19 @@
               <dd id="budgetIo">37%</dd>
             </div>
           </dl>
+        </article>
+
+        <!-- Visar senaste state change + reason utan loggläsning. -->
+        <article class="panel panel-secondary" aria-label="What changed">
+          <h2>What changed</h2>
+          <p class="change-signal" id="changeSignal">RUNNING → RUNNING</p>
+          <p class="change-reason" id="changeReason">reason_code: STABLE_LOOP · why: baseline continuity</p>
+        </article>
+
+        <!-- Visar fetch-hälsa per kanal inklusive fallback-status. -->
+        <article class="panel panel-secondary" aria-label="Last error">
+          <h2>Last error</h2>
+          <ul class="health-list" id="healthList"></ul>
         </article>
       </section>
     </main>

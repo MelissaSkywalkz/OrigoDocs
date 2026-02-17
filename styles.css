@@ -14,6 +14,10 @@
   --hud-rotate-b: 18s;
   --hud-jitter: 0px;
   --orb-beat: 1;
+  --accent: #78b7ff;
+  --accent-2: #47ffe6;
+  --glow: #78b7ff;
+  --state-color: #78b7ff;
 }
 
 * {
@@ -26,9 +30,9 @@ body {
   font-family: Inter, system-ui, sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at 20% 20%, #122849 0%, transparent 42%),
-    radial-gradient(circle at 80% 15%, #2b1443 0%, transparent 35%),
-    radial-gradient(circle at 50% 100%, #122746 0%, transparent 55%),
+    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--accent) 28%, transparent) 0%, transparent 42%),
+    radial-gradient(circle at 80% 15%, color-mix(in srgb, var(--accent-2) 20%, transparent) 0%, transparent 35%),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--bg-2) 90%, #091121) 0%, transparent 55%),
     var(--bg);
 }
 
@@ -56,6 +60,8 @@ body {
 
 .state-line {
   margin-top: 0.65rem;
+  border-left: 2px solid color-mix(in srgb, var(--state-color) 75%, transparent);
+  padding-left: 0.55rem;
   display: flex;
   align-items: baseline;
   gap: 0.65rem;
@@ -66,8 +72,8 @@ body {
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
-  background: var(--curiosity-color);
-  box-shadow: 0 0 14px var(--curiosity-color);
+  background: var(--state-color);
+  box-shadow: 0 0 14px var(--state-color);
 }
 
 .state-label {
@@ -212,7 +218,7 @@ body {
     radial-gradient(circle at 70% 70%, rgba(186, 132, 255, 0.2), transparent 45%),
     rgba(7, 12, 24, 0.84);
   box-shadow:
-    0 0 44px rgba(77, 156, 255, var(--orb-glow, 0.45)),
+    0 0 44px color-mix(in srgb, var(--glow) 75%, transparent),
     inset 0 0 40px rgba(88, 157, 255, 0.24);
   animation: orbPulse calc(var(--orb-pulse, 4) * 1s) ease-in-out infinite;
   z-index: 2;
@@ -283,6 +289,27 @@ body {
   color: var(--muted);
 }
 
+/* Banner förstärks tydligt vid WAITING_APPROVAL/BLOCKED. */
+.status-banner {
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  background: linear-gradient(115deg, color-mix(in srgb, var(--state-color) 32%, transparent), rgba(18, 9, 17, 0.68));
+  border: 1px solid color-mix(in srgb, var(--state-color) 80%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--state-color) 40%, transparent);
+}
+
+.status-banner h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--state-color) 82%, #fff);
+}
+
+.status-banner p {
+  margin: 0.35rem 0 0;
+  color: #d6e5ff;
+  font-size: 0.87rem;
+}
+
 .secondary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -324,6 +351,53 @@ body {
   display: flex;
   justify-content: space-between;
   color: #aac3e8;
+}
+
+.change-signal {
+  margin: 0;
+  font: 600 0.98rem "Space Grotesk", sans-serif;
+  color: color-mix(in srgb, var(--state-color) 85%, #dce8ff);
+}
+
+.change-reason {
+  margin: 0.35rem 0 0;
+  color: #a9c3e7;
+  font-size: 0.82rem;
+}
+
+.health-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.79rem;
+}
+
+.health-list li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.4rem;
+  align-items: center;
+  color: #bdd2ef;
+}
+
+.health-pill {
+  border-radius: 999px;
+  padding: 0.08rem 0.45rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.health-ok {
+  background: rgba(71, 255, 190, 0.15);
+  color: #76ffd3;
+}
+
+.health-failed {
+  background: rgba(255, 110, 150, 0.18);
+  color: #ff99b4;
 }
 
 @keyframes spin {
