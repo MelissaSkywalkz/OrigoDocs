@@ -33,12 +33,6 @@ const STATE_META = {
   },
 };
 
-const STATE_COLORS = {
-  OK: "#44f7cb",
-  RUNNING: "#78b7ff",
-  WAITING_APPROVAL: "#ffd366",
-  BLOCKED: "#ff5f83",
-};
 
 const STATE_REASON = {
   OK: { reason_code: "TARGET_REACHED", why: "all channels responding within threshold" },
@@ -51,6 +45,13 @@ const STATE_REASON = {
 };
 
 const CHANNELS = ["state", "status", "budget", "requests", "diary", "library", "events"];
+
+const AMBIENT_GRADS = {
+  social: "linear-gradient(to right, #fa709a 0%, #fee140 100%)",
+  midnight_calm: "radial-gradient(circle farthest-corner at 10% 20%, rgba(100,43,115,1) 0%, rgba(4,0,4,1) 90%)",
+  ink: "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
+  work: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%)",
+};
 
 const refs = {
   stateSignal: document.getElementById("stateSignal"),
@@ -116,15 +117,43 @@ function resolveMode() {
 
 function getModeTheme(mode) {
   if (mode === "defensive") {
-    return { accent: "#ff6f96", accent2: "#ffbb75", glow: "#ff6f96", bg: "#1a0a16", bg2: "#2d0f23" };
+    return {
+      accent: "#ff6f96",
+      accent2: "#ffbb75",
+      glow: "#ff6f96",
+      bg: "#1a0a16",
+      bg2: "#2d0f23",
+      themeName: "ink",
+    };
   }
   if (mode === "focused") {
-    return { accent: "#47ffe6", accent2: "#71e0ff", glow: "#47ffe6", bg: "#05141d", bg2: "#0d2737" };
+    return {
+      accent: "#47ffe6",
+      accent2: "#71e0ff",
+      glow: "#47ffe6",
+      bg: "#05141d",
+      bg2: "#0d2737",
+      themeName: "work",
+    };
   }
   if (mode === "social") {
-    return { accent: "#ba84ff", accent2: "#8f7dff", glow: "#ba84ff", bg: "#111029", bg2: "#231b41" };
+    return {
+      accent: "#ba84ff",
+      accent2: "#8f7dff",
+      glow: "#ba84ff",
+      bg: "#111029",
+      bg2: "#231b41",
+      themeName: "social",
+    };
   }
-  return { accent: "#78b7ff", accent2: "#47ffe6", glow: "#78b7ff", bg: "#060b15", bg2: "#15253f" };
+  return {
+    accent: "#78b7ff",
+    accent2: "#47ffe6",
+    glow: "#78b7ff",
+    bg: "#060b15",
+    bg2: "#15253f",
+    themeName: "midnight_calm",
+  };
 }
 
 // Håller signal→etikett→detalj i samma ordning för alla vitalvärden.
@@ -154,14 +183,22 @@ function applyTheme() {
   const irritation = clamp(uiState.irritation);
   const mode = resolveMode();
   const modeTheme = getModeTheme(mode);
-  const operationalState = resolveOperationalState();
-  const stateColor = STATE_COLORS[operationalState] || STATE_COLORS.RUNNING;
+  const operationalState = uiState.state || resolveOperationalState();
+  const stateColor =
+    operationalState === "BLOCKED"
+      ? "var(--danger)"
+      : operationalState === "WAITING_APPROVAL"
+        ? "var(--warn)"
+        : operationalState === "RUNNING"
+          ? "var(--accent-2)"
+          : "var(--ok)";
 
   root.style.setProperty("--accent", modeTheme.accent);
   root.style.setProperty("--accent-2", modeTheme.accent2);
   root.style.setProperty("--glow", modeTheme.glow);
   root.style.setProperty("--bg", modeTheme.bg);
   root.style.setProperty("--bg-2", modeTheme.bg2);
+  root.style.setProperty("--ambient-grad", AMBIENT_GRADS[modeTheme.themeName] || AMBIENT_GRADS.ink);
   root.style.setProperty("--state-color", stateColor);
 
   root.style.setProperty("--energy-speed", (16 - energy / 10).toFixed(2));

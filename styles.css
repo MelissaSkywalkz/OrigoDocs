@@ -18,6 +18,10 @@
   --accent-2: #47ffe6;
   --glow: #78b7ff;
   --state-color: #78b7ff;
+  --ambient-grad: linear-gradient(to right, #243949 0%, #517fa4 100%);
+  --ok: #55f6c9;
+  --warn: #ffd166;
+  --danger: #ff5f83;
 }
 
 * {
@@ -33,11 +37,42 @@ body {
     radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--accent) 28%, transparent) 0%, transparent 42%),
     radial-gradient(circle at 80% 15%, color-mix(in srgb, var(--accent-2) 20%, transparent) 0%, transparent 35%),
     radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--bg-2) 90%, #091121) 0%, transparent 55%),
+    var(--ambient-grad),
     var(--bg);
 }
 
-.dashboard {
-  width: min(1120px, 100% - 2.5rem);
+/* Ambientlager ger levande bakgrund utan att påverka interaktion/layout. */
+.ambient {
+  position: fixed;
+  inset: -4%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(560px 340px at 88% 8%, color-mix(in srgb, var(--accent-2) 13%, transparent), transparent 65%),
+    radial-gradient(900px 520px at 50% 80%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  opacity: 0.92;
+  animation: ambientDrift 90s ease-in-out infinite;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* Status-halo runt hela appen ger direkt state-signal utan loggar. */
+.app::before {
+  content: "";
+  position: fixed;
+  inset: 10px;
+  pointer-events: none;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--state-color) 55%, transparent);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--state-color) 30%, transparent);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.dashboard {  width: min(1120px, 100% - 2.5rem);
   margin: 1.5rem auto 2.5rem;
   display: grid;
   gap: 1.5rem;
@@ -400,6 +435,11 @@ body {
   color: #ff99b4;
 }
 
+@keyframes ambientDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.9; }
+  50% { transform: translate3d(-2%, 1%, 0) scale(1.02); opacity: 1; }
+}
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -423,6 +463,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .ring,
   .presence-orb,
+  .ambient,
   .hud-layer-a,
   .hud-layer-b {
     animation: none !important;
