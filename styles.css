@@ -9,6 +9,11 @@
   --curiosity-color: #70b3ff;
   --social-color: #ba84ff;
   --irritation-color: #ff6e96;
+  --hud-opacity: 0.42;
+  --hud-rotate-a: 24s;
+  --hud-rotate-b: 18s;
+  --hud-jitter: 0px;
+  --orb-beat: 1;
 }
 
 * {
@@ -80,6 +85,55 @@ body {
   display: grid;
   place-items: center;
   isolation: isolate;
+}
+
+/* HUD-overlay är helt dekorativ och absolut placerad för noll layoutpåverkan. */
+.hud-overlay {
+  position: absolute;
+  width: min(92vw, 620px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--hud-opacity);
+  filter: drop-shadow(0 0 12px rgba(78, 163, 255, 0.22));
+  transform: translate(var(--hud-jitter), calc(var(--hud-jitter) * -0.45));
+}
+
+.hud-layer {
+  transform-origin: 300px 300px;
+}
+
+.hud-layer-a {
+  animation: hudSpinA var(--hud-rotate-a) linear infinite;
+}
+
+.hud-layer-b {
+  animation: hudSpinB var(--hud-rotate-b) linear infinite;
+}
+
+.hud-ring,
+.hud-segment {
+  fill: none;
+  stroke: rgba(124, 183, 255, 0.45);
+  stroke-width: 1.6;
+}
+
+.hud-ring-soft {
+  stroke-opacity: 0.35;
+  stroke-dasharray: 4 8;
+}
+
+.hud-segment {
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+
+.hud-segment-hot {
+  stroke: rgba(255, 121, 173, 0.65);
+}
+
+.hud-ticks circle {
+  fill: rgba(113, 189, 255, 0.8);
 }
 
 /* Ringarna ersätter traditionella kort och bygger djup i gränssnittet. */
@@ -278,8 +332,31 @@ body {
 }
 
 @keyframes orbPulse {
-  0%, 100% { transform: scale(0.97); }
-  50% { transform: scale(1.03); }
+  0%, 100% { transform: scale(calc(0.972 + (var(--orb-beat) - 1) * 0.015)); }
+  50% { transform: scale(calc(1.022 + (var(--orb-beat) - 1) * 0.03)); }
+}
+
+@keyframes hudSpinA {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hudSpinB {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .presence-orb,
+  .hud-layer-a,
+  .hud-layer-b {
+    animation: none !important;
+  }
+
+  .hud-overlay {
+    transform: none;
+  }
 }
 
 @media (max-width: 760px) {

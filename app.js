@@ -82,20 +82,38 @@ function renderVitals() {
   refs.irritationDetail.textContent = detailFromValue(irritation, "Friction");
 }
 
-// Knyt animationstempo och glow till befintliga state-värden utan att ändra dataflödet.
-function applyDynamics() {
+// applyTheme mappar state till visuella HUD-variabler (opacitet, fart, jitter, orb-beat).
+function applyTheme() {
   const root = document.documentElement;
-  root.style.setProperty("--energy-speed", (16 - uiState.energy / 10).toFixed(2));
-  root.style.setProperty("--curiosity-speed", (19 - uiState.curiosity / 10).toFixed(2));
-  root.style.setProperty("--social-speed", (22 - uiState.social / 10).toFixed(2));
-  root.style.setProperty("--irritation-speed", (24 - uiState.irritation / 8).toFixed(2));
+  const energy = clamp(uiState.energy);
+  const curiosity = clamp(uiState.curiosity);
+  const social = clamp(uiState.social);
+  const irritation = clamp(uiState.irritation);
 
-  const glow = (0.2 + uiState.energy / 160 + uiState.curiosity / 250).toFixed(2);
-  const pulse = (5.2 - (uiState.energy + uiState.curiosity) / 55).toFixed(2);
+  root.style.setProperty("--energy-speed", (16 - energy / 10).toFixed(2));
+  root.style.setProperty("--curiosity-speed", (19 - curiosity / 10).toFixed(2));
+  root.style.setProperty("--social-speed", (22 - social / 10).toFixed(2));
+  root.style.setProperty("--irritation-speed", (24 - irritation / 8).toFixed(2));
+
+  const glow = (0.2 + energy / 160 + curiosity / 250).toFixed(2);
+  const pulse = (5.2 - (energy + curiosity) / 55).toFixed(2);
+  const beat = (0.9 + (energy + curiosity) / 240).toFixed(3);
+  const hudOpacity = (0.26 + curiosity / 300 + social / 500).toFixed(2);
+  const hudRotateA = (26 - curiosity / 12).toFixed(2);
+  const hudRotateB = (21 - energy / 16 + irritation / 40).toFixed(2);
+  const jitter = ((irritation - 50) / 65).toFixed(2);
 
   root.style.setProperty("--orb-glow", glow);
   root.style.setProperty("--orb-pulse", pulse);
+  root.style.setProperty("--orb-beat", beat);
+  root.style.setProperty("--hud-opacity", hudOpacity);
+  root.style.setProperty("--hud-rotate-a", `${hudRotateA}s`);
+  root.style.setProperty("--hud-rotate-b", `${hudRotateB}s`);
+  root.style.setProperty("--hud-jitter", `${jitter}px`);
 }
+
+// Bakåtkompatibel alias för eventuella anrop som fortfarande använder gamla namnet.
+const applyDynamics = applyTheme;
 
 function resolveMode() {
   if (uiState.irritation > 70) return "defensive";
@@ -133,7 +151,7 @@ function renderFeed() {
 
 function renderAll() {
   renderVitals();
-  applyDynamics();
+  applyTheme();
   renderState();
   renderFeed();
 }

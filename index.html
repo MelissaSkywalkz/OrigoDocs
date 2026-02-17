@@ -30,6 +30,33 @@
         <div class="ring ring-social" aria-hidden="true"></div>
         <div class="ring ring-irritation" aria-hidden="true"></div>
 
+        <!-- Dekorativ HUD-overlay i inline SVG: ligger absolut över scenen utan att påverka layout. -->
+        <svg class="hud-overlay" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+          <g class="hud-layer hud-layer-a">
+            <circle cx="300" cy="300" r="250" class="hud-ring"></circle>
+            <circle cx="300" cy="300" r="214" class="hud-ring hud-ring-soft"></circle>
+            <path class="hud-segment" d="M300 64 A236 236 0 0 1 470 136"></path>
+            <path class="hud-segment" d="M530 300 A230 230 0 0 1 470 464"></path>
+            <path class="hud-segment" d="M132 468 A238 238 0 0 1 72 300"></path>
+          </g>
+          <g class="hud-layer hud-layer-b">
+            <circle cx="300" cy="300" r="182" class="hud-ring"></circle>
+            <path class="hud-segment hud-segment-hot" d="M142 210 A184 184 0 0 1 212 142"></path>
+            <path class="hud-segment" d="M388 142 A184 184 0 0 1 458 210"></path>
+            <path class="hud-segment" d="M388 458 A184 184 0 0 1 458 390"></path>
+          </g>
+          <g class="hud-ticks">
+            <circle cx="300" cy="38" r="2.5"></circle>
+            <circle cx="300" cy="562" r="2.5"></circle>
+            <circle cx="38" cy="300" r="2.5"></circle>
+            <circle cx="562" cy="300" r="2.5"></circle>
+            <circle cx="122" cy="122" r="2"></circle>
+            <circle cx="478" cy="122" r="2"></circle>
+            <circle cx="122" cy="478" r="2"></circle>
+            <circle cx="478" cy="478" r="2"></circle>
+          </g>
+        </svg>
+
         <article class="presence-orb" id="presenceOrb" aria-label="Elsa Presence Orb">
           <p class="orb-label">Presence Orb</p>
           <p class="orb-value" id="orbState">Observing</p>
