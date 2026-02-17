@@ -3,172 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Origo Map: intern lathund</title>
+    <title>Elsa // Autonomous Presence Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="layout">
-    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
-      <div class="sidebar-header">
-        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
-      </div>
-      <div class="nav-search">
-        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
-        <ul id="searchResults" class="search-results hidden"></ul>
-      </div>
-      <div class="nav-content">
-        <div class="nav-section">
-          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
-            Dokumentation
-          </button>
-          <div class="accordion-panel" id="nav-docs">
-            <a href="index.html" aria-current="page">Start</a>
-            <a href="pages/page.html">JSON 101</a>
-            <a href="pages/origo-guide.html">Origo guide</a>
-            <a href="pages/layermanager.html">Layermanager</a>
-            <a href="pages/geoserver.html">GeoServer 101</a>
-            <a href="pages/geoserver-styles.html">GeoServer styles</a>
-            <a href="pages/geowebcache.html">GeoWebCache</a>
-            <a href="pages/origo-server.html">Origo Server</a>
-            <a href="pages/git-vscode.html">Git & VS Code</a>
-            <a href="pages/examples.html">Origo-recept</a>
-            <a href="pages/try-it.html">Try it-lab</a>
-            <a href="pages/faq-gis.html">FAQ GIS</a>
-            <a href="pages/npm.html">npm & plugins</a>
-            <a href="pages/release-playbook.html">Release‑playbook</a>
-            <a href="pages/troubleshooting.html">Felsökning</a>
-          </div>
-        </div>
-        <div class="nav-section">
-          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
-            Snabblänkar
-          </button>
-          <div class="accordion-panel" id="nav-shortcuts" hidden>
-            <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
-            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
-              >Origo Docs (extern)</a
-            >
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <div class="nav-backdrop" hidden></div>
-
-    <main class="main" id="main">
-      <header class="topbar">
-        <button
-          class="nav-toggle"
-          data-nav-toggle
-          aria-label="Öppna eller stäng meny"
-          aria-expanded="true"
-        >
-          <img src="sort.png" alt="" />
-        </button>
-        <div class="topbar-title">
-          <span class="eyebrow">Origo Map</span>
-          <h1>Start</h1>
-        </div>
-        <div class="topbar-meta">
-          <span class="status-pill">Översikt</span>
+  <body>
+    <main class="dashboard" aria-live="polite">
+      <header class="hud-header">
+        <p class="kicker">ELSΑ • Autonomous Entity Interface</p>
+        <div class="state-line">
+          <span class="signal-dot" id="stateSignal" aria-hidden="true"></span>
+          <span class="state-label" id="stateLabel">Awaiting sync…</span>
+          <span class="state-detail" id="stateDetail">Systems calibrating</span>
         </div>
       </header>
 
-      <section class="hero">
-        <div>
-          <h2>Snabbstart för teamet</h2>
-          <p>
-            Här samlar vi JSON‑grunder, Origo‑konfigurationer och driftstöd för GeoServer och
-            GeoWebCache. Innehållet är kort, kopierbart och anpassat för vardagsarbete.
-          </p>
-          <div class="hero-actions">
-            <a class="button" href="pages/page.html">Läs JSON 101</a>
-            <a class="button button-secondary" href="pages/origo-guide.html">Gå till Origo guide</a>
-          </div>
-        </div>
-        <div class="hero-card">
-          <h3>Snabbstart</h3>
-          <p>Öppna en guide, kopiera ett exempel och testa lokalt direkt.</p>
-        </div>
+      <!-- Presence Orb är nu visuellt centrum; ringar och signaler roterar runt den. -->
+      <section class="orb-zone" aria-label="Presence Core">
+        <div class="ring ring-energy" aria-hidden="true"></div>
+        <div class="ring ring-curiosity" aria-hidden="true"></div>
+        <div class="ring ring-social" aria-hidden="true"></div>
+        <div class="ring ring-irritation" aria-hidden="true"></div>
+
+        <article class="presence-orb" id="presenceOrb" aria-label="Elsa Presence Orb">
+          <p class="orb-label">Presence Orb</p>
+          <p class="orb-value" id="orbState">Observing</p>
+          <p class="orb-detail" id="orbDetail">Neural lattice stable</p>
+        </article>
+
+        <!-- Vitals ligger i koncentriska lager för snabb läsning nära kärnan. -->
+        <ul class="vitals" aria-label="Vitals">
+          <li class="vital" style="--ring: var(--energy-color)">
+            <span class="vital-signal" id="energySignal">73%</span>
+            <span class="vital-label">Energy</span>
+            <span class="vital-detail" id="energyDetail">Optimal reserve</span>
+          </li>
+          <li class="vital" style="--ring: var(--curiosity-color)">
+            <span class="vital-signal" id="curiositySignal">58%</span>
+            <span class="vital-label">Curiosity</span>
+            <span class="vital-detail" id="curiosityDetail">Exploration active</span>
+          </li>
+          <li class="vital" style="--ring: var(--social-color)">
+            <span class="vital-signal" id="socialSignal">42%</span>
+            <span class="vital-label">Social</span>
+            <span class="vital-detail" id="socialDetail">Low-band outreach</span>
+          </li>
+          <li class="vital" style="--ring: var(--irritation-color)">
+            <span class="vital-signal" id="irritationSignal">21%</span>
+            <span class="vital-label">Irritation</span>
+            <span class="vital-detail" id="irritationDetail">Noise controlled</span>
+          </li>
+        </ul>
       </section>
 
-      <section class="card-grid">
-        <article class="card">
-          <h3>JSON 101</h3>
-          <p>Förklara objekt, arrayer och vanliga fel. Mini-checklista ingår.</p>
-          <a class="link" href="pages/page.html">Öppna JSON 101 →</a>
+      <!-- Activity/Budget tonas ned till sekundära informationspaneler. -->
+      <section class="secondary-grid">
+        <article class="panel panel-secondary" id="activityPanel" aria-label="Activity Feed">
+          <h2>Activity Feed</h2>
+          <ul id="activityFeed"></ul>
         </article>
-        <article class="card">
-          <h3>Origo guide</h3>
-          <p>Snabbstart, lager, controls och prestanda.</p>
-          <a class="link" href="pages/origo-guide.html">Öppna guiden →</a>
-        </article>
-        <article class="card">
-          <h3>Layermanager</h3>
-          <p>Plugin för att söka och lägga till lager från kataloger.</p>
-          <a class="link" href="pages/layermanager.html">Se Layermanager →</a>
-        </article>
-        <article class="card">
-          <h3>GeoServer 101</h3>
-          <p>Hur servern, datakällor och standarder hänger ihop med Origo.</p>
-          <a class="link" href="pages/geoserver.html">Läs GeoServer 101 →</a>
-        </article>
-        <article class="card">
-          <h3>GeoServer styles</h3>
-          <p>SLD, CSS och MBStyle. Se när du använder vad.</p>
-          <a class="link" href="pages/geoserver-styles.html">Gå till styles →</a>
-        </article>
-        <article class="card">
-          <h3>GeoWebCache</h3>
-          <p>Tile-cache, gridsets och hur du felsöker “gamla tiles”.</p>
-          <a class="link" href="pages/geowebcache.html">Läs GeoWebCache →</a>
-        </article>
-        <article class="card">
-          <h3>Origo Server</h3>
-          <p>Backend‑stöd för proxy, state och andra tjänster.</p>
-          <a class="link" href="pages/origo-server.html">Öppna Origo Server →</a>
-        </article>
-        <article class="card">
-          <h3>Git & VS Code</h3>
-          <p>Tryggt arbetssätt för Git-ovana kollegor.</p>
-          <a class="link" href="pages/git-vscode.html">Öppna guiden →</a>
-        </article>
-        <article class="card">
-          <h3>Origo-recept</h3>
-          <p>Kopierbara konfig-exempel med WMS/WFS och controls.</p>
-          <a class="link" href="pages/examples.html">Öppna recept →</a>
-        </article>
-        <article class="card">
-          <h3>FAQ GIS</h3>
-          <p>Vanliga frågor för nybörjare. Snabba svar på “varför?”.</p>
-          <a class="link" href="pages/faq-gis.html">Läs FAQ →</a>
-        </article>
-        <article class="card">
-          <h3>npm & plugins</h3>
-          <p>Installera, lås versioner och bygg in i statiskt projekt.</p>
-          <a class="link" href="pages/npm.html">Gå till npm →</a>
-        </article>
-        <article class="card">
-          <h3>Felsökning</h3>
-          <p>Checklistor för CORS, CRS, 404 och cache-problem.</p>
-          <a class="link" href="pages/troubleshooting.html">Öppna felsökning →</a>
-        </article>
-        <article class="card">
-          <h3>Try it-lab</h3>
-          <p>Experimentera med JSON, BBOX, SLD och interaktiva verktyg.</p>
-          <a class="link" href="pages/try-it.html">Öppna Try it-lab →</a>
-        </article>
-        <article class="card">
-          <h3>Release‑playbook</h3>
-          <p>Körbar checklista för data, styles, cache, Origo och deploy.</p>
-          <a class="link" href="pages/release-playbook.html">Öppna playbook →</a>
+
+        <article class="panel panel-secondary" aria-label="Budget">
+          <h2>Budget</h2>
+          <dl class="budget">
+            <div>
+              <dt>Inference</dt>
+              <dd id="budgetInference">68%</dd>
+            </div>
+            <div>
+              <dt>Memory</dt>
+              <dd id="budgetMemory">52%</dd>
+            </div>
+            <div>
+              <dt>I/O</dt>
+              <dd id="budgetIo">37%</dd>
+            </div>
+          </dl>
         </article>
       </section>
     </main>
 
-    <script src="assets/js/main.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

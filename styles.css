@@ -1,0 +1,303 @@
+:root {
+  color-scheme: dark;
+  --bg: #060b15;
+  --surface: #0d1628;
+  --surface-soft: rgba(16, 29, 49, 0.55);
+  --text: #dbe8ff;
+  --muted: #87a2cf;
+  --energy-color: #47ffe6;
+  --curiosity-color: #70b3ff;
+  --social-color: #ba84ff;
+  --irritation-color: #ff6e96;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 20%, #122849 0%, transparent 42%),
+    radial-gradient(circle at 80% 15%, #2b1443 0%, transparent 35%),
+    radial-gradient(circle at 50% 100%, #122746 0%, transparent 55%),
+    var(--bg);
+}
+
+.dashboard {
+  width: min(1120px, 100% - 2.5rem);
+  margin: 1.5rem auto 2.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.hud-header {
+  background: linear-gradient(125deg, rgba(19, 33, 57, 0.72), rgba(9, 17, 31, 0.72));
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1px rgba(138, 177, 240, 0.08);
+}
+
+.kicker {
+  margin: 0;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+
+.state-line {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.signal-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--curiosity-color);
+  box-shadow: 0 0 14px var(--curiosity-color);
+}
+
+.state-label {
+  font: 700 1.3rem "Space Grotesk", sans-serif;
+}
+
+.state-detail {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.orb-zone {
+  position: relative;
+  min-height: 560px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+/* Ringarna ersätter traditionella kort och bygger djup i gränssnittet. */
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(151, 180, 229, 0.18);
+  box-shadow: inset 0 0 20px rgba(114, 153, 220, 0.1), 0 0 18px rgba(34, 95, 188, 0.15);
+  animation: spin linear infinite;
+  pointer-events: none;
+}
+
+.ring::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.ring-energy {
+  width: 260px;
+  height: 260px;
+  animation-duration: calc(var(--energy-speed, 12) * 1s);
+}
+.ring-energy::before {
+  background: var(--energy-color);
+  box-shadow: 0 0 16px var(--energy-color);
+}
+
+.ring-curiosity {
+  width: 350px;
+  height: 350px;
+  animation-duration: calc(var(--curiosity-speed, 16) * 1s);
+  animation-direction: reverse;
+}
+.ring-curiosity::before {
+  background: var(--curiosity-color);
+  box-shadow: 0 0 16px var(--curiosity-color);
+}
+
+.ring-social {
+  width: 440px;
+  height: 440px;
+  animation-duration: calc(var(--social-speed, 20) * 1s);
+}
+.ring-social::before {
+  background: var(--social-color);
+  box-shadow: 0 0 16px var(--social-color);
+}
+
+.ring-irritation {
+  width: 530px;
+  height: 530px;
+  animation-duration: calc(var(--irritation-speed, 14) * 1s);
+  animation-direction: reverse;
+}
+.ring-irritation::before {
+  background: var(--irritation-color);
+  box-shadow: 0 0 18px var(--irritation-color);
+}
+
+.presence-orb {
+  width: 220px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  align-content: center;
+  text-align: center;
+  gap: 0.2rem;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(112, 179, 255, 0.35), transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(186, 132, 255, 0.2), transparent 45%),
+    rgba(7, 12, 24, 0.84);
+  box-shadow:
+    0 0 44px rgba(77, 156, 255, var(--orb-glow, 0.45)),
+    inset 0 0 40px rgba(88, 157, 255, 0.24);
+  animation: orbPulse calc(var(--orb-pulse, 4) * 1s) ease-in-out infinite;
+  z-index: 2;
+}
+
+.orb-label {
+  margin: 0;
+  font-size: 0.77rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.orb-value {
+  margin: 0;
+  font: 700 1.75rem "Space Grotesk", sans-serif;
+}
+.orb-detail {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #adc4ea;
+}
+
+.vitals {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vital {
+  position: absolute;
+  width: 172px;
+  padding: 0.65rem 0.8rem;
+  border-radius: 14px;
+  background: rgba(9, 18, 34, 0.58);
+  box-shadow: inset 0 0 0 1px rgba(159, 194, 248, 0.09), 0 8px 22px rgba(4, 9, 18, 0.42);
+}
+.vital::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14%;
+  bottom: 14%;
+  width: 2px;
+  background: var(--ring);
+  box-shadow: 0 0 12px var(--ring);
+}
+
+.vital:nth-child(1) { top: 17%; left: 51%; }
+.vital:nth-child(2) { top: 44%; right: 8%; }
+.vital:nth-child(3) { bottom: 16%; left: 51%; }
+.vital:nth-child(4) { top: 43%; left: 8%; }
+
+.vital-signal {
+  display: block;
+  font: 600 1.2rem "Space Grotesk", sans-serif;
+}
+.vital-label {
+  display: block;
+  font-size: 0.77rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a6c0ea;
+}
+.vital-detail {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.panel-secondary {
+  padding: 1rem;
+  border-radius: 16px;
+  background: var(--surface-soft);
+  box-shadow: inset 0 0 0 1px rgba(143, 179, 238, 0.08);
+  opacity: 0.78;
+}
+
+.panel-secondary h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bdd3f7;
+}
+
+#activityFeed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem;
+  color: #a8c0e4;
+  font-size: 0.88rem;
+}
+
+.budget {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.budget div {
+  display: flex;
+  justify-content: space-between;
+  color: #aac3e8;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(0.97); }
+  50% { transform: scale(1.03); }
+}
+
+@media (max-width: 760px) {
+  .dashboard {
+    width: min(100% - 1.2rem, 1120px);
+  }
+
+  .orb-zone {
+    min-height: 640px;
+  }
+
+  .ring-irritation {
+    width: 470px;
+    height: 470px;
+  }
+
+  .vital:nth-child(1) { top: 8%; left: 50%; transform: translateX(-50%); }
+  .vital:nth-child(2) { top: 31%; right: 4%; }
+  .vital:nth-child(3) { bottom: 9%; left: 50%; transform: translateX(-50%); }
+  .vital:nth-child(4) { top: 31%; left: 4%; }
+}
