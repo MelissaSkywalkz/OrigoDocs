@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Standarder & konventioner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Arbetssätt</span><h1>Standarder &amp; konventioner</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Skapa konsekvens i lagernamn, gruppstruktur, styles och ändringshantering för Origo/GeoServer/GWC.</p>
+
+        <h2 id="namngivning">Namngivning</h2>
+        <ul>
+          <li>Lagernamn följer i praktiken suffix per geometri: <code>_p</code>, <code>_l</code>, <code>_y</code>.</li>
+          <li>Workspace-prefix ska vara tydligt i anrop: <code>publik:</code> eller <code>intern:</code>.</li>
+          <li>Gruppnamn i klient är snake_case och speglar verksamhet (exempel: <code>fastighet_adress_omraden</code>).</li>
+        </ul>
+
+        <h2 id="lager-tillagg">Hur vi lägger till lager</h2>
+        <ol>
+          <li>Placera lagret i rätt verksamhetsgrupp i <code>groups</code>.</li>
+          <li>Koppla mot rätt source (<code>publik_wms</code>, <code>intern_wms</code>, <code>publik_wmts</code>, <code>publik_wfs</code>, <code>intern_wfs</code>).</li>
+          <li>Sätt egenskaper explicit: <code>type</code>, ev. <code>queryable</code>, <code>opacity</code>, <code>hasThemeLegend</code>.</li>
+          <li>Verifiera i klient + recipes + felsökningssteg innan release.</li>
+        </ol>
+
+        <h2 id="style-versionering">Style-versionering</h2>
+        <ul>
+          <li>Byt inte style “in-place” utan versionssuffix.</li>
+          <li>Dokumentera stylebyte och cachepåverkan i changelog.</li>
+        </ul>
+
+        <h2 id="change-management">Change management</h2>
+        <ul>
+          <li>Separera ändringar: data, style, cache och klientkonfig i tydliga steg.</li>
+          <li>Beskriv påverkan på legend, prestanda och feature info i PR-texten.</li>
+          <li>Uppdatera <code>docs/CHANGELOG.md</code> i samma leverans.</li>
+        </ul>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Om det finns formell central policy för gruppdjup i lagerträdet. Verifiera här: interna riktlinjedokument/arkitekturbeslut.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
