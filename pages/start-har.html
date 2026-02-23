@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ny utvecklare: start här</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Onboarding</span><h1>Ny utvecklare: start här</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Ge snabb och verklighetsnära onboarding till vår Origo + GeoServer + GeoWebCache-miljö.</p>
+
+        <h2 id="forsta-veckan">Första veckan i praktiken</h2>
+        <ol>
+          <li>Starta docs lokalt: <code>python -m http.server 8000</code>.</li>
+          <li>Läs <a href="origo-guide.html">Origo i vår miljö</a> för controls, projektion och sources.</li>
+          <li>Läs <a href="geoserver.html">attribut/filtrering</a> innan lagerändringar.</li>
+          <li>Läs <a href="geoserver-styles.html">stilsättning</a> innan style- eller legendändringar.</li>
+          <li>Läs <a href="geowebcache.html">GWC</a> innan du seedar.</li>
+          <li>Använd <a href="examples.html">Quick recipes</a> för verifiering och <a href="troubleshooting.html">Felsökningshandbok</a> vid fel.</li>
+        </ol>
+
+        <h2 id="nyckelkunskap">Nyckelkunskap du behöver tidigt</h2>
+        <ul>
+          <li>Vi kör i första hand <strong>EPSG:3008</strong>.</li>
+          <li>Vi har både <strong>publik</strong> och <strong>intern</strong> GeoServer-källa.</li>
+          <li>Lagerträdet är stort och verksamhetsstyrt — fel gruppval blir snabbt ett driftproblem.</li>
+        </ul>
+
+        <h2 id="vanliga-fel">Vanliga nybörjarfel</h2>
+        <ul>
+          <li>Testar enbart i browser utan att testa i Origo-klienten.</li>
+          <li>Seedar cache innan WMS/legend verifierats.</li>
+          <li>Missar att maskera nycklar i dokumenterade URL:er.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
