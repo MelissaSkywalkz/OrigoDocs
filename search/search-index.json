@@ -445,16 +445,16 @@
     "category": "Onboarding",
     "url": "pages/start-har.html",
     "heading": "Ny utvecklare: start här",
-    "content": "Snabbstart git clone //srv-origo01/Git/Origo.git Origo npm install npm start Läsordning Origo i vår miljö → GeoServer attribut/filter → stilsättning → GWC → felsökning.",
+    "content": "Snabbstart hos oss git clone //srv-origo01/Git/Origo.git Origo npm install npm start Läsordning Origo i vår miljö → GeoServer attribut/filter → stilsättning → GWC → felsökning.",
     "type": "page",
     "weight": 1
   },
   {
     "id": "start-har-snabbstart",
-    "title": "Ny utvecklare: start här: Snabbstart",
+    "title": "Ny utvecklare: start här: Snabbstart hos oss",
     "category": "Onboarding",
     "url": "pages/start-har.html#snabbstart",
-    "heading": "Snabbstart",
+    "heading": "Snabbstart hos oss",
     "content": "git clone //srv-origo01/Git/Origo.git Origo npm install npm start Läsordning Origo i vår miljö → GeoServer attribut/filter → stilsättning → GWC → felsökning.",
     "type": "section",
     "weight": 1.2

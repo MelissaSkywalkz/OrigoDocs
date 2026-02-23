@@ -15,3 +15,20 @@
 ### Okänt hos oss (behöver bekräftas)
 - Exakt standard för verifiering av cache-hit/miss headers i alla miljöer (kan skilja mellan proxy-lager).
   - Verifiera här: driftloggning/proxykonfiguration för respektive miljö.
+
+## 2026-02-23 (revidering 7: canonical template på nya sidor)
+
+### Vad ändrades
+- Migrerade nya docs-sidor till canonical `pages/try-it.html`-struktur (samma nav/header/sidebar/sök-hookar):
+  - `pages/start-har.html`
+  - `pages/standarder-konventioner.html`
+  - `pages/wms-wmts-prestanda.html`
+- Säkerställde att sidorna innehåller samma DOM-hookar:
+  - `#sidenav`
+  - `#navSearch`
+  - `.nav-backdrop`
+  - `assets/js/main.js`
+- Regenererade `search/search-index.json`.
+
+### Okänt hos oss (behöver bekräftas)
+- Varför lokal HTTP-server inte accepterar anslutning i denna körmiljö (påverkar browser-baserad liveverifiering här).
