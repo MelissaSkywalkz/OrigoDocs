@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Standarder & konventioner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Arbetssätt</span><h1>Standarder &amp; konventioner</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Samla våra faktiska konventioner för lager, styles, behörigheter och driftsättning.</p>
+
+        <h2 id="namn">Namngivning</h2>
+        <ul>
+          <li>Workspace-prefix: <code>intern:</code> och <code>publik:</code>.</li>
+          <li>Geometri-suffix förekommer brett: <code>_p</code>, <code>_l</code>, <code>_y</code>.</li>
+          <li>Gruppnamn i Origo hålls i snake_case och ska spegla verksamhet.</li>
+        </ul>
+
+        <h2 id="behorighet">Behörighet (AD + GeoServer)</h2>
+        <ol>
+          <li>Skapa AD-grupp: <code>User-SK-Geoserver-&lt;namn&gt;</code>.</li>
+          <li>Verifiera roll i GeoServer under LDAP/roles.</li>
+          <li>Sätt read/write/admin på workspace/lager och spara.</li>
+          <li>Alternativt: Security → Data (regex-regler, mer avancerat).</li>
+        </ol>
+
+        <h2 id="drift-git">Git och driftsättning</h2>
+        <ul>
+          <li>Lokalt serverrepo: <code>//srv-origo01/git/origo.git</code>.</li>
+          <li>Internt jobb kör var 5:e minut för build/driftsättning av testflöde.</li>
+          <li>Extern skarp miljö byggs från branch <code>extern</code> (merge från master när test är klart).</li>
+        </ul>
+
+        <h2 id="change">Change management</h2>
+        <ul>
+          <li>Separera ändringar: data, style, cache, klientkonfig.</li>
+          <li>Rensa tile-lager innan borttag av underliggande lager.</li>
+          <li>Undvik att flytta lager mellan workspace utan tydlig plan.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

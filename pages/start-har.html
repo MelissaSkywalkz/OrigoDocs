@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ny utvecklare: start här</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Onboarding</span><h1>Ny utvecklare: start här</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Snabb väg in i hur vi faktiskt jobbar med Origo/GeoServer/GWC på <code>srv-origo01</code>.</p>
+
+        <h2 id="forsta-dagen">Dag 1: få upp lokal miljö</h2>
+        <ol>
+          <li>Kloning vid ny dator (internt repo): <code>git clone //srv-origo01/Git/Origo.git Origo</code>.</li>
+          <li>Alternativt mot GitHub-org: <code>git clone https://github.com/SkovdeGIS/origo.git</code>.</li>
+          <li>Installera beroenden: <code>npm install</code>.</li>
+          <li>Starta devserver: <code>npm start</code> (standard <code>http://localhost:9966</code>).</li>
+        </ol>
+
+        <h2 id="forsta-veckan">Första veckan: rätt läsordning</h2>
+        <ol>
+          <li><a href="origo-guide.html">Origo i vår miljö</a> (källor, grupper, projektion).</li>
+          <li><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a>.</li>
+          <li><a href="geoserver-styles.html">GeoServer: stilsättning</a>.</li>
+          <li><a href="geowebcache.html">GWC: caching</a>.</li>
+          <li><a href="troubleshooting.html">Felsökningshandbok</a>.</li>
+        </ol>
+
+        <h2 id="kritiska-urler">Kritiska URL:er att känna till</h2>
+        <ul>
+          <li>GeoServer admin: <code>https://srv-origo01.kommun.skovde.se/geoserver/web</code></li>
+          <li>WMS/WFS endpoint: <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
+          <li>CSW: <code>https://srv-origo01.kommun.skovde.se/geoserver/csw/</code></li>
+          <li>Intern Origo: <code>https://srv-origo01.kommun.skovde.se/</code></li>
+          <li>Publik Origo: <code>https://origo.skovde.se</code></li>
+        </ul>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakt standard för vilket repo (GitHub vs lokalt) som alltid ska vara primär remote för nya utvecklare. Verifiera här: teamets aktuella git-rutin i driftkanalen.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
