@@ -1,26 +1,22 @@
 # Changelog – OrigoDocs
 
-## 2026-02-23 (revidering efter review)
+## 2026-02-23 (revidering 2 efter review)
 
 ### Vad lades till
-- Fördjupat innehåll på samtliga nya kärnsidor med tydligare "Syfte", "När används", arbetssteg och felbilder.
-- Konkretare driftförankring mot vår faktiska setup: EPSG:3008, intern/publik GeoServer, WMTS via GWC samt Origo Server-endpoints.
-- Tydligare säkerhetsnotering om maskning av nycklar i externa URL:er.
+- Tydligare förankring till faktisk lagerrealitet från index-konfig: tematiska lagerfamiljer, queryable=false-fall, intern/publik-source-mönster.
+- Praktiska exempel med verkliga lager-ID:n från vår miljö (bl.a. skyfall, fastighet, WMTS fastighetsgräns).
+- Ny felsökningspost för bakgrundslager med både WMS- och WMTS-varianter.
 
 ### Vad skrevs om
-- `pages/origo-guide.html` omskriven med konkreta konfigmönster från vår klientmiljö.
-- `pages/geoserver.html` omskriven med riktlinjer för attribut, queryable och filterkedja.
-- `pages/geoserver-styles.html` omskriven med fokus på legend/scale/cache.
-- `pages/geowebcache.html` omskriven med seed-flöde och vanliga GWC-fel.
-- `pages/wms-wmts-prestanda.html` omskriven med lastdrivare från Origo-klienten.
-- `pages/examples.html` omskriven med verklighetsnära copy/paste-anrop mot vår driftdomän.
-- `pages/troubleshooting.html` omskriven till symptom → orsak → verifiera → fix.
-- `pages/standarder-konventioner.html` omskriven med namngivning och change management från vår lagerstruktur.
+- `pages/origo-guide.html`: omskriven med driftrelevanta mönster och riskområden från verklig lagerkatalog.
+- `pages/geoserver.html`: omskriven med attribut/queryable/filter utifrån faktisk konfigprofil.
+- `pages/geoserver-styles.html`: omskriven med fokus på tematiska lager, legend och cache.
+- `pages/wms-wmts-prestanda.html`: omskriven med verkliga lastdrivare från vår lagerstruktur.
+- `pages/examples.html`: omskriven med copy/paste mot våra faktiska endpoints och lager-ID:n.
+- `pages/troubleshooting.html`: omskriven med mer konkreta symptomkedjor för vår miljö.
 
 ### Okänt hos oss (behöver bekräftas)
-- Exakta viewparams som används i produktion per lager.
-  - Verifiera här: GeoServer layer-konfiguration i drift.
-- Exakta standardvärden för GWC metatile/gutter och ev. nattlig seedning.
-  - Verifiera här: GeoServer/GWC admin + driftjobb.
-- Exakt renderMode-policy per app.
-  - Verifiera här: respektive app-repos `index.json`.
+- Formell policy för dubbla WMS/WMTS-varianter av samma bakgrundstema.
+  - Verifiera här: produktions-`index.json` + driftbeslut i ops-dokumentation.
+- Exakt tröskel för acceptabel legendlast i produktion.
+  - Verifiera här: APM/prestandarapporter i driftmiljön.

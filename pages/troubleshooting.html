@@ -11,37 +11,36 @@
     <main class="main" id="main">
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Support</span><h1>Felsökningshandbok</h1></div></header>
       <section class="doc-content">
-        <h2 id="symptom">Symptom → orsak → verifiera → fix</h2>
+        <h2 id="symptom">Symptom → trolig orsak → verifiera → fix</h2>
 
         <h3 id="tom-karta">Tom karta i Origo</h3>
-        <p><strong>Trolig orsak:</strong> CRS/bbox mismatch (ofta EPSG:3008 i vår miljö).</p>
-        <p><strong>Verifiera så här:</strong> kör GetMap-recept med liten bbox från <a href="examples.html#wms-getmap">Quick recipes</a>.</p>
-        <p><strong>Fix:</strong> säkerställ samma CRS i source, request och klientens projectionCode.</p>
+        <p><strong>Trolig orsak:</strong> CRS/bbox mismatch (vår standard är EPSG:3008).</p>
+        <p><strong>Verifiera:</strong> kör WMS GetMap med liten bbox mot rätt source.</p>
+        <p><strong>Fix:</strong> synka <code>projectionCode</code>, request-CRS och lagersource.</p>
 
-        <h3 id="fel-tile">Förskjutna eller fel WMTS-tiles</h3>
-        <p><strong>Trolig orsak:</strong> fel matrixset/matrixIdsPrefix eller mismatch mot klientresolutions.</p>
-        <p><strong>Verifiera så här:</strong> kontrollera <code>source.publik_wmts.matrixSet</code> och jämför med klientens <code>resolutions</code>.</p>
-        <p><strong>Fix:</strong> synka matrixset och seeda om berörda nivåer.</p>
+        <h3 id="wmts-forskjutet">WMTS förskjuten eller pixlad fel</h3>
+        <p><strong>Trolig orsak:</strong> fel matrixset/prefix eller seed saknar nivåer.</p>
+        <p><strong>Verifiera:</strong> jämför <code>matrixSet=EPSG:3008</code> och klientens <code>resolutions</code>.</p>
+        <p><strong>Fix:</strong> korrigera matrisinställningar och seeda om relevant spann.</p>
 
-        <h3 id="legend-last">Hög last vid lagerhantering</h3>
-        <p><strong>Trolig orsak:</strong> många temalager + frekventa legendanrop.</p>
-        <p><strong>Verifiera så här:</strong> kontrollera nätverksspår för upprepade GetLegendGraphic.</p>
-        <p><strong>Fix:</strong> slå av legend där det inte ger verksamhetsvärde och prioritera kritiska lager.</p>
+        <h3 id="ingen-featureinfo">Ingen feature info vid klick</h3>
+        <p><strong>Trolig orsak:</strong> lager har <code>queryable: "false"</code> (planmosaik, höjd, vind m.fl.).</p>
+        <p><strong>Verifiera:</strong> kontrollera lagerposten i index-konfig.</p>
+        <p><strong>Fix:</strong> ändra queryable endast om verksamhetskrav finns och prestanda tillåter.</p>
 
-        <h3 id="feature-info">Feature info saknas</h3>
-        <p><strong>Trolig orsak:</strong> lager är inte queryable (eller medvetet satt till false).</p>
-        <p><strong>Verifiera så här:</strong> kontrollera lagerdefinitionen och queryable-flagga i konfig.</p>
-        <p><strong>Fix:</strong> aktivera queryable där feature info behövs, annars dokumentera avsikten.</p>
+        <h3 id="legend-tung">Legend känns långsam eller otydlig</h3>
+        <p><strong>Trolig orsak:</strong> många samtidiga tematiska lager och tunga legendsvar.</p>
+        <p><strong>Verifiera:</strong> nätverksspår för GetLegendGraphic + identifiera temalager i aktuell grupp.</p>
+        <p><strong>Fix:</strong> minimera antal aktiva temalager och prioritera kritiska legender.</p>
 
-        <h3 id="gamla-tiles">Gamla tiles efter ändring</h3>
-        <p><strong>Trolig orsak:</strong> cache inte truncerad/seedad för rätt nivåer.</p>
-        <p><strong>Verifiera så här:</strong> jämför WMS (färsk render) med WMTS (cache).</p>
-        <p><strong>Fix:</strong> truncate + seed för rätt bbox och zoomspann.</p>
+        <h3 id="bakgrund-duplikat">Bakgrund beter sig olika mellan vyer</h3>
+        <p><strong>Trolig orsak:</strong> samma karttema finns i både WMS och WMTS-variant.</p>
+        <p><strong>Verifiera:</strong> kontrollera vilket lager som är aktivt i background-gruppen.</p>
+        <p><strong>Fix:</strong> välj primär källa per scenario och dokumentera valet i releaseändringen.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Exakt loggpunkt för produktionens WMTS-fel i infra. Verifiera här: reverse proxy/ingress-loggar i driftmiljön.</li>
-          <li>Gemensam larmgräns för svarstider på WMS/WMTS. Verifiera här: driftövervakning/APM.</li>
+          <li>Exakt driftprocess för incidenteskalering vid GeoServer/GWC-fel. Verifiera här: driftorganisationens incidentrutin.</li>
         </ul>
       </section>
     </main>

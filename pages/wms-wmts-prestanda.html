@@ -12,39 +12,39 @@
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Prestanda</span><h1>WMS/WMTS-prestanda i vår klient</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Ge praktiska regler för när vi kör WMS respektive WMTS och hur Origo-inställningar påverkar serverlast.</p>
+        <p>Förklara vad som faktiskt driver last i vår Origo-klient med stora tematiska lagerträd och blandade WMS/WMTS-källor.</p>
 
-        <h2 id="wms-vs-wmts">WMS vs WMTS hos oss</h2>
+        <h2 id="drivare">Lastdrivare vi ser hos oss</h2>
         <ul>
-          <li><strong>WMTS:</strong> används via <code>/geoserver/gwc/service/wmts</code> för snabb rendering i stabila lager.</li>
-          <li><strong>WMS:</strong> används via <code>/geoserver/publik/wms</code> och <code>/geoserver/intern/wms</code> när flexibilitet krävs.</li>
+          <li>Stora domäner (klimat, buller, geologi, statistik) innehåller många lager som kan slås på samtidigt.</li>
+          <li>Tematiska lager med legend (<code>hasThemeLegend/thematicStyling</code>) driver extra anrop vid lagerarbete.</li>
+          <li>Parallella WMS + WMTS-varianter av vissa kartor kan försvåra tolkning av vad som faktiskt är flaskhals.</li>
         </ul>
 
-        <h2 id="origo-last">Origo-val som driver last</h2>
+        <h2 id="wms-wmts">När vi använder vad</h2>
         <ul>
-          <li>Legendkontroll + många tematiska lager genererar många legendförfrågningar.</li>
-          <li>Många samtidigt synliga WMS-lager ger tung render-last per pan/zoom.</li>
-          <li>Djup gruppstruktur är bra för ordning men kan trigga många toggles om användarflödet är otydligt.</li>
+          <li><strong>WMTS:</strong> när renderingstid och upplevelse prioriteras (t.ex. bakgrunder och stabila lager).</li>
+          <li><strong>WMS:</strong> när vi behöver snabb iteration av style/filter eller när lagret ändras ofta.</li>
         </ul>
 
-        <h2 id="checklista">Prestandachecklista före release</h2>
+        <h2 id="konkret">Konkreta prestandaregler</h2>
         <ol>
-          <li>Kör snabb GetMap med liten bbox.</li>
-          <li>Verifiera att WMTS-lager använder korrekt matrixset <code>EPSG:3008</code>.</li>
-          <li>Mät nätverk: antal legendanrop vid normal användning.</li>
-          <li>Bekräfta att standard-synliga lager är få och motiverade.</li>
+          <li>Testa alltid med liten bbox först.</li>
+          <li>Begränsa antalet default-synliga lager.</li>
+          <li>Prioritera legend för lager med tydligt verksamhetsvärde.</li>
+          <li>Undvik att seeda hela kommunen vid små ändringar.</li>
         </ol>
 
         <h2 id="varningar">Varningar</h2>
         <ul>
-          <li><strong>CRS axis order:</strong> fel ordning kan ge tom karta trots HTTP 200.</li>
-          <li><strong>Stora test-bboxar:</strong> maskerar flaskhalsar och gör felsökning långsammare.</li>
-          <li><strong>Onödiga legendanrop:</strong> driver serverlast utan att tillföra användarvärde.</li>
+          <li><strong>CRS axis order-fel</strong> kan ge tom karta trots HTTP 200.</li>
+          <li><strong>För mycket samtidigt aktiverat</strong> i temagrupper gör felsökning missvisande.</li>
+          <li><strong>Bakgrund i fel källa</strong> (WMS i stället för WMTS eller tvärtom) ger felaktig prestandabild.</li>
         </ul>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Exakt renderMode-användning per app. Verifiera här: respektive app-<code>index.json</code>.</li>
+          <li>Exakta tröskelvärden för acceptabel legendlast per vy. Verifiera här: prestandamätningar i drift/APM.</li>
         </ul>
       </section>
     </main>

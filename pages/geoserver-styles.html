@@ -12,38 +12,36 @@
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Stilsättning (SLD/CSS/legend/scale)</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Beskriva hur vi gör style-ändringar utan att slå ut legend, prestanda eller cache i Origo.</p>
+        <p>Beskriva hur vi stilsätter lager så att tematisk legend, skalbeteende och cache fungerar i vår Origo-miljö.</p>
 
-        <h2 id="best-practice">Best practice</h2>
+        <h2 id="verkliga-exempel">Verkliga exempel i vår konfig</h2>
         <ul>
-          <li>Versionera style-namn (exempel: <code>plan_v2</code>, <code>plan_v3</code>) innan default byts.</li>
-          <li>Använd scale-gating i regler så att detaljrik symbolik inte renderas i små skalor.</li>
-          <li>För lager med <code>thematicStyling: true</code> ska legendsvar verifieras vid varje styleändring.</li>
+          <li><code>lediga_tomter</code>-style i klienten har filter per status (<code>SÅLD</code>, <code>RESERVERAD</code>, <code>TOMTSLÄPP</code>, <code>LEDIG</code>).</li>
+          <li>Många WMS-lager har <code>hasThemeLegend: true</code> + <code>thematicStyling: true</code>, t.ex. skyfall, buller, geologi, VA.</li>
+          <li>Vissa bakgrundslager använder opacitet i klienten (t.ex. värmekartering, baskarta), vilket påverkar visuell tolkning av legend.</li>
         </ul>
 
-        <h2 id="legend">Legend i vår Origo-setup</h2>
-        <p>Vi använder legendkontroll i klienten och många lager har tematiska legender. Undvik att skapa onödigt tunga legendanrop.</p>
+        <h2 id="best-practice">Best practice för oss</h2>
+        <ol>
+          <li>Versionera styles och byt inte i blindo.</li>
+          <li>Verifiera alltid skala + legend tillsammans.</li>
+          <li>Testa både WMS och WMTS efter styleändring för att upptäcka cache-eftersläpning.</li>
+        </ol>
+
         <pre><code>/geoserver/ows?service=WMS&amp;request=GetLegendGraphic
-&amp;layer=publik:offentlig_verksamhet_grundskola_p
+&amp;layer=publik:klimat_skyfall_sodra_ryd_2024_max_vattendjup_ma_100_y
 &amp;format=image/svg+xml&amp;transparent=true</code></pre>
 
-        <h2 id="skala">Skala och fel vi ofta ser</h2>
+        <h2 id="vanliga-fel">Vanliga fel</h2>
         <ul>
-          <li><strong>Symptom:</strong> lager syns men legend upplevs fel. <strong>Orsak:</strong> style-regler med skalfilter matchar inte förväntad zoom.</li>
-          <li><strong>Symptom:</strong> växlande symbolik mellan zoomnivåer. <strong>Orsak:</strong> överlappande rule-intervall.</li>
+          <li><strong>Symptom:</strong> legend stämmer inte med karta. <strong>Orsak:</strong> style-regel + skalintervall matchar inte klientzoom.</li>
+          <li><strong>Symptom:</strong> tematisk karta ser gammal ut i en vy. <strong>Orsak:</strong> WMTS-cache inte uppdaterad för alla nivåer.</li>
+          <li><strong>Symptom:</strong> svårtolkad kartbild. <strong>Orsak:</strong> opacitet + tematiska färger kolliderar med bakgrund.</li>
         </ul>
-
-        <h2 id="cache">Style + cache</h2>
-        <ol>
-          <li>Kör GetMap med liten bbox.</li>
-          <li>Kör GetLegendGraphic.</li>
-          <li>Truncate/seed cache i begränsad bbox och nivåspann.</li>
-          <li>Verifiera i Origo att WMTS och WMS inte divergerar visuellt.</li>
-        </ol>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Om alla team använder SLD eller blandar med GeoServer CSS i drift. Verifiera här: stylebibliotek i GeoServer data_dir/style-repo.</li>
+          <li>Om alla team använder gemensam style-review innan publicering. Verifiera här: teamens releaseprocess.</li>
         </ul>
       </section>
     </main>
