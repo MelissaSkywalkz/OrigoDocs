@@ -32,3 +32,24 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Varför lokal HTTP-server inte accepterar anslutning i denna körmiljö (påverkar browser-baserad liveverifiering här).
+
+## 2026-02-23 (revidering 8: innehållsutbyggnad i canonical design)
+
+### Vad ändrades
+- Byggde ut dokumentationsinnehåll i canonical layout (samma nav/search/DOM-hooks som `pages/try-it.html`) för:
+  - `pages/start-har.html`
+  - `pages/origo-guide.html`
+  - `pages/geoserver.html`
+  - `pages/geoserver-styles.html`
+  - `pages/geowebcache.html`
+  - `pages/wms-wmts-prestanda.html`
+  - `pages/examples.html`
+  - `pages/troubleshooting.html`
+  - `pages/standarder-konventioner.html`
+- Harmoniserade navtexter så nya ämnen ligger i samma Dokumentation-meny som övriga sidor (ingen separat meny).
+- Uppdaterade `index.html` för konsekvent nav/search och tydligare ingångar till de utbyggda guiderna.
+- Regenererade `search/search-index.json` så nya avsnitt, rubriker och texter är sökbara.
+
+### Okänt hos oss (behöver bekräftas)
+- Exakta tröskelvärden/standard för cache-hit headers mellan alla miljöer (intern/proxy/extern).
+- Tydlig central policy för när lager ska flyttas från WMS till WMTS som bindande regel.

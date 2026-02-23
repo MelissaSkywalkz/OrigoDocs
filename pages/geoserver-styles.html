@@ -1,1 +1,58 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>GeoServer: stilsättning</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav" aria-label="Sidomeny"><div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a></div><div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i OrigoDocs…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html" aria-current="page">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a><a href="try-it.html">Try it-lab</a><a href="release-playbook.html">Release-playbook</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button" aria-label="Meny"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Stilsättning (SLD/legend)</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>Style är datalogik hos oss. Vi optimerar för begriplighet, skala och legendprestanda.</p><h2 id="rule">Känt fel: RULE=undefined</h2><p><strong>Symptom:</strong> <code>Specified style does not contains a rule named undefined</code>.<br/><strong>Orsak:</strong> RULE skickas tom/undefined eller matchar inte Rule Name.<br/><strong>Fix:</strong> skicka RULE endast när giltigt och mappa mot <code>Rule/Name</code> (inte Title).</p><h2 id="legend">Legendpraxis</h2><ul><li>Begär legend bara när panelen faktiskt visas.</li><li>Undvik auto-anrop för lager utan verksamhetsnytta i aktuell vy.</li><li>Verifiera alltid style + legend + cache tillsammans.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><p>Formell övre gräns för style-komplexitet (antal regler) innan uppdelning krävs.</p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeoServer: stilsättning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">&gt;_ Origo Docs</a></div>
+      <div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div>
+      <div class="nav-content">
+        <div class="nav-section">
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">Dokumentation</button>
+          <div class="accordion-panel" id="nav-docs">
+            <a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a><a href="geoserver-styles.html" aria-current="page">GeoServer: stilsättning</a><a href="geowebcache.html">GeoWebCache</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="try-it.html">Try it-lab</a><a href="troubleshooting.html">Felsökning</a><a href="standarder-konventioner.html">Standarder &amp; konventioner</a><a href="release-playbook.html">Release-playbook</a>
+          </div>
+        </div>
+        <div class="nav-section"><button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">Snabblänkar</button><div class="accordion-panel" id="nav-shortcuts" hidden><a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a><a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a></div></div>
+      </div>
+    </nav>
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true" type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Stilsättning</h1></div><div class="topbar-meta"><span class="status-pill">SLD</span></div></header>
+      <section class="doc-content">
+        <h2 id="ansvar">Stilen är datalogik, inte bara färg</h2>
+        <p>Hos oss byggs regler på attribut, skala och ibland filterkombinationer. En stil ska ha ett tydligt ansvar.</p>
+
+        <h2 id="praxis">Praxis hos oss</h2>
+        <ul>
+          <li>Undvik stora "legacy styles" utan struktur.</li>
+          <li>Dela upp regler med tydliga block och namn.</li>
+          <li>Använd skalintervall aktivt för att minska onödig rendering.</li>
+          <li>Sätt transparens i Origo när användaren ska kunna ändra själv.</li>
+        </ul>
+
+        <h2 id="legend">Legendhantering</h2>
+        <p>GetLegendGraphic är en prestandafälla när den överanvänds. Vi begär bara legend när den faktiskt visas.</p>
+        <p>Vanligt fel: <code>Specified style does not contains a rule named undefined</code>.</p>
+        <ul>
+          <li><strong>Orsak:</strong> klient skickar <code>RULE=undefined</code> eller ett namn som inte finns i <code>&lt;Rule&gt;&lt;Name&gt;</code>.</li>
+          <li><strong>Fix:</strong> skicka RULE endast när värdet är giltigt och matchar Rule Name (inte Title).</li>
+        </ul>
+
+        <h2 id="specialfall">Specialfall från vår drift</h2>
+        <ul>
+          <li>ÅÄÖ i SLD kräver UTF-8 i XML-header.</li>
+          <li>Ritordning i Origo följer omvänd upplevd ordning mot SLD-listan – verifiera visuellt.</li>
+          <li>Rasterproblem med "−∞" löses genom att ersätta tecknet <code>−</code> med vanligt bindestreck <code>-</code>.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

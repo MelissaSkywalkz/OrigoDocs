@@ -1,1 +1,57 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Felsökningshandbok</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav" aria-label="Sidomeny"><div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a></div><div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i OrigoDocs…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html" aria-current="page">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a><a href="try-it.html">Try it-lab</a><a href="release-playbook.html">Release-playbook</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button" aria-label="Meny"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Support</span><h1>Felsökningshandbok</h1></div></header><section class="doc-content"><h2 id="metod">Metod hos oss</h2><ol><li>Testa GeoServer direkt (GetMap/Legend/Capabilities).</li><li>Kolla REST/loggar.</li><li>Isolera lager/stil.</li><li>Felsök Origo sist.</li></ol><h2 id="rule-undefined">RULE=undefined</h2><p>Symptom: legendfel om rule name är undefined eller inte matchar SLD Rule Name.</p><h2 id="schema">Schema/flush-fel</h2><p>Symptom: <code>Schema does not exist</code> / <code>Unable to flush</code>. Fix: data/store/schema först, frontend sen.</p><h2 id="cant-obtain-schema">Can't obtain schema</h2><p>Symptom: legend faller p.g.a. trasig datakälla. Åtgärd: samma som schema-fel.</p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Felsökning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">&gt;_ Origo Docs</a></div>
+      <div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div>
+      <div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GeoWebCache</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="try-it.html">Try it-lab</a><a href="troubleshooting.html" aria-current="page">Felsökning</a><a href="standarder-konventioner.html">Standarder &amp; konventioner</a><a href="release-playbook.html">Release-playbook</a></div></div><div class="nav-section"><button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">Snabblänkar</button><div class="accordion-panel" id="nav-shortcuts" hidden><a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a><a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a></div></div></div>
+    </nav>
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true" type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Drift</span><h1>Felsökning</h1></div><div class="topbar-meta"><span class="status-pill">Symptom → Fix</span></div></header>
+      <section class="doc-content">
+        <h2 id="metod">Metod hos oss</h2>
+        <ol>
+          <li>Testa direkt mot GeoServer (GetMap/GetLegendGraphic/GetFeatureInfo).</li>
+          <li>Kontrollera capabilities, REST och loggar.</li>
+          <li>Isolera lager för lager, stil för stil.</li>
+          <li>Felsök Origo sist.</li>
+        </ol>
+
+        <h2 id="rule">Legend-fel: <code>RULE=undefined</code></h2>
+        <p><strong>Symptom:</strong> <code>Specified style does not contains a rule named undefined</code>.</p>
+        <p><strong>Orsak:</strong> klienten skickar RULE utan giltigt värde eller med Rule Name som inte finns i SLD.</p>
+        <p><strong>Verifiera:</strong> kontrollera request-URL och matcha mot <code>&lt;Rule&gt;&lt;Name&gt;</code> i aktuell stil.</p>
+        <p><strong>Fix:</strong> skicka RULE endast när värdet är giltigt och synkat med SLD Rule Name.</p>
+
+        <h2 id="schema-flush">Datakälla trasig: schema/flush-fel</h2>
+        <p><strong>Symptom:</strong> <code>Schema '...' does not exist</code> / <code>Unable to flush 'workspace:layer'</code>.</p>
+        <p><strong>Orsak:</strong> tabell/vy saknas eller store pekar mot fel databas/schema/behörighet.</p>
+        <p><strong>Verifiera:</strong> öppna lager i GeoServer, testa anslutning i store, kontrollera Tomcat-loggar.</p>
+        <p><strong>Fix:</strong> återskapa tabell/vy, peka om store/lager eller avpublicera lagret och rensa referenser i layergroups/klient.</p>
+
+        <h2 id="cant-obtain">Legend-fel p.g.a. datakälla</h2>
+        <p><strong>Symptom:</strong> <code>Can't obtain the schema for the required layer</code> vid GetLegendGraphic.</p>
+        <p><strong>Orsak:</strong> samma grundorsak som schema/flush-problem.</p>
+        <p><strong>Fix:</strong> börja i datakällan, inte i frontend.</p>
+
+        <h2 id="checklist">Snabb checklista innan incident stängs</h2>
+        <ul>
+          <li>Lager svarar med korrekt statuskod i GetMap.</li>
+          <li>Legend fungerar utan RULE-fel.</li>
+          <li>Cache-läge (WMS/WMTS) verifierat för lagret.</li>
+          <li>Ändring dokumenterad i changelog.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
