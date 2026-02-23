@@ -525,7 +525,7 @@
     "category": "Verktyg",
     "url": "pages/try-it.html",
     "heading": "Try it-lab",
-    "content": "Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren. Snabbstart: JSON / GeoJSON Kartsandlåda URL-builder BBOX / Extent Upplösningar Gridset / Tile Gridset-utforskare SLD Avancerat Valideringsrapport Körhistorik JSON / GeoJSON Validera och formatera JSON. Identifiera GeoJSON, beräkna BBOX och exportera i olika format. Inmatning Validera Formatera Validera kontrollerar utan att ändra inmatningen. Formatera skriver om inmatningen. Kopiera Rensa Avancerat M",
+    "content": "Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren. Snabbstart: JSON / GeoJSON Kartsandlåda URL-builder BBOX / Extent Upplösningar Gridset / Tile Gridset-utforskare SLD Skövde-cases Så gör vi hos oss: Try-it scenarios (copy/paste) Bevara samma lab-mekanik, men testa med våra faktiska mönster och felbilder. WMS GetMap (min bbox): Kör URL-builder med bas https://srv-origo01.kommun.skovde.se/geoserver/ows/ , liten bbox i EPSG:3008 och kontrollera svarstid",
     "type": "page",
     "weight": 1
   },
