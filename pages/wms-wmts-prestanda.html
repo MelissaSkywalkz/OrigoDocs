@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WMS/WMTS-prestanda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Prestanda</span><h1>WMS/WMTS-prestanda och laststrategi</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Förklara vår praktiska strategi: WMTS där det går, WMS där det måste vara dynamiskt.</p>
+
+        <h2 id="strategi">Strategi</h2>
+        <ul>
+          <li><strong>WMTS:</strong> cache och snabb rendering.</li>
+          <li><strong>WMS:</strong> dynamiska filter/stilar och tät förändring.</li>
+        </ul>
+
+        <h2 id="lar-dom">Prestandalärdomar i vår miljö</h2>
+        <ul>
+          <li>Ett trasigt lager kan blockera hel kartupplevelse och skapa timeouts.</li>
+          <li>Små anrop (legend/GetFeatureInfo) kan bli större flaskhals än tiles.</li>
+          <li>Group layers påverkar cache/render mer än man först tror.</li>
+        </ul>
+
+        <h2 id="jmf">Observerad jämförelse hos oss</h2>
+        <p>I våra anteckningar finns exempel där WMS ligger runt 500–700 ms medan WMTS ligger runt 70–200 ms för jämförbar bakgrund. Använd det som riktning, inte absolut sanning.</p>
+
+        <h2 id="checklista">Checklista vid prestandaproblem</h2>
+        <ol>
+          <li>Testa GeoServer direkt (GetMap/GetLegendGraphic).</li>
+          <li>Kontrollera loggar i Tomcat + webbserver/proxy.</li>
+          <li>Verifiera om klienten använder WMTS eller fallbackar till WMS.</li>
+          <li>Isolera lager/stil stegvis innan UI-optimering.</li>
+        </ol>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakt gränsvärde för när WMS-svarstid klassas som driftincident. Verifiera här: övervaknings/SLA-rutin.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
