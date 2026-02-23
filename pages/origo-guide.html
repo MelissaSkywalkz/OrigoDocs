@@ -9,45 +9,43 @@
   </head>
   <body class="layout">
     <main class="main" id="main">
-      <header class="topbar">
-        <button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button>
-        <div class="topbar-title"><span class="eyebrow">Origo</span><h1>Origo i vår miljö</h1></div>
-      </header>
-
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Origo</span><h1>Helhetsbild: Origo + GeoServer + GWC</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Dokumentera vår faktiska klientprofil: EPSG:3008, blandning av intern/publik WMS, WMTS via GWC och stora verksamhetsgrupper med många tematiska lager.</p>
+        <p>Förankra hur vi faktiskt arbetar: GeoServer är sanningskälla, GWC är cache/prestanda, Origo är presentation och interaktion.</p>
 
-        <h2 id="realitet">Hur vår konfig faktiskt ser ut</h2>
+        <h2 id="ansvar">Ansvarsfördelning mellan lager</h2>
         <ul>
-          <li>Huvudprojektion: <code>EPSG:3008</code> med egen resolutions-lista i klienten.</li>
-          <li>Källor: <code>publik_wms</code>, <code>intern_wms</code>, <code>publik_wmts</code>, <code>publik_wfs</code>, <code>intern_wfs</code>, <code>csw</code>.</li>
-          <li>Tematiska lager är vanliga: många lager har <code>hasThemeLegend: true</code> + <code>thematicStyling: true</code> (t.ex. skyfall, buller, VA, geologi).</li>
-          <li>Flera lager är medvetet icke-frågbara: <code>queryable: "false"</code> används i bl.a. planmosaik, höjdkurvor, vindlager.</li>
+          <li><strong>GeoServer:</strong> data, attribut, filter, stilar och grundprestanda.</li>
+          <li><strong>GeoWebCache:</strong> WMTS, single tiles/tiled, on-demand cache och seed/truncate.</li>
+          <li><strong>Origo:</strong> konfig, lagerdefinitioner, UX, synlighet, interaktionsflöde och laddningsstrategi.</li>
         </ul>
 
-        <h2 id="gruppstruktur">Gruppstruktur vi behöver förhålla oss till</h2>
-        <p>Vår lagerstruktur är djup och verksamhetsstyrd (exempel: <code>natur_miljo → klimat → oversvamning_skyfall_dagvatten → skyfallskartering_2024</code> och <code>samhallsbyggnad → projekt → projekt_avima</code>). Det påverkar onboarding, prestanda och felsökning.</p>
+        <h2 id="grundprincip">Grundprincip vi följer</h2>
+        <p><strong>Så mycket logik som möjligt i GeoServer.</strong> Origo ska visa och styra interaktion – inte räkna eller gissa affärslogik.</p>
 
-        <h2 id="kritiska-lagerfamiljer">Kritiska lagerfamiljer (driftpåverkan)</h2>
+        <h2 id="praktiska-konsekvenser">Praktiska konsekvenser i vår konfig</h2>
         <ul>
-          <li><strong>Skyfall/klimat:</strong> många årgångar + tematiska lager (2021/2022/2023/2024) med hög legend- och renderbelastning.</li>
-          <li><strong>Buller:</strong> flera tematiska bullerskikt (Leq/Lmax, väg/järnväg) som ofta används i kombination.</li>
-          <li><strong>VA:</strong> punkt/linje-lager med tematisk styling i intern_wms, ofta känsliga för informationskrav och prestanda.</li>
-          <li><strong>Bakgrund:</strong> både WMTS och WMS-variant av topowebb finns parallellt, vilket kräver tydlig förvaltningsdisciplin.</li>
+          <li>Tydlig separation mellan <code>intern:</code> och <code>publik:</code> lager/källor.</li>
+          <li>Många tematiska lager med legendkrav (<code>hasThemeLegend</code> / <code>thematicStyling</code>).</li>
+          <li>Blandning av WMS/WMTS där WMTS används för hastighet och WMS för dynamik.</li>
+          <li>Lager med <code>queryable: false</code> används medvetet när feature info inte ska/kan ges.</li>
         </ul>
 
-        <h2 id="varfor">Varför vi gör så här</h2>
+        <h2 id="origo-principer">Origo-principer</h2>
         <ul>
-          <li>WMTS används där upplevelsehastighet är viktig (bakgrunder, vissa baslager).</li>
-          <li>WMS behålls brett för flexibilitet i style/filter och snabb dataleverans utan seed-beroende.</li>
-          <li>Tematiska lager prioriteras för verksamhetsanalys, vilket ökar kraven på legendhantering och felsökning.</li>
+          <li>Konfigurationsdrivet arbetssätt i <code>index.json</code>.</li>
+          <li>Tydliga lagerdefinitioner: källa, synlighet, zoomintervall, ev. queryable.</li>
+          <li>Undvik dolda beroenden och UI-fixar som egentligen ska lösas i data/stil/filter.</li>
+          <li>Prestanda först: kontroll på vad som laddas när (lazy/load-ordning).</li>
         </ul>
+
+        <h2 id="viktig-insikt">Viktig insikt i felsökning</h2>
+        <p>Om något är långsamt i Origo är det nästan alltid långsamt i GeoServer först. Börja alltid med serveranrop och loggar innan klientjusteringar.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Om vi har formell regel för när dubbla WMS/WMTS-versioner av samma bakgrundslager får förekomma. Verifiera här: produktions-<code>index.json</code> + driftbeslut i ops-dokumentation.</li>
-          <li>Om queryable-policy är centraliserad eller lagerägarstyrd. Verifiera här: lagerförvaltningsrutiner i verksamhetsteamen.</li>
+          <li>Formell, dokumenterad policy för exakt när lager ska växla från WMS till WMTS. Verifiera här: driftbeslut/arkitekturriktlinje för kartlager.</li>
         </ul>
       </section>
     </main>

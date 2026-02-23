@@ -1,25 +1,22 @@
 # Changelog – OrigoDocs
 
-## 2026-02-23 (revidering 3 efter review)
+## 2026-02-23 (revidering 4 efter review)
 
 ### Vad lades till
-- Flera nya driftförankrade avsnitt från interna anteckningar: server-URL:er, Git/remote-flöde, AD-behörigheter, seed-rutiner och prestandajämförelser WMS/WMTS.
-- Ny explicit felsökningskedja för tre återkommande loggfel:
-  - RULE=undefined i legend
-  - Schema does not exist / Unable to flush
-  - Can't obtain schema for layer
-- Konkreta quick recipes uppdaterade till `/geoserver/ows/` samt WMTS/GWC-endpoint i vår miljö.
+- Ny tydlig "helhetsbild" av ansvarsfördelning: GeoServer (sanning), GWC (cache), Origo (presentation/logiklager).
+- Tydligare backend-först-princip i flera sidor.
+- Metodisk felsökningsordning dokumenterad: GeoServer först, Origo sen.
 
 ### Vad skrevs om
-- `pages/start-har.html`: onboarding och kritiska URL:er.
-- `pages/geoserver.html`: attribut, filter, specialtecken och datakällafelsökning.
-- `pages/geoserver-styles.html`: RULE-fel och legendpraktik.
-- `pages/geowebcache.html`: två använda bbox-varianter och seed-rutin.
-- `pages/troubleshooting.html`: utökad handbok med loggfel från verklig drift.
-- `pages/standarder-konventioner.html`: AD-behörighet, Git/extern-branch, change management.
+- `pages/origo-guide.html`: omskriven till arkitektur-/ansvarssida.
+- `pages/geoserver.html`: omskriven med datamodellprinciper och filterpraxis.
+- `pages/geoserver-styles.html`: omskriven med style=logik, legendfällor och RULE-fel.
+- `pages/wms-wmts-prestanda.html`: omskriven med WMTS där det går, WMS där det måste vara dynamiskt.
+- `pages/troubleshooting.html`: omskriven till tydlig metodik + vanliga felmönster.
+- `pages/start-har.html` och `pages/standarder-konventioner.html`: skärpta för onboarding och kunskapsöverföring.
 
 ### Okänt hos oss (behöver bekräftas)
-- Officiell standard-BBOX för Skövde seed (vi har två varianter i anteckningar).
-  - Verifiera här: teamets GWC driftmall.
-- Exakt klientregel för vilka lager som får/inte får RULE vid legendanrop.
-  - Verifiera här: klientkod för legend/thematic-funktion.
+- Formella tröskelvärden för när WMS-latens kräver incident eskalering.
+  - Verifiera här: driftens monitorerings-/SLA-dokument.
+- Officiell policy för max komplexitet i en enskild style (antal regler/legendkrav).
+  - Verifiera här: style-governance i förvaltningsrutiner.

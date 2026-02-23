@@ -9,42 +9,55 @@
   </head>
   <body class="layout">
     <main class="main" id="main">
-      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Attribut &amp; filtrering</h1></div></header>
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Attribut & filtrering (hur vi gör)</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Dokumentera hur vi undviker vanliga fel i attribut, CQL och datakällor i vår GeoServer-miljö.</p>
+        <p>Beskriva vår datamodellpraxis så att filter, stilar, feature info och legend blir stabila över tid.</p>
 
-        <h2 id="attribut">Attribut: hur vi gör</h2>
+        <h2 id="attribut-princip">Attributprincip</h2>
         <ul>
-          <li>Attribut som används för filter i GeoServer behöver finnas kvar i datakällan även om de inte ska exponeras tydligt i Origo-popup.</li>
-          <li>När attribut visas i klienten (t.ex. fastighet/adress) måste namn hållas stabila över tid.</li>
-          <li>HTML-attribut kan användas i GeoServer (t.ex. länkfält), men <strong>hemligheter får inte hårdkodas</strong> i dokumentation eller style/attribututtryck.</li>
+          <li>Attribut ska vara <strong>stabila, förutsägbara, konsekventa</strong>.</li>
+          <li>Samma betydelse = samma värden = samma casing.</li>
+          <li>Fält används ofta samtidigt till CQL, style-regler, feature info och legendlogik.</li>
         </ul>
 
-        <h2 id="filtrering">Filtrering: rekommenderad ordning</h2>
+        <h2 id="attribut-undvik">Undvik</h2>
+        <ul>
+          <li>Blandade datatyper (text/nummer i samma fält).</li>
+          <li>Tomma strängar där <code>NULL</code> borde användas.</li>
+          <li>Semantiska fritextvärden som frontend måste tolka.</li>
+        </ul>
+
+        <h2 id="attribut-foredra">Föredra</h2>
+        <ul>
+          <li>Kodvärden (ex. status 1/2/3).</li>
+          <li>Tydliga booleska värden.</li>
+          <li>Enkla jämförelser: <code>=</code>, <code>IN</code>, <code>IS NOT NULL</code>.</li>
+        </ul>
+
+        <h2 id="filtrering">Filtrering: vår ordning</h2>
         <ol>
-          <li>Layer filter för permanenta regler.</li>
-          <li>viewparams för kontrollerade parametrar.</li>
-          <li>CQL_FILTER för test/felsökning.</li>
+          <li>Filtrera så tidigt som möjligt i GeoServer.</li>
+          <li>Hellre flera tydliga lager än frontend-magisk filtrering.</li>
+          <li>Undvik att filtrera samma data på flera ställen (dubbellogik).</li>
         </ol>
-        <pre><code># CQL-exempel (adressstatus)
-"Status" = 'L' AND "Borttagen hos LM" = 'N' AND "Adressplatsstatus" = '1'</code></pre>
 
-        <h2 id="specialtecken">Specialtecken och kända fällor</h2>
+        <h2 id="fallgropar">Kända fallgropar</h2>
         <ul>
-          <li>CQL och filter kan fallera med vissa specialtecken; verifiera alltid mot faktiskt datautfall.</li>
-          <li>Raster/TIF-problem med tecken som <code>−∞</code> förekommer: använd vanligt bindestreck <code>-</code> i stället för matematiskt minus.</li>
-          <li>SLD ska vara UTF-8-kodad för ÅÄÖ: <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code>.</li>
+          <li>För komplex CQL i realtid.</li>
+          <li>Lagerberoenden som Origo måste “förstå”.</li>
+          <li>Specialteckenproblem i CQL/SLD utan konsekvent encoding.</li>
         </ul>
 
-        <h2 id="datakalla-fel">Datakälla trasig: schema/flush-fel</h2>
-        <p><strong>Symptom:</strong> <code>Schema '...' does not exist</code> eller <code>Unable to flush 'workspace:layer'</code>.</p>
-        <p><strong>Trolig orsak:</strong> tabell/vy saknas, fel schema/databas, eller fel behörighet i store.</p>
-        <p><strong>Fix:</strong> återskapa tabell/vy, peka om store/lager, eller avpublicera lagret och rensa referenser i layergroups/klient.</p>
+        <h2 id="fel-schema">Symptom: schema/flush-fel</h2>
+        <p><strong>Symptom:</strong> <code>Schema '...' does not exist</code> / <code>Unable to flush 'workspace:layer'</code>.</p>
+        <p><strong>Orsak:</strong> tabell/vy saknas, fel store eller fel behörighet.</p>
+        <p><strong>Verifiera:</strong> GeoServer logg + datakälla + workspace/lagerkoppling.</p>
+        <p><strong>Fix:</strong> återskapa tabell/vy, peka om store, eller avpublicera/rensa lagerreferenser.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Vilka lager som fortfarande aktivt använder viewparams i produktion. Verifiera här: GeoServer layer config + SQL-vyer i databasrepo.</li>
+          <li>Vilken miniminivå av attributkontrakt som ska vara obligatorisk i alla team. Verifiera här: intern publiceringsstandard.</li>
         </ul>
       </section>
     </main>

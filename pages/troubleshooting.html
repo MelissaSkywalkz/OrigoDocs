@@ -11,32 +11,37 @@
     <main class="main" id="main">
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Support</span><h1>Felsökningshandbok</h1></div></header>
       <section class="doc-content">
-        <h2 id="symptom">Symptom → trolig orsak → verifiera → fix</h2>
+        <h2 id="metod">Metodiskt arbetssätt (vår standard)</h2>
+        <ol>
+          <li>Testa direkt mot GeoServer: GetMap, GetLegendGraphic, Capabilities.</li>
+          <li>Kontrollera REST/loggar.</li>
+          <li>Isolera lager för lager, stil för stil.</li>
+          <li>Först därefter felsök Origo-konfig/UX.</li>
+        </ol>
 
-        <h3 id="rule-undefined">Legendfel: "Specified style does not contains a rule named undefined"</h3>
-        <p><strong>Trolig orsak:</strong> RULE-parametern skickas som <code>undefined</code> eller pekar på fel Rule Name.</p>
-        <p><strong>Verifiera:</strong> kontrollera nätverksanrop för <code>GetLegendGraphic</code> och om <code>RULE=undefined</code> förekommer.</p>
-        <p><strong>Fix:</strong> skicka RULE bara vid giltigt värde och matcha <code>&lt;Rule&gt;&lt;Name&gt;</code> i SLD.</p>
+        <h2 id="rule">Symptom: RULE=undefined i legend</h2>
+        <p><strong>Orsak:</strong> RULE-parameter felaktig eller tom.</p>
+        <p><strong>Verifiera:</strong> nätverksspår + kontroll av Rule Name i SLD.</p>
+        <p><strong>Fix:</strong> skicka RULE endast med giltig Name.</p>
 
-        <h3 id="schema-missing">Fel: "Schema does not exist" / "Unable to flush"</h3>
-        <p><strong>Trolig orsak:</strong> tabell/vy saknas eller store pekar fel (schema/databas/behörighet).</p>
-        <p><strong>Verifiera:</strong> GeoServer-logg + datakälla för lagret.</p>
-        <p><strong>Fix:</strong> återställ datakälla, peka om store, eller avpublicera/rensa lagret i layergroups/klient.</p>
+        <h2 id="schema">Symptom: Schema saknas / Unable to flush</h2>
+        <p><strong>Orsak:</strong> trasig datakälla (schema/tabell/vy/store/behörighet).</p>
+        <p><strong>Verifiera:</strong> GeoServer-loggar + datakällans anslutning/schema.</p>
+        <p><strong>Fix:</strong> återställ data eller peka om store; annars avpublicera/rensa lagerreferenser.</p>
 
-        <h3 id="cant-obtain-schema">Legendfel: "Can't obtain the schema for the required layer"</h3>
-        <p><strong>Trolig orsak:</strong> samma datakälleproblem som ovan; GeoServer kan inte läsa feature type.</p>
-        <p><strong>Verifiera:</strong> testa WMS + GetLegendGraphic på samma lager och jämför loggmeddelanden.</p>
-        <p><strong>Fix:</strong> samma som schema/flush-fel.</p>
+        <h2 id="cant-obtain">Symptom: Can't obtain schema for required layer</h2>
+        <p><strong>Orsak:</strong> samma grundorsak som schema/flush-fel.</p>
+        <p><strong>Verifiera:</strong> jämför WMS och legendanrop för samma lager.</p>
+        <p><strong>Fix:</strong> åtgärda datakällan först, inte UI.</p>
 
-        <h3 id="wms-langsam">WMS är långsam (500–700 ms) jämfört med WMTS (70–200 ms)</h3>
-        <p><strong>Trolig orsak:</strong> renderkostnad, proxy/webbserver, Tomcat eller cacheflöde.</p>
-        <p><strong>Verifiera:</strong> mät samma lager som WMS och WMTS, granska Tomcat + webbserverloggar.</p>
-        <p><strong>Fix:</strong> seed WMTS där lämpligt, optimera style/filter, och felsök flaskhals i serverkedjan.</p>
+        <h2 id="langsam">Symptom: Origo upplevs långsam</h2>
+        <p><strong>Orsak:</strong> nästan alltid servernära (GeoServer/GWC/proxy/logik) före frontend.</p>
+        <p><strong>Verifiera:</strong> mät WMS/WMTS-responstid direkt; jämför mot klientupplevelse.</p>
+        <p><strong>Fix:</strong> flytta till WMTS där möjligt, minimera legendanrop och förenkla lagersammansättning.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Vilken komponent som oftast står för latens (GeoServer, proxy, nätverk, AV). Verifiera här: korrelerade loggar i Tomcat + webbserver/infra.</li>
-          <li>Exakt lista med lager som ska blockeras från legendhämtning i klient. Verifiera här: klientkonfig + supportloggar.</li>
+          <li>Exakta larmgränser per endpoint (WMS/WMTS/legend). Verifiera här: monitoreringskonfig/APM.</li>
         </ul>
       </section>
     </main>
