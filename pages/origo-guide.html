@@ -1,54 +1,7 @@
 <!doctype html>
 <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Origo i vår miljö</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
-  </head>
-  <body class="layout">
-    <main class="main" id="main">
-      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Origo</span><h1>Helhetsbild: Origo + GeoServer + GWC</h1></div></header>
-      <section class="doc-content">
-        <h2 id="syfte">Syfte</h2>
-        <p>Förankra hur vi faktiskt arbetar: GeoServer är sanningskälla, GWC är cache/prestanda, Origo är presentation och interaktion.</p>
-
-        <h2 id="ansvar">Ansvarsfördelning mellan lager</h2>
-        <ul>
-          <li><strong>GeoServer:</strong> data, attribut, filter, stilar och grundprestanda.</li>
-          <li><strong>GeoWebCache:</strong> WMTS, single tiles/tiled, on-demand cache och seed/truncate.</li>
-          <li><strong>Origo:</strong> konfig, lagerdefinitioner, UX, synlighet, interaktionsflöde och laddningsstrategi.</li>
-        </ul>
-
-        <h2 id="grundprincip">Grundprincip vi följer</h2>
-        <p><strong>Så mycket logik som möjligt i GeoServer.</strong> Origo ska visa och styra interaktion – inte räkna eller gissa affärslogik.</p>
-
-        <h2 id="praktiska-konsekvenser">Praktiska konsekvenser i vår konfig</h2>
-        <ul>
-          <li>Tydlig separation mellan <code>intern:</code> och <code>publik:</code> lager/källor.</li>
-          <li>Många tematiska lager med legendkrav (<code>hasThemeLegend</code> / <code>thematicStyling</code>).</li>
-          <li>Blandning av WMS/WMTS där WMTS används för hastighet och WMS för dynamik.</li>
-          <li>Lager med <code>queryable: false</code> används medvetet när feature info inte ska/kan ges.</li>
-        </ul>
-
-        <h2 id="origo-principer">Origo-principer</h2>
-        <ul>
-          <li>Konfigurationsdrivet arbetssätt i <code>index.json</code>.</li>
-          <li>Tydliga lagerdefinitioner: källa, synlighet, zoomintervall, ev. queryable.</li>
-          <li>Undvik dolda beroenden och UI-fixar som egentligen ska lösas i data/stil/filter.</li>
-          <li>Prestanda först: kontroll på vad som laddas när (lazy/load-ordning).</li>
-        </ul>
-
-        <h2 id="viktig-insikt">Viktig insikt i felsökning</h2>
-        <p>Om något är långsamt i Origo är det nästan alltid långsamt i GeoServer först. Börja alltid med serveranrop och loggar innan klientjusteringar.</p>
-
-        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
-        <ul>
-          <li>Formell, dokumenterad policy för exakt när lager ska växla från WMS till WMTS. Verifiera här: driftbeslut/arkitekturriktlinje för kartlager.</li>
-        </ul>
-      </section>
-    </main>
-    <script src="../assets/js/main.js"></script>
-  </body>
-</html>
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Origo i vår miljö</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head>
+<body class="layout">
+<nav class="sidenav" id="sidenav" aria-label="Sidomeny"><div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a></div><div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i OrigoDocs…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html" aria-current="page">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a><a href="try-it.html">Try it-lab</a><a href="release-playbook.html">Release-playbook</a></div></div></div></nav><div class="nav-backdrop" hidden></div>
+<main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button" aria-label="Meny"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Origo</span><h1>Helhetsbild: Origo + GeoServer + GWC</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>GeoServer är vår sanningskälla, GWC vår cachemotor och Origo vårt presentationslager.</p><h2 id="ansvar">Ansvarsfördelning</h2><ul><li><strong>GeoServer:</strong> data, attribut, filter, stilar, grundprestanda.</li><li><strong>GWC:</strong> WMTS, tile-cache, seed/truncate.</li><li><strong>Origo:</strong> konfig, UX, interaktion och laststrategi.</li></ul><h2 id="princip">Grundprincip</h2><p>Så mycket logik som möjligt i GeoServer – Origo ska i första hand visa, inte tolka affärslogik.</p><h2 id="konsekvenser">Konsekvenser i vår vardag</h2><ul><li>Intern/publik-separation i källor och lager.</li><li>Många tematiska lager driver legend- och renderlast.</li><li>WMS + WMTS används parallellt medvetet.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><p>Formell tröskel när lager ska migreras från WMS till WMTS. Verifiera här: driftens arkitekturbeslut/riktlinjer.</p></section></main>
+<script src="../assets/js/main.js"></script></body></html>
