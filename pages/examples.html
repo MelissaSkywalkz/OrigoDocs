@@ -11,8 +11,8 @@
     <main class="main" id="main">
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Recipes</span><h1>Quick recipes</h1></div></header>
       <section class="doc-content">
-        <h2 id="wms-getmap">WMS GetMap test (liten bbox, låg last)</h2>
-        <pre><code>curl -G 'https://srv-origo01.kommun.skovde.se/geoserver/publik/wms' \
+        <h2 id="wms-getmap">WMS GetMap (låg last, liten bbox)</h2>
+        <pre><code>curl -G 'https://srv-origo01.kommun.skovde.se/geoserver/ows/' \
   --data-urlencode 'service=WMS' \
   --data-urlencode 'version=1.1.1' \
   --data-urlencode 'request=GetMap' \
@@ -24,26 +24,29 @@
   --data-urlencode 'width=512' \
   --data-urlencode 'height=512'</code></pre>
 
-        <h2 id="wmts">WMTS GetTile (vår GWC-endpoint)</h2>
+        <h2 id="wmts">WMTS test</h2>
         <pre><code>https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts?SERVICE=WMTS&amp;REQUEST=GetTile&amp;VERSION=1.0.0
 &amp;LAYER=publik:lm_wms_fastighetsgrans_l&amp;STYLE=&amp;TILEMATRIXSET=EPSG:3008
 &amp;TILEMATRIX=EPSG:3008:10&amp;TILEROW=620&amp;TILECOL=430&amp;FORMAT=image/png</code></pre>
 
-        <h2 id="legend">GetLegendGraphic för temalager</h2>
-        <pre><code>https://srv-origo01.kommun.skovde.se/geoserver/ows?service=WMS&amp;request=GetLegendGraphic
-&amp;layer=publik:klimat_skyfall_sodra_ryd_2024_max_vattendjup_ma_100_y&amp;format=image/svg+xml&amp;transparent=true</code></pre>
+        <h2 id="legend">GetLegendGraphic + RULE-feltest</h2>
+        <pre><code># Normal
+https://srv-origo01.kommun.skovde.se/geoserver/ows?service=WMS&amp;request=GetLegendGraphic
+&amp;layer=publik:gata_buller2021_ljudutbr_vag_lmax_y&amp;format=image/svg+xml&amp;transparent=true
 
-        <h2 id="gwc-check">GWC seed/troubleshoot-checklista</h2>
+# Kontrollera att RULE INTE blir undefined
+&amp;RULE=&lt;rule_name_från_SLD&gt;</code></pre>
+
+        <h2 id="gwc">GWC seed-checklista</h2>
         <ol>
-          <li>GetMap fungerar i WMS?</li>
-          <li>Legend fungerar för berört temalager?</li>
-          <li>Truncate på rätt lager/grupp?</li>
-          <li>Seed med rätt bbox + nivåspann?</li>
-          <li>Verifierat både i WMTS-anrop och i Origo?</li>
+          <li>Välj EPSG:3008 gridset.</li>
+          <li>Sätt bbox (inte tom).</li>
+          <li>Kör truncate före seed.</li>
+          <li>Verifiera i klient att WMTS används.</li>
         </ol>
 
-        <h2 id="sakerhet">Säkerhet i exempel</h2>
-        <p>Maskera alltid tokens/nycklar i externa URL:er. Exempel: <code>userkey=&lt;MASKED&gt;</code>.</p>
+        <h2 id="sakerhet">Säkerhet</h2>
+        <p>Maskera alltid hemligheter i dokumentation och exempel (<code>&lt;MASKED&gt;</code>). Lägg aldrig ut riktiga lösenord/tokens i repo.</p>
       </section>
     </main>
     <script src="../assets/js/main.js"></script>

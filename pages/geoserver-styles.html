@@ -9,39 +9,35 @@
   </head>
   <body class="layout">
     <main class="main" id="main">
-      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Stilsättning (SLD/CSS/legend/scale)</h1></div></header>
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Stilsättning (SLD/CSS/legend)</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Beskriva hur vi stilsätter lager så att tematisk legend, skalbeteende och cache fungerar i vår Origo-miljö.</p>
+        <p>Få legend och stilsättning att bli stabil i Origo utan onödig serverlast.</p>
 
-        <h2 id="verkliga-exempel">Verkliga exempel i vår konfig</h2>
+        <h2 id="regel-fel">Känt legendfel: RULE=undefined</h2>
+        <p><strong>Fel:</strong> <code>Specified style does not contains a rule named undefined</code>.</p>
+        <p><strong>Orsak:</strong> klienten skickar <code>RULE=undefined</code> eller RULE som inte matchar faktisk <code>&lt;Rule&gt;&lt;Name&gt;</code> i SLD.</p>
+        <p><strong>Lösning:</strong> skicka RULE endast när giltigt värde finns, och matcha Rule <strong>Name</strong> (inte Rule Title).</p>
+
+        <h2 id="lager-som-triggar">Lager som återkommit i loggar (RULE-problem)</h2>
+        <p>Exempel från våra anteckningar: <code>intern:sgu_jordarter_2023_y</code>, <code>intern:va_dagvattenledning_l</code>, <code>publik:OP2040_gronstrak_l</code>, <code>publik:gata_buller2021_ljudutbr_jarnv_leq_y</code>, <code>publik:park_flex_ovriga_ytor_y</code>.</p>
+
+        <h2 id="ritordning">Ritordning och etiketter</h2>
         <ul>
-          <li><code>lediga_tomter</code>-style i klienten har filter per status (<code>SÅLD</code>, <code>RESERVERAD</code>, <code>TOMTSLÄPP</code>, <code>LEDIG</code>).</li>
-          <li>Många WMS-lager har <code>hasThemeLegend: true</code> + <code>thematicStyling: true</code>, t.ex. skyfall, buller, geologi, VA.</li>
-          <li>Vissa bakgrundslager använder opacitet i klienten (t.ex. värmekartering, baskarta), vilket påverkar visuell tolkning av legend.</li>
+          <li>I vår praxis blir översta kategorin i SLD ofta nederst i faktisk ritordning i Origo (omvänd visuellt mot SLD-listning).</li>
+          <li>Labels/kategorisering kan påverka användarupplevelsen i lagerdropdown (tänd/släck-problem).</li>
         </ul>
 
-        <h2 id="best-practice">Best practice för oss</h2>
+        <h2 id="best-practice">Best practice</h2>
         <ol>
-          <li>Versionera styles och byt inte i blindo.</li>
-          <li>Verifiera alltid skala + legend tillsammans.</li>
-          <li>Testa både WMS och WMTS efter styleändring för att upptäcka cache-eftersläpning.</li>
+          <li>UTF-8 i SLD.</li>
+          <li>Verifiera Rule Name-mappning vid GetLegendGraphic.</li>
+          <li>Sätt transparens primärt i Origo när användaren ska kunna styra opacitet.</li>
         </ol>
-
-        <pre><code>/geoserver/ows?service=WMS&amp;request=GetLegendGraphic
-&amp;layer=publik:klimat_skyfall_sodra_ryd_2024_max_vattendjup_ma_100_y
-&amp;format=image/svg+xml&amp;transparent=true</code></pre>
-
-        <h2 id="vanliga-fel">Vanliga fel</h2>
-        <ul>
-          <li><strong>Symptom:</strong> legend stämmer inte med karta. <strong>Orsak:</strong> style-regel + skalintervall matchar inte klientzoom.</li>
-          <li><strong>Symptom:</strong> tematisk karta ser gammal ut i en vy. <strong>Orsak:</strong> WMTS-cache inte uppdaterad för alla nivåer.</li>
-          <li><strong>Symptom:</strong> svårtolkad kartbild. <strong>Orsak:</strong> opacitet + tematiska färger kolliderar med bakgrund.</li>
-        </ul>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Om alla team använder gemensam style-review innan publicering. Verifiera här: teamens releaseprocess.</li>
+          <li>Exakt kodställe i klient där RULE sätts för temalager i alla varianter. Verifiera här: Origo-klientens legend/thematic-kod i app-repot.</li>
         </ul>
       </section>
     </main>

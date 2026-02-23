@@ -1,22 +1,25 @@
 # Changelog – OrigoDocs
 
-## 2026-02-23 (revidering 2 efter review)
+## 2026-02-23 (revidering 3 efter review)
 
 ### Vad lades till
-- Tydligare förankring till faktisk lagerrealitet från index-konfig: tematiska lagerfamiljer, queryable=false-fall, intern/publik-source-mönster.
-- Praktiska exempel med verkliga lager-ID:n från vår miljö (bl.a. skyfall, fastighet, WMTS fastighetsgräns).
-- Ny felsökningspost för bakgrundslager med både WMS- och WMTS-varianter.
+- Flera nya driftförankrade avsnitt från interna anteckningar: server-URL:er, Git/remote-flöde, AD-behörigheter, seed-rutiner och prestandajämförelser WMS/WMTS.
+- Ny explicit felsökningskedja för tre återkommande loggfel:
+  - RULE=undefined i legend
+  - Schema does not exist / Unable to flush
+  - Can't obtain schema for layer
+- Konkreta quick recipes uppdaterade till `/geoserver/ows/` samt WMTS/GWC-endpoint i vår miljö.
 
 ### Vad skrevs om
-- `pages/origo-guide.html`: omskriven med driftrelevanta mönster och riskområden från verklig lagerkatalog.
-- `pages/geoserver.html`: omskriven med attribut/queryable/filter utifrån faktisk konfigprofil.
-- `pages/geoserver-styles.html`: omskriven med fokus på tematiska lager, legend och cache.
-- `pages/wms-wmts-prestanda.html`: omskriven med verkliga lastdrivare från vår lagerstruktur.
-- `pages/examples.html`: omskriven med copy/paste mot våra faktiska endpoints och lager-ID:n.
-- `pages/troubleshooting.html`: omskriven med mer konkreta symptomkedjor för vår miljö.
+- `pages/start-har.html`: onboarding och kritiska URL:er.
+- `pages/geoserver.html`: attribut, filter, specialtecken och datakällafelsökning.
+- `pages/geoserver-styles.html`: RULE-fel och legendpraktik.
+- `pages/geowebcache.html`: två använda bbox-varianter och seed-rutin.
+- `pages/troubleshooting.html`: utökad handbok med loggfel från verklig drift.
+- `pages/standarder-konventioner.html`: AD-behörighet, Git/extern-branch, change management.
 
 ### Okänt hos oss (behöver bekräftas)
-- Formell policy för dubbla WMS/WMTS-varianter av samma bakgrundstema.
-  - Verifiera här: produktions-`index.json` + driftbeslut i ops-dokumentation.
-- Exakt tröskel för acceptabel legendlast i produktion.
-  - Verifiera här: APM/prestandarapporter i driftmiljön.
+- Officiell standard-BBOX för Skövde seed (vi har två varianter i anteckningar).
+  - Verifiera här: teamets GWC driftmall.
+- Exakt klientregel för vilka lager som får/inte får RULE vid legendanrop.
+  - Verifiera här: klientkod för legend/thematic-funktion.

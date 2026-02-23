@@ -12,42 +12,39 @@
       <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoServer</span><h1>Attribut &amp; filtrering</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Säkra att våra lager i intern/publik GeoServer publiceras med rätt attribut, rätt filterstrategi och rätt queryable-beteende för Origo.</p>
+        <p>Dokumentera hur vi undviker vanliga fel i attribut, CQL och datakällor i vår GeoServer-miljö.</p>
 
-        <h2 id="attribut">Attribut i vår verklighet</h2>
+        <h2 id="attribut">Attribut: hur vi gör</h2>
         <ul>
-          <li>Vissa lager har explicit attributlista i klienten (exempel: <code>publik:fb_adresser_p</code>, <code>fb_kommunala_bolag_agd_fastighet_y</code>).</li>
-          <li>När attributlistor finns i klienten får GeoServer-fältnamn inte ändras utan koordinerad ändring i Origo-konfig.</li>
-          <li>Fält med svenska tecken förekommer i visningstitlar; håll databasfält och visningstitel separerade.</li>
+          <li>Attribut som används för filter i GeoServer behöver finnas kvar i datakällan även om de inte ska exponeras tydligt i Origo-popup.</li>
+          <li>När attribut visas i klienten (t.ex. fastighet/adress) måste namn hållas stabila över tid.</li>
+          <li>HTML-attribut kan användas i GeoServer (t.ex. länkfält), men <strong>hemligheter får inte hårdkodas</strong> i dokumentation eller style/attribututtryck.</li>
         </ul>
 
-        <h2 id="filtrering">Filtrering: vår rekommenderade ordning</h2>
+        <h2 id="filtrering">Filtrering: rekommenderad ordning</h2>
         <ol>
-          <li><strong>Layer filter</strong> i GeoServer för permanenta affärsregler.</li>
-          <li><strong>viewparams</strong> för kontrollerade parameterflöden mot SQL-vyer.</li>
-          <li><strong>CQL_FILTER</strong> för test, felsökning och temporär analys.</li>
+          <li>Layer filter för permanenta regler.</li>
+          <li>viewparams för kontrollerade parametrar.</li>
+          <li>CQL_FILTER för test/felsökning.</li>
         </ol>
+        <pre><code># CQL-exempel (adressstatus)
+"Status" = 'L' AND "Borttagen hos LM" = 'N' AND "Adressplatsstatus" = '1'</code></pre>
 
-        <pre><code># CQL snabbtest (låg last)
-/geoserver/publik/wms?service=WMS&amp;request=GetMap&amp;layers=publik:fb_kommunal_fastighet_y&amp;CQL_FILTER=1=1
-
-# Viewparams-mönster (behöver lagerstöd i GeoServer)
-/geoserver/intern/wms?service=WMS&amp;request=GetMap&amp;layers=intern:statistiklager_v&amp;viewparams=nyko:4</code></pre>
-
-        <h2 id="queryable">Queryable-regler i vår setup</h2>
-        <p>Vi har flera medvetet icke-frågbara lager (<code>queryable: "false"</code>) exempelvis planmosaikdetaljer, vissa höjdlager (<code>geodata_hk_*</code>) och vissa vindlager. Förvänta inte feature info på dessa.</p>
-
-        <h2 id="vanliga-fel">Vanliga fel och åtgärd</h2>
+        <h2 id="specialtecken">Specialtecken och kända fällor</h2>
         <ul>
-          <li><strong>Symptom:</strong> popup saknar data. <strong>Orsak:</strong> attributfält ändrat i GeoServer/data men inte i klientens attributlista.</li>
-          <li><strong>Symptom:</strong> "inget händer" vid klick. <strong>Orsak:</strong> lager är queryable=false.</li>
-          <li><strong>Symptom:</strong> långsam GetMap. <strong>Orsak:</strong> filter på oindexerat fält eller för tung style + filter-kombination.</li>
+          <li>CQL och filter kan fallera med vissa specialtecken; verifiera alltid mot faktiskt datautfall.</li>
+          <li>Raster/TIF-problem med tecken som <code>−∞</code> förekommer: använd vanligt bindestreck <code>-</code> i stället för matematiskt minus.</li>
+          <li>SLD ska vara UTF-8-kodad för ÅÄÖ: <code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</code>.</li>
         </ul>
+
+        <h2 id="datakalla-fel">Datakälla trasig: schema/flush-fel</h2>
+        <p><strong>Symptom:</strong> <code>Schema '...' does not exist</code> eller <code>Unable to flush 'workspace:layer'</code>.</p>
+        <p><strong>Trolig orsak:</strong> tabell/vy saknas, fel schema/databas, eller fel behörighet i store.</p>
+        <p><strong>Fix:</strong> återskapa tabell/vy, peka om store/lager, eller avpublicera lagret och rensa referenser i layergroups/klient.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Vilka lager som i drift använder viewparams idag. Verifiera här: GeoServer layer config i produktionsmiljön.</li>
-          <li>Om vi har dokumenterad standard för namngivning av analyslager i <code>intern_wms</code>. Verifiera här: datateamets publiceringsrutin.</li>
+          <li>Vilka lager som fortfarande aktivt använder viewparams i produktion. Verifiera här: GeoServer layer config + SQL-vyer i databasrepo.</li>
         </ul>
       </section>
     </main>

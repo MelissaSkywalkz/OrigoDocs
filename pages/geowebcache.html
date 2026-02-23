@@ -9,43 +9,38 @@
   </head>
   <body class="layout">
     <main class="main" id="main">
-      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoWebCache</span><h1>Caching, seedning och felsökning</h1></div></header>
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoWebCache</span><h1>Caching, seedning och verifiering</h1></div></header>
       <section class="doc-content">
         <h2 id="syfte">Syfte</h2>
-        <p>Beskriva hur vi seedar WMTS-lager i vår EPSG:3008-miljö utan onödig driftpåverkan.</p>
+        <p>Standardisera hur vi seedar GWC i EPSG:3008 och undviker att cachejobb blir onödigt stora.</p>
 
-        <h2 id="nar-seeda">När vi seedar</h2>
+        <h2 id="bbox">BBOX i våra anteckningar</h2>
         <ul>
-          <li>Efter bekräftad styleändring i lager som körs via <code>publik_wmts</code>.</li>
-          <li>Efter större datalastning i lager med hög trafik.</li>
+          <li>Variant A (Skövde): <code>135000,6460000,170000,6500000</code></li>
+          <li>Variant B (Skövde kommun): <code>155000,6455000,190000,6500000</code></li>
         </ul>
+        <p><strong>Okänt hos oss (behöver bekräftas):</strong> vilken bbox som ska vara officiell standard. Verifiera här: driftmallen för GWC Seed/Truncate i teamets rutin.</p>
 
-        <h2 id="nar-inte">När vi inte seedar direkt</h2>
-        <ul>
-          <li>När ändringen endast gäller WMS-lager i intern analys.</li>
-          <li>När symbolik fortfarande itereras (risk för upprepad truncate/seed).</li>
-        </ul>
-
-        <h2 id="seed-checklista">Seed-checklista i vår miljö</h2>
+        <h2 id="seed-rutin">Seed-rutin vi följer</h2>
         <ol>
-          <li>Verifiera aktuell projektion och upplösningssteg mot klientens <code>resolutions</code>.</li>
-          <li>Verifiera GetMap/GetLegendGraphic först.</li>
-          <li>Truncate berört lager.</li>
-          <li>Seed begränsad bbox + nivåintervall.</li>
-          <li>Verifiera i Origo och med direkt WMTS-GetTile.</li>
+          <li>Verifiera att lagret fungerar i WMS med liten bbox.</li>
+          <li>Kör truncate för berört lager.</li>
+          <li>Seed i EPSG:3008 med begränsad bbox och nivåspann.</li>
+          <li>Verifiera WMTS-svar och klientrendering.</li>
         </ol>
+
+        <h2 id="verifiera-tiles">Verifiering</h2>
+        <ul>
+          <li>Tilecache lagras enligt anteckning på <code>F:\Tilecache</code>.</li>
+          <li>Verifiera att klient faktiskt använder WMTS (inte fallback till WMS) via nätverksspår.</li>
+          <li>Om prestanda är dålig trots cache: kontrollera webbserver/proxy/Tomcat-loggar och eventuell AV-påverkan enligt driftanteckning.</li>
+        </ul>
 
         <h2 id="vanliga-fel">Vanliga fel</h2>
         <ul>
-          <li><strong>Symptom:</strong> gamla tiles i vissa zoom. <strong>Orsak:</strong> nivåspannet i seedning var för smalt.</li>
-          <li><strong>Symptom:</strong> förskjutna tiles. <strong>Orsak:</strong> mismatch mellan gridset och klientresolutions i EPSG:3008.</li>
-          <li><strong>Symptom:</strong> lång seedningstid. <strong>Orsak:</strong> för stor bbox och/eller group-lager med hög komplexitet.</li>
-        </ul>
-
-        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
-        <ul>
-          <li>Exakta standardvärden för metatile/gutter i drift. Verifiera här: GWC layer settings i GeoServer admin.</li>
-          <li>Om nattlig seedning finns i schemalagt jobb. Verifiera här: driftjobb/CI för geoservermiljön.</li>
+          <li>Seed utan bbox → onödigt stor yta, mycket lång körning.</li>
+          <li>Fel gridset/align → förskjutna tiles.</li>
+          <li>Fel nivåspann → gamla tiles i vissa zoomnivåer.</li>
         </ul>
       </section>
     </main>

@@ -13,34 +13,30 @@
       <section class="doc-content">
         <h2 id="symptom">Symptom → trolig orsak → verifiera → fix</h2>
 
-        <h3 id="tom-karta">Tom karta i Origo</h3>
-        <p><strong>Trolig orsak:</strong> CRS/bbox mismatch (vår standard är EPSG:3008).</p>
-        <p><strong>Verifiera:</strong> kör WMS GetMap med liten bbox mot rätt source.</p>
-        <p><strong>Fix:</strong> synka <code>projectionCode</code>, request-CRS och lagersource.</p>
+        <h3 id="rule-undefined">Legendfel: "Specified style does not contains a rule named undefined"</h3>
+        <p><strong>Trolig orsak:</strong> RULE-parametern skickas som <code>undefined</code> eller pekar på fel Rule Name.</p>
+        <p><strong>Verifiera:</strong> kontrollera nätverksanrop för <code>GetLegendGraphic</code> och om <code>RULE=undefined</code> förekommer.</p>
+        <p><strong>Fix:</strong> skicka RULE bara vid giltigt värde och matcha <code>&lt;Rule&gt;&lt;Name&gt;</code> i SLD.</p>
 
-        <h3 id="wmts-forskjutet">WMTS förskjuten eller pixlad fel</h3>
-        <p><strong>Trolig orsak:</strong> fel matrixset/prefix eller seed saknar nivåer.</p>
-        <p><strong>Verifiera:</strong> jämför <code>matrixSet=EPSG:3008</code> och klientens <code>resolutions</code>.</p>
-        <p><strong>Fix:</strong> korrigera matrisinställningar och seeda om relevant spann.</p>
+        <h3 id="schema-missing">Fel: "Schema does not exist" / "Unable to flush"</h3>
+        <p><strong>Trolig orsak:</strong> tabell/vy saknas eller store pekar fel (schema/databas/behörighet).</p>
+        <p><strong>Verifiera:</strong> GeoServer-logg + datakälla för lagret.</p>
+        <p><strong>Fix:</strong> återställ datakälla, peka om store, eller avpublicera/rensa lagret i layergroups/klient.</p>
 
-        <h3 id="ingen-featureinfo">Ingen feature info vid klick</h3>
-        <p><strong>Trolig orsak:</strong> lager har <code>queryable: "false"</code> (planmosaik, höjd, vind m.fl.).</p>
-        <p><strong>Verifiera:</strong> kontrollera lagerposten i index-konfig.</p>
-        <p><strong>Fix:</strong> ändra queryable endast om verksamhetskrav finns och prestanda tillåter.</p>
+        <h3 id="cant-obtain-schema">Legendfel: "Can't obtain the schema for the required layer"</h3>
+        <p><strong>Trolig orsak:</strong> samma datakälleproblem som ovan; GeoServer kan inte läsa feature type.</p>
+        <p><strong>Verifiera:</strong> testa WMS + GetLegendGraphic på samma lager och jämför loggmeddelanden.</p>
+        <p><strong>Fix:</strong> samma som schema/flush-fel.</p>
 
-        <h3 id="legend-tung">Legend känns långsam eller otydlig</h3>
-        <p><strong>Trolig orsak:</strong> många samtidiga tematiska lager och tunga legendsvar.</p>
-        <p><strong>Verifiera:</strong> nätverksspår för GetLegendGraphic + identifiera temalager i aktuell grupp.</p>
-        <p><strong>Fix:</strong> minimera antal aktiva temalager och prioritera kritiska legender.</p>
-
-        <h3 id="bakgrund-duplikat">Bakgrund beter sig olika mellan vyer</h3>
-        <p><strong>Trolig orsak:</strong> samma karttema finns i både WMS och WMTS-variant.</p>
-        <p><strong>Verifiera:</strong> kontrollera vilket lager som är aktivt i background-gruppen.</p>
-        <p><strong>Fix:</strong> välj primär källa per scenario och dokumentera valet i releaseändringen.</p>
+        <h3 id="wms-langsam">WMS är långsam (500–700 ms) jämfört med WMTS (70–200 ms)</h3>
+        <p><strong>Trolig orsak:</strong> renderkostnad, proxy/webbserver, Tomcat eller cacheflöde.</p>
+        <p><strong>Verifiera:</strong> mät samma lager som WMS och WMTS, granska Tomcat + webbserverloggar.</p>
+        <p><strong>Fix:</strong> seed WMTS där lämpligt, optimera style/filter, och felsök flaskhals i serverkedjan.</p>
 
         <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
         <ul>
-          <li>Exakt driftprocess för incidenteskalering vid GeoServer/GWC-fel. Verifiera här: driftorganisationens incidentrutin.</li>
+          <li>Vilken komponent som oftast står för latens (GeoServer, proxy, nätverk, AV). Verifiera här: korrelerade loggar i Tomcat + webbserver/infra.</li>
+          <li>Exakt lista med lager som ska blockeras från legendhämtning i klient. Verifiera här: klientkonfig + supportloggar.</li>
         </ul>
       </section>
     </main>
