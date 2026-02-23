@@ -1,6 +1,61 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Origo i vår miljö</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav" aria-label="Sidomeny"><div class="sidebar-header"><a href="../index.html" class="logo">>_ Origo Docs</a></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html" aria-current="page">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Origo</span><h1>Origo i vår miljö</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>Dokumentera hur vår Origo-klient normalt kopplar mot GeoServer/CSW och hur vi minimerar onödig last.</p><h2 id="varda">Hur vi gör i vardagen</h2><ul><li>Layermanager används för att hämta lager via CSW och standard-WMS.</li><li>Metadata hämtas och appliceras i klienten efter laddning.</li><li>Mina lager-gruppen visas först när den faktiskt innehåller lager.</li></ul><h2 id="konfigutdrag">Konfigutdrag från vår interna klient</h2><pre><code>url: "/geoserver/csw"
-defaultWmsUrl: "/geoserver/ows"
-layersDefaultProps.useLegendGraphics: false
-layersDefaultProps.infoFormat: "text/html"
-autoMetadata: true
-CSW request: /geoserver/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecords&amp;maxRecords=1000</code></pre><p>Detta mönster betyder att vi prioriterar snabb lagerinläsning först och metadataförbättring efteråt.</p><h2 id="varfor">Varför vi gör så</h2><ul><li><strong>useLegendGraphics: false</strong> minskar legend-last när många lager finns i listan.</li><li><strong>setTimeout före metadatafetch</strong> minskar risk att lägga last samtidigt som första kart-render.</li><li><strong>defaultWmsUrl</strong> gör att tillagda lager från katalogen får samma standard-ände.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><ul><li>Exakt timeout/gränsvärden för metadatahämtning i drift. Verifiera här: klientens produktions-<code>index.html</code> där <code>setTimeout(fetchCswAndApplyMetadata, ...)</code> sätts.</li><li>Vilka lager som alltid ska ha legend trots globalt <code>useLegendGraphics: false</code>. Verifiera här: lagerdefinitioner i driftsatt Origo-konfig (<code>index.json</code> i app-repot).</li></ul><h2 id="relaterat">Relaterat</h2><p><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a> · <a href="geoserver.html">GeoServer: attribut & filtrering</a> · <a href="troubleshooting.html">Felsökningshandbok</a></p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Origo i vår miljö</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header"><a href="../index.html" class="logo">&gt;_ Origo Docs</a></div>
+      <div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html" aria-current="page">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder &amp; konventioner</a></div></div></div>
+    </nav>
+    <div class="nav-backdrop" hidden></div>
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Origo</span><h1>Origo i vår miljö</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Den här sidan beskriver hur vår Origo-klient är uppsatt i praktiken: controls, projektion, källor och lagerstruktur som påverkar drift och felsökning.</p>
+
+        <h2 id="hur-vi-jobbar">Hur vi jobbar i klienten</h2>
+        <ul>
+          <li>Vår huvudprojektion är <code>EPSG:3008</code> och samma projektion används i flera controls (position, mätning, externa länkar).</li>
+          <li>Vi blandar WMS, WMTS och WFS beroende på behov: WMTS för snabb rendering, WMS för stil/filter-flexibilitet, WFS för objekt där klientinteraktion krävs.</li>
+          <li>Lagren är hårt grupperade per verksamhetsdomän, med djupa undergrupper (t.ex. samhällsbyggnad, klimat, projekt, VA, statistik).</li>
+        </ul>
+
+        <h2 id="konkreta-konfigpunkter">Konkreta konfigpunkter från vår setup</h2>
+        <pre><code>projectionCode: "EPSG:3008"
+source.publik_wms.url: "/geoserver/publik/wms"
+source.intern_wms.url: "/geoserver/intern/wms"
+source.publik_wmts.url: "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts"
+source.csw.url: "/geoserver/csw/"
+sharemap.serviceEndpoint: "https://srv-origo01.kommun.skovde.se/origo-server/mapstate/"
+measure.elevationServiceURL: "https://srv-origo01.kommun.skovde.se/origo-server/lm/elevation/3008/{easting}/{northing}"</code></pre>
+
+        <h2 id="varfor">Varför vi gör så</h2>
+        <ul>
+          <li><strong>EPSG:3008 först:</strong> minskar transformfel mellan källor, mätning och positionering i vår kommunala driftmiljö.</li>
+          <li><strong>Både intern/publik source:</strong> vi separerar åtkomst och publicering, vilket underlättar behörighetsstyrning.</li>
+          <li><strong>Djup gruppstruktur:</strong> gör lagerlistan hanterbar trots mycket stor mängd lager.</li>
+        </ul>
+
+        <h2 id="vanliga-fallgropar">Vanliga fallgropar</h2>
+        <ul>
+          <li>WMS-lager utan explicit <code>queryable</code> beter sig olika mot förväntad feature info.</li>
+          <li>WMTS-lager med fel <code>matrixSet</code>/<code>matrixIdsPrefix</code> ger förskjutning eller tomma tiles.</li>
+          <li>Blandning av <code>intern_wfs</code> och <code>publik_wfs</code> utan tydlig regel skapar otydligt ändringsansvar.</li>
+        </ul>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakta riktlinjer för när lager ska vara WMTS istället för WMS i respektive domän. Verifiera här: respektive lagerdefinition i produktions-<code>index.json</code>.</li>
+          <li>Vilka grupper som ska hållas initialt expanderade för verksamhetsteam. Verifiera här: <code>groups[].expanded</code> i produktions-<code>index.json</code>.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

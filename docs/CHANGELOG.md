@@ -1,27 +1,26 @@
 # Changelog – OrigoDocs
 
-## 2026-02-23
+## 2026-02-23 (revidering efter review)
 
 ### Vad lades till
-- Ny onboarding-sida: `pages/start-har.html`.
-- Ny sida för prestanda: `pages/wms-wmts-prestanda.html`.
-- Ny sida för standarder: `pages/standarder-konventioner.html`.
-- Ny startstruktur på `index.html` med tydlig "start här"-väg.
+- Fördjupat innehåll på samtliga nya kärnsidor med tydligare "Syfte", "När används", arbetssteg och felbilder.
+- Konkretare driftförankring mot vår faktiska setup: EPSG:3008, intern/publik GeoServer, WMTS via GWC samt Origo Server-endpoints.
+- Tydligare säkerhetsnotering om maskning av nycklar i externa URL:er.
 
 ### Vad skrevs om
-- `pages/origo-guide.html` fokuserar nu på vårt klientmönster (CSW/metadata/lagergrupp).
-- `pages/geoserver.html` fokuserar på attribut och filtrering (CQL/viewparams/layer filters).
-- `pages/geoserver-styles.html` fokuserar på stilsättning, legend och cachepåverkan.
-- `pages/geowebcache.html` fokuserar på seedning/truncate och driftval.
-- `pages/examples.html` är nu en quick-recipe-sida med copy/paste-anrop.
-- `pages/troubleshooting.html` är ombyggd till symptom → orsak → verifiera → fix.
+- `pages/origo-guide.html` omskriven med konkreta konfigmönster från vår klientmiljö.
+- `pages/geoserver.html` omskriven med riktlinjer för attribut, queryable och filterkedja.
+- `pages/geoserver-styles.html` omskriven med fokus på legend/scale/cache.
+- `pages/geowebcache.html` omskriven med seed-flöde och vanliga GWC-fel.
+- `pages/wms-wmts-prestanda.html` omskriven med lastdrivare från Origo-klienten.
+- `pages/examples.html` omskriven med verklighetsnära copy/paste-anrop mot vår driftdomän.
+- `pages/troubleshooting.html` omskriven till symptom → orsak → verifiera → fix.
+- `pages/standarder-konventioner.html` omskriven med namngivning och change management från vår lagerstruktur.
 
 ### Okänt hos oss (behöver bekräftas)
-- Exakta timeout-värden och metadatahämtning i produktionsklienten.
-  - Verifiera här: produktionsappens `index.html`/`index.json` där metadatahämtning och timeout sätts.
-- Exakt policy för CSS vs SLD i alla team.
-  - Verifiera här: style-repo eller GeoServer data_dir i drift.
-- Exakta GWC-standardvärden (metatiling/gutter) och schemalagd seedning.
-  - Verifiera här: GeoServer/GWC admin och driftjobb i CI/ops-repo.
-- Exakta renderMode-val i produktions-Origo-appar.
+- Exakta viewparams som används i produktion per lager.
+  - Verifiera här: GeoServer layer-konfiguration i drift.
+- Exakta standardvärden för GWC metatile/gutter och ev. nattlig seedning.
+  - Verifiera här: GeoServer/GWC admin + driftjobb.
+- Exakt renderMode-policy per app.
   - Verifiera här: respektive app-repos `index.json`.

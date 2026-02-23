@@ -1,1 +1,50 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Felsökningshandbok</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav"><div class="sidebar-header"><a href="../index.html" class="logo">>_ Origo Docs</a></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html" aria-current="page">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Support</span><h1>Felsökningshandbok</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>Ge snabb felsökning enligt mönstret <strong>symptom → trolig orsak → verifiera → fix</strong>.</p><h2 id="fall-1">Tom karta</h2><ul><li><strong>Trolig orsak:</strong> fel CRS/BBOX/axis order.</li><li><strong>Verifiera:</strong> kör GetMap med liten bbox från <a href="examples.html#wms-getmap">Quick recipes</a>.</li><li><strong>Fix:</strong> säkerställ samma CRS i lager, request och Origo-vy.</li></ul><h2 id="fall-2">Lagertitel/beskrivning saknas i listan</h2><ul><li><strong>Trolig orsak:</strong> CSW metadata hämtas inte eller matchar inte lager-id.</li><li><strong>Verifiera:</strong> kontrollera <code>/geoserver/csw?...GetRecords...</code> svar och att identifierare mappar mot layerId.</li><li><strong>Fix:</strong> rätta identifierare i metadata eller justera mappingregler i klientkoden.</li></ul><h2 id="fall-3">Mina lager visas inte</h2><ul><li><strong>Trolig orsak:</strong> gruppen är tom och döljs av klientlogik.</li><li><strong>Verifiera:</strong> lägg till ett lager och kontrollera att gruppen blir synlig.</li><li><strong>Fix:</strong> säkerställ att lagret får <code>group: "mylayers"</code>.</li></ul><h2 id="fall-4">Legend ger hög last</h2><ul><li><strong>Trolig orsak:</strong> för många automatiska GetLegendGraphic-anrop.</li><li><strong>Verifiera:</strong> nätverksflik i browser + jämför med lager där legend är av.</li><li><strong>Fix:</strong> använd default <code>useLegendGraphics: false</code> och aktivera selektivt.</li></ul><h2 id="fall-5">Gamla tiles efter style-ändring</h2><ul><li><strong>Trolig orsak:</strong> GWC-cache ej truncerad/seedad för rätt nivåer.</li><li><strong>Verifiera:</strong> jämför WMS (färsk) mot WMTS (cache).</li><li><strong>Fix:</strong> truncate + seed begränsad bbox/zoom och verifiera igen.</li></ul><h2 id="fall-6">WMS fungerar direkt men inte i Origo</h2><ul><li><strong>Trolig orsak:</strong> CORS/mixed content/annan endpoint i klient.</li><li><strong>Verifiera:</strong> jämför request-URL i browsernätverk mot konfigurerad källa.</li><li><strong>Fix:</strong> använd samma protokoll/host och säkerställ tillåten CORS i server/proxy.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><ul><li>Var loggar från produktionsproxy samlas för WMS/WMTS-fel. Verifiera här: driftmiljöns loggkonfiguration.</li><li>Exakta SLO/timeout-gränser per tjänst. Verifiera här: reverse proxy/ingress-konfig.</li></ul><h2 id="relaterat">Relaterat</h2><p><a href="examples.html">Quick recipes</a> · <a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a> · <a href="geowebcache.html">GWC: caching</a></p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Felsökningshandbok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Support</span><h1>Felsökningshandbok</h1></div></header>
+      <section class="doc-content">
+        <h2 id="symptom">Symptom → orsak → verifiera → fix</h2>
+
+        <h3 id="tom-karta">Tom karta i Origo</h3>
+        <p><strong>Trolig orsak:</strong> CRS/bbox mismatch (ofta EPSG:3008 i vår miljö).</p>
+        <p><strong>Verifiera så här:</strong> kör GetMap-recept med liten bbox från <a href="examples.html#wms-getmap">Quick recipes</a>.</p>
+        <p><strong>Fix:</strong> säkerställ samma CRS i source, request och klientens projectionCode.</p>
+
+        <h3 id="fel-tile">Förskjutna eller fel WMTS-tiles</h3>
+        <p><strong>Trolig orsak:</strong> fel matrixset/matrixIdsPrefix eller mismatch mot klientresolutions.</p>
+        <p><strong>Verifiera så här:</strong> kontrollera <code>source.publik_wmts.matrixSet</code> och jämför med klientens <code>resolutions</code>.</p>
+        <p><strong>Fix:</strong> synka matrixset och seeda om berörda nivåer.</p>
+
+        <h3 id="legend-last">Hög last vid lagerhantering</h3>
+        <p><strong>Trolig orsak:</strong> många temalager + frekventa legendanrop.</p>
+        <p><strong>Verifiera så här:</strong> kontrollera nätverksspår för upprepade GetLegendGraphic.</p>
+        <p><strong>Fix:</strong> slå av legend där det inte ger verksamhetsvärde och prioritera kritiska lager.</p>
+
+        <h3 id="feature-info">Feature info saknas</h3>
+        <p><strong>Trolig orsak:</strong> lager är inte queryable (eller medvetet satt till false).</p>
+        <p><strong>Verifiera så här:</strong> kontrollera lagerdefinitionen och queryable-flagga i konfig.</p>
+        <p><strong>Fix:</strong> aktivera queryable där feature info behövs, annars dokumentera avsikten.</p>
+
+        <h3 id="gamla-tiles">Gamla tiles efter ändring</h3>
+        <p><strong>Trolig orsak:</strong> cache inte truncerad/seedad för rätt nivåer.</p>
+        <p><strong>Verifiera så här:</strong> jämför WMS (färsk render) med WMTS (cache).</p>
+        <p><strong>Fix:</strong> truncate + seed för rätt bbox och zoomspann.</p>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakt loggpunkt för produktionens WMTS-fel i infra. Verifiera här: reverse proxy/ingress-loggar i driftmiljön.</li>
+          <li>Gemensam larmgräns för svarstider på WMS/WMTS. Verifiera här: driftövervakning/APM.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

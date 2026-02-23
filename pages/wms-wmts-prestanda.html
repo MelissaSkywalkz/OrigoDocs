@@ -1,1 +1,53 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>WMS/WMTS-prestanda</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav"><div class="sidebar-header"><a href="../index.html" class="logo">>_ Origo Docs</a></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GWC: caching</a><a href="wms-wmts-prestanda.html" aria-current="page">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Prestanda</span><h1>WMS/WMTS-prestanda i Origo</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>Visa hur klientval i Origo påverkar serverlast och svarstid.</p><h2 id="hur">Hur Origo påverkar last</h2><ul><li>Legend-anrop per lager kan bli många; använd selektiv legendstrategi.</li><li>Group layers och många synliga lager multiplicerar GetMap/WMTS-förfrågningar.</li><li>WMS används för flexibilitet, WMTS för snabb rendering vid stabil kartbild.</li></ul><h2 id="rekommendation">Rekommenderad strategi</h2><ol><li>Börja med WMS under utveckling (snabb iteration).</li><li>När style/filter stabiliserats: exponera WMTS för högtrafikvyer.</li><li>Minimera default-synliga lager och verifiera att legend inte laddas i onödan.</li></ol><h2 id="varningar">Kända fallgropar</h2><ul><li><strong>Fel CRS axis order</strong> ger tomt eller felplacerat lager trots HTTP 200.</li><li><strong>För stora BBOX i test</strong> döljer skillnad mellan bra/dålig style-optimering.</li><li><strong>Ingen gräns på filter</strong> kan ge tunga databasfrågor och timeout i WMS.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><ul><li>Exakt användning av <code>renderMode</code> i våra produktionsappar. Verifiera här: respektive Origo-apps <code>index.json</code> i app-repon.</li><li>Vilka klientvyer som kör ren WMTS kontra WMS. Verifiera här: lagerkällor i app-konfig.</li></ul><h2 id="relaterat">Relaterat</h2><p><a href="examples.html">Quick recipes</a> · <a href="geowebcache.html">GWC: caching</a> · <a href="troubleshooting.html">Felsökningshandbok</a></p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WMS/WMTS-prestanda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Prestanda</span><h1>WMS/WMTS-prestanda i vår klient</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Ge praktiska regler för när vi kör WMS respektive WMTS och hur Origo-inställningar påverkar serverlast.</p>
+
+        <h2 id="wms-vs-wmts">WMS vs WMTS hos oss</h2>
+        <ul>
+          <li><strong>WMTS:</strong> används via <code>/geoserver/gwc/service/wmts</code> för snabb rendering i stabila lager.</li>
+          <li><strong>WMS:</strong> används via <code>/geoserver/publik/wms</code> och <code>/geoserver/intern/wms</code> när flexibilitet krävs.</li>
+        </ul>
+
+        <h2 id="origo-last">Origo-val som driver last</h2>
+        <ul>
+          <li>Legendkontroll + många tematiska lager genererar många legendförfrågningar.</li>
+          <li>Många samtidigt synliga WMS-lager ger tung render-last per pan/zoom.</li>
+          <li>Djup gruppstruktur är bra för ordning men kan trigga många toggles om användarflödet är otydligt.</li>
+        </ul>
+
+        <h2 id="checklista">Prestandachecklista före release</h2>
+        <ol>
+          <li>Kör snabb GetMap med liten bbox.</li>
+          <li>Verifiera att WMTS-lager använder korrekt matrixset <code>EPSG:3008</code>.</li>
+          <li>Mät nätverk: antal legendanrop vid normal användning.</li>
+          <li>Bekräfta att standard-synliga lager är få och motiverade.</li>
+        </ol>
+
+        <h2 id="varningar">Varningar</h2>
+        <ul>
+          <li><strong>CRS axis order:</strong> fel ordning kan ge tom karta trots HTTP 200.</li>
+          <li><strong>Stora test-bboxar:</strong> maskerar flaskhalsar och gör felsökning långsammare.</li>
+          <li><strong>Onödiga legendanrop:</strong> driver serverlast utan att tillföra användarvärde.</li>
+        </ul>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakt renderMode-användning per app. Verifiera här: respektive app-<code>index.json</code>.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>

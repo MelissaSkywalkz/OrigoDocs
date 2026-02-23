@@ -1,1 +1,54 @@
-<!doctype html><html lang="sv"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>GWC: caching</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="../assets/css/main.css" /></head><body class="layout"><nav class="sidenav" id="sidenav"><div class="sidebar-header"><a href="../index.html" class="logo">>_ Origo Docs</a></div><div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut & filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html" aria-current="page">GWC: caching</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="troubleshooting.html">Felsökningshandbok</a><a href="standarder-konventioner.html">Standarder & konventioner</a></div></div></div></nav><div class="nav-backdrop" hidden></div><main class="main" id="main"><header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoWebCache</span><h1>Caching, seedning och drift</h1></div></header><section class="doc-content"><h2 id="syfte">Syfte</h2><p>Beskriva när vi använder cache, när vi avstår och hur vi seedar säkert i vår miljö.</p><h2 id="nar-cache">När cache behövs</h2><ul><li>Bakgrunds-/temalager med hög trafik och stabil symbolik.</li><li>WMTS-flöden där snabb upplevelse prioriteras över realtid.</li></ul><p>Undvik tung seedning för lager som ändras ofta under arbetsdagen.</p><h2 id="seedning">Seedningsflöde</h2><ol><li>Verifiera WMS-rendering och style först.</li><li>Kör truncate för berört lagerområde.</li><li>Kör seed i avgränsad bbox + valda zoomnivåer.</li><li>Verifiera visuellt i Origo och med direkt WMTS-anrop.</li></ol><h2 id="checklista">Checklista GWC-trobleshoot</h2><ul><li>Matchar Origos upplösningar gridset?</li><li>Är CRS samma i lager, gridset och klient?</li><li>Ser du gamla tiles bara i vissa zoom? Seed saknar nivåer.</li><li>Är layer group i spel? Säkerställ att hela gruppen seedas eller bryt ut kritiska lager.</li></ul><h2 id="varning">Varningar vi ofta missar</h2><ul><li>Group layers kan ge oväntat många tile-kombinationer och längre seedtid.</li><li>Seedning med för stor bbox direkt ger lång kö och blockerar annat underhåll.</li><li>Efter stylebyte: gamla tiles kan se "rätt" ut i vissa zoomnivåer men inte alla.</li></ul><h2 id="okant">Okänt hos oss (behöver bekräftas)</h2><ul><li>Exakta standardvärden för metatiling/gutter i drift. Verifiera här: GWC gridset/layer config i GeoServer admin eller data_dir.</li><li>Om vi har automatiserad nattlig seedning. Verifiera här: drift-skript/CI-jobb i driftrepo.</li></ul><h2 id="relaterat">Relaterat</h2><p><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a> · <a href="troubleshooting.html">Felsökningshandbok</a></p></section></main><script src="../assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GWC: caching</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">GeoWebCache</span><h1>Caching, seedning och felsökning</h1></div></header>
+      <section class="doc-content">
+        <h2 id="syfte">Syfte</h2>
+        <p>Beskriva hur vi seedar WMTS-lager i vår EPSG:3008-miljö utan onödig driftpåverkan.</p>
+
+        <h2 id="nar-seeda">När vi seedar</h2>
+        <ul>
+          <li>Efter bekräftad styleändring i lager som körs via <code>publik_wmts</code>.</li>
+          <li>Efter större datalastning i lager med hög trafik.</li>
+        </ul>
+
+        <h2 id="nar-inte">När vi inte seedar direkt</h2>
+        <ul>
+          <li>När ändringen endast gäller WMS-lager i intern analys.</li>
+          <li>När symbolik fortfarande itereras (risk för upprepad truncate/seed).</li>
+        </ul>
+
+        <h2 id="seed-checklista">Seed-checklista i vår miljö</h2>
+        <ol>
+          <li>Verifiera aktuell projektion och upplösningssteg mot klientens <code>resolutions</code>.</li>
+          <li>Verifiera GetMap/GetLegendGraphic först.</li>
+          <li>Truncate berört lager.</li>
+          <li>Seed begränsad bbox + nivåintervall.</li>
+          <li>Verifiera i Origo och med direkt WMTS-GetTile.</li>
+        </ol>
+
+        <h2 id="vanliga-fel">Vanliga fel</h2>
+        <ul>
+          <li><strong>Symptom:</strong> gamla tiles i vissa zoom. <strong>Orsak:</strong> nivåspannet i seedning var för smalt.</li>
+          <li><strong>Symptom:</strong> förskjutna tiles. <strong>Orsak:</strong> mismatch mellan gridset och klientresolutions i EPSG:3008.</li>
+          <li><strong>Symptom:</strong> lång seedningstid. <strong>Orsak:</strong> för stor bbox och/eller group-lager med hög komplexitet.</li>
+        </ul>
+
+        <h2 id="okant">Okänt hos oss (behöver bekräftas)</h2>
+        <ul>
+          <li>Exakta standardvärden för metatile/gutter i drift. Verifiera här: GWC layer settings i GeoServer admin.</li>
+          <li>Om nattlig seedning finns i schemalagt jobb. Verifiera här: driftjobb/CI för geoservermiljön.</li>
+        </ul>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
