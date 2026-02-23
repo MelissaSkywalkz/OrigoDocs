@@ -19,8 +19,17 @@ const OFFLINE_SEARCH_INDEX = [
     weight: 1,
   },
   {
+    id: 'start-har',
+    title: 'Ny utvecklare: start här',
+    category: 'Onboarding',
+    url: 'pages/start-har.html',
+    content: 'onboarding start här första veckan origo geoserver geowebcache',
+    type: 'page',
+    weight: 1,
+  },
+  {
     id: 'origo-guide',
-    title: 'Origo – guide',
+    title: 'Origo i vår miljö',
     category: 'Origo',
     url: 'pages/origo-guide.html',
     content:
@@ -84,8 +93,26 @@ const OFFLINE_SEARCH_INDEX = [
     weight: 1,
   },
   {
+    id: 'wms-wmts-prestanda',
+    title: 'WMS/WMTS-prestanda',
+    category: 'Prestanda',
+    url: 'pages/wms-wmts-prestanda.html',
+    content: 'wms wmts prestanda legend rendermode grupp lager cache last',
+    type: 'page',
+    weight: 1,
+  },
+  {
+    id: 'standarder-konventioner',
+    title: 'Standarder & konventioner',
+    category: 'Arbetssätt',
+    url: 'pages/standarder-konventioner.html',
+    content: 'standarder konventioner namngivning mappar lager change management',
+    type: 'page',
+    weight: 1,
+  },
+  {
     id: 'examples',
-    title: 'Origo-recept',
+    title: 'Quick recipes',
     category: 'Origo',
     url: 'pages/examples.html',
     content: 'recept kopiera konfig wms wfs wmts controls',
@@ -121,7 +148,7 @@ const OFFLINE_SEARCH_INDEX = [
   },
   {
     id: 'troubleshooting',
-    title: 'Felsökning',
+    title: 'Felsökningshandbok',
     category: 'Support',
     url: 'pages/troubleshooting.html',
     content: 'felsökning cors crs 404 cache problem tom karta tiles förskjuten',
@@ -377,7 +404,8 @@ const initSearch = () => {
   let selectedIndex = -1;
 
   if (!IS_OFFLINE_FILE) {
-    const searchIndexUrl = new URL('../search/search-index.json', document.baseURI).href;
+    const isDocsPage = window.location.pathname.includes('/pages/');
+    const searchIndexUrl = isDocsPage ? '../search/search-index.json' : 'search/search-index.json';
     fetch(searchIndexUrl)
       .then((response) => (response.ok ? response.json() : []))
       .then((data) => {
