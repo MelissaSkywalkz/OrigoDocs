@@ -404,7 +404,8 @@ const initSearch = () => {
   let selectedIndex = -1;
 
   if (!IS_OFFLINE_FILE) {
-    const searchIndexUrl = new URL('../search/search-index.json', document.baseURI).href;
+    const isDocsPage = window.location.pathname.includes('/pages/');
+    const searchIndexUrl = isDocsPage ? '../search/search-index.json' : 'search/search-index.json';
     fetch(searchIndexUrl)
       .then((response) => (response.ok ? response.json() : []))
       .then((data) => {
