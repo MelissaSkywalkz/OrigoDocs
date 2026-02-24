@@ -183,28 +183,47 @@
         </details>
 
         <h2 id="wms-wfs-wmts">WMS, WFS och WMTS i Origo</h2>
-        <p>Exempel på hur du definierar olika lager i Origo-konfigurationen:</p>
-        <pre><code>{  "source": {
-    "wms_example": {
-      "url": "https://localhost/geoserver/example_workspace/wms",
-      "version": "1.1.1"
+        <p>Exempel enligt vårt faktiska mönster (EPSG:3008, intern/publik sources och tydlig layer-typ):</p>
+        <pre><code>{
+  "sources": {
+    "publik_wms": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/",
+      "params": { "LAYERS": "publik:wms_publik_lm_topowebb_nedtonad" }
     },
-    "wfs_example": {
-      "url": "https://localhost/geoserver/example_workspace/ows",
+    "publik_wfs": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/",
       "strategy": "all"
     },
-    "wmts_example": {
-      "url": "https://localhost/geoserver/example_workspace/gwc/service/wmts",
-      "matrixSet": "EXAMPLE_3008_GRID",
-      "matrixIdsPrefix": "EXAMPLE_3008_GRID:",
-      "tileSize": [512, 512]
+    "publik_wmts": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts",
+      "matrixSet": "EPSG:3008"
     }
   },
   "layers": [
-    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
-    { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
-    { "name": "example_layer_wmts", "type": "WMTS", "source": "wmts_example" }
-  ]}
+    {
+      "name": "publik:wms_publik_lm_topowebb_nedtonad",
+      "group": "background",
+      "source": "publik_wms",
+      "type": "WMS",
+      "format": "image/png",
+      "style": "karta_gra",
+      "queryable": "false"
+    },
+    {
+      "name": "origo_search",
+      "source": "publik_wfs",
+      "group": "baskarta",
+      "type": "WFS"
+    },
+    {
+      "name": "publik:lm_wms_fastighetsgrans_l",
+      "source": "publik_wmts",
+      "group": "fastighetsindelning",
+      "type": "WMTS",
+      "format": "image/png"
+    }
+  ]
+}
 </code></pre>
       </section>
     </main>
