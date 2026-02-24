@@ -26,20 +26,17 @@
           </button>
           <div class="accordion-panel" id="nav-docs">
             <a href="../index.html">Start</a>
-            <a href="page.html">JSON 101</a>
-            <a href="origo-guide.html">Origo – guide</a>
-            <a href="layermanager.html">Layermanager</a>
-            <a href="geoserver.html">GeoServer 101</a>
-            <a href="geoserver-styles.html">GeoServer – styles</a>
+            <a href="start-har.html">Ny utvecklare: start här</a>
+            <a href="origo-guide.html">Origo i vår miljö</a>
+            <a href="geoserver.html">GeoServer: attribut &amp; filtrering</a>
+            <a href="geoserver-styles.html">GeoServer: stilsättning</a>
             <a href="geowebcache.html">GeoWebCache</a>
-            <a href="origo-server.html">Origo Server</a>
-            <a href="git-vscode.html">Git & VS Code</a>
-            <a href="examples.html">Origo-recept</a>
+            <a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a>
+            <a href="examples.html">Quick recipes</a>
             <a href="try-it.html">Try it-lab</a>
-            <a href="faq-gis.html">FAQ GIS</a>
-            <a href="npm.html">npm & plugins</a>
-            <a class="active" href="release-playbook.html" aria-current="page">Release‑playbook</a>
             <a href="troubleshooting.html">Felsökning</a>
+            <a href="standarder-konventioner.html">Standarder &amp; konventioner</a>
+            <a class="active" href="release-playbook.html" aria-current="page">Release‑playbook</a>
           </div>
         </div>
         <div class="nav-section">
@@ -154,7 +151,7 @@
               <li>
                 <label
                   ><input type="checkbox" data-playbook-id="data-permissions" />Kontrollera
-                  permissions / service endpoints (https://localhost/geoserver)</label
+                  permissions / service endpoints (https://srv-origo01.kommun.skovde.se/geoserver/ows/)</label
                 >
               </li>
               <li>
@@ -313,10 +310,31 @@
         <h2>Verifiering efter release</h2>
         <ul>
           <li>Kontrollera att Origo laddar kartan utan fel i konsolen.</li>
-          <li>Testa WMS/WFS‑anrop mot https://localhost/geoserver.</li>
+          <li>Testa WMS/WFS‑anrop mot https://srv-origo01.kommun.skovde.se/geoserver/ows/.</li>
           <li>Verifiera att styles och labels syns på rätt zoomnivå.</li>
           <li>Bekräfta att cache ger uppdaterade tiles.</li>
         </ul>
+
+        <h2 id="release-sanity-check">Release sanity-check</h2>
+        <ul>
+          <li>Kontrollera startsida, Try it-lab och felsökning.</li>
+          <li>Verifiera minst ett WMS-lager och ett WMTS-lager.</li>
+          <li>Bekräfta att legend och GetFeatureInfo svarar utan fel.</li>
+        </ul>
+
+        <div class="playbook-card" style="margin-bottom:1rem">
+          <h3>Kopiera verifieringspaket</h3>
+          <p>Genererar standardanrop för snabb post-release-kontroll.</p>
+          <div class="tryit-actions tryit-actions-primary">
+            <button class="tryit-button" id="releaseCopyVerifyPack" type="button">Kopiera verifieringspaket</button>
+          </div>
+          <pre id="releaseVerifyPackOutput" class="tryit-output tryit-mono"></pre>
+        </div>
+
+        <div class="playbook-card" style="margin-bottom:1rem">
+          <h3>Rollback-plan (mall)</h3>
+          <textarea id="rollbackPlan" class="tryit-input" rows="4" placeholder="1) Vad rullas tillbaka?&#10;2) Hur görs rollback?&#10;3) Hur verifieras återställning?"></textarea>
+        </div>
 
         <h2>Vanliga misstag</h2>
         <ul>

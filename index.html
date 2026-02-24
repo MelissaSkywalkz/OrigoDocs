@@ -3,172 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Origo Map: intern lathund</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <title>OrigoDocs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/main.css" />
   </head>
   <body class="layout">
     <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
-      <div class="sidebar-header">
-        <a href="index.html" class="logo" aria-label="Till startsidan">>_ Origo Docs</a>
-      </div>
-      <div class="nav-search">
-        <input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" />
-        <ul id="searchResults" class="search-results hidden"></ul>
-      </div>
+      <div class="sidebar-header"><a href="index.html" class="logo">&gt;_ Origo Docs</a></div>
+      <div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div>
       <div class="nav-content">
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs">
-            Dokumentation
-          </button>
+          <button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">Dokumentation</button>
           <div class="accordion-panel" id="nav-docs">
             <a href="index.html" aria-current="page">Start</a>
-            <a href="pages/page.html">JSON 101</a>
-            <a href="pages/origo-guide.html">Origo guide</a>
-            <a href="pages/layermanager.html">Layermanager</a>
-            <a href="pages/geoserver.html">GeoServer 101</a>
-            <a href="pages/geoserver-styles.html">GeoServer styles</a>
+            <a href="pages/start-har.html">Ny utvecklare: start här</a>
+            <a href="pages/origo-guide.html">Origo i vår miljö</a>
+            <a href="pages/geoserver.html">GeoServer: attribut &amp; filtrering</a>
+            <a href="pages/geoserver-styles.html">GeoServer: stilsättning</a>
             <a href="pages/geowebcache.html">GeoWebCache</a>
-            <a href="pages/origo-server.html">Origo Server</a>
-            <a href="pages/git-vscode.html">Git & VS Code</a>
-            <a href="pages/examples.html">Origo-recept</a>
+            <a href="pages/wms-wmts-prestanda.html">WMS/WMTS-prestanda</a>
+            <a href="pages/examples.html">Quick recipes</a>
             <a href="pages/try-it.html">Try it-lab</a>
-            <a href="pages/faq-gis.html">FAQ GIS</a>
-            <a href="pages/npm.html">npm & plugins</a>
-            <a href="pages/release-playbook.html">Release‑playbook</a>
             <a href="pages/troubleshooting.html">Felsökning</a>
+            <a href="pages/standarder-konventioner.html">Standarder &amp; konventioner</a>
+            <a href="pages/release-playbook.html">Release-playbook</a>
           </div>
         </div>
         <div class="nav-section">
-          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts">
-            Snabblänkar
-          </button>
+          <button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">Snabblänkar</button>
           <div class="accordion-panel" id="nav-shortcuts" hidden>
             <a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a>
-            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map"
-              >Origo Docs (extern)</a
-            >
+            <a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a>
           </div>
         </div>
       </div>
     </nav>
-
     <div class="nav-backdrop" hidden></div>
 
     <main class="main" id="main">
       <header class="topbar">
-        <button
-          class="nav-toggle"
-          data-nav-toggle
-          aria-label="Öppna eller stäng meny"
-          aria-expanded="true"
-        >
-          <img src="sort.png" alt="" />
-        </button>
-        <div class="topbar-title">
-          <span class="eyebrow">Origo Map</span>
-          <h1>Start</h1>
-        </div>
-        <div class="topbar-meta">
-          <span class="status-pill">Översikt</span>
-        </div>
+        <button class="nav-toggle" data-nav-toggle aria-label="Meny" aria-expanded="true" type="button"><img src="sort.png" alt="" /></button>
+        <div class="topbar-title"><span class="eyebrow">Intern dokumentation</span><h1>Start</h1></div>
       </header>
 
       <section class="hero">
         <div>
-          <h2>Snabbstart för teamet</h2>
-          <p>
-            Här samlar vi JSON‑grunder, Origo‑konfigurationer och driftstöd för GeoServer och
-            GeoWebCache. Innehållet är kort, kopierbart och anpassat för vardagsarbete.
-          </p>
+          <h2>OrigoDocs enligt hur vi faktiskt arbetar</h2>
+          <p>Beprövade rutiner för vår GeoServer + GeoWebCache + Origo-miljö, med fokus på snabb onboarding och reproducerbar drift.</p>
           <div class="hero-actions">
-            <a class="button" href="pages/page.html">Läs JSON 101</a>
-            <a class="button button-secondary" href="pages/origo-guide.html">Gå till Origo guide</a>
+            <a class="button" href="pages/start-har.html">Ny utvecklare: start här</a>
+            <a class="button button-secondary" href="pages/troubleshooting.html">Öppna felsökning</a>
           </div>
         </div>
-        <div class="hero-card">
-          <h3>Snabbstart</h3>
-          <p>Öppna en guide, kopiera ett exempel och testa lokalt direkt.</p>
-        </div>
+      </section>
+
+      <section class="card-grid" aria-label="Snabbpanel vardagsflöden">
+        <article class="card"><h3>Testa WMS snabbt</h3><a class="link" href="pages/examples.html#getmap">Öppna test →</a></article>
+        <article class="card"><h3>Testa WMTS tile</h3><a class="link" href="pages/examples.html#wmts">Öppna test →</a></article>
+        <article class="card"><h3>Legend / RULE-check</h3><a class="link" href="pages/examples.html#legend">Öppna check →</a></article>
+        <article class="card"><h3>Seed / truncate-checklista</h3><a class="link" href="pages/geowebcache.html#seed">Öppna checklista →</a></article>
+        <article class="card"><h3>Vanliga fel → fix</h3><a class="link" href="pages/troubleshooting.html#vanliga-fel">Öppna felsökning →</a></article>
+        <article class="card"><h3>Release sanity-check</h3><a class="link" href="pages/release-playbook.html#release-sanity-check">Öppna sanity-check →</a></article>
       </section>
 
       <section class="card-grid">
-        <article class="card">
-          <h3>JSON 101</h3>
-          <p>Förklara objekt, arrayer och vanliga fel. Mini-checklista ingår.</p>
-          <a class="link" href="pages/page.html">Öppna JSON 101 →</a>
-        </article>
-        <article class="card">
-          <h3>Origo guide</h3>
-          <p>Snabbstart, lager, controls och prestanda.</p>
-          <a class="link" href="pages/origo-guide.html">Öppna guiden →</a>
-        </article>
-        <article class="card">
-          <h3>Layermanager</h3>
-          <p>Plugin för att söka och lägga till lager från kataloger.</p>
-          <a class="link" href="pages/layermanager.html">Se Layermanager →</a>
-        </article>
-        <article class="card">
-          <h3>GeoServer 101</h3>
-          <p>Hur servern, datakällor och standarder hänger ihop med Origo.</p>
-          <a class="link" href="pages/geoserver.html">Läs GeoServer 101 →</a>
-        </article>
-        <article class="card">
-          <h3>GeoServer styles</h3>
-          <p>SLD, CSS och MBStyle. Se när du använder vad.</p>
-          <a class="link" href="pages/geoserver-styles.html">Gå till styles →</a>
-        </article>
-        <article class="card">
-          <h3>GeoWebCache</h3>
-          <p>Tile-cache, gridsets och hur du felsöker “gamla tiles”.</p>
-          <a class="link" href="pages/geowebcache.html">Läs GeoWebCache →</a>
-        </article>
-        <article class="card">
-          <h3>Origo Server</h3>
-          <p>Backend‑stöd för proxy, state och andra tjänster.</p>
-          <a class="link" href="pages/origo-server.html">Öppna Origo Server →</a>
-        </article>
-        <article class="card">
-          <h3>Git & VS Code</h3>
-          <p>Tryggt arbetssätt för Git-ovana kollegor.</p>
-          <a class="link" href="pages/git-vscode.html">Öppna guiden →</a>
-        </article>
-        <article class="card">
-          <h3>Origo-recept</h3>
-          <p>Kopierbara konfig-exempel med WMS/WFS och controls.</p>
-          <a class="link" href="pages/examples.html">Öppna recept →</a>
-        </article>
-        <article class="card">
-          <h3>FAQ GIS</h3>
-          <p>Vanliga frågor för nybörjare. Snabba svar på “varför?”.</p>
-          <a class="link" href="pages/faq-gis.html">Läs FAQ →</a>
-        </article>
-        <article class="card">
-          <h3>npm & plugins</h3>
-          <p>Installera, lås versioner och bygg in i statiskt projekt.</p>
-          <a class="link" href="pages/npm.html">Gå till npm →</a>
-        </article>
-        <article class="card">
-          <h3>Felsökning</h3>
-          <p>Checklistor för CORS, CRS, 404 och cache-problem.</p>
-          <a class="link" href="pages/troubleshooting.html">Öppna felsökning →</a>
-        </article>
-        <article class="card">
-          <h3>Try it-lab</h3>
-          <p>Experimentera med JSON, BBOX, SLD och interaktiva verktyg.</p>
-          <a class="link" href="pages/try-it.html">Öppna Try it-lab →</a>
-        </article>
-        <article class="card">
-          <h3>Release‑playbook</h3>
-          <p>Körbar checklista för data, styles, cache, Origo och deploy.</p>
-          <a class="link" href="pages/release-playbook.html">Öppna playbook →</a>
-        </article>
+        <article class="card"><h3>Origo i vår miljö</h3><p>Rollfördelning mellan Origo, GeoServer och GWC.</p><a class="link" href="pages/origo-guide.html">Öppna →</a></article>
+        <article class="card"><h3>GeoServer: attribut &amp; filtrering</h3><p>Hur vi modellerar data och minimerar frontend-specialfall.</p><a class="link" href="pages/geoserver.html">Öppna →</a></article>
+        <article class="card"><h3>GeoServer: stilsättning</h3><p>SLD-regler, legend och skala på ett robust sätt.</p><a class="link" href="pages/geoserver-styles.html">Öppna →</a></article>
+        <article class="card"><h3>GeoWebCache</h3><p>Seed-rutiner, BBOX-val och cache-verifiering.</p><a class="link" href="pages/geowebcache.html">Öppna →</a></article>
+        <article class="card"><h3>WMS/WMTS-prestanda</h3><p>När du väljer WMS, när du väljer WMTS och hur du mäter rätt.</p><a class="link" href="pages/wms-wmts-prestanda.html">Öppna →</a></article>
+        <article class="card"><h3>Quick recipes</h3><p>Copy/paste för GetMap, legend, WMTS och seed.</p><a class="link" href="pages/examples.html">Öppna →</a></article>
+        <article class="card"><h3>Try it-lab</h3><p>Interaktiva verktyg och Skövde-cases för validering.</p><a class="link" href="pages/try-it.html">Öppna →</a></article>
+        <article class="card"><h3>Felsökning</h3><p>Symptom → orsak → verifiering → fix.</p><a class="link" href="pages/troubleshooting.html">Öppna →</a></article>
       </section>
     </main>
-
     <script src="assets/js/main.js"></script>
   </body>
 </html>
