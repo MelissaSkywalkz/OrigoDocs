@@ -32,20 +32,17 @@
           </button>
           <div class="accordion-panel" id="nav-docs">
             <a href="../index.html">Start</a>
-            <a href="page.html">JSON 101</a>
-            <a href="origo-guide.html">Origo – guide</a>
-            <a href="layermanager.html">Layermanager</a>
-            <a href="geoserver.html">GeoServer 101</a>
-            <a href="geoserver-styles.html">GeoServer – styles</a>
+            <a href="start-har.html">Ny utvecklare: start här</a>
+            <a href="origo-guide.html">Origo i vår miljö</a>
+            <a href="geoserver.html">GeoServer: attribut & filtrering</a>
+            <a href="geoserver-styles.html">GeoServer: stilsättning</a>
             <a href="geowebcache.html">GeoWebCache</a>
-            <a href="origo-server.html">Origo Server</a>
-            <a href="git-vscode.html">Git & VS Code</a>
-            <a href="examples.html">Origo-recept</a>
+            <a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a>
+            <a href="examples.html">Quick recipes</a>
             <a class="active" href="try-it.html" aria-current="page">Try it-lab</a>
-            <a href="faq-gis.html">FAQ GIS</a>
-            <a href="npm.html">npm & plugins</a>
-            <a href="release-playbook.html">Release-playbook</a>
             <a href="troubleshooting.html">Felsökning</a>
+            <a href="standarder-konventioner.html">Standarder & konventioner</a>
+            <a href="release-playbook.html">Release-playbook</a>
           </div>
         </div>
         <div class="nav-section">
@@ -105,7 +102,32 @@
           <a href="#gridcalc">Gridset / Tile</a>
           <a href="#gridset-explorer">Gridset-utforskare</a>
           <a href="#sld">SLD</a>
+          <a href="#skovde-cases">Skövde-cases</a>
         </nav>
+
+        <section class="doc-section" id="skovde-cases">
+          <h2>Så gör vi hos oss: Try-it scenarios (copy/paste)</h2>
+          <p>Bevara samma lab-mekanik, men testa med våra faktiska mönster och felbilder.</p>
+          <ul>
+            <li><strong>WMS GetMap (min bbox):</strong> Kör URL-builder med bas <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code>, liten bbox i EPSG:3008 och kontrollera svarstid.</li>
+            <li><strong>GetLegendGraphic + RULE:</strong> testa att RULE inte blir <code>undefined</code>; förväntat resultat är giltig legend utan GeoServer-fel.</li>
+            <li><strong>CQL-filter:</strong> testa enkla uttryck först (<code>=</code>, <code>IN</code>) innan komplexa contains/intersects.</li>
+            <li><strong>WMTS vs WMS:</strong> jämför samma lager i map-sandbox och notera skillnad i render och svarstid.</li>
+            <li><strong>GWC cache-hit/miss:</strong> använd URL-builder + nätverksinspektion och jämför mot seedade nivåer/bbox.</li>
+            <li><strong>Group layers:</strong> verifiera faktisk renderordning och belastning med få lager aktiva samtidigt.</li>
+          </ul>
+          <p><strong>JSON-snabbtest i labben:</strong> klistra in i JSON-verktyget och validera att struktur följer våra source/layer-mönster.</p>
+<pre><code>{
+  "sources": {
+    "publik_wms": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/" },
+    "publik_wmts": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts", "matrixSet": "EPSG:3008" }
+  },
+  "layers": [
+    { "name": "publik:wms_publik_lm_topowebb_nedtonad", "type": "WMS", "source": "publik_wms", "group": "background" },
+    { "name": "publik:lm_wms_fastighetsgrans_l", "type": "WMTS", "source": "publik_wmts", "group": "fastighetsindelning" }
+  ]
+}</code></pre>
+        </section>
 
         <template id="tryit-layout-template">
           <div class="tryit">
