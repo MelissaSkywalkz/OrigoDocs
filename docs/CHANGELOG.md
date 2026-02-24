@@ -121,3 +121,17 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - I vilka nätsegment browsern tillåts köra direkta testanrop mot alla interna endpoints (påverkar "kör direkt" i vissa miljöer).
+
+## 2026-02-24 (revidering 13: mer produktkänsla i vardagsverktygen)
+
+### Vad ändrades
+- Utökade Try it-lab med mer verktygsdrivna block:
+  - Environment switcher med knapp som applicerar bas-URL i flera verktyg (URL-builder, BBOX, verifieringspaket).
+  - Interaktiv template-generator (WMS, WMTS, SLD) med generera + kopiera.
+- Utökade felsökning med sökbar "known issues"-databas genom filtrering av issue-kort.
+- Lade till Ctrl/Cmd+K-snabbkommando mot global docs-sök.
+- Lade till synlig metadata "Ägare" + "Senast uppdaterad" på kärnsidor (`origo-guide`, `try-it`, `troubleshooting`).
+- Regenererade sökindex så de nya verktygssektionerna blir sökbara.
+
+### Okänt hos oss (behöver bekräftas)
+- Slutlig lista över owners per område (primär + backup) för att hålla metadata helt aktuell över tid.

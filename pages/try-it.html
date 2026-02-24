@@ -87,6 +87,7 @@
       </header>
 
       <section class="doc-content">
+        <p class="muted"><strong>Ägare:</strong> Origo-dev + drift · <strong>Senast uppdaterad:</strong> 2026-02-24</p>
         <p>
           Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i
           webbläsaren.
@@ -160,16 +161,37 @@
         <section class="doc-section" id="environment-switcher">
           <h2>Versioner &amp; miljöer</h2>
           <p>Använd dessa bas-URL:er konsekvent när du byter mellan intern/publik/lokal miljö.</p>
+          <label for="env-switch"><strong>Miljö</strong></label>
+          <select id="env-switch" class="tryit-input" aria-label="Välj miljö">
+            <option value="intern">Intern</option>
+            <option value="publik">Publik</option>
+            <option value="lokal">Lokal</option>
+          </select>
+          <div class="tryit-actions tryit-actions-primary">
+            <button id="env-apply" class="tryit-button" type="button">Använd miljö i verktyg</button>
+          </div>
           <ul>
             <li><strong>Intern:</strong> <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
             <li><strong>Publik:</strong> <code>https://origo.skovde.se</code> (klient), OWS enligt publicerad endpoint</li>
             <li><strong>Lokal:</strong> <code>http://localhost:9966/</code> (Origo dev)</li>
           </ul>
+          <pre id="env-output" class="tryit-output tryit-mono"></pre>
         </section>
 
         <section class="doc-section" id="template-generator">
           <h2>Template generator (snippets)</h2>
           <p>Snabba mallar för WMS/WMTS och SLD som följer våra standardfält.</p>
+          <label for="template-kind"><strong>Typ av template</strong></label>
+          <select id="template-kind" class="tryit-input" aria-label="Välj template-typ">
+            <option value="wms">Origo layer snippet (WMS)</option>
+            <option value="wmts">Origo layer snippet (WMTS)</option>
+            <option value="sld">SLD basmall</option>
+          </select>
+          <div class="tryit-actions tryit-actions-primary">
+            <button id="template-generate" class="tryit-button" type="button">Generera template</button>
+            <button id="template-copy" class="tryit-button secondary" type="button">Kopiera template</button>
+          </div>
+          <pre id="template-output" class="tryit-output tryit-mono"></pre>
 <pre><code>{
   "name": "publik:lm_wms_fastighetsgrans_l",
   "group": "fastighetsindelning",

@@ -1372,6 +1372,97 @@ const initCommandPaletteShortcut = () => {
     }
   });
 };
+
+const initEnvironmentSwitcher = () => {
+  const select = document.getElementById('env-switch');
+  const applyBtn = document.getElementById('env-apply');
+  const output = document.getElementById('env-output');
+  if (!select || !applyBtn) return;
+
+  const envMap = {
+    intern: {
+      ows: 'https://srv-origo01.kommun.skovde.se/geoserver/ows/',
+      wmts: 'https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts',
+    },
+    publik: {
+      ows: 'https://origo.skovde.se/geoserver/ows/',
+      wmts: 'https://origo.skovde.se/geoserver/gwc/service/wmts',
+    },
+    lokal: {
+      ows: 'http://localhost:8080/geoserver/ows/',
+      wmts: 'http://localhost:8080/geoserver/gwc/service/wmts',
+    },
+  };
+
+  applyBtn.addEventListener('click', () => {
+    const env = envMap[select.value] || envMap.intern;
+    const vpSource = document.getElementById('vp-source');
+    const urlBase = document.getElementById('urlbuilder-base');
+    const bboxBase = document.getElementById('bbox-base');
+
+    if (vpSource) vpSource.value = env.ows;
+    if (urlBase) urlBase.value = env.ows;
+    if (bboxBase) bboxBase.value = env.ows;
+
+    if (output) {
+      output.textContent = `Miljö applicerad: ${select.value}\nOWS: ${env.ows}\nWMTS: ${env.wmts}`;
+    }
+  });
+};
+
+const initTemplateGenerator = () => {
+  const kind = document.getElementById('template-kind');
+  const genBtn = document.getElementById('template-generate');
+  const copyBtn = document.getElementById('template-copy');
+  const output = document.getElementById('template-output');
+  if (!kind || !genBtn || !copyBtn || !output) return;
+
+  const templates = {
+    wms: `{
+  "name": "publik:wms_publik_lm_topowebb_nedtonad",
+  "group": "background",
+  "source": "publik_wms",
+  "type": "WMS",
+  "format": "image/png",
+  "style": "karta_gra",
+  "queryable": "false"
+}`,
+    wmts: `{
+  "name": "publik:lm_wms_fastighetsgrans_l",
+  "group": "fastighetsindelning",
+  "source": "publik_wmts",
+  "type": "WMTS",
+  "format": "image/png",
+  "visible": true
+}`,
+    sld: `<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0">
+  <NamedLayer>
+    <Name>example_style</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <Name>default-rule</Name>
+          <PolygonSymbolizer>...</PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>`,
+  };
+
+  genBtn.addEventListener('click', () => {
+    output.textContent = templates[kind.value] || templates.wms;
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    if (!output.textContent.trim()) {
+      output.textContent = templates[kind.value] || templates.wms;
+    }
+    await copyText(output.textContent);
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initDocCodeBlocks();
   const devMode = new URLSearchParams(window.location.search).get('dev') === '1';
@@ -4294,4 +4385,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initVerificationPack();
   initKnownIssuesFilter();
   initCommandPaletteShortcut();
+  initEnvironmentSwitcher();
+  initTemplateGenerator();
 });
