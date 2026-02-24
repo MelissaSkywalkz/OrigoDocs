@@ -680,15 +680,14 @@
     "weight": 1.2
   },
   {
-    "id": "troubleshoot-symptom-0",
-    "title": "Felsökning: Tom karta",
-    "category": "Felsökning",
-    "url": "pages/troubleshooting.html#symptom-rotorsak",
-    "heading": "Tom karta",
-    "content": "Symptom: Tom karta. Orsak: ",
-    "keywords": "tom karta ",
-    "type": "symptom",
-    "weight": 2
+    "id": "start-har-forsta-task",
+    "title": "Ny utvecklare: start här: Första arbetsuppgift",
+    "category": "Onboarding",
+    "url": "pages/start-har.html#forsta-task",
+    "heading": "Första arbetsuppgift",
+    "content": "Lägg till eller uppdatera ett lager i en testkonfig ( index.json ). Verifiera lagret med GetMap och GetLegendGraphic. Dokumentera vad du ändrat och varför i changelog.",
+    "type": "section",
+    "weight": 1.2
   },
   {
     "id": "troubleshoot-symptom-1",
