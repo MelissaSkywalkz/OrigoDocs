@@ -53,3 +53,22 @@
 ### Okänt hos oss (behöver bekräftas)
 - Exakta tröskelvärden/standard för cache-hit headers mellan alla miljöer (intern/proxy/extern).
 - Tydlig central policy för när lager ska flyttas från WMS till WMTS som bindande regel.
+
+## 2026-02-23 (revidering 9: verkliga JSON-patterns och house rules)
+
+### Vad ändrades
+- Uppdaterade JSON-exempel till våra faktiska mönster (källor/lager/URL:er) i:
+  - `pages/faq-gis.html`
+  - `pages/page.html`
+  - `pages/try-it.html` (Skövde-cases + JSON-snabbtest)
+- Uppdaterade driftnära endpoint-referenser i `pages/release-playbook.html` från generiska localhost-exempel till vår OWS-pattern.
+- Lade till `docs/_house_patterns.md` med inventering av vad som faktiskt kan beläggas i repo (layout, sök, labs, config-mönster och begränsningar).
+- Regenererade `search/search-index.json` så nya exempel och sektioner är sökbara.
+
+### Pattern-källor i repo
+- Sök/lab/layout-patterns: `assets/js/main.js`, `pages/try-it.html`, `scripts/build-search-index.js`.
+- Konfig/lager-exempel i docs-kod: `pages/page.html`, `pages/faq-gis.html`, `pages/examples.html`.
+
+### Okänt hos oss (kunde ej beläggas i repo)
+- Full produktionskonfig för samtliga kartinstanser (`index.json` för alla miljöer) finns inte i detta repo.
+- Därför är exempel representativa för belagda mönster, inte komplett dump av driftkonfig.

@@ -85,7 +85,7 @@
     "category": "FAQ",
     "url": "pages/faq-gis.html#wms-wfs-wmts",
     "heading": "WMS, WFS och WMTS i Origo",
-    "content": "Exempel på hur du definierar olika lager i Origo-konfigurationen: { \"source\": { \"wms_example\": { \"url\": \"https://localhost/geoserver/example_workspace/wms\", \"version\": \"1.1.1\" }, \"wfs_example\": { \"url\": \"https://localhost/geoserver/example_workspace/ows\", \"strategy\": \"all\" }, \"wmts_example\": { \"url\"",
+    "content": "Exempel enligt vårt faktiska mönster (EPSG:3008, intern/publik sources och tydlig layer-typ): { \"sources\": { \"publik_wms\": { \"url\": \"https://srv-origo01.kommun.skovde.se/geoserver/ows/\", \"params\": { \"LAYERS\": \"publik:wms_publik_lm_topowebb_nedtonad\" } }, \"publik_wfs\": { \"url\": \"https://srv-origo01.k",
     "type": "section",
     "weight": 1.2
   },

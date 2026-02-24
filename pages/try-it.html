@@ -116,6 +116,17 @@
             <li><strong>GWC cache-hit/miss:</strong> använd URL-builder + nätverksinspektion och jämför mot seedade nivåer/bbox.</li>
             <li><strong>Group layers:</strong> verifiera faktisk renderordning och belastning med få lager aktiva samtidigt.</li>
           </ul>
+          <p><strong>JSON-snabbtest i labben:</strong> klistra in i JSON-verktyget och validera att struktur följer våra source/layer-mönster.</p>
+<pre><code>{
+  "sources": {
+    "publik_wms": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/" },
+    "publik_wmts": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts", "matrixSet": "EPSG:3008" }
+  },
+  "layers": [
+    { "name": "publik:wms_publik_lm_topowebb_nedtonad", "type": "WMS", "source": "publik_wms", "group": "background" },
+    { "name": "publik:lm_wms_fastighetsgrans_l", "type": "WMTS", "source": "publik_wmts", "group": "fastighetsindelning" }
+  ]
+}</code></pre>
         </section>
 
         <template id="tryit-layout-template">
