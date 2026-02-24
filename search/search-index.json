@@ -635,7 +635,7 @@
     "category": "Support",
     "url": "pages/troubleshooting.html#vanliga-fel",
     "heading": "Vanliga fel",
-    "content": "Vanligaste orsaken till långa incidenter Man felsöker Origo först – börja i GeoServer/GWC och gå sedan upp i stacken. CORS / mixed content Browser https-sidor får inte hämta http-resurser; CORS-policy kan stoppa XHR/fetch. FAQ GIS Origo guide RULE=undefined GeoServer <p class",
+    "content": "Vanligaste orsaken till långa incidenter Man felsöker Origo först – börja i GeoServer/GWC och gå sedan upp i stacken. Known issues-sök (symptom/fix) CORS / mixed content Browser https-sidor får inte hämta http-resurser; CORS-policy kan stoppa XHR/fetch. <a class=\"ts-pill\" href=\"faq-g",
     "type": "section",
     "weight": 1.2
   },
@@ -742,6 +742,16 @@
     "content": "Interaktiva verktyg för att validera, formatera och testa konfigurationer direkt i webbläsaren. Snabbstart: JSON / GeoJSON Kartsandlåda URL-builder BBOX / Extent Upplösningar Gridset / Tile Gridset-utforskare SLD Skövde-cases Så gör vi hos oss: Try-it scenarios (copy/paste) Bevara samma lab-mekanik, men testa med våra faktiska mönster och felbilder. WMS GetMap (min bbox): Kör URL-builder med bas https://srv-origo01.kommun.skovde.se/geoserver/ows/ , liten bbox i EPSG:3008 och kontrollera svarstid",
     "type": "page",
     "weight": 1
+  },
+  {
+    "id": "try-it-verification-pack-title",
+    "title": "Try it-lab: Verifieringspaket per lager",
+    "category": "Verktyg",
+    "url": "pages/try-it.html#verification-pack-title",
+    "heading": "Verifieringspaket per lager",
+    "content": "Kör våra standardtester snabbt: GetCapabilities, GetMap, GetLegendGraphic, GetFeatureInfo och WMTS. Layer name Workspace WMS/WMTS endpoint Style <",
+    "type": "section",
+    "weight": 1.2
   },
   {
     "id": "try-it-json",

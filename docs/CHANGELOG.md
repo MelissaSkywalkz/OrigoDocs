@@ -104,3 +104,20 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Formell lagrad process för versionshantering av ADR (id-ägare, ändringsgodkännande och arkiveringsrutin).
+
+## 2026-02-24 (revidering 12: tidsbesparande vardagsfunktioner)
+
+### Vad ändrades
+- Utökade `pages/try-it.html` med tre nya avancerade block utan att ändra labmotor/layoutsystem:
+  - Verifieringspaket per lager (form + knapp)
+  - Versioner & miljöer (intern/publik/lokal)
+  - Template generator för Origo-konfig och SLD-bas
+- Utökade `pages/troubleshooting.html` med sökbar "Known issues"-input kopplad till issue-kort.
+- Lade till nya hjälpfunktioner i `assets/js/main.js`:
+  - `initVerificationPack()` (genererar standardtester/curl/URL för ett lager)
+  - `initKnownIssuesFilter()` (filtrering av symptom/fix-kort)
+  - `initCommandPaletteShortcut()` (Ctrl/Cmd+K fokuserar global sökruta)
+- Regenererade `search/search-index.json` för att indexera de nya sektionerna och texterna.
+
+### Okänt hos oss (behöver bekräftas)
+- I vilka nätsegment browsern tillåts köra direkta testanrop mot alla interna endpoints (påverkar "kör direkt" i vissa miljöer).

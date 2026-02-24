@@ -129,6 +129,71 @@
 }</code></pre>
         </section>
 
+        <section class="tool-card" id="verification-pack" aria-labelledby="verification-pack-title" tabindex="0">
+          <div class="tool-card-head">
+            <h2 id="verification-pack-title">Verifieringspaket per lager</h2>
+            <p>Kör våra standardtester snabbt: GetCapabilities, GetMap, GetLegendGraphic, GetFeatureInfo och WMTS.</p>
+          </div>
+          <div class="tryit-grid">
+            <div>
+              <label for="vp-layer"><strong>Layer name</strong></label>
+              <input id="vp-layer" class="tryit-input" value="publik:wms_publik_lm_topowebb_nedtonad" />
+              <label for="vp-workspace"><strong>Workspace</strong></label>
+              <input id="vp-workspace" class="tryit-input" value="publik" />
+              <label for="vp-source"><strong>WMS/WMTS endpoint</strong></label>
+              <input id="vp-source" class="tryit-input" value="https://srv-origo01.kommun.skovde.se/geoserver/ows/" />
+              <label for="vp-style"><strong>Style</strong></label>
+              <input id="vp-style" class="tryit-input" value="karta_gra" />
+              <label for="vp-rule"><strong>RULE (valfritt)</strong></label>
+              <input id="vp-rule" class="tryit-input" placeholder="Lämna tomt om ej relevant" />
+              <div class="tryit-actions tryit-actions-primary">
+                <button id="vp-generate" class="tryit-button" type="button">Generera verifieringspaket</button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat (copy/paste curl + URL)</strong>
+              <pre id="vp-output" class="tryit-output tryit-mono"></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="environment-switcher">
+          <h2>Versioner &amp; miljöer</h2>
+          <p>Använd dessa bas-URL:er konsekvent när du byter mellan intern/publik/lokal miljö.</p>
+          <ul>
+            <li><strong>Intern:</strong> <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
+            <li><strong>Publik:</strong> <code>https://origo.skovde.se</code> (klient), OWS enligt publicerad endpoint</li>
+            <li><strong>Lokal:</strong> <code>http://localhost:9966/</code> (Origo dev)</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="template-generator">
+          <h2>Template generator (snippets)</h2>
+          <p>Snabba mallar för WMS/WMTS och SLD som följer våra standardfält.</p>
+<pre><code>{
+  "name": "publik:lm_wms_fastighetsgrans_l",
+  "group": "fastighetsindelning",
+  "source": "publik_wmts",
+  "type": "WMTS",
+  "format": "image/png",
+  "visible": true
+}</code></pre>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;StyledLayerDescriptor version="1.0.0"&gt;
+  &lt;NamedLayer&gt;
+    &lt;Name&gt;example_style&lt;/Name&gt;
+    &lt;UserStyle&gt;
+      &lt;FeatureTypeStyle&gt;
+        &lt;Rule&gt;
+          &lt;Name&gt;default-rule&lt;/Name&gt;
+          &lt;PolygonSymbolizer&gt;...&lt;/PolygonSymbolizer&gt;
+        &lt;/Rule&gt;
+      &lt;/FeatureTypeStyle&gt;
+    &lt;/UserStyle&gt;
+  &lt;/NamedLayer&gt;
+&lt;/StyledLayerDescriptor&gt;</code></pre>
+        </section>
+
         <template id="tryit-layout-template">
           <div class="tryit">
             <div class="tryit-grid">

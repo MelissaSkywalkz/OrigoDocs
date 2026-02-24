@@ -132,10 +132,12 @@
 
           <h2 id="vanliga-fel">Vanliga fel</h2>
           <div class="callout callout-warning"><h3>Vanligaste orsaken till långa incidenter</h3><p>Man felsöker Origo först – börja i GeoServer/GWC och gå sedan upp i stacken.</p></div>
+          <label for="issueFilter"><strong>Known issues-sök (symptom/fix)</strong></label>
+          <input id="issueFilter" class="tryit-input" placeholder="Sök t.ex. legend, timeout, schema, gwc, capabilities" />
           <div class="ts-issues">
-            <div class="ts-issue"><div class="ts-issue-head"><h3 class="ts-issue-title">CORS / mixed content</h3><span class="ts-issue-tag">Browser</span></div><p class="ts-issue-text">https-sidor får inte hämta http-resurser; CORS-policy kan stoppa XHR/fetch.</p><div class="ts-issue-actions"><a class="ts-pill" href="faq-gis.html">FAQ GIS</a><a class="ts-pill" href="origo-guide.html">Origo guide</a></div></div>
-            <div class="ts-issue"><div class="ts-issue-head"><h3 class="ts-issue-title">RULE=undefined</h3><span class="ts-issue-tag">GeoServer</span></div><p class="ts-issue-text">Skicka RULE endast när värdet motsvarar ett faktiskt <code>&lt;Rule&gt;&lt;Name&gt;</code>.</p><div class="ts-issue-actions"><a class="ts-pill" href="geoserver-styles.html">GeoServer styles</a><a class="ts-pill" href="try-it.html#sld">Try it-lab</a></div></div>
-            <div class="ts-issue"><div class="ts-issue-head"><h3 class="ts-issue-title">Datakälla/schema-fel</h3><span class="ts-issue-tag">GeoServer</span></div><p class="ts-issue-text">Återskapa tabell/vy, peka om store eller avpublicera trasigt lager.</p><div class="ts-issue-actions"><a class="ts-pill" href="geoserver.html">GeoServer 101</a></div></div>
+            <div class="ts-issue" data-issue="cors mixed content browser"><div class="ts-issue-head"><h3 class="ts-issue-title">CORS / mixed content</h3><span class="ts-issue-tag">Browser</span></div><p class="ts-issue-text">https-sidor får inte hämta http-resurser; CORS-policy kan stoppa XHR/fetch.</p><div class="ts-issue-actions"><a class="ts-pill" href="faq-gis.html">FAQ GIS</a><a class="ts-pill" href="origo-guide.html">Origo guide</a></div></div>
+            <div class="ts-issue" data-issue="legend rule undefined geoserver"><div class="ts-issue-head"><h3 class="ts-issue-title">RULE=undefined</h3><span class="ts-issue-tag">GeoServer</span></div><p class="ts-issue-text">Skicka RULE endast när värdet motsvarar ett faktiskt <code>&lt;Rule&gt;&lt;Name&gt;</code>.</p><div class="ts-issue-actions"><a class="ts-pill" href="geoserver-styles.html">GeoServer styles</a><a class="ts-pill" href="try-it.html#sld">Try it-lab</a></div></div>
+            <div class="ts-issue" data-issue="schema flush capabilities geoserver"><div class="ts-issue-head"><h3 class="ts-issue-title">Datakälla/schema-fel</h3><span class="ts-issue-tag">GeoServer</span></div><p class="ts-issue-text">Återskapa tabell/vy, peka om store eller avpublicera trasigt lager.</p><div class="ts-issue-actions"><a class="ts-pill" href="geoserver.html">GeoServer 101</a></div></div>
           </div>
 
           <h2 id="geoserver-relaterade">GeoServer-relaterade</h2>
