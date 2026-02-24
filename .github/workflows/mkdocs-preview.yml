@@ -30,7 +30,7 @@ jobs:
           pip install -r mkdocs/requirements.txt
 
       - name: Build MkDocs site
-        run: mkdocs build --strict
+        run: mkdocs build -f mkdocs.yml --strict
 
       - name: Deploy preview to gh-pages-mkdocs branch (/mkdocs path)
         uses: peaceiris/actions-gh-pages@v4
@@ -38,5 +38,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages-mkdocs
           publish_dir: ./mkdocs/site
-          destination_dir: mkdocs
+          destination_dir: mkdocs/site
           keep_files: true

@@ -1,7 +1,7 @@
 site_name: OrigoDocs Preview (MkDocs)
 site_description: Parallel MkDocs + Material preview for OrigoDocs
-site_url: https://<org-or-user>.github.io/<repo>/mkdocs/
-repo_url: https://github.com/<org-or-user>/<repo>
+site_url: https://melissaskywalkz.github.io/OrigoDocs/mkdocs/site/
+repo_url: https://github.com/MelissaSkywalkz/OrigoDocs
 edit_uri: ""
 docs_dir: mkdocs/docs
 site_dir: mkdocs/site
