@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Standarder & konventioner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">&gt;_ Origo Docs</a></div>
+      <div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div>
+      <div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GeoWebCache</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="try-it.html">Try it-lab</a><a href="troubleshooting.html">Felsökning</a><a href="standarder-konventioner.html" aria-current="page">Standarder &amp; konventioner</a><a href="release-playbook.html">Release-playbook</a></div></div><div class="nav-section"><button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">Snabblänkar</button><div class="accordion-panel" id="nav-shortcuts" hidden><a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a><a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a></div></div></div>
+    </nav>
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true" type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Arbetssätt</span><h1>Standarder &amp; konventioner</h1></div><div class="topbar-meta"><span class="status-pill">Gemensamt språk</span></div></header>
+      <section class="doc-content">
+        <nav class="troubleshoot-toc" aria-label="Glossary och konventioner">
+          <strong>Glossary &amp; konventioner:</strong>
+          <a href="#naming">Namngivning</a>
+          <a href="#attributes">Attributkonventioner</a>
+          <a href="#dod">Definition of done</a>
+          <a href="#adr">ADR / beslutshistorik</a>
+        </nav>
+
+        <h2 id="backend-forst">Backend-först-principen</h2>
+        <p>Datalogik och regler ska ligga i GeoServer. Origo ska vara konfigurerad presentation, inte extra affärslogik.</p>
+
+        <h2 id="naming">Namngivning (Glossary)</h2>
+        <ul>
+          <li><strong>workspace:layer</strong> är huvudformatet, t.ex. <code>publik:lm_wms_fastighetsgrans_l</code>.</li>
+          <li><strong>Suffix geometri:</strong> <code>_p</code> (punkt), <code>_l</code> (linje), <code>_y</code> (yta).</li>
+          <li><strong>Säsong/år:</strong> lägg år sist i namn när dataset är tidsbundet (t.ex. <code>..._2024_y</code>).</li>
+          <li><strong>Intern/publik:</strong> separera via source/workspace i stället för otydliga specialregler i frontend.</li>
+        </ul>
+
+        <h2 id="attributes">Attributkonventioner</h2>
+        <ul>
+          <li>Konsekvent casing och datatyp per attribut.</li>
+          <li>Föredra kodvärden/boolean framför fritext där filter/stil bygger på attribut.</li>
+          <li>Undvik tomma strängar där <code>NULL</code> är semantiskt korrekt.</li>
+          <li>Håll CQL enkelt: börja med <code>=</code>, <code>IN</code>, <code>IS NOT NULL</code>.</li>
+        </ul>
+
+        <h2 id="dod">Definition of done för lager</h2>
+        <ol>
+          <li>GetMap svarar <code>200</code> från OWS.</li>
+          <li>GetLegendGraphic fungerar utan RULE-fel.</li>
+          <li>FeatureInfo fungerar enligt förväntat (eller är avsiktligt avstängt).</li>
+          <li>Rätt cache-läge verifierat (WMS vs WMTS) och seed/truncate utfört vid behov.</li>
+          <li>Lager syns i rätt grupp i Origo med rätt zoom/synlighet.</li>
+        </ol>
+
+        <h2 id="adr">ADR / beslutshistorik</h2>
+
+        <h3>ADR-001: Backend-först</h3>
+        <p><strong>Beslut:</strong> logik (filter/stil/regler) hanteras primärt i GeoServer.</p>
+        <p><strong>Kontext:</strong> frontend-specialfall gav svårfelsökta regressionsfel.</p>
+        <p><strong>Alternativ:</strong> mer logik i Origo-konfig/JS.</p>
+        <p><strong>Konsekvens:</strong> snabbare felsökning, tydligare ansvar men högre krav på datadisciplin i GeoServer.</p>
+
+        <h3>ADR-002: WMTS där möjligt, WMS där nödvändigt</h3>
+        <p><strong>Beslut:</strong> bakgrund/tunga lager prioriterar WMTS; dynamiska lager kan ligga kvar på WMS.</p>
+        <p><strong>Kontext:</strong> uppmätt skillnad i svarstid mellan oseedad WMS och varm WMTS-cache.</p>
+        <p><strong>Alternativ:</strong> allt via WMS eller allt via WMTS.</p>
+        <p><strong>Konsekvens:</strong> bättre prestanda men behov av aktiv cache-rutin och dokumenterad beslutsmatris.</p>
+
+        <h3>ADR-003: RULE skickas endast med giltigt Rule Name</h3>
+        <p><strong>Beslut:</strong> klient skickar inte RULE om värdet saknas/är oklart.</p>
+        <p><strong>Kontext:</strong> återkommande incidenter med <code>RULE=undefined</code> i legendanrop.</p>
+        <p><strong>Alternativ:</strong> alltid skicka RULE och hoppas på fallback.</p>
+        <p><strong>Konsekvens:</strong> färre legendfel, tydligare koppling mellan SLD-regler och klientparametrar.</p>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
