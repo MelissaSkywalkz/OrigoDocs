@@ -3803,6 +3803,7 @@ const initReleasePlaybook = () => {
   const checkboxes = container.querySelectorAll('input[type=\"checkbox\"][data-playbook-id]');
   const resetButton = document.getElementById('playbookReset');
   const storageKey = 'playbook:release';
+  const rollbackKey = 'playbook:release:rollback';
   let state = {};
 
   try {
@@ -3828,6 +3829,32 @@ const initReleasePlaybook = () => {
         checkbox.checked = false;
       });
       localStorage.removeItem(storageKey);
+      localStorage.removeItem(rollbackKey);
+      const rollbackTextarea = document.getElementById('rollbackPlan');
+      if (rollbackTextarea) rollbackTextarea.value = '';
+    });
+  }
+
+  const rollbackTextarea = document.getElementById('rollbackPlan');
+  if (rollbackTextarea) {
+    rollbackTextarea.value = localStorage.getItem(rollbackKey) || '';
+    rollbackTextarea.addEventListener('input', () => {
+      localStorage.setItem(rollbackKey, rollbackTextarea.value);
+    });
+  }
+
+  const verifyBtn = document.getElementById('releaseCopyVerifyPack');
+  const verifyOut = document.getElementById('releaseVerifyPackOutput');
+  if (verifyBtn && verifyOut) {
+    verifyBtn.addEventListener('click', async () => {
+      const pack = [
+        "curl -I 'https://srv-origo01.kommun.skovde.se/geoserver/ows/?service=WMS&request=GetCapabilities'",
+        "curl -I 'https://srv-origo01.kommun.skovde.se/geoserver/ows/?service=WFS&request=GetCapabilities'",
+        "curl -G 'https://srv-origo01.kommun.skovde.se/geoserver/ows/' --data-urlencode 'service=WMS' --data-urlencode 'request=GetLegendGraphic' --data-urlencode 'format=image/png' --data-urlencode 'layer=publik:wms_publik_lm_topowebb_nedtonad'",
+        "curl -I 'https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts?SERVICE=WMTS&REQUEST=GetCapabilities'",
+      ].join('\n');
+      verifyOut.textContent = pack;
+      await copyText(pack);
     });
   }
 };

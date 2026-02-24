@@ -135,3 +135,28 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Slutlig lista över owners per område (primär + backup) för att hålla metadata helt aktuell över tid.
+
+## 2026-02-24 (revidering 14: snabbare vardagsanvändning + navkonsistens)
+
+### Vad ändrades
+- Harmoniserade navigationen i `pages/release-playbook.html` till samma huvudstruktur som startsidan.
+- Lade till operativ snabbpanel på `index.html` med 6 vardagsknappar till specifika ankare:
+  - WMS-test
+  - WMTS-tile-test
+  - Legend/RULE-check
+  - Seed/truncate-checklista
+  - Vanliga fel→fix
+  - Release sanity-check
+- Utökade `pages/try-it.html` med landningsyta “Välj verktyg” (bokmärkningsvänliga direktlänkar till verktygsankare).
+- Förbättrade `pages/release-playbook.html` till mer checklista-verktyg:
+  - ny sektion `#release-sanity-check`
+  - knapp för “Kopiera verifieringspaket”
+  - rollback-mallruta
+- Utökade `assets/js/main.js` för release-verktygsstöd:
+  - localStorage för rollback-plan
+  - reset av rollback + checklistor
+  - generering/kopiering av verifieringspaket i release-sidan
+- Regenererade `search/search-index.json`.
+
+### Okänt hos oss (behöver bekräftas)
+- Om publik OWS-endpoint ska vara exakt `origo.skovde.se/geoserver/ows/` i alla miljöer eller proxas olika mellan miljöer.

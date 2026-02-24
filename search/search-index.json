@@ -490,6 +490,16 @@
     "weight": 1
   },
   {
+    "id": "release-playbook-release-sanity-check",
+    "title": "Release‑playbook: Release sanity-check",
+    "category": "Release",
+    "url": "pages/release-playbook.html#release-sanity-check",
+    "heading": "Release sanity-check",
+    "content": "Kontrollera startsida, Try it-lab och felsökning. Verifiera minst ett WMS-lager och ett WMTS-lager. Bekräfta att legend och GetFeatureInfo svarar utan fel. Kopiera verifieringspaket Genererar standardanrop för snabb post-release-kontroll. Kopiera verifieringspaket Rollba",
+    "type": "section",
+    "weight": 1.2
+  },
+  {
     "id": "standarder-konventioner",
     "title": "Standarder & konventioner",
     "category": "Arbetssätt",
