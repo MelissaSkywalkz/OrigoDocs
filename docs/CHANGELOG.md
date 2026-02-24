@@ -83,3 +83,24 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Exakta tröskelvärden och acceptansnivå för timeout per tjänst i alla miljöer.
+
+## 2026-02-24 (revidering 11: playbooks + glossary/DoD + ADR)
+
+### Vad ändrades
+- Utökade `pages/origo-guide.html` med fem operativa playbooks som speglar verkligt arbetssätt:
+  1) Publicera nytt lager
+  2) Ändra stil + legend utan cache-regression
+  3) Välj WMS vs WMTS (beslutsmatris)
+  4) Incidenttriage (seg karta/timeout)
+  5) Releaseflöde PR → deploy → verifiering
+- Varje playbook innehåller förutsättningar, steg-för-steg, vanliga misstag, verifiering och done-definition.
+- Utökade `pages/standarder-konventioner.html` med aktivt glossary/konventioner-nav och nya kärnavsnitt:
+  - Namngivning (workspace:layer, suffix, år/säsong)
+  - Attributkonventioner
+  - Definition of done för lager
+  - ADR / beslutshistorik
+- Lade in tre ADR-poster (backend-först, WMTS-vs-WMS-princip, RULE-hantering).
+- Regenererade `search/search-index.json` så nya playbooks, glossary-termer och ADR-innehåll blir sökbara.
+
+### Okänt hos oss (behöver bekräftas)
+- Formell lagrad process för versionshantering av ADR (id-ägare, ändringsgodkännande och arkiveringsrutin).

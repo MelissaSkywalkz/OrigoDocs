@@ -66,32 +66,74 @@
           <li><strong>Origo</strong> är presentations- och interaktionslager (konfiguration, UX, synlighet, verktyg).</li>
         </ul>
 
-        <h2 id="princip">Så gör vi hos oss</h2>
-        <p>Vi lägger så mycket logik som möjligt i GeoServer. Origo ska i första hand visa data, inte räkna ut affärsregler i frontend.</p>
-        <ol>
-          <li>Datamodell, filter och stil i GeoServer.</li>
-          <li>Cache- och tile-strategi i GWC.</li>
-          <li>Synlighet, zoomintervall och verktyg i Origo-konfig.</li>
-        </ol>
-
         <h2 id="miljoer">Miljöer och viktiga URL:er</h2>
         <ul>
-          <li>Server: <code>srv-origo01</code></li>
-          <li>GeoServer UI (internt): <code>https://srv-origo01.kommun.skovde.se/geoserver/web</code></li>
-          <li>OWS endpoint (WMS/WFS): <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
-          <li>REST API: <code>https://srv-origo01.kommun.skovde.se/geoserver/rest/layers.json</code></li>
+          <li>GeoServer UI: <code>https://srv-origo01.kommun.skovde.se/geoserver/web</code></li>
+          <li>OWS endpoint: <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
+          <li>REST layers: <code>https://srv-origo01.kommun.skovde.se/geoserver/rest/layers.json</code></li>
           <li>Intern Origo: <code>https://srv-origo01.kommun.skovde.se/</code></li>
           <li>Publik Origo: <code>https://origo.skovde.se</code></li>
         </ul>
 
-        <h2 id="vardagsflode">Vardagsflöde för ändringar</h2>
+        <h2 id="playbooks">Operativa playbooks (så jobbar vi hos oss)</h2>
+
+        <h3 id="playbook-publicera">1) Publicera nytt lager (data → Origo)</h3>
+        <p><strong>Förutsättningar:</strong> datakälla tillgänglig, workspace bestämt, lagernamn enligt konvention.</p>
         <ol>
-          <li>Validera lager/stil direkt i GeoServer.</li>
-          <li>Bekräfta om ändringen ska vara WMS (dynamik) eller WMTS (hastighet).</li>
-          <li>Uppdatera <code>index.json</code> och relaterad kartkonfig.</li>
-          <li>Kör verifiering i Try it-lab och i kartvyn.</li>
-          <li>Dokumentera ändringen i changelog.</li>
+          <li>Publicera i GeoServer och testa preview.</li>
+          <li>Verifiera GetMap/GetFeatureInfo direkt mot OWS.</li>
+          <li>Lägg till source/layer i Origo-konfig.</li>
+          <li>Kontrollera grupp, synlighet, min/max scale.</li>
         </ol>
+        <p><strong>Vanliga misstag:</strong> fel workspace-prefix, blandad CRS, lager kvar i fel layergroup.</p>
+        <p><strong>Verifiering:</strong> GetMap returnerar <code>200</code>, lagret syns i klient, inga console-fel.</p>
+        <p><strong>Done-definition:</strong> lager kan aktiveras av användare och ger korrekt legend/info.</p>
+
+        <h3 id="playbook-style">2) Ändra stil + legend utan att sabba cache</h3>
+        <p><strong>Förutsättningar:</strong> aktuell SLD backupad, lagret identifierat i GWC.</p>
+        <ol>
+          <li>Uppdatera stil i GeoServer och validera Rule Names.</li>
+          <li>Testa GetLegendGraphic utan och med RULE där relevant.</li>
+          <li>Truncate/seed om cache-beroende lager påverkas.</li>
+          <li>Verifiera i Origo att legend och rendering matchar.</li>
+        </ol>
+        <p><strong>Vanliga misstag:</strong> <code>RULE=undefined</code>, fel Rule Name, glömd cache-rensning.</p>
+        <p><strong>Verifiering:</strong> legendsvar <code>200</code>, inga schemafel i logg, uppdaterad symbolik i klient.</p>
+        <p><strong>Done-definition:</strong> ny stil visas konsekvent i både WMS och WMTS-flöden där tillämpligt.</p>
+
+        <h3 id="playbook-wms-vs-wmts">3) Välj WMS vs WMTS (beslutsmatris)</h3>
+        <p><strong>Förutsättningar:</strong> syfte med lagret (dynamik vs hastighet) är tydlig.</p>
+        <ul>
+          <li><strong>Välj WMTS</strong> när samma bild efterfrågas ofta och kan cacheas.</li>
+          <li><strong>Välj WMS</strong> när stil/filter ändras ofta eller data är starkt dynamisk.</li>
+        </ul>
+        <p><strong>Vanliga misstag:</strong> köra tung bakgrund som WMS i stället för WMTS.</p>
+        <p><strong>Verifiering:</strong> jämför svarstid; hos oss ofta ~70–200 ms WMTS vs ~500–700 ms WMS på tunga lager.</p>
+        <p><strong>Done-definition:</strong> valt läge motiverat och dokumenterat i changelog/PR.</p>
+
+        <h3 id="playbook-incident">4) Incident: karta seg / timeout (triage)</h3>
+        <p><strong>Förutsättningar:</strong> reproducerbart symptom och timestamp från användare.</p>
+        <ol>
+          <li>Bekräfta symptom i klient (Network/Console).</li>
+          <li>Kör motsvarande OWS-anrop direkt.</li>
+          <li>Isolera lager/stil: ett i taget.</li>
+          <li>Kontrollera Tomcat/proxy/GWC-loggar i samma tidsfönster.</li>
+        </ol>
+        <p><strong>Vanliga misstag:</strong> felsöka frontend först och hoppa över serveranrop.</p>
+        <p><strong>Verifiering:</strong> flaskhals pekad (datakälla, render, cache eller nätverk).</p>
+        <p><strong>Done-definition:</strong> åtgärd implementerad + mätbar förbättring + incidentnotering uppdaterad.</p>
+
+        <h3 id="playbook-release">5) Release: PR → deploy → verifiering</h3>
+        <p><strong>Förutsättningar:</strong> granskad PR, uppdaterad docs/changelog, rollback-plan finns.</p>
+        <ol>
+          <li>Merge till rätt branch enligt driftflöde.</li>
+          <li>Låt deployjobbet bygga och distribuera.</li>
+          <li>Verifiera intern sida först, därefter publik vid behov.</li>
+          <li>Bekräfta sök, lager och kritiska kartflöden.</li>
+        </ol>
+        <p><strong>Vanliga misstag:</strong> glömd verifiering av sökindex och cacheläge.</p>
+        <p><strong>Verifiering:</strong> startsida, felsökning, try-it och minst ett WMS/WMTS-lager fungerar utan fel.</p>
+        <p><strong>Done-definition:</strong> release signerad i checklista och monitorerad utan regressionsfel.</p>
       </section>
     </main>
     <script src="../assets/js/main.js"></script>
