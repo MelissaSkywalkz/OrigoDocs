@@ -11,30 +11,6 @@ Detta är en **parallell preview** i MkDocs + Material. Nuvarande statiska site 
 - [Vanliga fel → fix](release-playbook.md#vanliga-fel--snabbfix)
 - [Release sanity-check](release-playbook.md#release-sanity-check)
 
-## Origo
+## Översikt
 
-Rollfördelning mellan Origo, GeoServer och GeoWebCache (backend-först).
-
-## GeoServer
-
-Attribut, filtrering, stilar och legendhantering.
-
-## GeoWebCache
-
-Seed/truncate, gridset och cachestrategi.
-
-## Prestanda
-
-WMS vs WMTS och verifiering i vår miljö.
-
-## Vanliga fel
-
-Symptom → orsak → verifiering → fix (inkl. RULE, schema/flush, cache).
-
-## Release
-
-Se [Release-playbook](release-playbook.md).
-
-## Lab
-
-Se [Try it-lab](lab/index.md).
+Använd vänstermenyn för samma huvudämnen som i nuvarande OrigoDocs: Origo, GeoServer, GWC, Prestanda, Felsökning, Release och Lab.

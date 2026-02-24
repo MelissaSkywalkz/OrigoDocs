@@ -31,17 +31,11 @@ markdown_extensions:
 
 nav:
   - Start: index.md
-  - Origo:
-      - Översikt: index.md#origo
-  - GeoServer:
-      - Översikt: index.md#geoserver
-  - GeoWebCache:
-      - Översikt: index.md#geowebcache
-  - Prestanda:
-      - WMS/WMTS: index.md#prestanda
-  - Felsökning:
-      - Vanliga fel: index.md#vanliga-fel
-  - Release:
-      - Playbook: release-playbook.md
+  - Origo: origo.md
+  - GeoServer: geoserver.md
+  - GeoWebCache: geowebcache.md
+  - Prestanda: prestanda.md
+  - Felsökning: felsokning.md
+  - Release: release-playbook.md
   - Lab:
       - Try it-lab: lab/index.md

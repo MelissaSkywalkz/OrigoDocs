@@ -176,3 +176,11 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Exakt slutlig preview-URL beror på repo/organisationsnamn och Pages-inställningar i GitHub.
+
+## Revidering 16 – MkDocs strict-build varningar åtgärdade
+
+- Fixade MkDocs-nav så det pekar på faktiska `.md`-sidor i stället för ankarlänkar i `nav` (tar bort strict-varningar för saknade nav-referenser).
+- Lade till minimala ämnessidor för Origo/GeoServer/GWC/Prestanda/Felsökning under `mkdocs/docs/` för konsekvent meny.
+- Fixade länk i `mkdocs/docs/lab/index.md` till absolut URL för statiska Try-it-labben (så MkDocs inte validerar mot icke-dokfil).
+- Låste snabblänksankare i `mkdocs/docs/release-playbook.md` med explicita heading-ID:n (`{#...}`) så indexlänkar matchar i strict mode.
+
