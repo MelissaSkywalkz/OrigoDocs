@@ -72,3 +72,14 @@
 ### Okänt hos oss (kunde ej beläggas i repo)
 - Full produktionskonfig för samtliga kartinstanser (`index.json` för alla miljöer) finns inte i detta repo.
 - Därför är exempel representativa för belagda mönster, inte komplett dump av driftkonfig.
+
+## 2026-02-24 (revidering 10: felsökning i äldre avancerad design)
+
+### Vad ändrades
+- Byggde om `pages/troubleshooting.html` till den äldre, mer avancerade strukturstilen (innehållsmeny, symptomtabell, stegkort, issue-kort, mini-cards och debug-kommandon) samtidigt som befintlig OrigoDocs-layout behölls.
+- Återställde den bredare dokumentationsmenyn på felsökningssidan (JSON 101, Layermanager, FAQ GIS, npm/plugins m.fl.) för bättre match mot äldre designmönster.
+- Uppdaterade innehållet med mer verklighetsnära driftfall: `RULE=undefined`, schema/flush-problem, cache/seed, WMS/WMTS-skillnader och OWS-kommandon för vår miljö.
+- Regenererade `search/search-index.json` så de nya sektionerna och rubrikerna blir sökbara.
+
+### Okänt hos oss (behöver bekräftas)
+- Exakta tröskelvärden och acceptansnivå för timeout per tjänst i alla miljöer.
