@@ -1,0 +1,47 @@
+site_name: OrigoDocs Preview (MkDocs)
+site_description: Parallel MkDocs + Material preview for OrigoDocs
+site_url: https://<org-or-user>.github.io/<repo>/mkdocs/
+repo_url: https://github.com/<org-or-user>/<repo>
+edit_uri: ""
+docs_dir: mkdocs/docs
+site_dir: mkdocs/site
+
+theme:
+  name: material
+  language: sv
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.instant
+    - toc.follow
+    - content.code.copy
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Start: index.md
+  - Origo:
+      - Översikt: index.md#origo
+  - GeoServer:
+      - Översikt: index.md#geoserver
+  - GeoWebCache:
+      - Översikt: index.md#geowebcache
+  - Prestanda:
+      - WMS/WMTS: index.md#prestanda
+  - Felsökning:
+      - Vanliga fel: index.md#vanliga-fel
+  - Release:
+      - Playbook: release-playbook.md
+  - Lab:
+      - Try it-lab: lab/index.md

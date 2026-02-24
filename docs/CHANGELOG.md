@@ -160,3 +160,19 @@
 
 ### Okänt hos oss (behöver bekräftas)
 - Om publik OWS-endpoint ska vara exakt `origo.skovde.se/geoserver/ows/` i alla miljöer eller proxas olika mellan miljöer.
+
+## 2026-02-24 (revidering 15: parallell MkDocs + Material preview)
+
+### Vad ändrades
+- Lagt till en **parallell** MkDocs-preview (nuvarande statiska site orörd):
+  - `mkdocs.yml` i repo-root (med `docs_dir: mkdocs/docs` för att undvika krock med befintlig `docs/`)
+  - `mkdocs/requirements.txt`
+  - `mkdocs/docs/index.md` (minimal migrering av startsida + snabbpanel)
+  - `mkdocs/docs/release-playbook.md` (minimal migrering)
+  - `mkdocs/docs/lab/index.md` (tydlig länk till befintlig statisk Try it-lab)
+- Lagt till GitHub Actions-workflow `.github/workflows/mkdocs-preview.yml` för deployment till separat branch/path:
+  - branch: `gh-pages-mkdocs`
+  - destination path: `/mkdocs/`
+
+### Okänt hos oss (behöver bekräftas)
+- Exakt slutlig preview-URL beror på repo/organisationsnamn och Pages-inställningar i GitHub.
