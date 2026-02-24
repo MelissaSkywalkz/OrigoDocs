@@ -19,8 +19,17 @@ const OFFLINE_SEARCH_INDEX = [
     weight: 1,
   },
   {
+    id: 'start-har',
+    title: 'Ny utvecklare: start här',
+    category: 'Onboarding',
+    url: 'pages/start-har.html',
+    content: 'onboarding start här första veckan origo geoserver geowebcache',
+    type: 'page',
+    weight: 1,
+  },
+  {
     id: 'origo-guide',
-    title: 'Origo – guide',
+    title: 'Origo i vår miljö',
     category: 'Origo',
     url: 'pages/origo-guide.html',
     content:
@@ -84,8 +93,26 @@ const OFFLINE_SEARCH_INDEX = [
     weight: 1,
   },
   {
+    id: 'wms-wmts-prestanda',
+    title: 'WMS/WMTS-prestanda',
+    category: 'Prestanda',
+    url: 'pages/wms-wmts-prestanda.html',
+    content: 'wms wmts prestanda legend rendermode grupp lager cache last',
+    type: 'page',
+    weight: 1,
+  },
+  {
+    id: 'standarder-konventioner',
+    title: 'Standarder & konventioner',
+    category: 'Arbetssätt',
+    url: 'pages/standarder-konventioner.html',
+    content: 'standarder konventioner namngivning mappar lager change management',
+    type: 'page',
+    weight: 1,
+  },
+  {
     id: 'examples',
-    title: 'Origo-recept',
+    title: 'Quick recipes',
     category: 'Origo',
     url: 'pages/examples.html',
     content: 'recept kopiera konfig wms wfs wmts controls',
@@ -121,7 +148,7 @@ const OFFLINE_SEARCH_INDEX = [
   },
   {
     id: 'troubleshooting',
-    title: 'Felsökning',
+    title: 'Felsökningshandbok',
     category: 'Support',
     url: 'pages/troubleshooting.html',
     content: 'felsökning cors crs 404 cache problem tom karta tiles förskjuten',
@@ -377,7 +404,8 @@ const initSearch = () => {
   let selectedIndex = -1;
 
   if (!IS_OFFLINE_FILE) {
-    const searchIndexUrl = new URL('../search/search-index.json', document.baseURI).href;
+    const isDocsPage = window.location.pathname.includes('/pages/');
+    const searchIndexUrl = isDocsPage ? '../search/search-index.json' : 'search/search-index.json';
     fetch(searchIndexUrl)
       .then((response) => (response.ok ? response.json() : []))
       .then((data) => {
@@ -1273,6 +1301,77 @@ const initDocCodeBlocks = () => {
 };
 
 // Run after DOM is ready
+
+const initVerificationPack = () => {
+  const btn = document.getElementById('vp-generate');
+  if (!btn) return;
+
+  const out = document.getElementById('vp-output');
+  const getVal = (id, fallback = '') => (document.getElementById(id)?.value || fallback).trim();
+
+  btn.addEventListener('click', () => {
+    const layer = getVal('vp-layer');
+    const workspace = getVal('vp-workspace');
+    const endpoint = getVal('vp-source', 'https://srv-origo01.kommun.skovde.se/geoserver/ows/');
+    const style = getVal('vp-style');
+    const rule = getVal('vp-rule');
+    if (!layer || !endpoint) {
+      if (out) out.textContent = 'Fyll i layer name och endpoint.';
+      return;
+    }
+
+    const wmtsBase = endpoint.replace(/\/ows\/?$/, '/gwc/service/wmts');
+    const legendRule = rule ? `&RULE=${encodeURIComponent(rule)}` : '';
+    const text = [
+      '# GetCapabilities (WMS)',
+      `curl -I '${endpoint}?service=WMS&request=GetCapabilities'`,
+      '',
+      '# GetMap (liten bbox)',
+      `curl -G '${endpoint}' --data-urlencode 'service=WMS' --data-urlencode 'request=GetMap' --data-urlencode 'layers=${layer}' --data-urlencode 'styles=${style}' --data-urlencode 'format=image/png' --data-urlencode 'srs=EPSG:3008' --data-urlencode 'bbox=155000,6455000,190000,6500000' --data-urlencode 'width=512' --data-urlencode 'height=512'`,
+      '',
+      '# GetLegendGraphic',
+      `${endpoint}?service=WMS&request=GetLegendGraphic&format=image/png&layer=${layer}${legendRule}`,
+      '',
+      '# GetFeatureInfo (WMS)',
+      `${endpoint}?service=WMS&request=GetFeatureInfo&layers=${layer}&query_layers=${layer}&info_format=application/json&srs=EPSG:3008&bbox=155000,6455000,190000,6500000&width=512&height=512&x=256&y=256`,
+      '',
+      '# WMTS GetTile',
+      `${wmtsBase}?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=${workspace}:${layer.split(':').pop()}&TILEMATRIXSET=EPSG:3008&FORMAT=image/png&TILEMATRIX=EPSG:3008:4&TILEROW=10&TILECOL=10`,
+      '',
+      '# Förväntat',
+      '- Statuskoder: 200 på capabilities/getmap/legend/featureinfo/gettile',
+      '- Tider: WMTS normalt snabbare än WMS på cachebara lager',
+    ].join('\n');
+
+    if (out) out.textContent = text;
+  });
+};
+
+const initKnownIssuesFilter = () => {
+  const input = document.getElementById('issueFilter');
+  if (!input) return;
+  const issues = Array.from(document.querySelectorAll('.ts-issue[data-issue]'));
+  const filter = () => {
+    const q = input.value.trim().toLowerCase();
+    issues.forEach((el) => {
+      const hay = `${el.getAttribute('data-issue') || ''} ${el.textContent || ''}`.toLowerCase();
+      el.hidden = q ? !hay.includes(q) : false;
+    });
+  };
+  input.addEventListener('input', filter);
+};
+
+const initCommandPaletteShortcut = () => {
+  window.addEventListener('keydown', (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      const searchInput = document.getElementById('navSearch');
+      if (!searchInput) return;
+      event.preventDefault();
+      searchInput.focus();
+      searchInput.select?.();
+    }
+  });
+};
 document.addEventListener('DOMContentLoaded', () => {
   initDocCodeBlocks();
   const devMode = new URLSearchParams(window.location.search).get('dev') === '1';
@@ -4192,4 +4291,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReleasePlaybook();
   initScrollSpy();
   initGridsetExplorer();
+  initVerificationPack();
+  initKnownIssuesFilter();
+  initCommandPaletteShortcut();
 });

@@ -32,20 +32,17 @@
           </button>
           <div class="accordion-panel" id="nav-docs">
             <a href="../index.html">Start</a>
-            <a href="page.html">JSON 101</a>
-            <a href="origo-guide.html">Origo – guide</a>
-            <a href="layermanager.html">Layermanager</a>
-            <a href="geoserver.html">GeoServer 101</a>
-            <a href="geoserver-styles.html">GeoServer – styles</a>
+            <a href="start-har.html">Ny utvecklare: start här</a>
+            <a href="origo-guide.html">Origo i vår miljö</a>
+            <a href="geoserver.html">GeoServer: attribut & filtrering</a>
+            <a href="geoserver-styles.html">GeoServer: stilsättning</a>
             <a href="geowebcache.html">GeoWebCache</a>
-            <a href="origo-server.html">Origo Server</a>
-            <a href="git-vscode.html">Git & VS Code</a>
-            <a href="examples.html">Origo-recept</a>
+            <a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a>
+            <a href="examples.html">Quick recipes</a>
             <a class="active" href="try-it.html" aria-current="page">Try it-lab</a>
-            <a href="faq-gis.html">FAQ GIS</a>
-            <a href="npm.html">npm & plugins</a>
-            <a href="release-playbook.html">Release-playbook</a>
             <a href="troubleshooting.html">Felsökning</a>
+            <a href="standarder-konventioner.html">Standarder & konventioner</a>
+            <a href="release-playbook.html">Release-playbook</a>
           </div>
         </div>
         <div class="nav-section">
@@ -105,7 +102,97 @@
           <a href="#gridcalc">Gridset / Tile</a>
           <a href="#gridset-explorer">Gridset-utforskare</a>
           <a href="#sld">SLD</a>
+          <a href="#skovde-cases">Skövde-cases</a>
         </nav>
+
+        <section class="doc-section" id="skovde-cases">
+          <h2>Så gör vi hos oss: Try-it scenarios (copy/paste)</h2>
+          <p>Bevara samma lab-mekanik, men testa med våra faktiska mönster och felbilder.</p>
+          <ul>
+            <li><strong>WMS GetMap (min bbox):</strong> Kör URL-builder med bas <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code>, liten bbox i EPSG:3008 och kontrollera svarstid.</li>
+            <li><strong>GetLegendGraphic + RULE:</strong> testa att RULE inte blir <code>undefined</code>; förväntat resultat är giltig legend utan GeoServer-fel.</li>
+            <li><strong>CQL-filter:</strong> testa enkla uttryck först (<code>=</code>, <code>IN</code>) innan komplexa contains/intersects.</li>
+            <li><strong>WMTS vs WMS:</strong> jämför samma lager i map-sandbox och notera skillnad i render och svarstid.</li>
+            <li><strong>GWC cache-hit/miss:</strong> använd URL-builder + nätverksinspektion och jämför mot seedade nivåer/bbox.</li>
+            <li><strong>Group layers:</strong> verifiera faktisk renderordning och belastning med få lager aktiva samtidigt.</li>
+          </ul>
+          <p><strong>JSON-snabbtest i labben:</strong> klistra in i JSON-verktyget och validera att struktur följer våra source/layer-mönster.</p>
+<pre><code>{
+  "sources": {
+    "publik_wms": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/" },
+    "publik_wmts": { "url": "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts", "matrixSet": "EPSG:3008" }
+  },
+  "layers": [
+    { "name": "publik:wms_publik_lm_topowebb_nedtonad", "type": "WMS", "source": "publik_wms", "group": "background" },
+    { "name": "publik:lm_wms_fastighetsgrans_l", "type": "WMTS", "source": "publik_wmts", "group": "fastighetsindelning" }
+  ]
+}</code></pre>
+        </section>
+
+        <section class="tool-card" id="verification-pack" aria-labelledby="verification-pack-title" tabindex="0">
+          <div class="tool-card-head">
+            <h2 id="verification-pack-title">Verifieringspaket per lager</h2>
+            <p>Kör våra standardtester snabbt: GetCapabilities, GetMap, GetLegendGraphic, GetFeatureInfo och WMTS.</p>
+          </div>
+          <div class="tryit-grid">
+            <div>
+              <label for="vp-layer"><strong>Layer name</strong></label>
+              <input id="vp-layer" class="tryit-input" value="publik:wms_publik_lm_topowebb_nedtonad" />
+              <label for="vp-workspace"><strong>Workspace</strong></label>
+              <input id="vp-workspace" class="tryit-input" value="publik" />
+              <label for="vp-source"><strong>WMS/WMTS endpoint</strong></label>
+              <input id="vp-source" class="tryit-input" value="https://srv-origo01.kommun.skovde.se/geoserver/ows/" />
+              <label for="vp-style"><strong>Style</strong></label>
+              <input id="vp-style" class="tryit-input" value="karta_gra" />
+              <label for="vp-rule"><strong>RULE (valfritt)</strong></label>
+              <input id="vp-rule" class="tryit-input" placeholder="Lämna tomt om ej relevant" />
+              <div class="tryit-actions tryit-actions-primary">
+                <button id="vp-generate" class="tryit-button" type="button">Generera verifieringspaket</button>
+              </div>
+            </div>
+            <div>
+              <strong>Resultat (copy/paste curl + URL)</strong>
+              <pre id="vp-output" class="tryit-output tryit-mono"></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="environment-switcher">
+          <h2>Versioner &amp; miljöer</h2>
+          <p>Använd dessa bas-URL:er konsekvent när du byter mellan intern/publik/lokal miljö.</p>
+          <ul>
+            <li><strong>Intern:</strong> <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
+            <li><strong>Publik:</strong> <code>https://origo.skovde.se</code> (klient), OWS enligt publicerad endpoint</li>
+            <li><strong>Lokal:</strong> <code>http://localhost:9966/</code> (Origo dev)</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="template-generator">
+          <h2>Template generator (snippets)</h2>
+          <p>Snabba mallar för WMS/WMTS och SLD som följer våra standardfält.</p>
+<pre><code>{
+  "name": "publik:lm_wms_fastighetsgrans_l",
+  "group": "fastighetsindelning",
+  "source": "publik_wmts",
+  "type": "WMTS",
+  "format": "image/png",
+  "visible": true
+}</code></pre>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;StyledLayerDescriptor version="1.0.0"&gt;
+  &lt;NamedLayer&gt;
+    &lt;Name&gt;example_style&lt;/Name&gt;
+    &lt;UserStyle&gt;
+      &lt;FeatureTypeStyle&gt;
+        &lt;Rule&gt;
+          &lt;Name&gt;default-rule&lt;/Name&gt;
+          &lt;PolygonSymbolizer&gt;...&lt;/PolygonSymbolizer&gt;
+        &lt;/Rule&gt;
+      &lt;/FeatureTypeStyle&gt;
+    &lt;/UserStyle&gt;
+  &lt;/NamedLayer&gt;
+&lt;/StyledLayerDescriptor&gt;</code></pre>
+        </section>
 
         <template id="tryit-layout-template">
           <div class="tryit">
