@@ -76,6 +76,29 @@ OrigoDocs har en fulltextsökfunktion som indexerar alla sidor och särskilt fel
 - De flesta verktyg är stabila för grundläggande verifiering och felsökning.
 - Gridset Explorer och Map sandbox innehåller funktioner som kan kräva vidare validering mot specifika serversättningar och markeras därför som delvis experimentella — kontrollera kommentarer i koden och kör lokala tester.
 
+
+## MkDocs preview
+
+Parallell preview av dokumentationen finns under `mkdocs/` och publiceras utan att påverka nuvarande GitHub Pages-root.
+
+- Preview-path i GitHub Pages: `/OrigoDocs/mkdocs/site/`
+- Full URL: `https://melissaskywalkz.github.io/OrigoDocs/mkdocs/site/`
+
+Lokal körning:
+
+```bash
+python3 -m venv .venv-mkdocs
+source .venv-mkdocs/bin/activate
+pip install -r mkdocs/requirements.txt
+mkdocs serve -f mkdocs.yml
+```
+
+Bygg statisk output:
+
+```bash
+mkdocs build -f mkdocs.yml
+```
+
 ## Mer information
 
 Se `pages/try-it.html` för det användargränssnitt som innehåller alla verktyg. För utvecklarespecifika instruktioner och kodkonventioner, se `.github/copilot-instructions.md` och `CONTRIBUTING.md`.
