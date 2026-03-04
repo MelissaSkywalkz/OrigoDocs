@@ -209,23 +209,45 @@
 }
 </code></pre>
         <pre><code>{
-  "source": {
-    "wms_example": {
-      "url": "https://localhost/geoserver/example_workspace/wms",
-      "version": "1.1.1"
+  "sources": {
+    "publik_wms": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/"
     },
-    "wfs_example": {
-      "url": "https://localhost/geoserver/example_workspace/ows",
+    "publik_wfs": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/ows/",
       "strategy": "all"
+    },
+    "publik_wmts": {
+      "url": "https://srv-origo01.kommun.skovde.se/geoserver/gwc/service/wmts",
+      "matrixSet": "EPSG:3008"
     }
   }
 }
 </code></pre>
         <pre><code>{
   "layers": [
-    { "name": "example_layer_wms", "type": "WMS", "source": "wms_example" },
-    { "name": "example_layer_wfs", "type": "WFS", "source": "wfs_example" },
-    { "name": "example_group", "type": "GROUP", "layers": ["example_layer_wfs"] }
+    {
+      "name": "publik:wms_publik_lm_topowebb_nedtonad",
+      "source": "publik_wms",
+      "group": "background",
+      "type": "WMS",
+      "format": "image/png",
+      "style": "karta_gra",
+      "queryable": "false"
+    },
+    {
+      "name": "origo_search",
+      "source": "publik_wfs",
+      "group": "baskarta",
+      "type": "WFS"
+    },
+    {
+      "name": "publik:lm_wms_fastighetsgrans_l",
+      "source": "publik_wmts",
+      "group": "fastighetsindelning",
+      "type": "WMTS",
+      "format": "image/png"
+    }
   ]
 }
 </code></pre>
@@ -251,9 +273,9 @@
         <h3>Mini-övning</h3>
         <ol>
           <li>
-            Hitta en tjänst-URL (t.ex. <code>wms_example</code> eller <code>wfs_example</code>).
+            Hitta en tjänst-URL (t.ex. <code>publik_wms</code> eller <code>publik_wfs</code>).
           </li>
-          <li>Hitta ett lagernamn som använder <code>source</code>.</li>
+          <li>Hitta ett lagernamn som använder <code>source</code> och kontrollera om typen är WMS/WFS/WMTS.</li>
           <li>Hitta en control (t.ex. <code>sharemap</code> eller <code>print</code>).</li>
         </ol>
       </section>

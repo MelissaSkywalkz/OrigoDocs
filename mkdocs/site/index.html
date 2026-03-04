@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OrigoDocs MkDocs preview</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.5; }
+      .card { max-width: 860px; border: 1px solid #ddd; border-radius: 10px; padding: 1rem 1.25rem; }
+      code { background: #f5f5f5; padding: .15rem .3rem; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>MkDocs preview-path fungerar</h1>
+      <p>Den här sidan ligger i <code>/mkdocs/site/</code> för att undvika 404 på GitHub Pages root-spåret.</p>
+      <p>Den fulla Material-previewn byggs av workflow: <code>.github/workflows/mkdocs-preview.yml</code>.</p>
+      <ul>
+        <li>Repo root: <a href="/OrigoDocs/">/OrigoDocs/</a></li>
+        <li>MkDocs källfiler: <a href="/OrigoDocs/mkdocs/docs/">/OrigoDocs/mkdocs/docs/</a></li>
+        <li>Preview-start i markdown: <a href="/OrigoDocs/mkdocs/docs/index.md">/OrigoDocs/mkdocs/docs/index.md</a></li>
+      </ul>
+      <p>För riktig MkDocs-rendering: kör Actions-jobbet <strong>Deploy MkDocs Preview</strong> eller lokalt <code>mkdocs build -f mkdocs.yml --strict</code>.</p>
+    </div>
+  </body>
+</html>
