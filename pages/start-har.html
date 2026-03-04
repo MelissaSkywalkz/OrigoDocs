@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ny utvecklare: start här</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+  </head>
+  <body class="layout">
+    <nav class="sidenav" id="sidenav" aria-label="Sidomeny">
+      <div class="sidebar-header"><a href="../index.html" class="logo" aria-label="Till startsidan">&gt;_ Origo Docs</a></div>
+      <div class="nav-search"><input type="search" id="navSearch" placeholder="Sök i GIS-handboken…" aria-label="Sök" /><ul id="searchResults" class="search-results hidden"></ul></div>
+      <div class="nav-content"><div class="nav-section"><button class="accordion-button" aria-expanded="true" aria-controls="nav-docs" type="button">Dokumentation</button><div class="accordion-panel" id="nav-docs"><a href="../index.html">Start</a><a href="start-har.html" aria-current="page">Ny utvecklare: start här</a><a href="origo-guide.html">Origo i vår miljö</a><a href="geoserver.html">GeoServer: attribut &amp; filtrering</a><a href="geoserver-styles.html">GeoServer: stilsättning</a><a href="geowebcache.html">GeoWebCache</a><a href="wms-wmts-prestanda.html">WMS/WMTS-prestanda</a><a href="examples.html">Quick recipes</a><a href="try-it.html">Try it-lab</a><a href="troubleshooting.html">Felsökning</a><a href="standarder-konventioner.html">Standarder &amp; konventioner</a><a href="release-playbook.html">Release-playbook</a></div></div><div class="nav-section"><button class="accordion-button" aria-expanded="false" aria-controls="nav-shortcuts" type="button">Snabblänkar</button><div class="accordion-panel" id="nav-shortcuts" hidden><a href="https://docs.geoserver.org/">GeoServer Docs (extern)</a><a href="https://origo-map.github.io/origo-documentation/latest/#origo-map">Origo Docs (extern)</a></div></div></div>
+    </nav>
+    <div class="nav-backdrop" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar"><button class="nav-toggle" data-nav-toggle aria-label="Öppna eller stäng meny" aria-expanded="true" type="button"><img src="../sort.png" alt="" /></button><div class="topbar-title"><span class="eyebrow">Onboarding</span><h1>Ny utvecklare: start här</h1></div><div class="topbar-meta"><span class="status-pill">Vecka 1</span></div></header>
+      <section class="doc-content">
+        <h2 id="snabbstart">Snabbstart hos oss</h2>
+        <ol>
+          <li><code>git clone //srv-origo01/Git/Origo.git Origo</code></li>
+          <li><code>npm install</code></li>
+          <li><code>npm start</code> (lokal utvecklingsserver på <code>http://localhost:9966/</code>)</li>
+        </ol>
+
+        <h2 id="miljo">Vår målmiljö i korthet</h2>
+        <ul>
+          <li>Server: <code>srv-origo01</code></li>
+          <li>GeoServer OWS: <code>https://srv-origo01.kommun.skovde.se/geoserver/ows/</code></li>
+          <li>Intern Origo: <code>https://srv-origo01.kommun.skovde.se/</code></li>
+          <li>Publik Origo: <code>https://origo.skovde.se</code></li>
+        </ul>
+
+        <h2 id="lasordning">Rekommenderad läsordning</h2>
+        <p>Origo i vår miljö → GeoServer attribut/filter → stilsättning → GeoWebCache → WMS/WMTS-prestanda → Felsökning.</p>
+
+        <h2 id="forsta-task">Första arbetsuppgift</h2>
+        <ol>
+          <li>Lägg till eller uppdatera ett lager i en testkonfig (<code>index.json</code>).</li>
+          <li>Verifiera lagret med GetMap och GetLegendGraphic.</li>
+          <li>Dokumentera vad du ändrat och varför i changelog.</li>
+        </ol>
+      </section>
+    </main>
+    <script src="../assets/js/main.js"></script>
+  </body>
+</html>
