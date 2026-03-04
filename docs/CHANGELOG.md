@@ -196,3 +196,8 @@
 - Lade till förcheck av interna markdown-länkar/ankare via `scripts/check_mkdocs_links.py` innan strict-build.
 - Uppdaterade README-kommandon till `mkdocs ...` för att undvika modulskuggning från repo-mappen `mkdocs/`.
 
+## Revidering 19 – 404-skydd på MkDocs preview-path
+
+- Lade till `mkdocs/site/index.html` som fallback-landing för att undvika GitHub Pages-404 på `/OrigoDocs/mkdocs/site/` när build-output inte ännu är publicerad.
+- Lade till `mkdocs/site/.nojekyll` för stabil statisk servering av preview-pathen.
+
