@@ -190,3 +190,9 @@
 - Låste MkDocs-beroenden i `mkdocs/requirements.txt` till kända 1.x/Material-versioner för att undvika versionsglidning i preview-spåret.
 - Uppdaterade workflow till `python -m mkdocs build -f mkdocs.yml --strict` så CI alltid använder den installerade miljön, inte eventuell global `mkdocs` i runnern.
 
+## Revidering 18 – MkDocs CI härdat för strict-felsökning
+
+- Lade till versionslogg i MkDocs-workflow (`mkdocs --version` + `pip show mkdocs mkdocs-material`) för snabbare felsökning i Actions.
+- Lade till förcheck av interna markdown-länkar/ankare via `scripts/check_mkdocs_links.py` innan strict-build.
+- Uppdaterade README-kommandon till `mkdocs ...` för att undvika modulskuggning från repo-mappen `mkdocs/`.
+

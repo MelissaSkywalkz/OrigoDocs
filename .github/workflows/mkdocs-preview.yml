@@ -29,8 +29,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r mkdocs/requirements.txt
 
+      - name: Show MkDocs versions
+        run: |
+          mkdocs --version
+          python -m pip show mkdocs mkdocs-material
+
+      - name: Pre-check internal markdown links/anchors
+        run: python scripts/check_mkdocs_links.py
+
       - name: Build MkDocs site
-        run: python -m mkdocs build -f mkdocs.yml --strict
+        run: mkdocs build -f mkdocs.yml --strict
 
       - name: Deploy preview to gh-pages-mkdocs branch (/mkdocs path)
         uses: peaceiris/actions-gh-pages@v4
