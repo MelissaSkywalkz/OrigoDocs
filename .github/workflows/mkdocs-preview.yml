@@ -30,7 +30,7 @@ jobs:
           pip install -r mkdocs/requirements.txt
 
       - name: Build MkDocs site
-        run: mkdocs build -f mkdocs.yml --strict
+        run: python -m mkdocs build -f mkdocs.yml --strict
 
       - name: Deploy preview to gh-pages-mkdocs branch (/mkdocs path)
         uses: peaceiris/actions-gh-pages@v4

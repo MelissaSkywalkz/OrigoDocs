@@ -184,3 +184,9 @@
 - Fixade länk i `mkdocs/docs/lab/index.md` till absolut URL för statiska Try-it-labben (så MkDocs inte validerar mot icke-dokfil).
 - Låste snabblänksankare i `mkdocs/docs/release-playbook.md` med explicita heading-ID:n (`{#...}`) så indexlänkar matchar i strict mode.
 
+
+## Revidering 17 – MkDocs strict-stabilisering i CI
+
+- Låste MkDocs-beroenden i `mkdocs/requirements.txt` till kända 1.x/Material-versioner för att undvika versionsglidning i preview-spåret.
+- Uppdaterade workflow till `python -m mkdocs build -f mkdocs.yml --strict` så CI alltid använder den installerade miljön, inte eventuell global `mkdocs` i runnern.
+
